@@ -42,18 +42,12 @@ import type {
   MultiStatusUpdateResultResponse,
   NotFoundResponse,
   NotImplementedResponse,
-  QueryBatch200Item,
   QueryBatchBody,
   QueryBatchParams,
-  QueryCSR200Item,
   QueryCSRParams,
-  QueryCSRSubscription200Item,
   QueryCSRSubscriptionParams,
-  QueryEntity200Item,
   QueryEntityParams,
-  QuerySubscription200Item,
   QuerySubscriptionParams,
-  QueryTemporal200Item,
   QueryTemporalBody,
   QueryTemporalParams,
   ReplaceAttrsParams,
@@ -83,7 +77,6 @@ import type {
   RetrieveTemporalParams,
   SubscriptionBody,
   SubscriptionFragmentBody,
-  TemporalQueryBatch200Item,
   TemporalQueryBatchParams,
   UnprocessableResponse,
   UpdateAttrsParams,
@@ -97,8 +90,7 @@ import type {
   UpdateSubscriptionParams,
   UpsertBatchBodyItem,
   UpsertBatchParams,
-  UpsertTemporalParams
-} from './api.schemas';
+  UpsertTemporalParams, Entity, CsourceRegistration, Subscription, EntityTemporal, JsonLdContext } from './api.schemas';
 
 
 // https://stackoverflow.com/questions/49579094/typescript-conditional-types-filter-out-readonly-properties-pick-only-requir/49579497#49579497
@@ -206,7 +198,7 @@ export const createEntity = async (createEntityBody?: NonReadonly<CreateEntityBo
 
 
 export type queryEntityResponse200ApplicationLdJson = {
-  data: QueryEntity200Item[]
+  data: (Entity & JsonLdContext)[]
   status: 200
 }
 
@@ -1048,7 +1040,7 @@ export const createCSR = async (createCSRBody?: NonReadonly<CreateCSRBody>, opti
 
 
 export type queryCSRResponse200 = {
-  data: QueryCSR200Item[]
+  data: (CsourceRegistration & JsonLdContext)[]
   status: 200
 }
 
@@ -1383,7 +1375,7 @@ export const createSubscription = async (subscriptionBody?: SubscriptionBody,
 
 
 export type querySubscriptionResponse200 = {
-  data: QuerySubscription200Item[]
+  data: (Subscription & JsonLdContext)[]
   status: 200
 }
 
@@ -1708,7 +1700,7 @@ export const createCSRSubscription = async (subscriptionBody?: SubscriptionBody,
 
 
 export type queryCSRSubscriptionResponse200 = {
-  data: QueryCSRSubscription200Item[]
+  data: (Subscription & JsonLdContext)[]
   status: 200
 }
 
@@ -2230,7 +2222,7 @@ export const deleteBatch = async (deleteBatchBody?: string[],
 
 
 export type queryBatchResponse200ApplicationLdJson = {
-  data: QueryBatch200Item[]
+  data: (Entity & JsonLdContext)[]
   status: 200
 }
 
@@ -2439,7 +2431,7 @@ export const upsertTemporal = async (entityTemporalBody?: EntityTemporalBody,
 
 
 export type queryTemporalResponse200 = {
-  data: QueryTemporal200Item[]
+  data: (EntityTemporal & JsonLdContext)[]
   status: 200
 }
 
@@ -2956,7 +2948,7 @@ export const deleteAttrInstanceTemporal = async (entityId: string,
 
 
 export type temporalQueryBatchResponse200 = {
-  data: TemporalQueryBatch200Item[]
+  data: (EntityTemporal & JsonLdContext)[]
   status: 200
 }
 

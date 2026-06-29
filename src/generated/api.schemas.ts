@@ -1015,6 +1015,13 @@ export interface FeatureProperties {
 export type LdContext = string | { [key: string]: unknown } | (string | { [key: string]: unknown })[];
 
 /**
+ * Helper: wraps any type with an optional JSON-LD @context.
+ */
+export type JsonLdContext = {
+  '@context'?: LdContext;
+};
+
+/**
  * 5.2.29 This data type represents a spatially bounded Entity in GeoJSON format, as mandated by IETF RFC 7946.
  */
 export interface Feature {
@@ -2591,11 +2598,6 @@ format?: QueryFormatEntitiesParameter;
  */
 local?: QueryLocalParameter;
 };
-
-export type QueryEntity200Item = Entity & {
-  '@context'?: LdContext;
-};
-
 export type RetrieveEntityParams = {
 /**
  * Selection of Entity Types as per clause 4.17. "*" is also allowed as a value and local is
@@ -2982,11 +2984,6 @@ limit?: QueryLimitParameter;
  */
 count?: QueryCountParameter;
 };
-
-export type QueryCSR200Item = CsourceRegistration & {
-  '@context'?: LdContext;
-};
-
 export type RetrieveCSRParams = {
 options?: QueryOptionsSysAttrsParameter;
 };
@@ -3034,11 +3031,6 @@ count?: QueryCountParameter;
  */
 local?: QueryLocalParameter;
 };
-
-export type QuerySubscription200Item = Subscription & {
-  '@context'?: LdContext;
-};
-
 export type RetrieveSubscriptionParams = {
 options?: QueryOptionsSysAttrsParameter;
 /**
@@ -3093,11 +3085,6 @@ limit?: QueryLimitParameter;
  */
 count?: QueryCountParameter;
 };
-
-export type QueryCSRSubscription200Item = Subscription & {
-  '@context'?: LdContext;
-};
-
 export type RetrieveCSRSubscriptionParams = {
 options?: QueryOptionsSysAttrsParameter;
 };
@@ -3193,11 +3180,6 @@ export const QueryBatchOptionsItem = {...OptionsRepresentation,...OptionsSysAttr
 export type QueryBatchBody = Query & {
   '@context'?: LdContext;
 };
-
-export type QueryBatch200Item = Entity & {
-  '@context'?: LdContext;
-};
-
 export type MergeBatchParams = {
 /**
  * 6.3.18 Limiting Distributed Operations. If local=true then no Context Source Registrations shall be
@@ -3372,11 +3354,6 @@ format?: QueryFormatTemporalParameter;
  */
 local?: QueryLocalParameter;
 };
-
-export type QueryTemporal200Item = EntityTemporal & {
-  '@context'?: LdContext;
-};
-
 export type RetrieveTemporalParams = {
 /**
  * List of Attributes to be matched by the Entity and included in the response. If the Entity does not
@@ -3549,11 +3526,6 @@ export type TemporalQueryBatchParams = {
  */
 local?: QueryLocalParameter;
 };
-
-export type TemporalQueryBatch200Item = EntityTemporal & {
-  '@context'?: LdContext;
-};
-
 export type RetrieveEntityTypesParams = {
 /**
  * If true, then detailed entity type information represented as an array with

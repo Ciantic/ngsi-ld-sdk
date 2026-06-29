@@ -81,6 +81,80 @@ function fixLdJsonContentType(file: SourceFile): void {
   });
 }
 
+/**
+ * Inline *200Item types (e.g. QueryEntity200Item) into their base type
+ * intersected with JsonLdContext. Deletes the thin wrapper types from
+ * the schemas file and replaces all usages in the API file.
+ */
+function fix200ItemTypes(schemasFile: SourceFile, apiFile: SourceFile): void {
+  // Map from *200Item name → base type name (e.g. QueryEntity200Item → Entity)
+  const itemToBase: Map<string, string> = new Map();
+
+  // 1. Collect mappings and delete *200Item type aliases from schemas
+  for (const typeAlias of [...schemasFile.getTypeAliases()]) {
+    const name = typeAlias.getName();
+    if (!name.endsWith("200Item")) continue;
+
+    const typeNode = typeAlias.getTypeNode();
+    if (typeNode?.isKind(SyntaxKind.IntersectionType)) {
+      const firstType = typeNode.getTypeNodes()[0];
+      if (firstType) itemToBase.set(name, firstType.getText());
+    }
+    typeAlias.remove();
+  }
+
+  // 2. Add JsonLdContext helper type after LdContext
+  const ldContext = schemasFile.getTypeAlias("LdContext");
+  if (ldContext) {
+    schemasFile.insertText(
+      ldContext.getEnd(),
+      `\n\n/**\n * Helper: wraps any type with an optional JSON-LD @context.\n */\nexport type JsonLdContext = {\n  '@context'?: LdContext;\n};`,
+    );
+  }
+
+  // 3. Fix imports in api.ts: remove *200Item, add base types + JsonLdContext
+  const importDecl = apiFile.getImportDeclaration(
+    (d) => d.getModuleSpecifierValue() === "./api.schemas",
+  );
+  if (importDecl) {
+    const baseTypes = new Set(itemToBase.values());
+    baseTypes.add("JsonLdContext");
+
+    // Remove *200Item named imports
+    for (const itemName of itemToBase.keys()) {
+      const ni = importDecl
+        .getNamedImports()
+        .find((n) => n.getName() === itemName);
+      ni?.remove();
+    }
+
+    // Add missing base type + JsonLdContext imports
+    for (const bt of baseTypes) {
+      if (
+        !importDecl
+          .getNamedImports()
+          .some((n) => n.getName() === bt)
+      ) {
+        importDecl.addNamedImport(bt);
+      }
+    }
+  }
+
+  // 4. Replace all *200Item type references with inline intersections
+  for (const [itemName, baseName] of itemToBase) {
+    apiFile.forEachDescendant((node, traversal) => {
+      if (
+        node.getKind() === SyntaxKind.TypeReference &&
+        node.getText() === itemName
+      ) {
+        node.replaceWithText(`(${baseName} & JsonLdContext)`);
+        traversal.skip();
+      }
+    });
+  }
+}
+
+
 const SCHEMAS_FILE = "./src/generated/api.schemas.ts";
 
 /**
@@ -151,6 +225,7 @@ export default defineConfig({
         fixUnknowns(schemasFile);
         fixLdJsonContentType(apiFile);
         renameTwoTypes(schemasFile, apiFile);
+        fix200ItemTypes(schemasFile, apiFile);
 
         schemasFile.saveSync();
         apiFile.saveSync();
