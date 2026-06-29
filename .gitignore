@@ -1,4 +1,5 @@
 node_modules/
 dist/
 ngsi-ld-api.yaml
+ngsi-ld-api.ldonly.yaml
 todo/

@@ -66,11 +66,73 @@ function fixUnknowns(sourceFile: SourceFile): void {
   });
 }
 
+/**
+ * The ETSI spec uses the non-standard "application/json+ld" MIME type,
+ * but real NGSI-LD brokers (Orion-LD, Stellio) expect the standard
+ * "application/ld+json". Fix Content-Type headers in generated code.
+ */
+function fixLdJsonContentType(file: SourceFile): void {
+  file.forEachDescendant((node) => {
+    if (node.getText().includes("application/json+ld")) {
+      node.replaceWithText(
+        node.getText().replace(/'application\/json\+ld'/g, "'application/ld+json'"),
+      );
+    }
+  });
+}
+
 const SCHEMAS_FILE = "./src/generated/api.schemas.ts";
+
+/**
+ * After stripping application/json variants, the remaining types ending
+ * in "One", "OneItem", "Two" or "TwoItem" are the only response types.
+ * Drop the ordinal so:
+ *   QueryEntity200OneItem  → QueryEntity200Item
+ *   RetrieveCSR200         → (stays as-is, "Two" already renamed)
+ */
+function renameTwoTypes(schemasFile: SourceFile, apiFile: SourceFile): void {
+  const renames: Map<string, string> = new Map();
+
+  // Collect renames from schemas file (type definitions)
+  for (const typeAlias of schemasFile.getTypeAliases()) {
+    const name = typeAlias.getName();
+    if (name.endsWith("OneItem")) {
+      renames.set(name, name.replace(/OneItem$/, "Item"));
+    } else if (name.endsWith("TwoItem")) {
+      renames.set(name, name.replace(/TwoItem$/, "Item"));
+    } else if (name.endsWith("One") && !name.endsWith("OneItem")) {
+      renames.set(name, name.replace(/One$/, ""));
+    } else if (name.endsWith("Two") && !name.endsWith("TwoItem")) {
+      renames.set(name, name.replace(/Two$/, ""));
+    }
+  }
+
+  // Apply renames in schemas
+  for (const [oldName, newName] of renames) {
+    const typeAlias = schemasFile.getTypeAlias(oldName);
+    if (typeAlias) typeAlias.rename(newName);
+  }
+
+  // Apply renames in api file (all references)
+  for (const [oldName, newName] of renames) {
+    // Replace in type reference strings and export statements
+    apiFile.forEachDescendant((node, traversal) => {
+      // Replace identifier references
+      if (
+        node.getText() === oldName
+        && (node.getParent()?.getKind() === SyntaxKind.TypeReference
+            || node.getKind() === SyntaxKind.Identifier)
+      ) {
+        node.replaceWithText(newName);
+        traversal.skip();
+      }
+    });
+  }
+}
 
 export default defineConfig({
   "ngsi-ld": {
-    input: "./ngsi-ld-api.yaml",
+    input: "./ngsi-ld-api.ldonly.yaml",
     output: {
       target: "./src/generated/api.ts",
       client: "fetch",
@@ -80,12 +142,18 @@ export default defineConfig({
     hooks: {
       afterAllFilesWrite: () => {
         const project = new Project();
-        const sourceFile = project.addSourceFileAtPath(SCHEMAS_FILE);
+        const schemasFile = project.addSourceFileAtPath(SCHEMAS_FILE);
+        const apiFile = project.addSourceFileAtPath(
+          "./src/generated/api.ts",
+        );
 
-        fixDuplicateOptions(sourceFile);
-        fixUnknowns(sourceFile);
+        fixDuplicateOptions(schemasFile);
+        fixUnknowns(schemasFile);
+        fixLdJsonContentType(apiFile);
+        renameTwoTypes(schemasFile, apiFile);
 
-        sourceFile.saveSync();
+        schemasFile.saveSync();
+        apiFile.saveSync();
       },
     },
   },

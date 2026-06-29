@@ -24,15 +24,15 @@ globalThis.fetch = async (
     url = brokerUrl.replace(/\/+$/, "") + url;
   }
 
-  // Auto-set Content-Type: application/json for requests with a body
-  // that don't already have a Content-Type header set.
-  // (The orval-generated SDK inconsistently sets this header.)
+  // Auto-set Content-Type: application/ld+json for requests with a body
+  // that don't already have a Content-Type header set (DELETE operations
+  // with a body, e.g. batch delete, need this).
   const hasBody = !!init?.body;
   const existingHeaders = init?.headers
     ? new Headers(init.headers)
     : new Headers();
   if (hasBody && !existingHeaders.has("content-type")) {
-    existingHeaders.set("content-type", "application/json");
+    existingHeaders.set("content-type", "application/ld+json");
     init = { ...init, headers: existingHeaders };
   }
 

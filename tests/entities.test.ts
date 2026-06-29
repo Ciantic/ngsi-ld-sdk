@@ -130,6 +130,7 @@ describe("mergeEntity", () => {
     trackId(entity);
 
     const patch = {
+      "@context": ["https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"],
       humidity: {
         type: "Property" as const,
         value: 55,
@@ -158,6 +159,7 @@ describe("replaceEntity", () => {
     trackId(entity);
 
     const replacement = {
+      "@context": ["https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"],
       id: entity.id,
       type: "TestEntity",
       replacedAttr: {
@@ -181,6 +183,7 @@ describe("appendAttrs", () => {
     trackId(entity);
 
     const newAttrs = {
+      "@context": ["https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"],
       newProperty: {
         type: "Property" as const,
         value: 42,
@@ -202,6 +205,7 @@ describe("updateEntity", () => {
     trackId(entity);
 
     const patch = {
+      "@context": ["https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"],
       temperature: {
         type: "Property" as const,
         value: 99,
@@ -223,6 +227,7 @@ describe("updateAttrs", () => {
     trackId(entity);
 
     const attrPatch: Property = {
+      "@context": ["https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"],
       type: "Property" as const,
       value: 100,
     };
@@ -233,6 +238,7 @@ describe("updateAttrs", () => {
 
   it("should return 404 when updating attribute on non-existent entity", async () => {
     const attrPatch: Property = {
+      "@context": ["https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"],
       type: "Property" as const,
       value: 100,
     };
@@ -275,6 +281,7 @@ describe("replaceAttrs", () => {
     trackId(entity);
 
     const replacement: Property = {
+      "@context": ["https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"],
       type: "Property" as const,
       value: 200,
     };

@@ -22,6 +22,10 @@ import {
 export const brokerUrl: string =
   process.env["NGSILD_BROKER_URL"] ?? "http://localhost:1026/ngsi-ld/v1";
 
+const NGSILD_CORE_CONTEXT = [
+  "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
+];
+
 // --- Factory functions ---
 
 let entityCounter = 0;
@@ -34,6 +38,7 @@ export function makeEntity(
   const suffix = `${Date.now()}-${entityCounter}`;
   const id = `urn:ngsi-ld:TestEntity:test-${suffix}`;
   return {
+    "@context": NGSILD_CORE_CONTEXT,
     id,
     type: "TestEntity",
     temperature: {
@@ -69,6 +74,7 @@ export function makeCSR(
   const suffix = `${Date.now()}-${csrCounter}`;
   const id = `urn:ngsi-ld:CSR:test-${suffix}`;
   return {
+    "@context": NGSILD_CORE_CONTEXT,
     id,
     type: "ContextSourceRegistration" as const,
     information: [
@@ -90,6 +96,7 @@ export function makeSubscription(
   subCounter += 1;
   const suffix = `${Date.now()}-${subCounter}`;
   return {
+    "@context": NGSILD_CORE_CONTEXT,
     id: `urn:ngsi-ld:Subscription:test-${suffix}`,
     type: "Subscription",
     entities: [{ type: "TestEntity" }] as EntitySelector[],

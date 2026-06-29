@@ -6,24 +6,19 @@
  * OpenAPI spec version: 1.8.1
  */
 import type {
-  AppendAttrsBodyTwo,
+  AppendAttrsBody,
   AppendAttrsParams,
   AppendAttrsTemporalParams,
-  Attribute,
   AttributeFragmentBody,
-  AttributeList,
   BadRequestResponse,
   ConflictResponse,
-  ContextSourceIdentity,
-  CreateBatchBodyTwoItem,
+  CreateBatchBodyItem,
   CreateBatchParams,
-  CreateCSRBodyTwo,
-  CreateContextBodyOne,
-  CreateContextBodyTwo,
-  CreateEntityBodyTwo,
+  CreateCSRBody,
+  CreateContextBody,
+  CreateEntityBody,
   CreateEntityParams,
   CreateSubscriptionParams,
-  CsourceRegistration,
   DeleteAttrInstanceTemporalParams,
   DeleteAttrsParams,
   DeleteAttrsTemporalParams,
@@ -32,84 +27,75 @@ import type {
   DeleteEntityParams,
   DeleteSubscriptionParams,
   DeleteTemporalParams,
-  Entity,
-  EntityMap,
-  EntityTemporal,
   EntityTemporalBody,
   EntityTemporalFragmentBody,
-  EntityType,
-  EntityTypeInfo,
-  EntityTypeList,
   Feature,
   FeatureCollection,
   GatewayTimeoutResponse,
   LdContextMetadata,
   ListContextsParams,
-  MergeBatchBodyTwoItem,
+  MergeBatchBodyItem,
   MergeBatchParams,
-  MergeEntityBodyTwo,
+  MergeEntityBody,
   MergeEntityParams,
   MultiStatusBatchOperationResultResponse,
   MultiStatusUpdateResultResponse,
   NotFoundResponse,
   NotImplementedResponse,
-  Query,
-  QueryBatch200TwoItem,
-  QueryBatchBodyTwo,
+  QueryBatch200Item,
+  QueryBatchBody,
   QueryBatchParams,
-  QueryCSR200TwoItem,
+  QueryCSR200Item,
   QueryCSRParams,
-  QueryCSRSubscription200TwoItem,
+  QueryCSRSubscription200Item,
   QueryCSRSubscriptionParams,
-  QueryEntity200TwoItem,
+  QueryEntity200Item,
   QueryEntityParams,
-  QuerySubscription200TwoItem,
+  QuerySubscription200Item,
   QuerySubscriptionParams,
-  QueryTemporal200TwoItem,
+  QueryTemporal200Item,
   QueryTemporalBody,
   QueryTemporalParams,
   ReplaceAttrsParams,
-  ReplaceEntityBodyTwo,
+  ReplaceEntityBody,
   ReplaceEntityParams,
-  RetrieveAttrTypeInfo200Two,
+  RetrieveAttrTypeInfo200,
   RetrieveAttrTypeInfoParams,
-  RetrieveAttrTypes200Two,
+  RetrieveAttrTypes200,
   RetrieveAttrTypesParams,
-  RetrieveCSIdentityInfo200Two,
-  RetrieveCSR200Two,
+  RetrieveCSIdentityInfo200,
+  RetrieveCSR200,
   RetrieveCSRParams,
-  RetrieveCSRSubscription200Two,
+  RetrieveCSRSubscription200,
   RetrieveCSRSubscriptionParams,
-  RetrieveContext200One,
-  RetrieveContext200Two,
+  RetrieveContext200,
   RetrieveContextParams,
-  RetrieveEntity200Two,
-  RetrieveEntityMap200Two,
+  RetrieveEntity200,
+  RetrieveEntityMap200,
   RetrieveEntityParams,
-  RetrieveEntityTypeInfo200Two,
+  RetrieveEntityTypeInfo200,
   RetrieveEntityTypeInfoParams,
-  RetrieveEntityTypes200Two,
+  RetrieveEntityTypes200,
   RetrieveEntityTypesParams,
-  RetrieveSubscription200Two,
+  RetrieveSubscription200,
   RetrieveSubscriptionParams,
-  RetrieveTemporal200Two,
+  RetrieveTemporal200,
   RetrieveTemporalParams,
-  Subscription,
   SubscriptionBody,
   SubscriptionFragmentBody,
-  TemporalQueryBatch200TwoItem,
+  TemporalQueryBatch200Item,
   TemporalQueryBatchParams,
   UnprocessableResponse,
   UpdateAttrsParams,
   UpdateAttrsTemporalParams,
-  UpdateBatchBodyTwoItem,
+  UpdateBatchBodyItem,
   UpdateBatchParams,
-  UpdateCSRBodyTwo,
-  UpdateEntityBodyTwo,
-  UpdateEntityMapBodyTwo,
+  UpdateCSRBody,
+  UpdateEntityBody,
+  UpdateEntityMapBody,
   UpdateEntityParams,
   UpdateSubscriptionParams,
-  UpsertBatchBodyTwoItem,
+  UpsertBatchBodyItem,
   UpsertBatchParams,
   UpsertTemporalParams
 } from './api.schemas';
@@ -198,14 +184,14 @@ export const getCreateEntityUrl = (params?: CreateEntityParams,) => {
  * @summary Entity creation
 
  */
-export const createEntity = async (createEntityBody?: NonReadonly<Entity & unknown | CreateEntityBodyTwo>,
+export const createEntity = async (createEntityBody?: NonReadonly<CreateEntityBody>,
     params?: CreateEntityParams, options?: RequestInit): Promise<createEntityResponse> => {
 
   const res = await fetch(getCreateEntityUrl(params),
   {
     ...options,
-    method: 'POST'
-    ,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/ld+json', ...options?.headers },
     body: JSON.stringify(createEntityBody)
   }
 )
@@ -219,13 +205,8 @@ export const createEntity = async (createEntityBody?: NonReadonly<Entity & unkno
 
 
 
-export type queryEntityResponse200ApplicationJson = {
-  data: (Entity & unknown)[]
-  status: 200
-}
-
-export type queryEntityResponse200ApplicationJsonLd = {
-  data: QueryEntity200TwoItem[]
+export type queryEntityResponse200ApplicationLdJson = {
+  data: QueryEntity200Item[]
   status: 200
 }
 
@@ -244,7 +225,7 @@ export type queryEntityResponse501 = {
   status: 501
 }
 
-export type queryEntityResponseSuccess = (queryEntityResponse200ApplicationJson | queryEntityResponse200ApplicationJsonLd | queryEntityResponse200ApplicationGeoJson) & {
+export type queryEntityResponseSuccess = (queryEntityResponse200ApplicationLdJson | queryEntityResponse200ApplicationGeoJson) & {
   headers: Headers;
 };
 export type queryEntityResponseError = (queryEntityResponse400 | queryEntityResponse501) & {
@@ -303,13 +284,8 @@ export const queryEntity = async (params?: QueryEntityParams, options?: RequestI
 
 
 
-export type retrieveEntityResponse200ApplicationJson = {
-  data: Entity & unknown
-  status: 200
-}
-
-export type retrieveEntityResponse200ApplicationJsonLd = {
-  data: RetrieveEntity200Two
+export type retrieveEntityResponse200ApplicationLdJson = {
+  data: RetrieveEntity200
   status: 200
 }
 
@@ -333,7 +309,7 @@ export type retrieveEntityResponse501 = {
   status: 501
 }
 
-export type retrieveEntityResponseSuccess = (retrieveEntityResponse200ApplicationJson | retrieveEntityResponse200ApplicationJsonLd | retrieveEntityResponse200ApplicationGeoJson) & {
+export type retrieveEntityResponseSuccess = (retrieveEntityResponse200ApplicationLdJson | retrieveEntityResponse200ApplicationGeoJson) & {
   headers: Headers;
 };
 export type retrieveEntityResponseError = (retrieveEntityResponse400 | retrieveEntityResponse404 | retrieveEntityResponse501) & {
@@ -522,14 +498,14 @@ export const getMergeEntityUrl = (entityId: string,
 
  */
 export const mergeEntity = async (entityId: string,
-    mergeEntityBody?: NonReadonly<Entity | MergeEntityBodyTwo>,
+    mergeEntityBody?: NonReadonly<MergeEntityBody>,
     params?: MergeEntityParams, options?: RequestInit): Promise<mergeEntityResponse> => {
 
   const res = await fetch(getMergeEntityUrl(entityId,params),
   {
     ...options,
-    method: 'PATCH'
-    ,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/ld+json', ...options?.headers },
     body: JSON.stringify(mergeEntityBody)
   }
 )
@@ -597,14 +573,14 @@ export const getReplaceEntityUrl = (entityId: string,
 
  */
 export const replaceEntity = async (entityId: string,
-    replaceEntityBody?: NonReadonly<Entity | ReplaceEntityBodyTwo>,
+    replaceEntityBody?: NonReadonly<ReplaceEntityBody>,
     params?: ReplaceEntityParams, options?: RequestInit): Promise<replaceEntityResponse> => {
 
   const res = await fetch(getReplaceEntityUrl(entityId,params),
   {
     ...options,
-    method: 'PUT'
-    ,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/ld+json', ...options?.headers },
     body: JSON.stringify(replaceEntityBody)
   }
 )
@@ -672,14 +648,14 @@ export const getAppendAttrsUrl = (entityId: string,
 
  */
 export const appendAttrs = async (entityId: string,
-    appendAttrsBody?: NonReadonly<Entity | AppendAttrsBodyTwo>,
+    appendAttrsBody?: NonReadonly<AppendAttrsBody>,
     params?: AppendAttrsParams, options?: RequestInit): Promise<appendAttrsResponse> => {
 
   const res = await fetch(getAppendAttrsUrl(entityId,params),
   {
     ...options,
-    method: 'POST'
-    ,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/ld+json', ...options?.headers },
     body: JSON.stringify(appendAttrsBody)
   }
 )
@@ -747,14 +723,14 @@ export const getUpdateEntityUrl = (entityId: string,
 
  */
 export const updateEntity = async (entityId: string,
-    updateEntityBody?: NonReadonly<Entity | UpdateEntityBodyTwo>,
+    updateEntityBody?: NonReadonly<UpdateEntityBody>,
     params?: UpdateEntityParams, options?: RequestInit): Promise<updateEntityResponse> => {
 
   const res = await fetch(getUpdateEntityUrl(entityId,params),
   {
     ...options,
-    method: 'PATCH'
-    ,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/ld+json', ...options?.headers },
     body: JSON.stringify(updateEntityBody)
   }
 )
@@ -832,7 +808,7 @@ export const updateAttrs = async (entityId: string,
   {
     ...options,
     method: 'PATCH',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    headers: { 'Content-Type': 'application/ld+json', ...options?.headers },
     body: JSON.stringify(attributeFragmentBody)
   }
 )
@@ -993,7 +969,7 @@ export const replaceAttrs = async (entityId: string,
   {
     ...options,
     method: 'PUT',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    headers: { 'Content-Type': 'application/ld+json', ...options?.headers },
     body: JSON.stringify(attributeFragmentBody)
   }
 )
@@ -1051,13 +1027,13 @@ export const getCreateCSRUrl = () => {
  * @summary Csource registration creation
 
  */
-export const createCSR = async (createCSRBody?: NonReadonly<CsourceRegistration & unknown | CreateCSRBodyTwo>, options?: RequestInit): Promise<createCSRResponse> => {
+export const createCSR = async (createCSRBody?: NonReadonly<CreateCSRBody>, options?: RequestInit): Promise<createCSRResponse> => {
 
   const res = await fetch(getCreateCSRUrl(),
   {
     ...options,
-    method: 'POST'
-    ,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/ld+json', ...options?.headers },
     body: JSON.stringify(createCSRBody)
   }
 )
@@ -1071,13 +1047,8 @@ export const createCSR = async (createCSRBody?: NonReadonly<CsourceRegistration 
 
 
 
-export type queryCSRResponse200ApplicationJson = {
-  data: (CsourceRegistration & unknown)[]
-  status: 200
-}
-
-export type queryCSRResponse200ApplicationJsonLd = {
-  data: QueryCSR200TwoItem[]
+export type queryCSRResponse200 = {
+  data: QueryCSR200Item[]
   status: 200
 }
 
@@ -1086,7 +1057,7 @@ export type queryCSRResponse400 = {
   status: 400
 }
 
-export type queryCSRResponseSuccess = (queryCSRResponse200ApplicationJson | queryCSRResponse200ApplicationJsonLd) & {
+export type queryCSRResponseSuccess = (queryCSRResponse200) & {
   headers: Headers;
 };
 export type queryCSRResponseError = (queryCSRResponse400) & {
@@ -1157,13 +1128,8 @@ export const queryCSR = async (params?: QueryCSRParams, options?: RequestInit): 
 
 
 
-export type retrieveCSRResponse200ApplicationJson = {
-  data: CsourceRegistration & unknown
-  status: 200
-}
-
-export type retrieveCSRResponse200ApplicationJsonLd = {
-  data: RetrieveCSR200Two
+export type retrieveCSRResponse200 = {
+  data: RetrieveCSR200
   status: 200
 }
 
@@ -1177,7 +1143,7 @@ export type retrieveCSRResponse404 = {
   status: 404
 }
 
-export type retrieveCSRResponseSuccess = (retrieveCSRResponse200ApplicationJson | retrieveCSRResponse200ApplicationJsonLd) & {
+export type retrieveCSRResponseSuccess = (retrieveCSRResponse200) & {
   headers: Headers;
 };
 export type retrieveCSRResponseError = (retrieveCSRResponse400 | retrieveCSRResponse404) & {
@@ -1270,13 +1236,13 @@ export const getUpdateCSRUrl = (registrationId: string,) => {
 
  */
 export const updateCSR = async (registrationId: string,
-    updateCSRBody?: NonReadonly<CsourceRegistration | UpdateCSRBodyTwo>, options?: RequestInit): Promise<updateCSRResponse> => {
+    updateCSRBody?: NonReadonly<UpdateCSRBody>, options?: RequestInit): Promise<updateCSRResponse> => {
 
   const res = await fetch(getUpdateCSRUrl(registrationId),
   {
     ...options,
-    method: 'PATCH'
-    ,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/ld+json', ...options?.headers },
     body: JSON.stringify(updateCSRBody)
   }
 )
@@ -1402,7 +1368,7 @@ export const createSubscription = async (subscriptionBody?: SubscriptionBody,
   {
     ...options,
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    headers: { 'Content-Type': 'application/ld+json', ...options?.headers },
     body: JSON.stringify(subscriptionBody)
   }
 )
@@ -1416,13 +1382,8 @@ export const createSubscription = async (subscriptionBody?: SubscriptionBody,
 
 
 
-export type querySubscriptionResponse200ApplicationJson = {
-  data: (Subscription & unknown)[]
-  status: 200
-}
-
-export type querySubscriptionResponse200ApplicationJsonLd = {
-  data: QuerySubscription200TwoItem[]
+export type querySubscriptionResponse200 = {
+  data: QuerySubscription200Item[]
   status: 200
 }
 
@@ -1431,7 +1392,7 @@ export type querySubscriptionResponse400 = {
   status: 400
 }
 
-export type querySubscriptionResponseSuccess = (querySubscriptionResponse200ApplicationJson | querySubscriptionResponse200ApplicationJsonLd) & {
+export type querySubscriptionResponseSuccess = (querySubscriptionResponse200) & {
   headers: Headers;
 };
 export type querySubscriptionResponseError = (querySubscriptionResponse400) & {
@@ -1482,13 +1443,8 @@ export const querySubscription = async (params?: QuerySubscriptionParams, option
 
 
 
-export type retrieveSubscriptionResponse200ApplicationJson = {
-  data: Subscription & unknown
-  status: 200
-}
-
-export type retrieveSubscriptionResponse200ApplicationJsonLd = {
-  data: RetrieveSubscription200Two
+export type retrieveSubscriptionResponse200 = {
+  data: RetrieveSubscription200
   status: 200
 }
 
@@ -1502,7 +1458,7 @@ export type retrieveSubscriptionResponse404 = {
   status: 404
 }
 
-export type retrieveSubscriptionResponseSuccess = (retrieveSubscriptionResponse200ApplicationJson | retrieveSubscriptionResponse200ApplicationJsonLd) & {
+export type retrieveSubscriptionResponseSuccess = (retrieveSubscriptionResponse200) & {
   headers: Headers;
 };
 export type retrieveSubscriptionResponseError = (retrieveSubscriptionResponse400 | retrieveSubscriptionResponse404) & {
@@ -1610,7 +1566,7 @@ export const updateSubscription = async (subscriptionId: string,
   {
     ...options,
     method: 'PATCH',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    headers: { 'Content-Type': 'application/ld+json', ...options?.headers },
     body: JSON.stringify(subscriptionFragmentBody)
   }
 )
@@ -1737,7 +1693,7 @@ export const createCSRSubscription = async (subscriptionBody?: SubscriptionBody,
   {
     ...options,
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    headers: { 'Content-Type': 'application/ld+json', ...options?.headers },
     body: JSON.stringify(subscriptionBody)
   }
 )
@@ -1751,13 +1707,8 @@ export const createCSRSubscription = async (subscriptionBody?: SubscriptionBody,
 
 
 
-export type queryCSRSubscriptionResponse200ApplicationJson = {
-  data: (Subscription & unknown)[]
-  status: 200
-}
-
-export type queryCSRSubscriptionResponse200ApplicationJsonLd = {
-  data: QueryCSRSubscription200TwoItem[]
+export type queryCSRSubscriptionResponse200 = {
+  data: QueryCSRSubscription200Item[]
   status: 200
 }
 
@@ -1766,7 +1717,7 @@ export type queryCSRSubscriptionResponse400 = {
   status: 400
 }
 
-export type queryCSRSubscriptionResponseSuccess = (queryCSRSubscriptionResponse200ApplicationJson | queryCSRSubscriptionResponse200ApplicationJsonLd) & {
+export type queryCSRSubscriptionResponseSuccess = (queryCSRSubscriptionResponse200) & {
   headers: Headers;
 };
 export type queryCSRSubscriptionResponseError = (queryCSRSubscriptionResponse400) & {
@@ -1817,13 +1768,8 @@ export const queryCSRSubscription = async (params?: QueryCSRSubscriptionParams, 
 
 
 
-export type retrieveCSRSubscriptionResponse200ApplicationJson = {
-  data: Subscription & unknown
-  status: 200
-}
-
-export type retrieveCSRSubscriptionResponse200ApplicationJsonLd = {
-  data: RetrieveCSRSubscription200Two
+export type retrieveCSRSubscriptionResponse200 = {
+  data: RetrieveCSRSubscription200
   status: 200
 }
 
@@ -1837,7 +1783,7 @@ export type retrieveCSRSubscriptionResponse404 = {
   status: 404
 }
 
-export type retrieveCSRSubscriptionResponseSuccess = (retrieveCSRSubscriptionResponse200ApplicationJson | retrieveCSRSubscriptionResponse200ApplicationJsonLd) & {
+export type retrieveCSRSubscriptionResponseSuccess = (retrieveCSRSubscriptionResponse200) & {
   headers: Headers;
 };
 export type retrieveCSRSubscriptionResponseError = (retrieveCSRSubscriptionResponse400 | retrieveCSRSubscriptionResponse404) & {
@@ -1936,7 +1882,7 @@ export const updateCSRSubscription = async (subscriptionId: string,
   {
     ...options,
     method: 'PATCH',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    headers: { 'Content-Type': 'application/ld+json', ...options?.headers },
     body: JSON.stringify(subscriptionFragmentBody)
   }
 )
@@ -2055,15 +2001,15 @@ export const getCreateBatchUrl = (params?: CreateBatchParams,) => {
  * @summary Batch Entity Creation
 
  */
-export const createBatch = async (createBatchBody?: NonReadonly<(Entity & unknown)[] | CreateBatchBodyTwoItem[]>,
+export const createBatch = async (createBatchBodyItem?: NonReadonly<CreateBatchBodyItem[]>,
     params?: CreateBatchParams, options?: RequestInit): Promise<createBatchResponse> => {
 
   const res = await fetch(getCreateBatchUrl(params),
   {
     ...options,
-    method: 'POST'
-    ,
-    body: JSON.stringify(createBatchBody)
+    method: 'POST',
+    headers: { 'Content-Type': 'application/ld+json', ...options?.headers },
+    body: JSON.stringify(createBatchBodyItem)
   }
 )
 
@@ -2128,15 +2074,15 @@ export const getUpsertBatchUrl = (params?: UpsertBatchParams,) => {
  * @summary Batch Entity Creation or Update (Upsert)
 
  */
-export const upsertBatch = async (upsertBatchBody?: NonReadonly<(Entity & unknown)[] | UpsertBatchBodyTwoItem[]>,
+export const upsertBatch = async (upsertBatchBodyItem?: NonReadonly<UpsertBatchBodyItem[]>,
     params?: UpsertBatchParams, options?: RequestInit): Promise<upsertBatchResponse> => {
 
   const res = await fetch(getUpsertBatchUrl(params),
   {
     ...options,
-    method: 'POST'
-    ,
-    body: JSON.stringify(upsertBatchBody)
+    method: 'POST',
+    headers: { 'Content-Type': 'application/ld+json', ...options?.headers },
+    body: JSON.stringify(upsertBatchBodyItem)
   }
 )
 
@@ -2195,15 +2141,15 @@ export const getUpdateBatchUrl = (params?: UpdateBatchParams,) => {
  * @summary Batch Entity Update
 
  */
-export const updateBatch = async (updateBatchBody?: NonReadonly<(Entity & unknown)[] | UpdateBatchBodyTwoItem[]>,
+export const updateBatch = async (updateBatchBodyItem?: NonReadonly<UpdateBatchBodyItem[]>,
     params?: UpdateBatchParams, options?: RequestInit): Promise<updateBatchResponse> => {
 
   const res = await fetch(getUpdateBatchUrl(params),
   {
     ...options,
-    method: 'POST'
-    ,
-    body: JSON.stringify(updateBatchBody)
+    method: 'POST',
+    headers: { 'Content-Type': 'application/ld+json', ...options?.headers },
+    body: JSON.stringify(updateBatchBodyItem)
   }
 )
 
@@ -2283,13 +2229,8 @@ export const deleteBatch = async (deleteBatchBody?: string[],
 
 
 
-export type queryBatchResponse200ApplicationJson = {
-  data: (Entity & unknown)[]
-  status: 200
-}
-
-export type queryBatchResponse200ApplicationJsonLd = {
-  data: QueryBatch200TwoItem[]
+export type queryBatchResponse200ApplicationLdJson = {
+  data: QueryBatch200Item[]
   status: 200
 }
 
@@ -2303,7 +2244,7 @@ export type queryBatchResponse400 = {
   status: 400
 }
 
-export type queryBatchResponseSuccess = (queryBatchResponse200ApplicationJson | queryBatchResponse200ApplicationJsonLd | queryBatchResponse200ApplicationGeoJson) & {
+export type queryBatchResponseSuccess = (queryBatchResponse200ApplicationLdJson | queryBatchResponse200ApplicationGeoJson) & {
   headers: Headers;
 };
 export type queryBatchResponseError = (queryBatchResponse400) & {
@@ -2334,14 +2275,14 @@ export const getQueryBatchUrl = (params?: QueryBatchParams,) => {
  * @summary Query entities based on POST
 
  */
-export const queryBatch = async (queryBatchBody?: Query | QueryBatchBodyTwo,
+export const queryBatch = async (queryBatchBody?: QueryBatchBody,
     params?: QueryBatchParams, options?: RequestInit): Promise<queryBatchResponse> => {
 
   const res = await fetch(getQueryBatchUrl(params),
   {
     ...options,
-    method: 'POST'
-    ,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/ld+json', ...options?.headers },
     body: JSON.stringify(queryBatchBody)
   }
 )
@@ -2403,15 +2344,15 @@ export const getMergeBatchUrl = (params?: MergeBatchParams,) => {
  * @summary Batch Entity Merge
 
  */
-export const mergeBatch = async (mergeBatchBody?: NonReadonly<(Entity & unknown)[] | MergeBatchBodyTwoItem[]>,
+export const mergeBatch = async (mergeBatchBodyItem?: NonReadonly<MergeBatchBodyItem[]>,
     params?: MergeBatchParams, options?: RequestInit): Promise<mergeBatchResponse> => {
 
   const res = await fetch(getMergeBatchUrl(params),
   {
     ...options,
-    method: 'POST'
-    ,
-    body: JSON.stringify(mergeBatchBody)
+    method: 'POST',
+    headers: { 'Content-Type': 'application/ld+json', ...options?.headers },
+    body: JSON.stringify(mergeBatchBodyItem)
   }
 )
 
@@ -2483,7 +2424,7 @@ export const upsertTemporal = async (entityTemporalBody?: EntityTemporalBody,
   {
     ...options,
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    headers: { 'Content-Type': 'application/ld+json', ...options?.headers },
     body: JSON.stringify(entityTemporalBody)
   }
 )
@@ -2497,13 +2438,8 @@ export const upsertTemporal = async (entityTemporalBody?: EntityTemporalBody,
 
 
 
-export type queryTemporalResponse200ApplicationJson = {
-  data: (EntityTemporal & unknown)[]
-  status: 200
-}
-
-export type queryTemporalResponse200ApplicationJsonLd = {
-  data: QueryTemporal200TwoItem[]
+export type queryTemporalResponse200 = {
+  data: QueryTemporal200Item[]
   status: 200
 }
 
@@ -2512,7 +2448,7 @@ export type queryTemporalResponse400 = {
   status: 400
 }
 
-export type queryTemporalResponseSuccess = (queryTemporalResponse200ApplicationJson | queryTemporalResponse200ApplicationJsonLd) & {
+export type queryTemporalResponseSuccess = (queryTemporalResponse200) & {
   headers: Headers;
 };
 export type queryTemporalResponseError = (queryTemporalResponse400) & {
@@ -2574,13 +2510,8 @@ export const queryTemporal = async (params?: QueryTemporalParams, options?: Requ
 
 
 
-export type retrieveTemporalResponse200ApplicationJson = {
-  data: EntityTemporal & unknown
-  status: 200
-}
-
-export type retrieveTemporalResponse200ApplicationJsonLd = {
-  data: RetrieveTemporal200Two
+export type retrieveTemporalResponse200 = {
+  data: RetrieveTemporal200
   status: 200
 }
 
@@ -2594,7 +2525,7 @@ export type retrieveTemporalResponse404 = {
   status: 404
 }
 
-export type retrieveTemporalResponseSuccess = (retrieveTemporalResponse200ApplicationJson | retrieveTemporalResponse200ApplicationJsonLd) & {
+export type retrieveTemporalResponseSuccess = (retrieveTemporalResponse200) & {
   headers: Headers;
 };
 export type retrieveTemporalResponseError = (retrieveTemporalResponse400 | retrieveTemporalResponse404) & {
@@ -2778,7 +2709,7 @@ export const appendAttrsTemporal = async (entityId: string,
   {
     ...options,
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    headers: { 'Content-Type': 'application/ld+json', ...options?.headers },
     body: JSON.stringify(entityTemporalFragmentBody)
   }
 )
@@ -2934,7 +2865,7 @@ export const updateAttrsTemporal = async (entityId: string,
   {
     ...options,
     method: 'PATCH',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    headers: { 'Content-Type': 'application/ld+json', ...options?.headers },
     body: JSON.stringify(entityTemporalFragmentBody)
   }
 )
@@ -3024,13 +2955,8 @@ export const deleteAttrInstanceTemporal = async (entityId: string,
 
 
 
-export type temporalQueryBatchResponse200ApplicationJson = {
-  data: (EntityTemporal & unknown)[]
-  status: 200
-}
-
-export type temporalQueryBatchResponse200ApplicationJsonLd = {
-  data: TemporalQueryBatch200TwoItem[]
+export type temporalQueryBatchResponse200 = {
+  data: TemporalQueryBatch200Item[]
   status: 200
 }
 
@@ -3039,7 +2965,7 @@ export type temporalQueryBatchResponse400 = {
   status: 400
 }
 
-export type temporalQueryBatchResponseSuccess = (temporalQueryBatchResponse200ApplicationJson | temporalQueryBatchResponse200ApplicationJsonLd) & {
+export type temporalQueryBatchResponseSuccess = (temporalQueryBatchResponse200) & {
   headers: Headers;
 };
 export type temporalQueryBatchResponseError = (temporalQueryBatchResponse400) & {
@@ -3078,7 +3004,7 @@ export const temporalQueryBatch = async (queryTemporalBody?: QueryTemporalBody,
   {
     ...options,
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    headers: { 'Content-Type': 'application/ld+json', ...options?.headers },
     body: JSON.stringify(queryTemporalBody)
   }
 )
@@ -3092,13 +3018,8 @@ export const temporalQueryBatch = async (queryTemporalBody?: QueryTemporalBody,
 
 
 
-export type retrieveEntityTypesResponse200ApplicationJson = {
-  data: EntityTypeList | EntityType[]
-  status: 200
-}
-
-export type retrieveEntityTypesResponse200ApplicationJsonLd = {
-  data: RetrieveEntityTypes200Two
+export type retrieveEntityTypesResponse200 = {
+  data: RetrieveEntityTypes200
   status: 200
 }
 
@@ -3107,7 +3028,7 @@ export type retrieveEntityTypesResponse400 = {
   status: 400
 }
 
-export type retrieveEntityTypesResponseSuccess = (retrieveEntityTypesResponse200ApplicationJson | retrieveEntityTypesResponse200ApplicationJsonLd) & {
+export type retrieveEntityTypesResponseSuccess = (retrieveEntityTypesResponse200) & {
   headers: Headers;
 };
 export type retrieveEntityTypesResponseError = (retrieveEntityTypesResponse400) & {
@@ -3164,13 +3085,8 @@ export const retrieveEntityTypes = async (params?: RetrieveEntityTypesParams, op
 
 
 
-export type retrieveEntityTypeInfoResponse200ApplicationJson = {
-  data: EntityTypeInfo
-  status: 200
-}
-
-export type retrieveEntityTypeInfoResponse200ApplicationJsonLd = {
-  data: RetrieveEntityTypeInfo200Two
+export type retrieveEntityTypeInfoResponse200 = {
+  data: RetrieveEntityTypeInfo200
   status: 200
 }
 
@@ -3184,7 +3100,7 @@ export type retrieveEntityTypeInfoResponse404 = {
   status: 404
 }
 
-export type retrieveEntityTypeInfoResponseSuccess = (retrieveEntityTypeInfoResponse200ApplicationJson | retrieveEntityTypeInfoResponse200ApplicationJsonLd) & {
+export type retrieveEntityTypeInfoResponseSuccess = (retrieveEntityTypeInfoResponse200) & {
   headers: Headers;
 };
 export type retrieveEntityTypeInfoResponseError = (retrieveEntityTypeInfoResponse400 | retrieveEntityTypeInfoResponse404) & {
@@ -3242,13 +3158,8 @@ export const retrieveEntityTypeInfo = async (type: string,
 
 
 
-export type retrieveAttrTypesResponse200ApplicationJson = {
-  data: AttributeList | Attribute[]
-  status: 200
-}
-
-export type retrieveAttrTypesResponse200ApplicationJsonLd = {
-  data: RetrieveAttrTypes200Two
+export type retrieveAttrTypesResponse200 = {
+  data: RetrieveAttrTypes200
   status: 200
 }
 
@@ -3257,7 +3168,7 @@ export type retrieveAttrTypesResponse400 = {
   status: 400
 }
 
-export type retrieveAttrTypesResponseSuccess = (retrieveAttrTypesResponse200ApplicationJson | retrieveAttrTypesResponse200ApplicationJsonLd) & {
+export type retrieveAttrTypesResponseSuccess = (retrieveAttrTypesResponse200) & {
   headers: Headers;
 };
 export type retrieveAttrTypesResponseError = (retrieveAttrTypesResponse400) & {
@@ -3314,13 +3225,8 @@ export const retrieveAttrTypes = async (params?: RetrieveAttrTypesParams, option
 
 
 
-export type retrieveAttrTypeInfoResponse200ApplicationJson = {
-  data: Attribute
-  status: 200
-}
-
-export type retrieveAttrTypeInfoResponse200ApplicationJsonLd = {
-  data: RetrieveAttrTypeInfo200Two
+export type retrieveAttrTypeInfoResponse200 = {
+  data: RetrieveAttrTypeInfo200
   status: 200
 }
 
@@ -3334,7 +3240,7 @@ export type retrieveAttrTypeInfoResponse404 = {
   status: 404
 }
 
-export type retrieveAttrTypeInfoResponseSuccess = (retrieveAttrTypeInfoResponse200ApplicationJson | retrieveAttrTypeInfoResponse200ApplicationJsonLd) & {
+export type retrieveAttrTypeInfoResponseSuccess = (retrieveAttrTypeInfoResponse200) & {
   headers: Headers;
 };
 export type retrieveAttrTypeInfoResponseError = (retrieveAttrTypeInfoResponse400 | retrieveAttrTypeInfoResponse404) & {
@@ -3426,13 +3332,13 @@ export const getCreateContextUrl = () => {
  * @summary Add a user @context to the internal cache
 
  */
-export const createContext = async (createContextBody?: CreateContextBodyOne | CreateContextBodyTwo, options?: RequestInit): Promise<createContextResponse> => {
+export const createContext = async (createContextBody?: CreateContextBody, options?: RequestInit): Promise<createContextResponse> => {
 
   const res = await fetch(getCreateContextUrl(),
   {
     ...options,
-    method: 'POST'
-    ,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/ld+json', ...options?.headers },
     body: JSON.stringify(createContextBody)
   }
 )
@@ -3446,12 +3352,7 @@ export const createContext = async (createContextBody?: CreateContextBodyOne | C
 
 
 
-export type listContextsResponse200ApplicationJson = {
-  data: string[] | LdContextMetadata[]
-  status: 200
-}
-
-export type listContextsResponse200ApplicationJsonLd = {
+export type listContextsResponse200 = {
   data: string[] | LdContextMetadata[]
   status: 200
 }
@@ -3461,7 +3362,7 @@ export type listContextsResponse400 = {
   status: 400
 }
 
-export type listContextsResponseSuccess = (listContextsResponse200ApplicationJson | listContextsResponse200ApplicationJsonLd) & {
+export type listContextsResponseSuccess = (listContextsResponse200) & {
   headers: Headers;
 };
 export type listContextsResponseError = (listContextsResponse400) & {
@@ -3521,13 +3422,8 @@ export const listContexts = async (params?: ListContextsParams, options?: Reques
 
 
 
-export type retrieveContextResponse200ApplicationJson = {
-  data: RetrieveContext200One
-  status: 200
-}
-
-export type retrieveContextResponse200ApplicationJsonLd = {
-  data: RetrieveContext200Two
+export type retrieveContextResponse200 = {
+  data: RetrieveContext200
   status: 200
 }
 
@@ -3546,7 +3442,7 @@ export type retrieveContextResponse422 = {
   status: 422
 }
 
-export type retrieveContextResponseSuccess = (retrieveContextResponse200ApplicationJson | retrieveContextResponse200ApplicationJsonLd) & {
+export type retrieveContextResponseSuccess = (retrieveContextResponse200) & {
   headers: Headers;
 };
 export type retrieveContextResponseError = (retrieveContextResponse400 | retrieveContextResponse404 | retrieveContextResponse422) & {
@@ -3679,13 +3575,8 @@ export const deleteContext = async (contextId: string,
 
 
 
-export type retrieveEntityMapResponse200ApplicationJson = {
-  data: EntityMap & unknown
-  status: 200
-}
-
-export type retrieveEntityMapResponse200ApplicationJsonLd = {
-  data: RetrieveEntityMap200Two
+export type retrieveEntityMapResponse200 = {
+  data: RetrieveEntityMap200
   status: 200
 }
 
@@ -3699,7 +3590,7 @@ export type retrieveEntityMapResponse404 = {
   status: 404
 }
 
-export type retrieveEntityMapResponseSuccess = (retrieveEntityMapResponse200ApplicationJson | retrieveEntityMapResponse200ApplicationJsonLd) & {
+export type retrieveEntityMapResponseSuccess = (retrieveEntityMapResponse200) & {
   headers: Headers;
 };
 export type retrieveEntityMapResponseError = (retrieveEntityMapResponse400 | retrieveEntityMapResponse404) & {
@@ -3784,13 +3675,13 @@ export const getUpdateEntityMapUrl = (entityMapId: string,) => {
 
  */
 export const updateEntityMap = async (entityMapId: string,
-    updateEntityMapBody?: NonReadonly<EntityMap | UpdateEntityMapBodyTwo>, options?: RequestInit): Promise<updateEntityMapResponse> => {
+    updateEntityMapBody?: NonReadonly<UpdateEntityMapBody>, options?: RequestInit): Promise<updateEntityMapResponse> => {
 
   const res = await fetch(getUpdateEntityMapUrl(entityMapId),
   {
     ...options,
-    method: 'PATCH'
-    ,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/ld+json', ...options?.headers },
     body: JSON.stringify(updateEntityMapBody)
   }
 )
@@ -3863,13 +3754,8 @@ export const deleteEntityMap = async (entityMapId: string, options?: RequestInit
 
 
 
-export type retrieveCSIdentityInfoResponse200ApplicationJson = {
-  data: ContextSourceIdentity
-  status: 200
-}
-
-export type retrieveCSIdentityInfoResponse200ApplicationJsonLd = {
-  data: RetrieveCSIdentityInfo200Two
+export type retrieveCSIdentityInfoResponse200 = {
+  data: RetrieveCSIdentityInfo200
   status: 200
 }
 
@@ -3878,7 +3764,7 @@ export type retrieveCSIdentityInfoResponse501 = {
   status: 501
 }
 
-export type retrieveCSIdentityInfoResponseSuccess = (retrieveCSIdentityInfoResponse200ApplicationJson | retrieveCSIdentityInfoResponse200ApplicationJsonLd) & {
+export type retrieveCSIdentityInfoResponseSuccess = (retrieveCSIdentityInfoResponse200) & {
   headers: Headers;
 };
 export type retrieveCSIdentityInfoResponseError = (retrieveCSIdentityInfoResponse501) & {

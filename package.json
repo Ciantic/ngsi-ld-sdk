@@ -12,7 +12,7 @@
     "build": "tsc",
     "test": "vitest run",
     "test:watch": "vitest",
-    "generate:api": "test -f ngsi-ld-api.yaml || curl -sL https://forge.etsi.org/rep/cim/ngsi-ld-openapi/-/raw/v1.8.1/openapi-3.0.3/ngsi-ld-api.yaml -o ngsi-ld-api.yaml; orval",
+    "generate:api": "test -f ngsi-ld-api.yaml || curl -sL https://forge.etsi.org/rep/cim/ngsi-ld-openapi/-/raw/v1.8.1/openapi-3.0.3/ngsi-ld-api.yaml -o ngsi-ld-api.yaml; node scripts/preprocess-spec.ts; orval",
     "orion:up": "podman compose -f tests/docker-test-orion/compose.yaml up -d",
     "orion:down": "podman compose -f tests/docker-test-orion/compose.yaml down",
     "orion-temporal:up": "podman compose -f tests/docker-test-orion-with-temporal/compose.yaml up -d",
@@ -24,7 +24,8 @@
     "ts-morph": "^28.0.0",
     "tsx": "^4.19.0",
     "typescript": "^5.9.3",
-    "vitest": "^4.0.0"
+    "vitest": "^4.0.0",
+    "yaml": "^2.9.0"
   },
   "dependencies": {
     "zod": "^4.4.3"
