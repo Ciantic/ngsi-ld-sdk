@@ -1,5 +1,23 @@
 import { defineConfig } from "orval";
 import { Project, SourceFile, SyntaxKind } from "ts-morph";
+import { existsSync, readFileSync } from "node:fs";
+import { parseDocument } from "yaml";
+import { execSync } from "node:child_process";
+
+const SPEC_FILE = "./ngsi-ld-api.yaml";
+const SPEC_URL =
+  "https://forge.etsi.org/rep/cim/ngsi-ld-openapi/-/raw/v1.8.1/openapi-3.0.3/ngsi-ld-api.yaml";
+
+/**
+ * Download the NGSI-LD spec if it doesn't exist locally.
+ * Called synchronously at config load time.
+ */
+function ensureSpec(): void {
+  if (!existsSync(SPEC_FILE)) {
+    console.log(`Downloading ${SPEC_URL} → ${SPEC_FILE}`);
+    execSync(`curl -sL ${SPEC_URL} -o ${SPEC_FILE}`);
+  }
+}
 
 /**
  * The NGSI-LD OpenAPI spec defines the `options` query parameter twice in
@@ -66,20 +84,60 @@ function fixUnknowns(sourceFile: SourceFile): void {
   });
 }
 
-/**
- * The ETSI spec uses the non-standard "application/json+ld" MIME type,
- * but real NGSI-LD brokers (Orion-LD, Stellio) expect the standard
- * "application/ld+json". Fix Content-Type headers in generated code.
- */
-function fixLdJsonContentType(file: SourceFile): void {
-  file.forEachDescendant((node) => {
-    if (node.getText().includes("application/json+ld")) {
-      node.replaceWithText(
-        node.getText().replace(/'application\/json\+ld'/g, "'application/ld+json'"),
-      );
-    }
-  });
+// --- Preprocess the OpenAPI spec in-memory ---
+
+const contentTypeToRemove = "application/json";
+const contentTypeToKeep = "application/ld+json";
+
+/** Replace the non-standard ETSI MIME type with the IANA standard one. */
+function fixMime(text: string): string {
+  return text.replace(/application\/json\+ld/g, "application/ld+json");
 }
+
+/**
+ * If `obj` has both "application/json" and "application/ld+json" keys,
+ * delete the "application/json" entry.
+ */
+function removeJsonVariant(obj: Record<string, unknown>): boolean {
+  if (!Object.hasOwn(obj, contentTypeToRemove)) return false;
+  if (!Object.hasOwn(obj, contentTypeToKeep)) return false;
+  delete obj[contentTypeToRemove];
+  return true;
+}
+
+/**
+ * Recursively walk a JS value. For every object with both MIME-type
+ * keys, remove the plain JSON one.
+ */
+function walk(obj: unknown): number {
+  let removed = 0;
+  if (typeof obj !== "object" || obj === null) return 0;
+
+  if (!Array.isArray(obj)) {
+    const record = obj as Record<string, unknown>;
+    if (removeJsonVariant(record)) removed++;
+    for (const value of Object.values(record)) removed += walk(value);
+  } else {
+    for (const item of obj) removed += walk(item);
+  }
+
+  return removed;
+}
+
+/**
+ * Read the original NGSI-LD OpenAPI spec, normalize MIME types and
+ * strip plain-json variants, then return the parsed document object.
+ */
+function loadAndPreprocessSpec(): Record<string, unknown> {
+  ensureSpec();
+  const raw = fixMime(readFileSync(SPEC_FILE, "utf-8"));
+  const doc = parseDocument(raw);
+  const data = doc.toJSON() as Record<string, unknown>;
+  walk(data);
+  return data;
+}
+
+// --- End preprocess ---
 
 /**
  * Inline *200Item types (e.g. QueryEntity200Item) into their base type
@@ -206,7 +264,9 @@ function renameTwoTypes(schemasFile: SourceFile, apiFile: SourceFile): void {
 
 export default defineConfig({
   "ngsi-ld": {
-    input: "./ngsi-ld-api.ldonly.yaml",
+    input: {
+      target: loadAndPreprocessSpec(),
+    },
     output: {
       target: "./src/generated/api.ts",
       client: "fetch",
@@ -223,7 +283,6 @@ export default defineConfig({
 
         fixDuplicateOptions(schemasFile);
         fixUnknowns(schemasFile);
-        fixLdJsonContentType(apiFile);
         renameTwoTypes(schemasFile, apiFile);
         fix200ItemTypes(schemasFile, apiFile);
 
