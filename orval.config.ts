@@ -305,6 +305,7 @@ export default defineConfig({
       client: "fetch",
       mode: "split",
       clean: true,
+      formatter: "prettier",
       baseUrl: {
         runtime: "process.env.NGSILD_BROKER_URL",
       },
