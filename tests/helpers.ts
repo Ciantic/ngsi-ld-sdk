@@ -90,9 +90,7 @@ export function makeCSR(
 let subCounter = 0;
 
 /** Create a minimal subscription body. */
-export function makeSubscription(
-  overrides?: Partial<SubscriptionBody>,
-): SubscriptionBody {
+export function makeSubscription() {
   subCounter += 1;
   const suffix = `${Date.now()}-${subCounter}`;
   return {
@@ -103,11 +101,10 @@ export function makeSubscription(
     notification: {
       endpoint: {
         uri: "http://example.com/notification",
-        accept: "application/json",
+        accept: "application/json" as const,
       },
     },
-    ...overrides,
-  } as SubscriptionBody;
+  } as const satisfies SubscriptionBody;
 }
 
 // --- Cleanup helpers ---
