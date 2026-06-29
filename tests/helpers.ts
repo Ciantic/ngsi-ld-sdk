@@ -31,9 +31,7 @@ const NGSILD_CORE_CONTEXT = [
 let entityCounter = 0;
 
 /** Create a minimal test entity with a simple Property. */
-export function makeEntity(
-  overrides?: Partial<Entity>,
-): Entity & { id: string; type: string } {
+export function makeEntity() {
   entityCounter += 1;
   const suffix = `${Date.now()}-${entityCounter}`;
   const id = `urn:ngsi-ld:TestEntity:test-${suffix}`;
@@ -45,37 +43,32 @@ export function makeEntity(
       type: "Property" as const,
       value: 25 + entityCounter,
     },
-    ...overrides,
-  } as Entity & { id: string; type: string };
+  } as const satisfies Entity & { id: string; type: string };
 }
 
 /** Create a test entity with a GeoProperty. */
-export function makeEntityWithGeo(
-  overrides?: Partial<Entity>,
-): Entity & { id: string; type: string } {
-  const entity = makeEntity(overrides);
-  (entity as Record<string, unknown>)["location"] = {
-    type: "GeoProperty",
-    value: {
-      type: "Point",
-      coordinates: [24.93, 60.17],
+export function makeEntityWithGeo() {
+  return {
+    ...makeEntity(),
+    location: {
+      type: "GeoProperty" as const,
+      value: {
+        type: "Point",
+        coordinates: [24.93, 60.17],
+      },
     },
-  } satisfies GeoProperty;
-  return entity;
+  } as const satisfies Entity & { id: string; type: string };
 }
 
 let csrCounter = 0;
 
 /** Create a minimal Context Source Registration. */
-export function makeCSR(
-  overrides?: Partial<CsourceRegistration>,
-): CsourceRegistration & { id: string; type: string } {
+export function makeCSR() {
   csrCounter += 1;
   const suffix = `${Date.now()}-${csrCounter}`;
-  const id = `urn:ngsi-ld:CSR:test-${suffix}`;
   return {
     "@context": NGSILD_CORE_CONTEXT,
-    id,
+    id: `urn:ngsi-ld:CSR:test-${suffix}`,
     type: "ContextSourceRegistration" as const,
     information: [
       {
@@ -83,8 +76,7 @@ export function makeCSR(
       },
     ],
     endpoint: "http://example.com/ngsi-ld",
-    ...overrides,
-  } as CsourceRegistration & { id: string; type: string };
+  } as const satisfies CsourceRegistration & { id: string; type: string };
 }
 
 let subCounter = 0;

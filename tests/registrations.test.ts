@@ -69,14 +69,15 @@ describe("queryCSR", () => {
   });
 
   it("should support query parameters to filter CSRs", async () => {
-    const csr = makeCSR({
+    const csr = {
+      ...makeCSR(),
       information: [
         {
           entities: [{ type: "CSRQueryEntity" }],
           propertyNames: ["temperature"],
         },
       ],
-    });
+    };
     await createCSR(csr);
     trackId(csr);
 

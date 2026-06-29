@@ -261,7 +261,7 @@ describe("updateAttrs", () => {
 // ---------------------------------------------------------------------------
 describe("deleteAttrs", () => {
   it("should delete a single attribute from an entity", async () => {
-    const entity = makeEntity({ extraAttr: { type: "Property" as const, value: 1 } });
+    const entity = { ...makeEntity(), extraAttr: { type: "Property" as const, value: 1 } };
     await createEntity(entity);
     trackId(entity);
 

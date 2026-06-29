@@ -94,7 +94,7 @@ describe("upsertBatch", () => {
     trackId(entity.id!);
 
     // Second upsert with modified attribute
-    const updated = makeEntity({ id: entity.id });
+    const updated = { ...makeEntity(), id: entity.id };
     (updated as Record<string, unknown>)["temperature"] = {
       type: "Property",
       value: 99,
@@ -117,13 +117,13 @@ describe("updateBatch", () => {
     trackIds([entity1.id!, entity2.id!]);
 
     // Prepare updated versions
-    const update1 = makeEntity({ id: entity1.id });
+    const update1 = { ...makeEntity(), id: entity1.id };
     (update1 as Record<string, unknown>)["temperature"] = {
       type: "Property",
       value: 100,
     };
 
-    const update2 = makeEntity({ id: entity2.id });
+    const update2 = { ...makeEntity(), id: entity2.id };
     (update2 as Record<string, unknown>)["temperature"] = {
       type: "Property",
       value: 200,
