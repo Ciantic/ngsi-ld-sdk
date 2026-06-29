@@ -84,6 +84,23 @@ function fixUnknowns(sourceFile: SourceFile): void {
   });
 }
 
+/**
+ * Orval derives response type names from the operationId (e.g.
+ * `deleteEntity` → `deleteEntityResponse204`). Uppercase the first
+ * character so they follow PascalCase convention.
+ */
+function fixResponseTypeCasing(apiFile: SourceFile): void {
+  for (const typeAlias of [...apiFile.getTypeAliases()]) {
+    const name = typeAlias.getName();
+    // Only touch types that are lowercase-first and contain "Response"
+    if (name[0] !== name[0]?.toLowerCase()) continue;
+    if (!name.includes("Response")) continue;
+
+    const pascal = name[0]!.toUpperCase() + name.slice(1);
+    typeAlias.rename(pascal);
+  }
+}
+
 // --- Preprocess the OpenAPI spec in-memory ---
 
 const contentTypeToRemove = "application/json";
@@ -288,6 +305,7 @@ export default defineConfig({
         fixUnknowns(schemasFile);
         renameTwoTypes(schemasFile, apiFile);
         fix200ItemTypes(schemasFile, apiFile);
+        fixResponseTypeCasing(apiFile);
 
         // Inject a declare shim so the generated code can reference
         // process.env.NGSILD_BROKER_URL without requiring @types/node.

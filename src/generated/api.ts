@@ -124,39 +124,39 @@ type NonReadonly<T> = [T] extends [UnionToIntersection<T>] ? {
 } : DistributeReadOnlyOverUnions<T>;
 
 
-export type createEntityResponse201 = {
+export type CreateEntityResponse201 = {
   data: void
   status: 201
 }
 
-export type createEntityResponse207 = {
+export type CreateEntityResponse207 = {
   data: MultiStatusBatchOperationResultResponse
   status: 207
 }
 
-export type createEntityResponse400 = {
+export type CreateEntityResponse400 = {
   data: BadRequestResponse
   status: 400
 }
 
-export type createEntityResponse409 = {
+export type CreateEntityResponse409 = {
   data: ConflictResponse
   status: 409
 }
 
-export type createEntityResponse422 = {
+export type CreateEntityResponse422 = {
   data: UnprocessableResponse
   status: 422
 }
 
-export type createEntityResponseSuccess = (createEntityResponse201 | createEntityResponse207) & {
+export type CreateEntityResponseSuccess = (CreateEntityResponse201 | CreateEntityResponse207) & {
   headers: Headers;
 };
-export type createEntityResponseError = (createEntityResponse400 | createEntityResponse409 | createEntityResponse422) & {
+export type CreateEntityResponseError = (CreateEntityResponse400 | CreateEntityResponse409 | CreateEntityResponse422) & {
   headers: Headers;
 };
 
-export type createEntityResponse = (createEntityResponseSuccess | createEntityResponseError)
+export type CreateEntityResponse = (CreateEntityResponseSuccess | CreateEntityResponseError)
 
 export const getCreateEntityUrl = (params?: CreateEntityParams,) => {
   const normalizedParams = new URLSearchParams();
@@ -181,7 +181,7 @@ export const getCreateEntityUrl = (params?: CreateEntityParams,) => {
 
  */
 export const createEntity = async (createEntityBody?: NonReadonly<CreateEntityBody>,
-    params?: CreateEntityParams, options?: RequestInit): Promise<createEntityResponse> => {
+    params?: CreateEntityParams, options?: RequestInit): Promise<CreateEntityResponse> => {
 
   const res = await fetch(getCreateEntityUrl(params),
   {
@@ -195,40 +195,40 @@ export const createEntity = async (createEntityBody?: NonReadonly<CreateEntityBo
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: createEntityResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as createEntityResponse
+  const data: CreateEntityResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as CreateEntityResponse
 }
 
 
 
-export type queryEntityResponse200ApplicationLdJson = {
+export type QueryEntityResponse200ApplicationLdJson = {
   data: (Entity & JsonLdContext)[]
   status: 200
 }
 
-export type queryEntityResponse200ApplicationGeoJson = {
+export type QueryEntityResponse200ApplicationGeoJson = {
   data: FeatureCollection
   status: 200
 }
 
-export type queryEntityResponse400 = {
+export type QueryEntityResponse400 = {
   data: BadRequestResponse
   status: 400
 }
 
-export type queryEntityResponse501 = {
+export type QueryEntityResponse501 = {
   data: NotImplementedResponse
   status: 501
 }
 
-export type queryEntityResponseSuccess = (queryEntityResponse200ApplicationLdJson | queryEntityResponse200ApplicationGeoJson) & {
+export type QueryEntityResponseSuccess = (QueryEntityResponse200ApplicationLdJson | QueryEntityResponse200ApplicationGeoJson) & {
   headers: Headers;
 };
-export type queryEntityResponseError = (queryEntityResponse400 | queryEntityResponse501) & {
+export type QueryEntityResponseError = (QueryEntityResponse400 | QueryEntityResponse501) & {
   headers: Headers;
 };
 
-export type queryEntityResponse = (queryEntityResponseSuccess | queryEntityResponseError)
+export type QueryEntityResponse = (QueryEntityResponseSuccess | QueryEntityResponseError)
 
 export const getQueryEntityUrl = (params?: QueryEntityParams,) => {
   const normalizedParams = new URLSearchParams();
@@ -260,7 +260,7 @@ export const getQueryEntityUrl = (params?: QueryEntityParams,) => {
  * @summary Query entities
 
  */
-export const queryEntity = async (params?: QueryEntityParams, options?: RequestInit): Promise<queryEntityResponse> => {
+export const queryEntity = async (params?: QueryEntityParams, options?: RequestInit): Promise<QueryEntityResponse> => {
 
   const res = await fetch(getQueryEntityUrl(params),
   {
@@ -274,45 +274,45 @@ export const queryEntity = async (params?: QueryEntityParams, options?: RequestI
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: queryEntityResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as queryEntityResponse
+  const data: QueryEntityResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as QueryEntityResponse
 }
 
 
 
-export type retrieveEntityResponse200ApplicationLdJson = {
+export type RetrieveEntityResponse200ApplicationLdJson = {
   data: RetrieveEntity200
   status: 200
 }
 
-export type retrieveEntityResponse200ApplicationGeoJson = {
+export type RetrieveEntityResponse200ApplicationGeoJson = {
   data: Feature
   status: 200
 }
 
-export type retrieveEntityResponse400 = {
+export type RetrieveEntityResponse400 = {
   data: BadRequestResponse
   status: 400
 }
 
-export type retrieveEntityResponse404 = {
+export type RetrieveEntityResponse404 = {
   data: NotFoundResponse
   status: 404
 }
 
-export type retrieveEntityResponse501 = {
+export type RetrieveEntityResponse501 = {
   data: NotImplementedResponse
   status: 501
 }
 
-export type retrieveEntityResponseSuccess = (retrieveEntityResponse200ApplicationLdJson | retrieveEntityResponse200ApplicationGeoJson) & {
+export type RetrieveEntityResponseSuccess = (RetrieveEntityResponse200ApplicationLdJson | RetrieveEntityResponse200ApplicationGeoJson) & {
   headers: Headers;
 };
-export type retrieveEntityResponseError = (retrieveEntityResponse400 | retrieveEntityResponse404 | retrieveEntityResponse501) & {
+export type RetrieveEntityResponseError = (RetrieveEntityResponse400 | RetrieveEntityResponse404 | RetrieveEntityResponse501) & {
   headers: Headers;
 };
 
-export type retrieveEntityResponse = (retrieveEntityResponseSuccess | retrieveEntityResponseError)
+export type RetrieveEntityResponse = (RetrieveEntityResponseSuccess | RetrieveEntityResponseError)
 
 export const getRetrieveEntityUrl = (entityId: string,
     params?: RetrieveEntityParams,) => {
@@ -346,7 +346,7 @@ export const getRetrieveEntityUrl = (entityId: string,
 
  */
 export const retrieveEntity = async (entityId: string,
-    params?: RetrieveEntityParams, options?: RequestInit): Promise<retrieveEntityResponse> => {
+    params?: RetrieveEntityParams, options?: RequestInit): Promise<RetrieveEntityResponse> => {
 
   const res = await fetch(getRetrieveEntityUrl(entityId,params),
   {
@@ -360,40 +360,40 @@ export const retrieveEntity = async (entityId: string,
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: retrieveEntityResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as retrieveEntityResponse
+  const data: RetrieveEntityResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as RetrieveEntityResponse
 }
 
 
 
-export type deleteEntityResponse204 = {
+export type DeleteEntityResponse204 = {
   data: void
   status: 204
 }
 
-export type deleteEntityResponse207 = {
+export type DeleteEntityResponse207 = {
   data: MultiStatusBatchOperationResultResponse
   status: 207
 }
 
-export type deleteEntityResponse400 = {
+export type DeleteEntityResponse400 = {
   data: BadRequestResponse
   status: 400
 }
 
-export type deleteEntityResponse404 = {
+export type DeleteEntityResponse404 = {
   data: NotFoundResponse
   status: 404
 }
 
-export type deleteEntityResponseSuccess = (deleteEntityResponse204 | deleteEntityResponse207) & {
+export type DeleteEntityResponseSuccess = (DeleteEntityResponse204 | DeleteEntityResponse207) & {
   headers: Headers;
 };
-export type deleteEntityResponseError = (deleteEntityResponse400 | deleteEntityResponse404) & {
+export type DeleteEntityResponseError = (DeleteEntityResponse400 | DeleteEntityResponse404) & {
   headers: Headers;
 };
 
-export type deleteEntityResponse = (deleteEntityResponseSuccess | deleteEntityResponseError)
+export type DeleteEntityResponse = (DeleteEntityResponseSuccess | DeleteEntityResponseError)
 
 export const getDeleteEntityUrl = (entityId: string,
     params?: DeleteEntityParams,) => {
@@ -419,7 +419,7 @@ export const getDeleteEntityUrl = (entityId: string,
 
  */
 export const deleteEntity = async (entityId: string,
-    params?: DeleteEntityParams, options?: RequestInit): Promise<deleteEntityResponse> => {
+    params?: DeleteEntityParams, options?: RequestInit): Promise<DeleteEntityResponse> => {
 
   const res = await fetch(getDeleteEntityUrl(entityId,params),
   {
@@ -433,40 +433,40 @@ export const deleteEntity = async (entityId: string,
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: deleteEntityResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as deleteEntityResponse
+  const data: DeleteEntityResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as DeleteEntityResponse
 }
 
 
 
-export type mergeEntityResponse204 = {
+export type MergeEntityResponse204 = {
   data: void
   status: 204
 }
 
-export type mergeEntityResponse207 = {
+export type MergeEntityResponse207 = {
   data: MultiStatusBatchOperationResultResponse
   status: 207
 }
 
-export type mergeEntityResponse400 = {
+export type MergeEntityResponse400 = {
   data: BadRequestResponse
   status: 400
 }
 
-export type mergeEntityResponse404 = {
+export type MergeEntityResponse404 = {
   data: NotFoundResponse
   status: 404
 }
 
-export type mergeEntityResponseSuccess = (mergeEntityResponse204 | mergeEntityResponse207) & {
+export type MergeEntityResponseSuccess = (MergeEntityResponse204 | MergeEntityResponse207) & {
   headers: Headers;
 };
-export type mergeEntityResponseError = (mergeEntityResponse400 | mergeEntityResponse404) & {
+export type MergeEntityResponseError = (MergeEntityResponse400 | MergeEntityResponse404) & {
   headers: Headers;
 };
 
-export type mergeEntityResponse = (mergeEntityResponseSuccess | mergeEntityResponseError)
+export type MergeEntityResponse = (MergeEntityResponseSuccess | MergeEntityResponseError)
 
 export const getMergeEntityUrl = (entityId: string,
     params?: MergeEntityParams,) => {
@@ -495,7 +495,7 @@ export const getMergeEntityUrl = (entityId: string,
  */
 export const mergeEntity = async (entityId: string,
     mergeEntityBody?: NonReadonly<MergeEntityBody>,
-    params?: MergeEntityParams, options?: RequestInit): Promise<mergeEntityResponse> => {
+    params?: MergeEntityParams, options?: RequestInit): Promise<MergeEntityResponse> => {
 
   const res = await fetch(getMergeEntityUrl(entityId,params),
   {
@@ -509,40 +509,40 @@ export const mergeEntity = async (entityId: string,
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: mergeEntityResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as mergeEntityResponse
+  const data: MergeEntityResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as MergeEntityResponse
 }
 
 
 
-export type replaceEntityResponse204 = {
+export type ReplaceEntityResponse204 = {
   data: void
   status: 204
 }
 
-export type replaceEntityResponse207 = {
+export type ReplaceEntityResponse207 = {
   data: MultiStatusBatchOperationResultResponse
   status: 207
 }
 
-export type replaceEntityResponse400 = {
+export type ReplaceEntityResponse400 = {
   data: BadRequestResponse
   status: 400
 }
 
-export type replaceEntityResponse404 = {
+export type ReplaceEntityResponse404 = {
   data: NotFoundResponse
   status: 404
 }
 
-export type replaceEntityResponseSuccess = (replaceEntityResponse204 | replaceEntityResponse207) & {
+export type ReplaceEntityResponseSuccess = (ReplaceEntityResponse204 | ReplaceEntityResponse207) & {
   headers: Headers;
 };
-export type replaceEntityResponseError = (replaceEntityResponse400 | replaceEntityResponse404) & {
+export type ReplaceEntityResponseError = (ReplaceEntityResponse400 | ReplaceEntityResponse404) & {
   headers: Headers;
 };
 
-export type replaceEntityResponse = (replaceEntityResponseSuccess | replaceEntityResponseError)
+export type ReplaceEntityResponse = (ReplaceEntityResponseSuccess | ReplaceEntityResponseError)
 
 export const getReplaceEntityUrl = (entityId: string,
     params?: ReplaceEntityParams,) => {
@@ -570,7 +570,7 @@ export const getReplaceEntityUrl = (entityId: string,
  */
 export const replaceEntity = async (entityId: string,
     replaceEntityBody?: NonReadonly<ReplaceEntityBody>,
-    params?: ReplaceEntityParams, options?: RequestInit): Promise<replaceEntityResponse> => {
+    params?: ReplaceEntityParams, options?: RequestInit): Promise<ReplaceEntityResponse> => {
 
   const res = await fetch(getReplaceEntityUrl(entityId,params),
   {
@@ -584,40 +584,40 @@ export const replaceEntity = async (entityId: string,
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: replaceEntityResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as replaceEntityResponse
+  const data: ReplaceEntityResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as ReplaceEntityResponse
 }
 
 
 
-export type appendAttrsResponse204 = {
+export type AppendAttrsResponse204 = {
   data: void
   status: 204
 }
 
-export type appendAttrsResponse207 = {
+export type AppendAttrsResponse207 = {
   data: MultiStatusUpdateResultResponse
   status: 207
 }
 
-export type appendAttrsResponse400 = {
+export type AppendAttrsResponse400 = {
   data: BadRequestResponse
   status: 400
 }
 
-export type appendAttrsResponse404 = {
+export type AppendAttrsResponse404 = {
   data: NotFoundResponse
   status: 404
 }
 
-export type appendAttrsResponseSuccess = (appendAttrsResponse204 | appendAttrsResponse207) & {
+export type AppendAttrsResponseSuccess = (AppendAttrsResponse204 | AppendAttrsResponse207) & {
   headers: Headers;
 };
-export type appendAttrsResponseError = (appendAttrsResponse400 | appendAttrsResponse404) & {
+export type AppendAttrsResponseError = (AppendAttrsResponse400 | AppendAttrsResponse404) & {
   headers: Headers;
 };
 
-export type appendAttrsResponse = (appendAttrsResponseSuccess | appendAttrsResponseError)
+export type AppendAttrsResponse = (AppendAttrsResponseSuccess | AppendAttrsResponseError)
 
 export const getAppendAttrsUrl = (entityId: string,
     params?: AppendAttrsParams,) => {
@@ -645,7 +645,7 @@ export const getAppendAttrsUrl = (entityId: string,
  */
 export const appendAttrs = async (entityId: string,
     appendAttrsBody?: NonReadonly<AppendAttrsBody>,
-    params?: AppendAttrsParams, options?: RequestInit): Promise<appendAttrsResponse> => {
+    params?: AppendAttrsParams, options?: RequestInit): Promise<AppendAttrsResponse> => {
 
   const res = await fetch(getAppendAttrsUrl(entityId,params),
   {
@@ -659,40 +659,40 @@ export const appendAttrs = async (entityId: string,
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: appendAttrsResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as appendAttrsResponse
+  const data: AppendAttrsResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as AppendAttrsResponse
 }
 
 
 
-export type updateEntityResponse204 = {
+export type UpdateEntityResponse204 = {
   data: void
   status: 204
 }
 
-export type updateEntityResponse207 = {
+export type UpdateEntityResponse207 = {
   data: MultiStatusUpdateResultResponse
   status: 207
 }
 
-export type updateEntityResponse400 = {
+export type UpdateEntityResponse400 = {
   data: BadRequestResponse
   status: 400
 }
 
-export type updateEntityResponse404 = {
+export type UpdateEntityResponse404 = {
   data: NotFoundResponse
   status: 404
 }
 
-export type updateEntityResponseSuccess = (updateEntityResponse204 | updateEntityResponse207) & {
+export type UpdateEntityResponseSuccess = (UpdateEntityResponse204 | UpdateEntityResponse207) & {
   headers: Headers;
 };
-export type updateEntityResponseError = (updateEntityResponse400 | updateEntityResponse404) & {
+export type UpdateEntityResponseError = (UpdateEntityResponse400 | UpdateEntityResponse404) & {
   headers: Headers;
 };
 
-export type updateEntityResponse = (updateEntityResponseSuccess | updateEntityResponseError)
+export type UpdateEntityResponse = (UpdateEntityResponseSuccess | UpdateEntityResponseError)
 
 export const getUpdateEntityUrl = (entityId: string,
     params?: UpdateEntityParams,) => {
@@ -720,7 +720,7 @@ export const getUpdateEntityUrl = (entityId: string,
  */
 export const updateEntity = async (entityId: string,
     updateEntityBody?: NonReadonly<UpdateEntityBody>,
-    params?: UpdateEntityParams, options?: RequestInit): Promise<updateEntityResponse> => {
+    params?: UpdateEntityParams, options?: RequestInit): Promise<UpdateEntityResponse> => {
 
   const res = await fetch(getUpdateEntityUrl(entityId,params),
   {
@@ -734,40 +734,40 @@ export const updateEntity = async (entityId: string,
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: updateEntityResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as updateEntityResponse
+  const data: UpdateEntityResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as UpdateEntityResponse
 }
 
 
 
-export type updateAttrsResponse204 = {
+export type UpdateAttrsResponse204 = {
   data: void
   status: 204
 }
 
-export type updateAttrsResponse207 = {
+export type UpdateAttrsResponse207 = {
   data: MultiStatusUpdateResultResponse
   status: 207
 }
 
-export type updateAttrsResponse400 = {
+export type UpdateAttrsResponse400 = {
   data: BadRequestResponse
   status: 400
 }
 
-export type updateAttrsResponse404 = {
+export type UpdateAttrsResponse404 = {
   data: NotFoundResponse
   status: 404
 }
 
-export type updateAttrsResponseSuccess = (updateAttrsResponse204 | updateAttrsResponse207) & {
+export type UpdateAttrsResponseSuccess = (UpdateAttrsResponse204 | UpdateAttrsResponse207) & {
   headers: Headers;
 };
-export type updateAttrsResponseError = (updateAttrsResponse400 | updateAttrsResponse404) & {
+export type UpdateAttrsResponseError = (UpdateAttrsResponse400 | UpdateAttrsResponse404) & {
   headers: Headers;
 };
 
-export type updateAttrsResponse = (updateAttrsResponseSuccess | updateAttrsResponseError)
+export type UpdateAttrsResponse = (UpdateAttrsResponseSuccess | UpdateAttrsResponseError)
 
 export const getUpdateAttrsUrl = (entityId: string,
     attrId: string,
@@ -798,7 +798,7 @@ export const getUpdateAttrsUrl = (entityId: string,
 export const updateAttrs = async (entityId: string,
     attrId: string,
     attributeFragmentBody?: AttributeFragmentBody,
-    params?: UpdateAttrsParams, options?: RequestInit): Promise<updateAttrsResponse> => {
+    params?: UpdateAttrsParams, options?: RequestInit): Promise<UpdateAttrsResponse> => {
 
   const res = await fetch(getUpdateAttrsUrl(entityId,attrId,params),
   {
@@ -812,40 +812,40 @@ export const updateAttrs = async (entityId: string,
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: updateAttrsResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as updateAttrsResponse
+  const data: UpdateAttrsResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as UpdateAttrsResponse
 }
 
 
 
-export type deleteAttrsResponse204 = {
+export type DeleteAttrsResponse204 = {
   data: void
   status: 204
 }
 
-export type deleteAttrsResponse207 = {
+export type DeleteAttrsResponse207 = {
   data: MultiStatusUpdateResultResponse
   status: 207
 }
 
-export type deleteAttrsResponse400 = {
+export type DeleteAttrsResponse400 = {
   data: BadRequestResponse
   status: 400
 }
 
-export type deleteAttrsResponse404 = {
+export type DeleteAttrsResponse404 = {
   data: NotFoundResponse
   status: 404
 }
 
-export type deleteAttrsResponseSuccess = (deleteAttrsResponse204 | deleteAttrsResponse207) & {
+export type DeleteAttrsResponseSuccess = (DeleteAttrsResponse204 | DeleteAttrsResponse207) & {
   headers: Headers;
 };
-export type deleteAttrsResponseError = (deleteAttrsResponse400 | deleteAttrsResponse404) & {
+export type DeleteAttrsResponseError = (DeleteAttrsResponse400 | DeleteAttrsResponse404) & {
   headers: Headers;
 };
 
-export type deleteAttrsResponse = (deleteAttrsResponseSuccess | deleteAttrsResponseError)
+export type DeleteAttrsResponse = (DeleteAttrsResponseSuccess | DeleteAttrsResponseError)
 
 export const getDeleteAttrsUrl = (entityId: string,
     attrId: string,
@@ -882,7 +882,7 @@ export const getDeleteAttrsUrl = (entityId: string,
  */
 export const deleteAttrs = async (entityId: string,
     attrId: string,
-    params?: DeleteAttrsParams, options?: RequestInit): Promise<deleteAttrsResponse> => {
+    params?: DeleteAttrsParams, options?: RequestInit): Promise<DeleteAttrsResponse> => {
 
   const res = await fetch(getDeleteAttrsUrl(entityId,attrId,params),
   {
@@ -896,40 +896,40 @@ export const deleteAttrs = async (entityId: string,
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: deleteAttrsResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as deleteAttrsResponse
+  const data: DeleteAttrsResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as DeleteAttrsResponse
 }
 
 
 
-export type replaceAttrsResponse204 = {
+export type ReplaceAttrsResponse204 = {
   data: void
   status: 204
 }
 
-export type replaceAttrsResponse207 = {
+export type ReplaceAttrsResponse207 = {
   data: MultiStatusUpdateResultResponse
   status: 207
 }
 
-export type replaceAttrsResponse400 = {
+export type ReplaceAttrsResponse400 = {
   data: BadRequestResponse
   status: 400
 }
 
-export type replaceAttrsResponse404 = {
+export type ReplaceAttrsResponse404 = {
   data: NotFoundResponse
   status: 404
 }
 
-export type replaceAttrsResponseSuccess = (replaceAttrsResponse204 | replaceAttrsResponse207) & {
+export type ReplaceAttrsResponseSuccess = (ReplaceAttrsResponse204 | ReplaceAttrsResponse207) & {
   headers: Headers;
 };
-export type replaceAttrsResponseError = (replaceAttrsResponse400 | replaceAttrsResponse404) & {
+export type ReplaceAttrsResponseError = (ReplaceAttrsResponse400 | ReplaceAttrsResponse404) & {
   headers: Headers;
 };
 
-export type replaceAttrsResponse = (replaceAttrsResponseSuccess | replaceAttrsResponseError)
+export type ReplaceAttrsResponse = (ReplaceAttrsResponseSuccess | ReplaceAttrsResponseError)
 
 export const getReplaceAttrsUrl = (entityId: string,
     attrId: string,
@@ -959,7 +959,7 @@ export const getReplaceAttrsUrl = (entityId: string,
 export const replaceAttrs = async (entityId: string,
     attrId: string,
     attributeFragmentBody?: AttributeFragmentBody,
-    params?: ReplaceAttrsParams, options?: RequestInit): Promise<replaceAttrsResponse> => {
+    params?: ReplaceAttrsParams, options?: RequestInit): Promise<ReplaceAttrsResponse> => {
 
   const res = await fetch(getReplaceAttrsUrl(entityId,attrId,params),
   {
@@ -973,40 +973,40 @@ export const replaceAttrs = async (entityId: string,
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: replaceAttrsResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as replaceAttrsResponse
+  const data: ReplaceAttrsResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as ReplaceAttrsResponse
 }
 
 
 
-export type createCSRResponse201 = {
+export type CreateCSRResponse201 = {
   data: void
   status: 201
 }
 
-export type createCSRResponse400 = {
+export type CreateCSRResponse400 = {
   data: BadRequestResponse
   status: 400
 }
 
-export type createCSRResponse409 = {
+export type CreateCSRResponse409 = {
   data: ConflictResponse
   status: 409
 }
 
-export type createCSRResponse422 = {
+export type CreateCSRResponse422 = {
   data: UnprocessableResponse
   status: 422
 }
 
-export type createCSRResponseSuccess = (createCSRResponse201) & {
+export type CreateCSRResponseSuccess = (CreateCSRResponse201) & {
   headers: Headers;
 };
-export type createCSRResponseError = (createCSRResponse400 | createCSRResponse409 | createCSRResponse422) & {
+export type CreateCSRResponseError = (CreateCSRResponse400 | CreateCSRResponse409 | CreateCSRResponse422) & {
   headers: Headers;
 };
 
-export type createCSRResponse = (createCSRResponseSuccess | createCSRResponseError)
+export type CreateCSRResponse = (CreateCSRResponseSuccess | CreateCSRResponseError)
 
 export const getCreateCSRUrl = () => {
 
@@ -1023,7 +1023,7 @@ export const getCreateCSRUrl = () => {
  * @summary Csource registration creation
 
  */
-export const createCSR = async (createCSRBody?: NonReadonly<CreateCSRBody>, options?: RequestInit): Promise<createCSRResponse> => {
+export const createCSR = async (createCSRBody?: NonReadonly<CreateCSRBody>, options?: RequestInit): Promise<CreateCSRResponse> => {
 
   const res = await fetch(getCreateCSRUrl(),
   {
@@ -1037,30 +1037,30 @@ export const createCSR = async (createCSRBody?: NonReadonly<CreateCSRBody>, opti
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: createCSRResponse['data'] = body ? JSON.parse(body) : undefined
-  return { data, status: res.status, headers: res.headers } as createCSRResponse
+  const data: CreateCSRResponse['data'] = body ? JSON.parse(body) : undefined
+  return { data, status: res.status, headers: res.headers } as CreateCSRResponse
 }
 
 
 
-export type queryCSRResponse200 = {
+export type QueryCSRResponse200 = {
   data: (CsourceRegistration & JsonLdContext)[]
   status: 200
 }
 
-export type queryCSRResponse400 = {
+export type QueryCSRResponse400 = {
   data: BadRequestResponse
   status: 400
 }
 
-export type queryCSRResponseSuccess = (queryCSRResponse200) & {
+export type QueryCSRResponseSuccess = (QueryCSRResponse200) & {
   headers: Headers;
 };
-export type queryCSRResponseError = (queryCSRResponse400) & {
+export type QueryCSRResponseError = (QueryCSRResponse400) & {
   headers: Headers;
 };
 
-export type queryCSRResponse = (queryCSRResponseSuccess | queryCSRResponseError)
+export type QueryCSRResponse = (QueryCSRResponseSuccess | QueryCSRResponseError)
 
 export const getQueryCSRUrl = (params?: QueryCSRParams,) => {
   const normalizedParams = new URLSearchParams();
@@ -1104,7 +1104,7 @@ export const getQueryCSRUrl = (params?: QueryCSRParams,) => {
  * @summary Discover Csource registrations
 
  */
-export const queryCSR = async (params?: QueryCSRParams, options?: RequestInit): Promise<queryCSRResponse> => {
+export const queryCSR = async (params?: QueryCSRParams, options?: RequestInit): Promise<QueryCSRResponse> => {
 
   const res = await fetch(getQueryCSRUrl(params),
   {
@@ -1118,35 +1118,35 @@ export const queryCSR = async (params?: QueryCSRParams, options?: RequestInit): 
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: queryCSRResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as queryCSRResponse
+  const data: QueryCSRResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as QueryCSRResponse
 }
 
 
 
-export type retrieveCSRResponse200 = {
+export type RetrieveCSRResponse200 = {
   data: RetrieveCSR200
   status: 200
 }
 
-export type retrieveCSRResponse400 = {
+export type RetrieveCSRResponse400 = {
   data: BadRequestResponse
   status: 400
 }
 
-export type retrieveCSRResponse404 = {
+export type RetrieveCSRResponse404 = {
   data: NotFoundResponse
   status: 404
 }
 
-export type retrieveCSRResponseSuccess = (retrieveCSRResponse200) & {
+export type RetrieveCSRResponseSuccess = (RetrieveCSRResponse200) & {
   headers: Headers;
 };
-export type retrieveCSRResponseError = (retrieveCSRResponse400 | retrieveCSRResponse404) & {
+export type RetrieveCSRResponseError = (RetrieveCSRResponse400 | RetrieveCSRResponse404) & {
   headers: Headers;
 };
 
-export type retrieveCSRResponse = (retrieveCSRResponseSuccess | retrieveCSRResponseError)
+export type RetrieveCSRResponse = (RetrieveCSRResponseSuccess | RetrieveCSRResponseError)
 
 export const getRetrieveCSRUrl = (registrationId: string,
     params?: RetrieveCSRParams,) => {
@@ -1172,7 +1172,7 @@ export const getRetrieveCSRUrl = (registrationId: string,
 
  */
 export const retrieveCSR = async (registrationId: string,
-    params?: RetrieveCSRParams, options?: RequestInit): Promise<retrieveCSRResponse> => {
+    params?: RetrieveCSRParams, options?: RequestInit): Promise<RetrieveCSRResponse> => {
 
   const res = await fetch(getRetrieveCSRUrl(registrationId,params),
   {
@@ -1186,35 +1186,35 @@ export const retrieveCSR = async (registrationId: string,
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: retrieveCSRResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as retrieveCSRResponse
+  const data: RetrieveCSRResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as RetrieveCSRResponse
 }
 
 
 
-export type updateCSRResponse204 = {
+export type UpdateCSRResponse204 = {
   data: void
   status: 204
 }
 
-export type updateCSRResponse400 = {
+export type UpdateCSRResponse400 = {
   data: BadRequestResponse
   status: 400
 }
 
-export type updateCSRResponse404 = {
+export type UpdateCSRResponse404 = {
   data: NotFoundResponse
   status: 404
 }
 
-export type updateCSRResponseSuccess = (updateCSRResponse204) & {
+export type UpdateCSRResponseSuccess = (UpdateCSRResponse204) & {
   headers: Headers;
 };
-export type updateCSRResponseError = (updateCSRResponse400 | updateCSRResponse404) & {
+export type UpdateCSRResponseError = (UpdateCSRResponse400 | UpdateCSRResponse404) & {
   headers: Headers;
 };
 
-export type updateCSRResponse = (updateCSRResponseSuccess | updateCSRResponseError)
+export type UpdateCSRResponse = (UpdateCSRResponseSuccess | UpdateCSRResponseError)
 
 export const getUpdateCSRUrl = (registrationId: string,) => {
 
@@ -1232,7 +1232,7 @@ export const getUpdateCSRUrl = (registrationId: string,) => {
 
  */
 export const updateCSR = async (registrationId: string,
-    updateCSRBody?: NonReadonly<UpdateCSRBody>, options?: RequestInit): Promise<updateCSRResponse> => {
+    updateCSRBody?: NonReadonly<UpdateCSRBody>, options?: RequestInit): Promise<UpdateCSRResponse> => {
 
   const res = await fetch(getUpdateCSRUrl(registrationId),
   {
@@ -1246,35 +1246,35 @@ export const updateCSR = async (registrationId: string,
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: updateCSRResponse['data'] = body ? JSON.parse(body) : undefined
-  return { data, status: res.status, headers: res.headers } as updateCSRResponse
+  const data: UpdateCSRResponse['data'] = body ? JSON.parse(body) : undefined
+  return { data, status: res.status, headers: res.headers } as UpdateCSRResponse
 }
 
 
 
-export type deleteCSRResponse204 = {
+export type DeleteCSRResponse204 = {
   data: void
   status: 204
 }
 
-export type deleteCSRResponse400 = {
+export type DeleteCSRResponse400 = {
   data: BadRequestResponse
   status: 400
 }
 
-export type deleteCSRResponse404 = {
+export type DeleteCSRResponse404 = {
   data: NotFoundResponse
   status: 404
 }
 
-export type deleteCSRResponseSuccess = (deleteCSRResponse204) & {
+export type DeleteCSRResponseSuccess = (DeleteCSRResponse204) & {
   headers: Headers;
 };
-export type deleteCSRResponseError = (deleteCSRResponse400 | deleteCSRResponse404) & {
+export type DeleteCSRResponseError = (DeleteCSRResponse400 | DeleteCSRResponse404) & {
   headers: Headers;
 };
 
-export type deleteCSRResponse = (deleteCSRResponseSuccess | deleteCSRResponseError)
+export type DeleteCSRResponse = (DeleteCSRResponseSuccess | DeleteCSRResponseError)
 
 export const getDeleteCSRUrl = (registrationId: string,) => {
 
@@ -1291,7 +1291,7 @@ export const getDeleteCSRUrl = (registrationId: string,) => {
  * @summary Csource registration deletion by id
 
  */
-export const deleteCSR = async (registrationId: string, options?: RequestInit): Promise<deleteCSRResponse> => {
+export const deleteCSR = async (registrationId: string, options?: RequestInit): Promise<DeleteCSRResponse> => {
 
   const res = await fetch(getDeleteCSRUrl(registrationId),
   {
@@ -1305,35 +1305,35 @@ export const deleteCSR = async (registrationId: string, options?: RequestInit): 
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: deleteCSRResponse['data'] = body ? JSON.parse(body) : undefined
-  return { data, status: res.status, headers: res.headers } as deleteCSRResponse
+  const data: DeleteCSRResponse['data'] = body ? JSON.parse(body) : undefined
+  return { data, status: res.status, headers: res.headers } as DeleteCSRResponse
 }
 
 
 
-export type createSubscriptionResponse201 = {
+export type CreateSubscriptionResponse201 = {
   data: void
   status: 201
 }
 
-export type createSubscriptionResponse400 = {
+export type CreateSubscriptionResponse400 = {
   data: BadRequestResponse
   status: 400
 }
 
-export type createSubscriptionResponse409 = {
+export type CreateSubscriptionResponse409 = {
   data: ConflictResponse
   status: 409
 }
 
-export type createSubscriptionResponseSuccess = (createSubscriptionResponse201) & {
+export type CreateSubscriptionResponseSuccess = (CreateSubscriptionResponse201) & {
   headers: Headers;
 };
-export type createSubscriptionResponseError = (createSubscriptionResponse400 | createSubscriptionResponse409) & {
+export type CreateSubscriptionResponseError = (CreateSubscriptionResponse400 | CreateSubscriptionResponse409) & {
   headers: Headers;
 };
 
-export type createSubscriptionResponse = (createSubscriptionResponseSuccess | createSubscriptionResponseError)
+export type CreateSubscriptionResponse = (CreateSubscriptionResponseSuccess | CreateSubscriptionResponseError)
 
 export const getCreateSubscriptionUrl = (params?: CreateSubscriptionParams,) => {
   const normalizedParams = new URLSearchParams();
@@ -1358,7 +1358,7 @@ export const getCreateSubscriptionUrl = (params?: CreateSubscriptionParams,) => 
 
  */
 export const createSubscription = async (subscriptionBody?: SubscriptionBody,
-    params?: CreateSubscriptionParams, options?: RequestInit): Promise<createSubscriptionResponse> => {
+    params?: CreateSubscriptionParams, options?: RequestInit): Promise<CreateSubscriptionResponse> => {
 
   const res = await fetch(getCreateSubscriptionUrl(params),
   {
@@ -1372,30 +1372,30 @@ export const createSubscription = async (subscriptionBody?: SubscriptionBody,
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: createSubscriptionResponse['data'] = body ? JSON.parse(body) : undefined
-  return { data, status: res.status, headers: res.headers } as createSubscriptionResponse
+  const data: CreateSubscriptionResponse['data'] = body ? JSON.parse(body) : undefined
+  return { data, status: res.status, headers: res.headers } as CreateSubscriptionResponse
 }
 
 
 
-export type querySubscriptionResponse200 = {
+export type QuerySubscriptionResponse200 = {
   data: (Subscription & JsonLdContext)[]
   status: 200
 }
 
-export type querySubscriptionResponse400 = {
+export type QuerySubscriptionResponse400 = {
   data: BadRequestResponse
   status: 400
 }
 
-export type querySubscriptionResponseSuccess = (querySubscriptionResponse200) & {
+export type QuerySubscriptionResponseSuccess = (QuerySubscriptionResponse200) & {
   headers: Headers;
 };
-export type querySubscriptionResponseError = (querySubscriptionResponse400) & {
+export type QuerySubscriptionResponseError = (QuerySubscriptionResponse400) & {
   headers: Headers;
 };
 
-export type querySubscriptionResponse = (querySubscriptionResponseSuccess | querySubscriptionResponseError)
+export type QuerySubscriptionResponse = (QuerySubscriptionResponseSuccess | QuerySubscriptionResponseError)
 
 export const getQuerySubscriptionUrl = (params?: QuerySubscriptionParams,) => {
   const normalizedParams = new URLSearchParams();
@@ -1419,7 +1419,7 @@ export const getQuerySubscriptionUrl = (params?: QuerySubscriptionParams,) => {
  * @summary Retrieve list of Subscriptions
 
  */
-export const querySubscription = async (params?: QuerySubscriptionParams, options?: RequestInit): Promise<querySubscriptionResponse> => {
+export const querySubscription = async (params?: QuerySubscriptionParams, options?: RequestInit): Promise<QuerySubscriptionResponse> => {
 
   const res = await fetch(getQuerySubscriptionUrl(params),
   {
@@ -1433,35 +1433,35 @@ export const querySubscription = async (params?: QuerySubscriptionParams, option
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: querySubscriptionResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as querySubscriptionResponse
+  const data: QuerySubscriptionResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as QuerySubscriptionResponse
 }
 
 
 
-export type retrieveSubscriptionResponse200 = {
+export type RetrieveSubscriptionResponse200 = {
   data: RetrieveSubscription200
   status: 200
 }
 
-export type retrieveSubscriptionResponse400 = {
+export type RetrieveSubscriptionResponse400 = {
   data: BadRequestResponse
   status: 400
 }
 
-export type retrieveSubscriptionResponse404 = {
+export type RetrieveSubscriptionResponse404 = {
   data: NotFoundResponse
   status: 404
 }
 
-export type retrieveSubscriptionResponseSuccess = (retrieveSubscriptionResponse200) & {
+export type RetrieveSubscriptionResponseSuccess = (RetrieveSubscriptionResponse200) & {
   headers: Headers;
 };
-export type retrieveSubscriptionResponseError = (retrieveSubscriptionResponse400 | retrieveSubscriptionResponse404) & {
+export type RetrieveSubscriptionResponseError = (RetrieveSubscriptionResponse400 | RetrieveSubscriptionResponse404) & {
   headers: Headers;
 };
 
-export type retrieveSubscriptionResponse = (retrieveSubscriptionResponseSuccess | retrieveSubscriptionResponseError)
+export type RetrieveSubscriptionResponse = (RetrieveSubscriptionResponseSuccess | RetrieveSubscriptionResponseError)
 
 export const getRetrieveSubscriptionUrl = (subscriptionId: string,
     params?: RetrieveSubscriptionParams,) => {
@@ -1487,7 +1487,7 @@ export const getRetrieveSubscriptionUrl = (subscriptionId: string,
 
  */
 export const retrieveSubscription = async (subscriptionId: string,
-    params?: RetrieveSubscriptionParams, options?: RequestInit): Promise<retrieveSubscriptionResponse> => {
+    params?: RetrieveSubscriptionParams, options?: RequestInit): Promise<RetrieveSubscriptionResponse> => {
 
   const res = await fetch(getRetrieveSubscriptionUrl(subscriptionId,params),
   {
@@ -1501,35 +1501,35 @@ export const retrieveSubscription = async (subscriptionId: string,
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: retrieveSubscriptionResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as retrieveSubscriptionResponse
+  const data: RetrieveSubscriptionResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as RetrieveSubscriptionResponse
 }
 
 
 
-export type updateSubscriptionResponse204 = {
+export type UpdateSubscriptionResponse204 = {
   data: void
   status: 204
 }
 
-export type updateSubscriptionResponse400 = {
+export type UpdateSubscriptionResponse400 = {
   data: BadRequestResponse
   status: 400
 }
 
-export type updateSubscriptionResponse404 = {
+export type UpdateSubscriptionResponse404 = {
   data: NotFoundResponse
   status: 404
 }
 
-export type updateSubscriptionResponseSuccess = (updateSubscriptionResponse204) & {
+export type UpdateSubscriptionResponseSuccess = (UpdateSubscriptionResponse204) & {
   headers: Headers;
 };
-export type updateSubscriptionResponseError = (updateSubscriptionResponse400 | updateSubscriptionResponse404) & {
+export type UpdateSubscriptionResponseError = (UpdateSubscriptionResponse400 | UpdateSubscriptionResponse404) & {
   headers: Headers;
 };
 
-export type updateSubscriptionResponse = (updateSubscriptionResponseSuccess | updateSubscriptionResponseError)
+export type UpdateSubscriptionResponse = (UpdateSubscriptionResponseSuccess | UpdateSubscriptionResponseError)
 
 export const getUpdateSubscriptionUrl = (subscriptionId: string,
     params?: UpdateSubscriptionParams,) => {
@@ -1556,7 +1556,7 @@ export const getUpdateSubscriptionUrl = (subscriptionId: string,
  */
 export const updateSubscription = async (subscriptionId: string,
     subscriptionFragmentBody?: SubscriptionFragmentBody,
-    params?: UpdateSubscriptionParams, options?: RequestInit): Promise<updateSubscriptionResponse> => {
+    params?: UpdateSubscriptionParams, options?: RequestInit): Promise<UpdateSubscriptionResponse> => {
 
   const res = await fetch(getUpdateSubscriptionUrl(subscriptionId,params),
   {
@@ -1570,35 +1570,35 @@ export const updateSubscription = async (subscriptionId: string,
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: updateSubscriptionResponse['data'] = body ? JSON.parse(body) : undefined
-  return { data, status: res.status, headers: res.headers } as updateSubscriptionResponse
+  const data: UpdateSubscriptionResponse['data'] = body ? JSON.parse(body) : undefined
+  return { data, status: res.status, headers: res.headers } as UpdateSubscriptionResponse
 }
 
 
 
-export type deleteSubscriptionResponse204 = {
+export type DeleteSubscriptionResponse204 = {
   data: void
   status: 204
 }
 
-export type deleteSubscriptionResponse400 = {
+export type DeleteSubscriptionResponse400 = {
   data: BadRequestResponse
   status: 400
 }
 
-export type deleteSubscriptionResponse404 = {
+export type DeleteSubscriptionResponse404 = {
   data: NotFoundResponse
   status: 404
 }
 
-export type deleteSubscriptionResponseSuccess = (deleteSubscriptionResponse204) & {
+export type DeleteSubscriptionResponseSuccess = (DeleteSubscriptionResponse204) & {
   headers: Headers;
 };
-export type deleteSubscriptionResponseError = (deleteSubscriptionResponse400 | deleteSubscriptionResponse404) & {
+export type DeleteSubscriptionResponseError = (DeleteSubscriptionResponse400 | DeleteSubscriptionResponse404) & {
   headers: Headers;
 };
 
-export type deleteSubscriptionResponse = (deleteSubscriptionResponseSuccess | deleteSubscriptionResponseError)
+export type DeleteSubscriptionResponse = (DeleteSubscriptionResponseSuccess | DeleteSubscriptionResponseError)
 
 export const getDeleteSubscriptionUrl = (subscriptionId: string,
     params?: DeleteSubscriptionParams,) => {
@@ -1624,7 +1624,7 @@ export const getDeleteSubscriptionUrl = (subscriptionId: string,
 
  */
 export const deleteSubscription = async (subscriptionId: string,
-    params?: DeleteSubscriptionParams, options?: RequestInit): Promise<deleteSubscriptionResponse> => {
+    params?: DeleteSubscriptionParams, options?: RequestInit): Promise<DeleteSubscriptionResponse> => {
 
   const res = await fetch(getDeleteSubscriptionUrl(subscriptionId,params),
   {
@@ -1638,35 +1638,35 @@ export const deleteSubscription = async (subscriptionId: string,
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: deleteSubscriptionResponse['data'] = body ? JSON.parse(body) : undefined
-  return { data, status: res.status, headers: res.headers } as deleteSubscriptionResponse
+  const data: DeleteSubscriptionResponse['data'] = body ? JSON.parse(body) : undefined
+  return { data, status: res.status, headers: res.headers } as DeleteSubscriptionResponse
 }
 
 
 
-export type createCSRSubscriptionResponse201 = {
+export type CreateCSRSubscriptionResponse201 = {
   data: void
   status: 201
 }
 
-export type createCSRSubscriptionResponse400 = {
+export type CreateCSRSubscriptionResponse400 = {
   data: BadRequestResponse
   status: 400
 }
 
-export type createCSRSubscriptionResponse409 = {
+export type CreateCSRSubscriptionResponse409 = {
   data: ConflictResponse
   status: 409
 }
 
-export type createCSRSubscriptionResponseSuccess = (createCSRSubscriptionResponse201) & {
+export type CreateCSRSubscriptionResponseSuccess = (CreateCSRSubscriptionResponse201) & {
   headers: Headers;
 };
-export type createCSRSubscriptionResponseError = (createCSRSubscriptionResponse400 | createCSRSubscriptionResponse409) & {
+export type CreateCSRSubscriptionResponseError = (CreateCSRSubscriptionResponse400 | CreateCSRSubscriptionResponse409) & {
   headers: Headers;
 };
 
-export type createCSRSubscriptionResponse = (createCSRSubscriptionResponseSuccess | createCSRSubscriptionResponseError)
+export type CreateCSRSubscriptionResponse = (CreateCSRSubscriptionResponseSuccess | CreateCSRSubscriptionResponseError)
 
 export const getCreateCSRSubscriptionUrl = () => {
 
@@ -1683,7 +1683,7 @@ export const getCreateCSRSubscriptionUrl = () => {
  * @summary Create subscription to Csource registration
 
  */
-export const createCSRSubscription = async (subscriptionBody?: SubscriptionBody, options?: RequestInit): Promise<createCSRSubscriptionResponse> => {
+export const createCSRSubscription = async (subscriptionBody?: SubscriptionBody, options?: RequestInit): Promise<CreateCSRSubscriptionResponse> => {
 
   const res = await fetch(getCreateCSRSubscriptionUrl(),
   {
@@ -1697,30 +1697,30 @@ export const createCSRSubscription = async (subscriptionBody?: SubscriptionBody,
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: createCSRSubscriptionResponse['data'] = body ? JSON.parse(body) : undefined
-  return { data, status: res.status, headers: res.headers } as createCSRSubscriptionResponse
+  const data: CreateCSRSubscriptionResponse['data'] = body ? JSON.parse(body) : undefined
+  return { data, status: res.status, headers: res.headers } as CreateCSRSubscriptionResponse
 }
 
 
 
-export type queryCSRSubscriptionResponse200 = {
+export type QueryCSRSubscriptionResponse200 = {
   data: (Subscription & JsonLdContext)[]
   status: 200
 }
 
-export type queryCSRSubscriptionResponse400 = {
+export type QueryCSRSubscriptionResponse400 = {
   data: BadRequestResponse
   status: 400
 }
 
-export type queryCSRSubscriptionResponseSuccess = (queryCSRSubscriptionResponse200) & {
+export type QueryCSRSubscriptionResponseSuccess = (QueryCSRSubscriptionResponse200) & {
   headers: Headers;
 };
-export type queryCSRSubscriptionResponseError = (queryCSRSubscriptionResponse400) & {
+export type QueryCSRSubscriptionResponseError = (QueryCSRSubscriptionResponse400) & {
   headers: Headers;
 };
 
-export type queryCSRSubscriptionResponse = (queryCSRSubscriptionResponseSuccess | queryCSRSubscriptionResponseError)
+export type QueryCSRSubscriptionResponse = (QueryCSRSubscriptionResponseSuccess | QueryCSRSubscriptionResponseError)
 
 export const getQueryCSRSubscriptionUrl = (params?: QueryCSRSubscriptionParams,) => {
   const normalizedParams = new URLSearchParams();
@@ -1744,7 +1744,7 @@ export const getQueryCSRSubscriptionUrl = (params?: QueryCSRSubscriptionParams,)
  * @summary Retrieval of list of subscriptions to Csource registrations
 
  */
-export const queryCSRSubscription = async (params?: QueryCSRSubscriptionParams, options?: RequestInit): Promise<queryCSRSubscriptionResponse> => {
+export const queryCSRSubscription = async (params?: QueryCSRSubscriptionParams, options?: RequestInit): Promise<QueryCSRSubscriptionResponse> => {
 
   const res = await fetch(getQueryCSRSubscriptionUrl(params),
   {
@@ -1758,35 +1758,35 @@ export const queryCSRSubscription = async (params?: QueryCSRSubscriptionParams, 
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: queryCSRSubscriptionResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as queryCSRSubscriptionResponse
+  const data: QueryCSRSubscriptionResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as QueryCSRSubscriptionResponse
 }
 
 
 
-export type retrieveCSRSubscriptionResponse200 = {
+export type RetrieveCSRSubscriptionResponse200 = {
   data: RetrieveCSRSubscription200
   status: 200
 }
 
-export type retrieveCSRSubscriptionResponse400 = {
+export type RetrieveCSRSubscriptionResponse400 = {
   data: BadRequestResponse
   status: 400
 }
 
-export type retrieveCSRSubscriptionResponse404 = {
+export type RetrieveCSRSubscriptionResponse404 = {
   data: NotFoundResponse
   status: 404
 }
 
-export type retrieveCSRSubscriptionResponseSuccess = (retrieveCSRSubscriptionResponse200) & {
+export type RetrieveCSRSubscriptionResponseSuccess = (RetrieveCSRSubscriptionResponse200) & {
   headers: Headers;
 };
-export type retrieveCSRSubscriptionResponseError = (retrieveCSRSubscriptionResponse400 | retrieveCSRSubscriptionResponse404) & {
+export type RetrieveCSRSubscriptionResponseError = (RetrieveCSRSubscriptionResponse400 | RetrieveCSRSubscriptionResponse404) & {
   headers: Headers;
 };
 
-export type retrieveCSRSubscriptionResponse = (retrieveCSRSubscriptionResponseSuccess | retrieveCSRSubscriptionResponseError)
+export type RetrieveCSRSubscriptionResponse = (RetrieveCSRSubscriptionResponseSuccess | RetrieveCSRSubscriptionResponseError)
 
 export const getRetrieveCSRSubscriptionUrl = (subscriptionId: string,
     params?: RetrieveCSRSubscriptionParams,) => {
@@ -1812,7 +1812,7 @@ export const getRetrieveCSRSubscriptionUrl = (subscriptionId: string,
 
  */
 export const retrieveCSRSubscription = async (subscriptionId: string,
-    params?: RetrieveCSRSubscriptionParams, options?: RequestInit): Promise<retrieveCSRSubscriptionResponse> => {
+    params?: RetrieveCSRSubscriptionParams, options?: RequestInit): Promise<RetrieveCSRSubscriptionResponse> => {
 
   const res = await fetch(getRetrieveCSRSubscriptionUrl(subscriptionId,params),
   {
@@ -1826,35 +1826,35 @@ export const retrieveCSRSubscription = async (subscriptionId: string,
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: retrieveCSRSubscriptionResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as retrieveCSRSubscriptionResponse
+  const data: RetrieveCSRSubscriptionResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as RetrieveCSRSubscriptionResponse
 }
 
 
 
-export type updateCSRSubscriptionResponse204 = {
+export type UpdateCSRSubscriptionResponse204 = {
   data: void
   status: 204
 }
 
-export type updateCSRSubscriptionResponse400 = {
+export type UpdateCSRSubscriptionResponse400 = {
   data: BadRequestResponse
   status: 400
 }
 
-export type updateCSRSubscriptionResponse404 = {
+export type UpdateCSRSubscriptionResponse404 = {
   data: NotFoundResponse
   status: 404
 }
 
-export type updateCSRSubscriptionResponseSuccess = (updateCSRSubscriptionResponse204) & {
+export type UpdateCSRSubscriptionResponseSuccess = (UpdateCSRSubscriptionResponse204) & {
   headers: Headers;
 };
-export type updateCSRSubscriptionResponseError = (updateCSRSubscriptionResponse400 | updateCSRSubscriptionResponse404) & {
+export type UpdateCSRSubscriptionResponseError = (UpdateCSRSubscriptionResponse400 | UpdateCSRSubscriptionResponse404) & {
   headers: Headers;
 };
 
-export type updateCSRSubscriptionResponse = (updateCSRSubscriptionResponseSuccess | updateCSRSubscriptionResponseError)
+export type UpdateCSRSubscriptionResponse = (UpdateCSRSubscriptionResponseSuccess | UpdateCSRSubscriptionResponseError)
 
 export const getUpdateCSRSubscriptionUrl = (subscriptionId: string,) => {
 
@@ -1872,7 +1872,7 @@ export const getUpdateCSRSubscriptionUrl = (subscriptionId: string,) => {
 
  */
 export const updateCSRSubscription = async (subscriptionId: string,
-    subscriptionFragmentBody?: SubscriptionFragmentBody, options?: RequestInit): Promise<updateCSRSubscriptionResponse> => {
+    subscriptionFragmentBody?: SubscriptionFragmentBody, options?: RequestInit): Promise<UpdateCSRSubscriptionResponse> => {
 
   const res = await fetch(getUpdateCSRSubscriptionUrl(subscriptionId),
   {
@@ -1886,35 +1886,35 @@ export const updateCSRSubscription = async (subscriptionId: string,
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: updateCSRSubscriptionResponse['data'] = body ? JSON.parse(body) : undefined
-  return { data, status: res.status, headers: res.headers } as updateCSRSubscriptionResponse
+  const data: UpdateCSRSubscriptionResponse['data'] = body ? JSON.parse(body) : undefined
+  return { data, status: res.status, headers: res.headers } as UpdateCSRSubscriptionResponse
 }
 
 
 
-export type deleteCSRSubscriptionResponse204 = {
+export type DeleteCSRSubscriptionResponse204 = {
   data: void
   status: 204
 }
 
-export type deleteCSRSubscriptionResponse400 = {
+export type DeleteCSRSubscriptionResponse400 = {
   data: BadRequestResponse
   status: 400
 }
 
-export type deleteCSRSubscriptionResponse404 = {
+export type DeleteCSRSubscriptionResponse404 = {
   data: NotFoundResponse
   status: 404
 }
 
-export type deleteCSRSubscriptionResponseSuccess = (deleteCSRSubscriptionResponse204) & {
+export type DeleteCSRSubscriptionResponseSuccess = (DeleteCSRSubscriptionResponse204) & {
   headers: Headers;
 };
-export type deleteCSRSubscriptionResponseError = (deleteCSRSubscriptionResponse400 | deleteCSRSubscriptionResponse404) & {
+export type DeleteCSRSubscriptionResponseError = (DeleteCSRSubscriptionResponse400 | DeleteCSRSubscriptionResponse404) & {
   headers: Headers;
 };
 
-export type deleteCSRSubscriptionResponse = (deleteCSRSubscriptionResponseSuccess | deleteCSRSubscriptionResponseError)
+export type DeleteCSRSubscriptionResponse = (DeleteCSRSubscriptionResponseSuccess | DeleteCSRSubscriptionResponseError)
 
 export const getDeleteCSRSubscriptionUrl = (subscriptionId: string,) => {
 
@@ -1931,7 +1931,7 @@ export const getDeleteCSRSubscriptionUrl = (subscriptionId: string,) => {
  * @summary Csource registration subscription deletion by id
 
  */
-export const deleteCSRSubscription = async (subscriptionId: string, options?: RequestInit): Promise<deleteCSRSubscriptionResponse> => {
+export const deleteCSRSubscription = async (subscriptionId: string, options?: RequestInit): Promise<DeleteCSRSubscriptionResponse> => {
 
   const res = await fetch(getDeleteCSRSubscriptionUrl(subscriptionId),
   {
@@ -1945,35 +1945,35 @@ export const deleteCSRSubscription = async (subscriptionId: string, options?: Re
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: deleteCSRSubscriptionResponse['data'] = body ? JSON.parse(body) : undefined
-  return { data, status: res.status, headers: res.headers } as deleteCSRSubscriptionResponse
+  const data: DeleteCSRSubscriptionResponse['data'] = body ? JSON.parse(body) : undefined
+  return { data, status: res.status, headers: res.headers } as DeleteCSRSubscriptionResponse
 }
 
 
 
-export type createBatchResponse201 = {
+export type CreateBatchResponse201 = {
   data: string[]
   status: 201
 }
 
-export type createBatchResponse207 = {
+export type CreateBatchResponse207 = {
   data: MultiStatusBatchOperationResultResponse
   status: 207
 }
 
-export type createBatchResponse400 = {
+export type CreateBatchResponse400 = {
   data: BadRequestResponse
   status: 400
 }
 
-export type createBatchResponseSuccess = (createBatchResponse201 | createBatchResponse207) & {
+export type CreateBatchResponseSuccess = (CreateBatchResponse201 | CreateBatchResponse207) & {
   headers: Headers;
 };
-export type createBatchResponseError = (createBatchResponse400) & {
+export type CreateBatchResponseError = (CreateBatchResponse400) & {
   headers: Headers;
 };
 
-export type createBatchResponse = (createBatchResponseSuccess | createBatchResponseError)
+export type CreateBatchResponse = (CreateBatchResponseSuccess | CreateBatchResponseError)
 
 export const getCreateBatchUrl = (params?: CreateBatchParams,) => {
   const normalizedParams = new URLSearchParams();
@@ -1998,7 +1998,7 @@ export const getCreateBatchUrl = (params?: CreateBatchParams,) => {
 
  */
 export const createBatch = async (createBatchBodyItem?: NonReadonly<CreateBatchBodyItem[]>,
-    params?: CreateBatchParams, options?: RequestInit): Promise<createBatchResponse> => {
+    params?: CreateBatchParams, options?: RequestInit): Promise<CreateBatchResponse> => {
 
   const res = await fetch(getCreateBatchUrl(params),
   {
@@ -2012,40 +2012,40 @@ export const createBatch = async (createBatchBodyItem?: NonReadonly<CreateBatchB
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: createBatchResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as createBatchResponse
+  const data: CreateBatchResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as CreateBatchResponse
 }
 
 
 
-export type upsertBatchResponse201 = {
+export type UpsertBatchResponse201 = {
   data: string[]
   status: 201
 }
 
-export type upsertBatchResponse204 = {
+export type UpsertBatchResponse204 = {
   data: void
   status: 204
 }
 
-export type upsertBatchResponse207 = {
+export type UpsertBatchResponse207 = {
   data: MultiStatusBatchOperationResultResponse
   status: 207
 }
 
-export type upsertBatchResponse400 = {
+export type UpsertBatchResponse400 = {
   data: BadRequestResponse
   status: 400
 }
 
-export type upsertBatchResponseSuccess = (upsertBatchResponse201 | upsertBatchResponse204 | upsertBatchResponse207) & {
+export type UpsertBatchResponseSuccess = (UpsertBatchResponse201 | UpsertBatchResponse204 | UpsertBatchResponse207) & {
   headers: Headers;
 };
-export type upsertBatchResponseError = (upsertBatchResponse400) & {
+export type UpsertBatchResponseError = (UpsertBatchResponse400) & {
   headers: Headers;
 };
 
-export type upsertBatchResponse = (upsertBatchResponseSuccess | upsertBatchResponseError)
+export type UpsertBatchResponse = (UpsertBatchResponseSuccess | UpsertBatchResponseError)
 
 export const getUpsertBatchUrl = (params?: UpsertBatchParams,) => {
   const normalizedParams = new URLSearchParams();
@@ -2071,7 +2071,7 @@ export const getUpsertBatchUrl = (params?: UpsertBatchParams,) => {
 
  */
 export const upsertBatch = async (upsertBatchBodyItem?: NonReadonly<UpsertBatchBodyItem[]>,
-    params?: UpsertBatchParams, options?: RequestInit): Promise<upsertBatchResponse> => {
+    params?: UpsertBatchParams, options?: RequestInit): Promise<UpsertBatchResponse> => {
 
   const res = await fetch(getUpsertBatchUrl(params),
   {
@@ -2085,35 +2085,35 @@ export const upsertBatch = async (upsertBatchBodyItem?: NonReadonly<UpsertBatchB
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: upsertBatchResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as upsertBatchResponse
+  const data: UpsertBatchResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as UpsertBatchResponse
 }
 
 
 
-export type updateBatchResponse204 = {
+export type UpdateBatchResponse204 = {
   data: void
   status: 204
 }
 
-export type updateBatchResponse207 = {
+export type UpdateBatchResponse207 = {
   data: MultiStatusBatchOperationResultResponse
   status: 207
 }
 
-export type updateBatchResponse400 = {
+export type UpdateBatchResponse400 = {
   data: BadRequestResponse
   status: 400
 }
 
-export type updateBatchResponseSuccess = (updateBatchResponse204 | updateBatchResponse207) & {
+export type UpdateBatchResponseSuccess = (UpdateBatchResponse204 | UpdateBatchResponse207) & {
   headers: Headers;
 };
-export type updateBatchResponseError = (updateBatchResponse400) & {
+export type UpdateBatchResponseError = (UpdateBatchResponse400) & {
   headers: Headers;
 };
 
-export type updateBatchResponse = (updateBatchResponseSuccess | updateBatchResponseError)
+export type UpdateBatchResponse = (UpdateBatchResponseSuccess | UpdateBatchResponseError)
 
 export const getUpdateBatchUrl = (params?: UpdateBatchParams,) => {
   const normalizedParams = new URLSearchParams();
@@ -2138,7 +2138,7 @@ export const getUpdateBatchUrl = (params?: UpdateBatchParams,) => {
 
  */
 export const updateBatch = async (updateBatchBodyItem?: NonReadonly<UpdateBatchBodyItem[]>,
-    params?: UpdateBatchParams, options?: RequestInit): Promise<updateBatchResponse> => {
+    params?: UpdateBatchParams, options?: RequestInit): Promise<UpdateBatchResponse> => {
 
   const res = await fetch(getUpdateBatchUrl(params),
   {
@@ -2152,35 +2152,35 @@ export const updateBatch = async (updateBatchBodyItem?: NonReadonly<UpdateBatchB
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: updateBatchResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as updateBatchResponse
+  const data: UpdateBatchResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as UpdateBatchResponse
 }
 
 
 
-export type deleteBatchResponse204 = {
+export type DeleteBatchResponse204 = {
   data: void
   status: 204
 }
 
-export type deleteBatchResponse207 = {
+export type DeleteBatchResponse207 = {
   data: MultiStatusBatchOperationResultResponse
   status: 207
 }
 
-export type deleteBatchResponse400 = {
+export type DeleteBatchResponse400 = {
   data: BadRequestResponse
   status: 400
 }
 
-export type deleteBatchResponseSuccess = (deleteBatchResponse204 | deleteBatchResponse207) & {
+export type DeleteBatchResponseSuccess = (DeleteBatchResponse204 | DeleteBatchResponse207) & {
   headers: Headers;
 };
-export type deleteBatchResponseError = (deleteBatchResponse400) & {
+export type DeleteBatchResponseError = (DeleteBatchResponse400) & {
   headers: Headers;
 };
 
-export type deleteBatchResponse = (deleteBatchResponseSuccess | deleteBatchResponseError)
+export type DeleteBatchResponse = (DeleteBatchResponseSuccess | DeleteBatchResponseError)
 
 export const getDeleteBatchUrl = (params?: DeleteBatchParams,) => {
   const normalizedParams = new URLSearchParams();
@@ -2205,7 +2205,7 @@ export const getDeleteBatchUrl = (params?: DeleteBatchParams,) => {
 
  */
 export const deleteBatch = async (deleteBatchBody?: string[],
-    params?: DeleteBatchParams, options?: RequestInit): Promise<deleteBatchResponse> => {
+    params?: DeleteBatchParams, options?: RequestInit): Promise<DeleteBatchResponse> => {
 
   const res = await fetch(getDeleteBatchUrl(params),
   {
@@ -2219,35 +2219,35 @@ export const deleteBatch = async (deleteBatchBody?: string[],
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: deleteBatchResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as deleteBatchResponse
+  const data: DeleteBatchResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as DeleteBatchResponse
 }
 
 
 
-export type queryBatchResponse200ApplicationLdJson = {
+export type QueryBatchResponse200ApplicationLdJson = {
   data: (Entity & JsonLdContext)[]
   status: 200
 }
 
-export type queryBatchResponse200ApplicationGeoJson = {
+export type QueryBatchResponse200ApplicationGeoJson = {
   data: FeatureCollection
   status: 200
 }
 
-export type queryBatchResponse400 = {
+export type QueryBatchResponse400 = {
   data: BadRequestResponse
   status: 400
 }
 
-export type queryBatchResponseSuccess = (queryBatchResponse200ApplicationLdJson | queryBatchResponse200ApplicationGeoJson) & {
+export type QueryBatchResponseSuccess = (QueryBatchResponse200ApplicationLdJson | QueryBatchResponse200ApplicationGeoJson) & {
   headers: Headers;
 };
-export type queryBatchResponseError = (queryBatchResponse400) & {
+export type QueryBatchResponseError = (QueryBatchResponse400) & {
   headers: Headers;
 };
 
-export type queryBatchResponse = (queryBatchResponseSuccess | queryBatchResponseError)
+export type QueryBatchResponse = (QueryBatchResponseSuccess | QueryBatchResponseError)
 
 export const getQueryBatchUrl = (params?: QueryBatchParams,) => {
   const normalizedParams = new URLSearchParams();
@@ -2272,7 +2272,7 @@ export const getQueryBatchUrl = (params?: QueryBatchParams,) => {
 
  */
 export const queryBatch = async (queryBatchBody?: QueryBatchBody,
-    params?: QueryBatchParams, options?: RequestInit): Promise<queryBatchResponse> => {
+    params?: QueryBatchParams, options?: RequestInit): Promise<QueryBatchResponse> => {
 
   const res = await fetch(getQueryBatchUrl(params),
   {
@@ -2286,35 +2286,35 @@ export const queryBatch = async (queryBatchBody?: QueryBatchBody,
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: queryBatchResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as queryBatchResponse
+  const data: QueryBatchResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as QueryBatchResponse
 }
 
 
 
-export type mergeBatchResponse204 = {
+export type MergeBatchResponse204 = {
   data: void
   status: 204
 }
 
-export type mergeBatchResponse207 = {
+export type MergeBatchResponse207 = {
   data: MultiStatusBatchOperationResultResponse
   status: 207
 }
 
-export type mergeBatchResponse400 = {
+export type MergeBatchResponse400 = {
   data: BadRequestResponse
   status: 400
 }
 
-export type mergeBatchResponseSuccess = (mergeBatchResponse204 | mergeBatchResponse207) & {
+export type MergeBatchResponseSuccess = (MergeBatchResponse204 | MergeBatchResponse207) & {
   headers: Headers;
 };
-export type mergeBatchResponseError = (mergeBatchResponse400) & {
+export type MergeBatchResponseError = (MergeBatchResponse400) & {
   headers: Headers;
 };
 
-export type mergeBatchResponse = (mergeBatchResponseSuccess | mergeBatchResponseError)
+export type MergeBatchResponse = (MergeBatchResponseSuccess | MergeBatchResponseError)
 
 export const getMergeBatchUrl = (params?: MergeBatchParams,) => {
   const normalizedParams = new URLSearchParams();
@@ -2341,7 +2341,7 @@ export const getMergeBatchUrl = (params?: MergeBatchParams,) => {
 
  */
 export const mergeBatch = async (mergeBatchBodyItem?: NonReadonly<MergeBatchBodyItem[]>,
-    params?: MergeBatchParams, options?: RequestInit): Promise<mergeBatchResponse> => {
+    params?: MergeBatchParams, options?: RequestInit): Promise<MergeBatchResponse> => {
 
   const res = await fetch(getMergeBatchUrl(params),
   {
@@ -2355,40 +2355,40 @@ export const mergeBatch = async (mergeBatchBodyItem?: NonReadonly<MergeBatchBody
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: mergeBatchResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as mergeBatchResponse
+  const data: MergeBatchResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as MergeBatchResponse
 }
 
 
 
-export type upsertTemporalResponse201 = {
+export type UpsertTemporalResponse201 = {
   data: void
   status: 201
 }
 
-export type upsertTemporalResponse204 = {
+export type UpsertTemporalResponse204 = {
   data: void
   status: 204
 }
 
-export type upsertTemporalResponse400 = {
+export type UpsertTemporalResponse400 = {
   data: BadRequestResponse
   status: 400
 }
 
-export type upsertTemporalResponse422 = {
+export type UpsertTemporalResponse422 = {
   data: UnprocessableResponse
   status: 422
 }
 
-export type upsertTemporalResponseSuccess = (upsertTemporalResponse201 | upsertTemporalResponse204) & {
+export type UpsertTemporalResponseSuccess = (UpsertTemporalResponse201 | UpsertTemporalResponse204) & {
   headers: Headers;
 };
-export type upsertTemporalResponseError = (upsertTemporalResponse400 | upsertTemporalResponse422) & {
+export type UpsertTemporalResponseError = (UpsertTemporalResponse400 | UpsertTemporalResponse422) & {
   headers: Headers;
 };
 
-export type upsertTemporalResponse = (upsertTemporalResponseSuccess | upsertTemporalResponseError)
+export type UpsertTemporalResponse = (UpsertTemporalResponseSuccess | UpsertTemporalResponseError)
 
 export const getUpsertTemporalUrl = (params?: UpsertTemporalParams,) => {
   const normalizedParams = new URLSearchParams();
@@ -2414,7 +2414,7 @@ export const getUpsertTemporalUrl = (params?: UpsertTemporalParams,) => {
 
  */
 export const upsertTemporal = async (entityTemporalBody?: EntityTemporalBody,
-    params?: UpsertTemporalParams, options?: RequestInit): Promise<upsertTemporalResponse> => {
+    params?: UpsertTemporalParams, options?: RequestInit): Promise<UpsertTemporalResponse> => {
 
   const res = await fetch(getUpsertTemporalUrl(params),
   {
@@ -2428,30 +2428,30 @@ export const upsertTemporal = async (entityTemporalBody?: EntityTemporalBody,
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: upsertTemporalResponse['data'] = body ? JSON.parse(body) : undefined
-  return { data, status: res.status, headers: res.headers } as upsertTemporalResponse
+  const data: UpsertTemporalResponse['data'] = body ? JSON.parse(body) : undefined
+  return { data, status: res.status, headers: res.headers } as UpsertTemporalResponse
 }
 
 
 
-export type queryTemporalResponse200 = {
+export type QueryTemporalResponse200 = {
   data: (EntityTemporal & JsonLdContext)[]
   status: 200
 }
 
-export type queryTemporalResponse400 = {
+export type QueryTemporalResponse400 = {
   data: BadRequestResponse
   status: 400
 }
 
-export type queryTemporalResponseSuccess = (queryTemporalResponse200) & {
+export type QueryTemporalResponseSuccess = (QueryTemporalResponse200) & {
   headers: Headers;
 };
-export type queryTemporalResponseError = (queryTemporalResponse400) & {
+export type QueryTemporalResponseError = (QueryTemporalResponse400) & {
   headers: Headers;
 };
 
-export type queryTemporalResponse = (queryTemporalResponseSuccess | queryTemporalResponseError)
+export type QueryTemporalResponse = (QueryTemporalResponseSuccess | QueryTemporalResponseError)
 
 export const getQueryTemporalUrl = (params?: QueryTemporalParams,) => {
   const normalizedParams = new URLSearchParams();
@@ -2486,7 +2486,7 @@ export const getQueryTemporalUrl = (params?: QueryTemporalParams,) => {
  * @summary Query temporal evolution of Entities
 
  */
-export const queryTemporal = async (params?: QueryTemporalParams, options?: RequestInit): Promise<queryTemporalResponse> => {
+export const queryTemporal = async (params?: QueryTemporalParams, options?: RequestInit): Promise<QueryTemporalResponse> => {
 
   const res = await fetch(getQueryTemporalUrl(params),
   {
@@ -2500,35 +2500,35 @@ export const queryTemporal = async (params?: QueryTemporalParams, options?: Requ
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: queryTemporalResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as queryTemporalResponse
+  const data: QueryTemporalResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as QueryTemporalResponse
 }
 
 
 
-export type retrieveTemporalResponse200 = {
+export type RetrieveTemporalResponse200 = {
   data: RetrieveTemporal200
   status: 200
 }
 
-export type retrieveTemporalResponse400 = {
+export type RetrieveTemporalResponse400 = {
   data: BadRequestResponse
   status: 400
 }
 
-export type retrieveTemporalResponse404 = {
+export type RetrieveTemporalResponse404 = {
   data: NotFoundResponse
   status: 404
 }
 
-export type retrieveTemporalResponseSuccess = (retrieveTemporalResponse200) & {
+export type RetrieveTemporalResponseSuccess = (RetrieveTemporalResponse200) & {
   headers: Headers;
 };
-export type retrieveTemporalResponseError = (retrieveTemporalResponse400 | retrieveTemporalResponse404) & {
+export type RetrieveTemporalResponseError = (RetrieveTemporalResponse400 | RetrieveTemporalResponse404) & {
   headers: Headers;
 };
 
-export type retrieveTemporalResponse = (retrieveTemporalResponseSuccess | retrieveTemporalResponseError)
+export type RetrieveTemporalResponse = (RetrieveTemporalResponseSuccess | RetrieveTemporalResponseError)
 
 export const getRetrieveTemporalUrl = (entityId: string,
     params?: RetrieveTemporalParams,) => {
@@ -2562,7 +2562,7 @@ export const getRetrieveTemporalUrl = (entityId: string,
 
  */
 export const retrieveTemporal = async (entityId: string,
-    params?: RetrieveTemporalParams, options?: RequestInit): Promise<retrieveTemporalResponse> => {
+    params?: RetrieveTemporalParams, options?: RequestInit): Promise<RetrieveTemporalResponse> => {
 
   const res = await fetch(getRetrieveTemporalUrl(entityId,params),
   {
@@ -2576,35 +2576,35 @@ export const retrieveTemporal = async (entityId: string,
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: retrieveTemporalResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as retrieveTemporalResponse
+  const data: RetrieveTemporalResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as RetrieveTemporalResponse
 }
 
 
 
-export type deleteTemporalResponse204 = {
+export type DeleteTemporalResponse204 = {
   data: void
   status: 204
 }
 
-export type deleteTemporalResponse400 = {
+export type DeleteTemporalResponse400 = {
   data: BadRequestResponse
   status: 400
 }
 
-export type deleteTemporalResponse404 = {
+export type DeleteTemporalResponse404 = {
   data: NotFoundResponse
   status: 404
 }
 
-export type deleteTemporalResponseSuccess = (deleteTemporalResponse204) & {
+export type DeleteTemporalResponseSuccess = (DeleteTemporalResponse204) & {
   headers: Headers;
 };
-export type deleteTemporalResponseError = (deleteTemporalResponse400 | deleteTemporalResponse404) & {
+export type DeleteTemporalResponseError = (DeleteTemporalResponse400 | DeleteTemporalResponse404) & {
   headers: Headers;
 };
 
-export type deleteTemporalResponse = (deleteTemporalResponseSuccess | deleteTemporalResponseError)
+export type DeleteTemporalResponse = (DeleteTemporalResponseSuccess | DeleteTemporalResponseError)
 
 export const getDeleteTemporalUrl = (entityId: string,
     params?: DeleteTemporalParams,) => {
@@ -2630,7 +2630,7 @@ export const getDeleteTemporalUrl = (entityId: string,
 
  */
 export const deleteTemporal = async (entityId: string,
-    params?: DeleteTemporalParams, options?: RequestInit): Promise<deleteTemporalResponse> => {
+    params?: DeleteTemporalParams, options?: RequestInit): Promise<DeleteTemporalResponse> => {
 
   const res = await fetch(getDeleteTemporalUrl(entityId,params),
   {
@@ -2644,35 +2644,35 @@ export const deleteTemporal = async (entityId: string,
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: deleteTemporalResponse['data'] = body ? JSON.parse(body) : undefined
-  return { data, status: res.status, headers: res.headers } as deleteTemporalResponse
+  const data: DeleteTemporalResponse['data'] = body ? JSON.parse(body) : undefined
+  return { data, status: res.status, headers: res.headers } as DeleteTemporalResponse
 }
 
 
 
-export type appendAttrsTemporalResponse204 = {
+export type AppendAttrsTemporalResponse204 = {
   data: void
   status: 204
 }
 
-export type appendAttrsTemporalResponse400 = {
+export type AppendAttrsTemporalResponse400 = {
   data: BadRequestResponse
   status: 400
 }
 
-export type appendAttrsTemporalResponse404 = {
+export type AppendAttrsTemporalResponse404 = {
   data: NotFoundResponse
   status: 404
 }
 
-export type appendAttrsTemporalResponseSuccess = (appendAttrsTemporalResponse204) & {
+export type AppendAttrsTemporalResponseSuccess = (AppendAttrsTemporalResponse204) & {
   headers: Headers;
 };
-export type appendAttrsTemporalResponseError = (appendAttrsTemporalResponse400 | appendAttrsTemporalResponse404) & {
+export type AppendAttrsTemporalResponseError = (AppendAttrsTemporalResponse400 | AppendAttrsTemporalResponse404) & {
   headers: Headers;
 };
 
-export type appendAttrsTemporalResponse = (appendAttrsTemporalResponseSuccess | appendAttrsTemporalResponseError)
+export type AppendAttrsTemporalResponse = (AppendAttrsTemporalResponseSuccess | AppendAttrsTemporalResponseError)
 
 export const getAppendAttrsTemporalUrl = (entityId: string,
     params?: AppendAttrsTemporalParams,) => {
@@ -2699,7 +2699,7 @@ export const getAppendAttrsTemporalUrl = (entityId: string,
  */
 export const appendAttrsTemporal = async (entityId: string,
     entityTemporalFragmentBody?: EntityTemporalFragmentBody,
-    params?: AppendAttrsTemporalParams, options?: RequestInit): Promise<appendAttrsTemporalResponse> => {
+    params?: AppendAttrsTemporalParams, options?: RequestInit): Promise<AppendAttrsTemporalResponse> => {
 
   const res = await fetch(getAppendAttrsTemporalUrl(entityId,params),
   {
@@ -2713,35 +2713,35 @@ export const appendAttrsTemporal = async (entityId: string,
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: appendAttrsTemporalResponse['data'] = body ? JSON.parse(body) : undefined
-  return { data, status: res.status, headers: res.headers } as appendAttrsTemporalResponse
+  const data: AppendAttrsTemporalResponse['data'] = body ? JSON.parse(body) : undefined
+  return { data, status: res.status, headers: res.headers } as AppendAttrsTemporalResponse
 }
 
 
 
-export type deleteAttrsTemporalResponse204 = {
+export type DeleteAttrsTemporalResponse204 = {
   data: void
   status: 204
 }
 
-export type deleteAttrsTemporalResponse400 = {
+export type DeleteAttrsTemporalResponse400 = {
   data: BadRequestResponse
   status: 400
 }
 
-export type deleteAttrsTemporalResponse404 = {
+export type DeleteAttrsTemporalResponse404 = {
   data: NotFoundResponse
   status: 404
 }
 
-export type deleteAttrsTemporalResponseSuccess = (deleteAttrsTemporalResponse204) & {
+export type DeleteAttrsTemporalResponseSuccess = (DeleteAttrsTemporalResponse204) & {
   headers: Headers;
 };
-export type deleteAttrsTemporalResponseError = (deleteAttrsTemporalResponse400 | deleteAttrsTemporalResponse404) & {
+export type DeleteAttrsTemporalResponseError = (DeleteAttrsTemporalResponse400 | DeleteAttrsTemporalResponse404) & {
   headers: Headers;
 };
 
-export type deleteAttrsTemporalResponse = (deleteAttrsTemporalResponseSuccess | deleteAttrsTemporalResponseError)
+export type DeleteAttrsTemporalResponse = (DeleteAttrsTemporalResponseSuccess | DeleteAttrsTemporalResponseError)
 
 export const getDeleteAttrsTemporalUrl = (entityId: string,
     attrId: string,
@@ -2778,7 +2778,7 @@ export const getDeleteAttrsTemporalUrl = (entityId: string,
  */
 export const deleteAttrsTemporal = async (entityId: string,
     attrId: string,
-    params?: DeleteAttrsTemporalParams, options?: RequestInit): Promise<deleteAttrsTemporalResponse> => {
+    params?: DeleteAttrsTemporalParams, options?: RequestInit): Promise<DeleteAttrsTemporalResponse> => {
 
   const res = await fetch(getDeleteAttrsTemporalUrl(entityId,attrId,params),
   {
@@ -2792,35 +2792,35 @@ export const deleteAttrsTemporal = async (entityId: string,
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: deleteAttrsTemporalResponse['data'] = body ? JSON.parse(body) : undefined
-  return { data, status: res.status, headers: res.headers } as deleteAttrsTemporalResponse
+  const data: DeleteAttrsTemporalResponse['data'] = body ? JSON.parse(body) : undefined
+  return { data, status: res.status, headers: res.headers } as DeleteAttrsTemporalResponse
 }
 
 
 
-export type updateAttrsTemporalResponse204 = {
+export type UpdateAttrsTemporalResponse204 = {
   data: void
   status: 204
 }
 
-export type updateAttrsTemporalResponse400 = {
+export type UpdateAttrsTemporalResponse400 = {
   data: BadRequestResponse
   status: 400
 }
 
-export type updateAttrsTemporalResponse404 = {
+export type UpdateAttrsTemporalResponse404 = {
   data: NotFoundResponse
   status: 404
 }
 
-export type updateAttrsTemporalResponseSuccess = (updateAttrsTemporalResponse204) & {
+export type UpdateAttrsTemporalResponseSuccess = (UpdateAttrsTemporalResponse204) & {
   headers: Headers;
 };
-export type updateAttrsTemporalResponseError = (updateAttrsTemporalResponse400 | updateAttrsTemporalResponse404) & {
+export type UpdateAttrsTemporalResponseError = (UpdateAttrsTemporalResponse400 | UpdateAttrsTemporalResponse404) & {
   headers: Headers;
 };
 
-export type updateAttrsTemporalResponse = (updateAttrsTemporalResponseSuccess | updateAttrsTemporalResponseError)
+export type UpdateAttrsTemporalResponse = (UpdateAttrsTemporalResponseSuccess | UpdateAttrsTemporalResponseError)
 
 export const getUpdateAttrsTemporalUrl = (entityId: string,
     attrId: string,
@@ -2855,7 +2855,7 @@ export const updateAttrsTemporal = async (entityId: string,
     attrId: string,
     instanceId: string,
     entityTemporalFragmentBody?: EntityTemporalFragmentBody,
-    params?: UpdateAttrsTemporalParams, options?: RequestInit): Promise<updateAttrsTemporalResponse> => {
+    params?: UpdateAttrsTemporalParams, options?: RequestInit): Promise<UpdateAttrsTemporalResponse> => {
 
   const res = await fetch(getUpdateAttrsTemporalUrl(entityId,attrId,instanceId,params),
   {
@@ -2869,35 +2869,35 @@ export const updateAttrsTemporal = async (entityId: string,
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: updateAttrsTemporalResponse['data'] = body ? JSON.parse(body) : undefined
-  return { data, status: res.status, headers: res.headers } as updateAttrsTemporalResponse
+  const data: UpdateAttrsTemporalResponse['data'] = body ? JSON.parse(body) : undefined
+  return { data, status: res.status, headers: res.headers } as UpdateAttrsTemporalResponse
 }
 
 
 
-export type deleteAttrInstanceTemporalResponse204 = {
+export type DeleteAttrInstanceTemporalResponse204 = {
   data: void
   status: 204
 }
 
-export type deleteAttrInstanceTemporalResponse400 = {
+export type DeleteAttrInstanceTemporalResponse400 = {
   data: BadRequestResponse
   status: 400
 }
 
-export type deleteAttrInstanceTemporalResponse404 = {
+export type DeleteAttrInstanceTemporalResponse404 = {
   data: NotFoundResponse
   status: 404
 }
 
-export type deleteAttrInstanceTemporalResponseSuccess = (deleteAttrInstanceTemporalResponse204) & {
+export type DeleteAttrInstanceTemporalResponseSuccess = (DeleteAttrInstanceTemporalResponse204) & {
   headers: Headers;
 };
-export type deleteAttrInstanceTemporalResponseError = (deleteAttrInstanceTemporalResponse400 | deleteAttrInstanceTemporalResponse404) & {
+export type DeleteAttrInstanceTemporalResponseError = (DeleteAttrInstanceTemporalResponse400 | DeleteAttrInstanceTemporalResponse404) & {
   headers: Headers;
 };
 
-export type deleteAttrInstanceTemporalResponse = (deleteAttrInstanceTemporalResponseSuccess | deleteAttrInstanceTemporalResponseError)
+export type DeleteAttrInstanceTemporalResponse = (DeleteAttrInstanceTemporalResponseSuccess | DeleteAttrInstanceTemporalResponseError)
 
 export const getDeleteAttrInstanceTemporalUrl = (entityId: string,
     attrId: string,
@@ -2931,7 +2931,7 @@ export const getDeleteAttrInstanceTemporalUrl = (entityId: string,
 export const deleteAttrInstanceTemporal = async (entityId: string,
     attrId: string,
     instanceId: string,
-    params?: DeleteAttrInstanceTemporalParams, options?: RequestInit): Promise<deleteAttrInstanceTemporalResponse> => {
+    params?: DeleteAttrInstanceTemporalParams, options?: RequestInit): Promise<DeleteAttrInstanceTemporalResponse> => {
 
   const res = await fetch(getDeleteAttrInstanceTemporalUrl(entityId,attrId,instanceId,params),
   {
@@ -2945,30 +2945,30 @@ export const deleteAttrInstanceTemporal = async (entityId: string,
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: deleteAttrInstanceTemporalResponse['data'] = body ? JSON.parse(body) : undefined
-  return { data, status: res.status, headers: res.headers } as deleteAttrInstanceTemporalResponse
+  const data: DeleteAttrInstanceTemporalResponse['data'] = body ? JSON.parse(body) : undefined
+  return { data, status: res.status, headers: res.headers } as DeleteAttrInstanceTemporalResponse
 }
 
 
 
-export type temporalQueryBatchResponse200 = {
+export type TemporalQueryBatchResponse200 = {
   data: (EntityTemporal & JsonLdContext)[]
   status: 200
 }
 
-export type temporalQueryBatchResponse400 = {
+export type TemporalQueryBatchResponse400 = {
   data: BadRequestResponse
   status: 400
 }
 
-export type temporalQueryBatchResponseSuccess = (temporalQueryBatchResponse200) & {
+export type TemporalQueryBatchResponseSuccess = (TemporalQueryBatchResponse200) & {
   headers: Headers;
 };
-export type temporalQueryBatchResponseError = (temporalQueryBatchResponse400) & {
+export type TemporalQueryBatchResponseError = (TemporalQueryBatchResponse400) & {
   headers: Headers;
 };
 
-export type temporalQueryBatchResponse = (temporalQueryBatchResponseSuccess | temporalQueryBatchResponseError)
+export type TemporalQueryBatchResponse = (TemporalQueryBatchResponseSuccess | TemporalQueryBatchResponseError)
 
 export const getTemporalQueryBatchUrl = (params?: TemporalQueryBatchParams,) => {
   const normalizedParams = new URLSearchParams();
@@ -2994,7 +2994,7 @@ export const getTemporalQueryBatchUrl = (params?: TemporalQueryBatchParams,) => 
 
  */
 export const temporalQueryBatch = async (queryTemporalBody?: QueryTemporalBody,
-    params?: TemporalQueryBatchParams, options?: RequestInit): Promise<temporalQueryBatchResponse> => {
+    params?: TemporalQueryBatchParams, options?: RequestInit): Promise<TemporalQueryBatchResponse> => {
 
   const res = await fetch(getTemporalQueryBatchUrl(params),
   {
@@ -3008,30 +3008,30 @@ export const temporalQueryBatch = async (queryTemporalBody?: QueryTemporalBody,
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: temporalQueryBatchResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as temporalQueryBatchResponse
+  const data: TemporalQueryBatchResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as TemporalQueryBatchResponse
 }
 
 
 
-export type retrieveEntityTypesResponse200 = {
+export type RetrieveEntityTypesResponse200 = {
   data: RetrieveEntityTypes200
   status: 200
 }
 
-export type retrieveEntityTypesResponse400 = {
+export type RetrieveEntityTypesResponse400 = {
   data: BadRequestResponse
   status: 400
 }
 
-export type retrieveEntityTypesResponseSuccess = (retrieveEntityTypesResponse200) & {
+export type RetrieveEntityTypesResponseSuccess = (RetrieveEntityTypesResponse200) & {
   headers: Headers;
 };
-export type retrieveEntityTypesResponseError = (retrieveEntityTypesResponse400) & {
+export type RetrieveEntityTypesResponseError = (RetrieveEntityTypesResponse400) & {
   headers: Headers;
 };
 
-export type retrieveEntityTypesResponse = (retrieveEntityTypesResponseSuccess | retrieveEntityTypesResponseError)
+export type RetrieveEntityTypesResponse = (RetrieveEntityTypesResponseSuccess | RetrieveEntityTypesResponseError)
 
 export const getRetrieveEntityTypesUrl = (params?: RetrieveEntityTypesParams,) => {
   const normalizedParams = new URLSearchParams();
@@ -3061,7 +3061,7 @@ export const getRetrieveEntityTypesUrl = (params?: RetrieveEntityTypesParams,) =
  * @summary Retrieve available entity types
 
  */
-export const retrieveEntityTypes = async (params?: RetrieveEntityTypesParams, options?: RequestInit): Promise<retrieveEntityTypesResponse> => {
+export const retrieveEntityTypes = async (params?: RetrieveEntityTypesParams, options?: RequestInit): Promise<RetrieveEntityTypesResponse> => {
 
   const res = await fetch(getRetrieveEntityTypesUrl(params),
   {
@@ -3075,35 +3075,35 @@ export const retrieveEntityTypes = async (params?: RetrieveEntityTypesParams, op
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: retrieveEntityTypesResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as retrieveEntityTypesResponse
+  const data: RetrieveEntityTypesResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as RetrieveEntityTypesResponse
 }
 
 
 
-export type retrieveEntityTypeInfoResponse200 = {
+export type RetrieveEntityTypeInfoResponse200 = {
   data: RetrieveEntityTypeInfo200
   status: 200
 }
 
-export type retrieveEntityTypeInfoResponse400 = {
+export type RetrieveEntityTypeInfoResponse400 = {
   data: BadRequestResponse
   status: 400
 }
 
-export type retrieveEntityTypeInfoResponse404 = {
+export type RetrieveEntityTypeInfoResponse404 = {
   data: NotFoundResponse
   status: 404
 }
 
-export type retrieveEntityTypeInfoResponseSuccess = (retrieveEntityTypeInfoResponse200) & {
+export type RetrieveEntityTypeInfoResponseSuccess = (RetrieveEntityTypeInfoResponse200) & {
   headers: Headers;
 };
-export type retrieveEntityTypeInfoResponseError = (retrieveEntityTypeInfoResponse400 | retrieveEntityTypeInfoResponse404) & {
+export type RetrieveEntityTypeInfoResponseError = (RetrieveEntityTypeInfoResponse400 | RetrieveEntityTypeInfoResponse404) & {
   headers: Headers;
 };
 
-export type retrieveEntityTypeInfoResponse = (retrieveEntityTypeInfoResponseSuccess | retrieveEntityTypeInfoResponseError)
+export type RetrieveEntityTypeInfoResponse = (RetrieveEntityTypeInfoResponseSuccess | RetrieveEntityTypeInfoResponseError)
 
 export const getRetrieveEntityTypeInfoUrl = (type: string,
     params?: RetrieveEntityTypeInfoParams,) => {
@@ -3134,7 +3134,7 @@ export const getRetrieveEntityTypeInfoUrl = (type: string,
 
  */
 export const retrieveEntityTypeInfo = async (type: string,
-    params?: RetrieveEntityTypeInfoParams, options?: RequestInit): Promise<retrieveEntityTypeInfoResponse> => {
+    params?: RetrieveEntityTypeInfoParams, options?: RequestInit): Promise<RetrieveEntityTypeInfoResponse> => {
 
   const res = await fetch(getRetrieveEntityTypeInfoUrl(type,params),
   {
@@ -3148,30 +3148,30 @@ export const retrieveEntityTypeInfo = async (type: string,
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: retrieveEntityTypeInfoResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as retrieveEntityTypeInfoResponse
+  const data: RetrieveEntityTypeInfoResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as RetrieveEntityTypeInfoResponse
 }
 
 
 
-export type retrieveAttrTypesResponse200 = {
+export type RetrieveAttrTypesResponse200 = {
   data: RetrieveAttrTypes200
   status: 200
 }
 
-export type retrieveAttrTypesResponse400 = {
+export type RetrieveAttrTypesResponse400 = {
   data: BadRequestResponse
   status: 400
 }
 
-export type retrieveAttrTypesResponseSuccess = (retrieveAttrTypesResponse200) & {
+export type RetrieveAttrTypesResponseSuccess = (RetrieveAttrTypesResponse200) & {
   headers: Headers;
 };
-export type retrieveAttrTypesResponseError = (retrieveAttrTypesResponse400) & {
+export type RetrieveAttrTypesResponseError = (RetrieveAttrTypesResponse400) & {
   headers: Headers;
 };
 
-export type retrieveAttrTypesResponse = (retrieveAttrTypesResponseSuccess | retrieveAttrTypesResponseError)
+export type RetrieveAttrTypesResponse = (RetrieveAttrTypesResponseSuccess | RetrieveAttrTypesResponseError)
 
 export const getRetrieveAttrTypesUrl = (params?: RetrieveAttrTypesParams,) => {
   const normalizedParams = new URLSearchParams();
@@ -3201,7 +3201,7 @@ export const getRetrieveAttrTypesUrl = (params?: RetrieveAttrTypesParams,) => {
  * @summary Available attributes
 
  */
-export const retrieveAttrTypes = async (params?: RetrieveAttrTypesParams, options?: RequestInit): Promise<retrieveAttrTypesResponse> => {
+export const retrieveAttrTypes = async (params?: RetrieveAttrTypesParams, options?: RequestInit): Promise<RetrieveAttrTypesResponse> => {
 
   const res = await fetch(getRetrieveAttrTypesUrl(params),
   {
@@ -3215,35 +3215,35 @@ export const retrieveAttrTypes = async (params?: RetrieveAttrTypesParams, option
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: retrieveAttrTypesResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as retrieveAttrTypesResponse
+  const data: RetrieveAttrTypesResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as RetrieveAttrTypesResponse
 }
 
 
 
-export type retrieveAttrTypeInfoResponse200 = {
+export type RetrieveAttrTypeInfoResponse200 = {
   data: RetrieveAttrTypeInfo200
   status: 200
 }
 
-export type retrieveAttrTypeInfoResponse400 = {
+export type RetrieveAttrTypeInfoResponse400 = {
   data: BadRequestResponse
   status: 400
 }
 
-export type retrieveAttrTypeInfoResponse404 = {
+export type RetrieveAttrTypeInfoResponse404 = {
   data: NotFoundResponse
   status: 404
 }
 
-export type retrieveAttrTypeInfoResponseSuccess = (retrieveAttrTypeInfoResponse200) & {
+export type RetrieveAttrTypeInfoResponseSuccess = (RetrieveAttrTypeInfoResponse200) & {
   headers: Headers;
 };
-export type retrieveAttrTypeInfoResponseError = (retrieveAttrTypeInfoResponse400 | retrieveAttrTypeInfoResponse404) & {
+export type RetrieveAttrTypeInfoResponseError = (RetrieveAttrTypeInfoResponse400 | RetrieveAttrTypeInfoResponse404) & {
   headers: Headers;
 };
 
-export type retrieveAttrTypeInfoResponse = (retrieveAttrTypeInfoResponseSuccess | retrieveAttrTypeInfoResponseError)
+export type RetrieveAttrTypeInfoResponse = (RetrieveAttrTypeInfoResponseSuccess | RetrieveAttrTypeInfoResponseError)
 
 export const getRetrieveAttrTypeInfoUrl = (attrId: string,
     params?: RetrieveAttrTypeInfoParams,) => {
@@ -3273,7 +3273,7 @@ export const getRetrieveAttrTypeInfoUrl = (attrId: string,
 
  */
 export const retrieveAttrTypeInfo = async (attrId: string,
-    params?: RetrieveAttrTypeInfoParams, options?: RequestInit): Promise<retrieveAttrTypeInfoResponse> => {
+    params?: RetrieveAttrTypeInfoParams, options?: RequestInit): Promise<RetrieveAttrTypeInfoResponse> => {
 
   const res = await fetch(getRetrieveAttrTypeInfoUrl(attrId,params),
   {
@@ -3287,30 +3287,30 @@ export const retrieveAttrTypeInfo = async (attrId: string,
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: retrieveAttrTypeInfoResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as retrieveAttrTypeInfoResponse
+  const data: RetrieveAttrTypeInfoResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as RetrieveAttrTypeInfoResponse
 }
 
 
 
-export type createContextResponse201 = {
+export type CreateContextResponse201 = {
   data: void
   status: 201
 }
 
-export type createContextResponse400 = {
+export type CreateContextResponse400 = {
   data: BadRequestResponse
   status: 400
 }
 
-export type createContextResponseSuccess = (createContextResponse201) & {
+export type CreateContextResponseSuccess = (CreateContextResponse201) & {
   headers: Headers;
 };
-export type createContextResponseError = (createContextResponse400) & {
+export type CreateContextResponseError = (CreateContextResponse400) & {
   headers: Headers;
 };
 
-export type createContextResponse = (createContextResponseSuccess | createContextResponseError)
+export type CreateContextResponse = (CreateContextResponseSuccess | CreateContextResponseError)
 
 export const getCreateContextUrl = () => {
 
@@ -3328,7 +3328,7 @@ export const getCreateContextUrl = () => {
  * @summary Add a user @context to the internal cache
 
  */
-export const createContext = async (createContextBody?: CreateContextBody, options?: RequestInit): Promise<createContextResponse> => {
+export const createContext = async (createContextBody?: CreateContextBody, options?: RequestInit): Promise<CreateContextResponse> => {
 
   const res = await fetch(getCreateContextUrl(),
   {
@@ -3342,30 +3342,30 @@ export const createContext = async (createContextBody?: CreateContextBody, optio
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: createContextResponse['data'] = body ? JSON.parse(body) : undefined
-  return { data, status: res.status, headers: res.headers } as createContextResponse
+  const data: CreateContextResponse['data'] = body ? JSON.parse(body) : undefined
+  return { data, status: res.status, headers: res.headers } as CreateContextResponse
 }
 
 
 
-export type listContextsResponse200 = {
+export type ListContextsResponse200 = {
   data: string[] | LdContextMetadata[]
   status: 200
 }
 
-export type listContextsResponse400 = {
+export type ListContextsResponse400 = {
   data: BadRequestResponse
   status: 400
 }
 
-export type listContextsResponseSuccess = (listContextsResponse200) & {
+export type ListContextsResponseSuccess = (ListContextsResponse200) & {
   headers: Headers;
 };
-export type listContextsResponseError = (listContextsResponse400) & {
+export type ListContextsResponseError = (ListContextsResponse400) & {
   headers: Headers;
 };
 
-export type listContextsResponse = (listContextsResponseSuccess | listContextsResponseError)
+export type ListContextsResponse = (ListContextsResponseSuccess | ListContextsResponseError)
 
 export const getListContextsUrl = (params?: ListContextsParams,) => {
   const normalizedParams = new URLSearchParams();
@@ -3398,7 +3398,7 @@ export const getListContextsUrl = (params?: ListContextsParams,) => {
  * @summary List all cached @contexts
 
  */
-export const listContexts = async (params?: ListContextsParams, options?: RequestInit): Promise<listContextsResponse> => {
+export const listContexts = async (params?: ListContextsParams, options?: RequestInit): Promise<ListContextsResponse> => {
 
   const res = await fetch(getListContextsUrl(params),
   {
@@ -3412,40 +3412,40 @@ export const listContexts = async (params?: ListContextsParams, options?: Reques
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: listContextsResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as listContextsResponse
+  const data: ListContextsResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as ListContextsResponse
 }
 
 
 
-export type retrieveContextResponse200 = {
+export type RetrieveContextResponse200 = {
   data: RetrieveContext200
   status: 200
 }
 
-export type retrieveContextResponse400 = {
+export type RetrieveContextResponse400 = {
   data: BadRequestResponse
   status: 400
 }
 
-export type retrieveContextResponse404 = {
+export type RetrieveContextResponse404 = {
   data: NotFoundResponse
   status: 404
 }
 
-export type retrieveContextResponse422 = {
+export type RetrieveContextResponse422 = {
   data: UnprocessableResponse
   status: 422
 }
 
-export type retrieveContextResponseSuccess = (retrieveContextResponse200) & {
+export type RetrieveContextResponseSuccess = (RetrieveContextResponse200) & {
   headers: Headers;
 };
-export type retrieveContextResponseError = (retrieveContextResponse400 | retrieveContextResponse404 | retrieveContextResponse422) & {
+export type RetrieveContextResponseError = (RetrieveContextResponse400 | RetrieveContextResponse404 | RetrieveContextResponse422) & {
   headers: Headers;
 };
 
-export type retrieveContextResponse = (retrieveContextResponseSuccess | retrieveContextResponseError)
+export type RetrieveContextResponse = (RetrieveContextResponseSuccess | RetrieveContextResponseError)
 
 export const getRetrieveContextUrl = (contextId: string,
     params?: RetrieveContextParams,) => {
@@ -3473,7 +3473,7 @@ export const getRetrieveContextUrl = (contextId: string,
 
  */
 export const retrieveContext = async (contextId: string,
-    params?: RetrieveContextParams, options?: RequestInit): Promise<retrieveContextResponse> => {
+    params?: RetrieveContextParams, options?: RequestInit): Promise<RetrieveContextResponse> => {
 
   const res = await fetch(getRetrieveContextUrl(contextId,params),
   {
@@ -3487,40 +3487,40 @@ export const retrieveContext = async (contextId: string,
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: retrieveContextResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as retrieveContextResponse
+  const data: RetrieveContextResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as RetrieveContextResponse
 }
 
 
 
-export type deleteContextResponse204 = {
+export type DeleteContextResponse204 = {
   data: void
   status: 204
 }
 
-export type deleteContextResponse400 = {
+export type DeleteContextResponse400 = {
   data: BadRequestResponse
   status: 400
 }
 
-export type deleteContextResponse404 = {
+export type DeleteContextResponse404 = {
   data: NotFoundResponse
   status: 404
 }
 
-export type deleteContextResponse504 = {
+export type DeleteContextResponse504 = {
   data: GatewayTimeoutResponse
   status: 504
 }
 
-export type deleteContextResponseSuccess = (deleteContextResponse204) & {
+export type DeleteContextResponseSuccess = (DeleteContextResponse204) & {
   headers: Headers;
 };
-export type deleteContextResponseError = (deleteContextResponse400 | deleteContextResponse404 | deleteContextResponse504) & {
+export type DeleteContextResponseError = (DeleteContextResponse400 | DeleteContextResponse404 | DeleteContextResponse504) & {
   headers: Headers;
 };
 
-export type deleteContextResponse = (deleteContextResponseSuccess | deleteContextResponseError)
+export type DeleteContextResponse = (DeleteContextResponseSuccess | DeleteContextResponseError)
 
 export const getDeleteContextUrl = (contextId: string,
     params?: DeleteContextParams,) => {
@@ -3551,7 +3551,7 @@ export const getDeleteContextUrl = (contextId: string,
 
  */
 export const deleteContext = async (contextId: string,
-    params?: DeleteContextParams, options?: RequestInit): Promise<deleteContextResponse> => {
+    params?: DeleteContextParams, options?: RequestInit): Promise<DeleteContextResponse> => {
 
   const res = await fetch(getDeleteContextUrl(contextId,params),
   {
@@ -3565,35 +3565,35 @@ export const deleteContext = async (contextId: string,
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: deleteContextResponse['data'] = body ? JSON.parse(body) : undefined
-  return { data, status: res.status, headers: res.headers } as deleteContextResponse
+  const data: DeleteContextResponse['data'] = body ? JSON.parse(body) : undefined
+  return { data, status: res.status, headers: res.headers } as DeleteContextResponse
 }
 
 
 
-export type retrieveEntityMapResponse200 = {
+export type RetrieveEntityMapResponse200 = {
   data: RetrieveEntityMap200
   status: 200
 }
 
-export type retrieveEntityMapResponse400 = {
+export type RetrieveEntityMapResponse400 = {
   data: BadRequestResponse
   status: 400
 }
 
-export type retrieveEntityMapResponse404 = {
+export type RetrieveEntityMapResponse404 = {
   data: NotFoundResponse
   status: 404
 }
 
-export type retrieveEntityMapResponseSuccess = (retrieveEntityMapResponse200) & {
+export type RetrieveEntityMapResponseSuccess = (RetrieveEntityMapResponse200) & {
   headers: Headers;
 };
-export type retrieveEntityMapResponseError = (retrieveEntityMapResponse400 | retrieveEntityMapResponse404) & {
+export type RetrieveEntityMapResponseError = (RetrieveEntityMapResponse400 | RetrieveEntityMapResponse404) & {
   headers: Headers;
 };
 
-export type retrieveEntityMapResponse = (retrieveEntityMapResponseSuccess | retrieveEntityMapResponseError)
+export type RetrieveEntityMapResponse = (RetrieveEntityMapResponseSuccess | RetrieveEntityMapResponseError)
 
 export const getRetrieveEntityMapUrl = (entityMapId: string,) => {
 
@@ -3610,7 +3610,7 @@ export const getRetrieveEntityMapUrl = (entityMapId: string,) => {
  * @summary EntityMap Retrieval by id
 
  */
-export const retrieveEntityMap = async (entityMapId: string, options?: RequestInit): Promise<retrieveEntityMapResponse> => {
+export const retrieveEntityMap = async (entityMapId: string, options?: RequestInit): Promise<RetrieveEntityMapResponse> => {
 
   const res = await fetch(getRetrieveEntityMapUrl(entityMapId),
   {
@@ -3624,35 +3624,35 @@ export const retrieveEntityMap = async (entityMapId: string, options?: RequestIn
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: retrieveEntityMapResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as retrieveEntityMapResponse
+  const data: RetrieveEntityMapResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as RetrieveEntityMapResponse
 }
 
 
 
-export type updateEntityMapResponse204 = {
+export type UpdateEntityMapResponse204 = {
   data: void
   status: 204
 }
 
-export type updateEntityMapResponse400 = {
+export type UpdateEntityMapResponse400 = {
   data: BadRequestResponse
   status: 400
 }
 
-export type updateEntityMapResponse404 = {
+export type UpdateEntityMapResponse404 = {
   data: NotFoundResponse
   status: 404
 }
 
-export type updateEntityMapResponseSuccess = (updateEntityMapResponse204) & {
+export type UpdateEntityMapResponseSuccess = (UpdateEntityMapResponse204) & {
   headers: Headers;
 };
-export type updateEntityMapResponseError = (updateEntityMapResponse400 | updateEntityMapResponse404) & {
+export type UpdateEntityMapResponseError = (UpdateEntityMapResponse400 | UpdateEntityMapResponse404) & {
   headers: Headers;
 };
 
-export type updateEntityMapResponse = (updateEntityMapResponseSuccess | updateEntityMapResponseError)
+export type UpdateEntityMapResponse = (UpdateEntityMapResponseSuccess | UpdateEntityMapResponseError)
 
 export const getUpdateEntityMapUrl = (entityMapId: string,) => {
 
@@ -3671,7 +3671,7 @@ export const getUpdateEntityMapUrl = (entityMapId: string,) => {
 
  */
 export const updateEntityMap = async (entityMapId: string,
-    updateEntityMapBody?: NonReadonly<UpdateEntityMapBody>, options?: RequestInit): Promise<updateEntityMapResponse> => {
+    updateEntityMapBody?: NonReadonly<UpdateEntityMapBody>, options?: RequestInit): Promise<UpdateEntityMapResponse> => {
 
   const res = await fetch(getUpdateEntityMapUrl(entityMapId),
   {
@@ -3685,35 +3685,35 @@ export const updateEntityMap = async (entityMapId: string,
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: updateEntityMapResponse['data'] = body ? JSON.parse(body) : undefined
-  return { data, status: res.status, headers: res.headers } as updateEntityMapResponse
+  const data: UpdateEntityMapResponse['data'] = body ? JSON.parse(body) : undefined
+  return { data, status: res.status, headers: res.headers } as UpdateEntityMapResponse
 }
 
 
 
-export type deleteEntityMapResponse204 = {
+export type DeleteEntityMapResponse204 = {
   data: void
   status: 204
 }
 
-export type deleteEntityMapResponse400 = {
+export type DeleteEntityMapResponse400 = {
   data: BadRequestResponse
   status: 400
 }
 
-export type deleteEntityMapResponse404 = {
+export type DeleteEntityMapResponse404 = {
   data: NotFoundResponse
   status: 404
 }
 
-export type deleteEntityMapResponseSuccess = (deleteEntityMapResponse204) & {
+export type DeleteEntityMapResponseSuccess = (DeleteEntityMapResponse204) & {
   headers: Headers;
 };
-export type deleteEntityMapResponseError = (deleteEntityMapResponse400 | deleteEntityMapResponse404) & {
+export type DeleteEntityMapResponseError = (DeleteEntityMapResponse400 | DeleteEntityMapResponse404) & {
   headers: Headers;
 };
 
-export type deleteEntityMapResponse = (deleteEntityMapResponseSuccess | deleteEntityMapResponseError)
+export type DeleteEntityMapResponse = (DeleteEntityMapResponseSuccess | DeleteEntityMapResponseError)
 
 export const getDeleteEntityMapUrl = (entityMapId: string,) => {
 
@@ -3730,7 +3730,7 @@ export const getDeleteEntityMapUrl = (entityMapId: string,) => {
  * @summary EntityMap Deletion by id
 
  */
-export const deleteEntityMap = async (entityMapId: string, options?: RequestInit): Promise<deleteEntityMapResponse> => {
+export const deleteEntityMap = async (entityMapId: string, options?: RequestInit): Promise<DeleteEntityMapResponse> => {
 
   const res = await fetch(getDeleteEntityMapUrl(entityMapId),
   {
@@ -3744,30 +3744,30 @@ export const deleteEntityMap = async (entityMapId: string, options?: RequestInit
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: deleteEntityMapResponse['data'] = body ? JSON.parse(body) : undefined
-  return { data, status: res.status, headers: res.headers } as deleteEntityMapResponse
+  const data: DeleteEntityMapResponse['data'] = body ? JSON.parse(body) : undefined
+  return { data, status: res.status, headers: res.headers } as DeleteEntityMapResponse
 }
 
 
 
-export type retrieveCSIdentityInfoResponse200 = {
+export type RetrieveCSIdentityInfoResponse200 = {
   data: RetrieveCSIdentityInfo200
   status: 200
 }
 
-export type retrieveCSIdentityInfoResponse501 = {
+export type RetrieveCSIdentityInfoResponse501 = {
   data: NotImplementedResponse
   status: 501
 }
 
-export type retrieveCSIdentityInfoResponseSuccess = (retrieveCSIdentityInfoResponse200) & {
+export type RetrieveCSIdentityInfoResponseSuccess = (RetrieveCSIdentityInfoResponse200) & {
   headers: Headers;
 };
-export type retrieveCSIdentityInfoResponseError = (retrieveCSIdentityInfoResponse501) & {
+export type RetrieveCSIdentityInfoResponseError = (RetrieveCSIdentityInfoResponse501) & {
   headers: Headers;
 };
 
-export type retrieveCSIdentityInfoResponse = (retrieveCSIdentityInfoResponseSuccess | retrieveCSIdentityInfoResponseError)
+export type RetrieveCSIdentityInfoResponse = (RetrieveCSIdentityInfoResponseSuccess | RetrieveCSIdentityInfoResponseError)
 
 export const getRetrieveCSIdentityInfoUrl = () => {
 
@@ -3785,7 +3785,7 @@ export const getRetrieveCSIdentityInfoUrl = () => {
  * @summary Context Source Identity Retrieval
 
  */
-export const retrieveCSIdentityInfo = async ( options?: RequestInit): Promise<retrieveCSIdentityInfoResponse> => {
+export const retrieveCSIdentityInfo = async ( options?: RequestInit): Promise<RetrieveCSIdentityInfoResponse> => {
 
   const res = await fetch(getRetrieveCSIdentityInfoUrl(),
   {
@@ -3799,8 +3799,8 @@ export const retrieveCSIdentityInfo = async ( options?: RequestInit): Promise<re
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: retrieveCSIdentityInfoResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as retrieveCSIdentityInfoResponse
+  const data: RetrieveCSIdentityInfoResponse['data'] = body ? JSON.parse(body) : {}
+  return { data, status: res.status, headers: res.headers } as RetrieveCSIdentityInfoResponse
 }
 
 
