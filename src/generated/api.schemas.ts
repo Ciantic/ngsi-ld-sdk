@@ -454,7 +454,7 @@ export interface GeometryMultiPoint {
 /**
  * An array of four positions where the first equals the last (i.e., a closed LineString).
  */
-export type GeometryLinearRing = GeometryPositionArray & unknown;
+export type GeometryLinearRing = GeometryPositionArray;
 
 /**
  * An array of linear rings.
@@ -464,7 +464,7 @@ export type GeometryPolygon = GeometryLinearRing[];
 /**
  * An array of two or more positions.
  */
-export type GeometryLineString = GeometryPositionArray & unknown;
+export type GeometryLineString = GeometryPositionArray;
 
 export type GeometryMultiLineStringType = typeof GeometryMultiLineStringType[keyof typeof GeometryMultiLineStringType];
 
@@ -1524,7 +1524,7 @@ export interface TemporalQuery {
  * 5.2.23 This datatype represents the information that is required in order to convey
  * a query when a "Query Temporal Evolution of Entities" operation is to be performed (as pe clause 5.7.4).
  */
-export type QueryTemporal = Query & unknown & {
+export type QueryTemporal = Query & {
   /** Temporal Query to be present only for "Query Temporal Evolution of Entities" operation (clause 5.7.4). */
   temporalQ?: TemporalQuery;
 };
@@ -2114,37 +2114,37 @@ export type UnprocessableResponse = ProblemDetails;
  */
 export type NotImplementedResponse = ProblemDetails;
 
-export type AttributeFragmentBodyTwo = (Property | Relationship | GeoProperty | LanguageProperty | VocabProperty | JsonProperty | ListProperty | ListRelationship) & unknown & {
+export type AttributeFragmentBodyTwo = (Property | Relationship | GeoProperty | LanguageProperty | VocabProperty | JsonProperty | ListProperty | ListRelationship) & {
   '@context'?: LdContext;
 };
 
 export type AttributeFragmentBody = Property | Relationship | GeoProperty | LanguageProperty | VocabProperty | JsonProperty | ListProperty | ListRelationship | AttributeFragmentBodyTwo;
 
-export type EntityTemporalBodyTwo = EntityTemporal & unknown & {
+export type EntityTemporalBodyTwo = EntityTemporal & {
   '@context'?: LdContext;
 };
 
 export type EntityTemporalBody = EntityTemporal | EntityTemporalBodyTwo;
 
-export type EntityTemporalFragmentBodyTwo = EntityTemporal & unknown & {
+export type EntityTemporalFragmentBodyTwo = EntityTemporal & {
   '@context'?: LdContext;
 };
 
 export type EntityTemporalFragmentBody = EntityTemporal | EntityTemporalFragmentBodyTwo;
 
-export type QueryTemporalBodyTwo = QueryTemporal & unknown & {
+export type QueryTemporalBodyTwo = QueryTemporal & {
   '@context'?: LdContext;
 };
 
 export type QueryTemporalBody = QueryTemporal | QueryTemporalBodyTwo;
 
-export type SubscriptionBodyTwo = Subscription & unknown & {
+export type SubscriptionBodyTwo = Subscription & {
   '@context'?: LdContext;
 };
 
-export type SubscriptionBody = Subscription & unknown | SubscriptionBodyTwo;
+export type SubscriptionBody = Subscription | SubscriptionBodyTwo;
 
-export type SubscriptionFragmentBodyTwo = Subscription & unknown & {
+export type SubscriptionFragmentBodyTwo = Subscription & {
   '@context'?: LdContext;
 };
 
@@ -2457,7 +2457,7 @@ export type CreateEntityParams = {
 local?: QueryLocalParameter;
 };
 
-export type CreateEntityBodyTwo = Entity & unknown & {
+export type CreateEntityBodyTwo = Entity & {
   '@context'?: LdContext;
 };
 
@@ -2604,7 +2604,7 @@ format?: QueryFormatEntitiesParameter;
 local?: QueryLocalParameter;
 };
 
-export type QueryEntity200TwoItem = Entity & unknown & {
+export type QueryEntity200TwoItem = Entity & {
   '@context'?: LdContext;
 };
 
@@ -2699,7 +2699,7 @@ format?: QueryFormatEntitiesParameter;
 local?: QueryLocalParameter;
 };
 
-export type RetrieveEntity200Two = Entity & unknown & {
+export type RetrieveEntity200Two = Entity & {
   '@context'?: LdContext;
 };
 
@@ -2765,7 +2765,7 @@ lang?: QueryLangParameter;
 local?: QueryLocalParameter;
 };
 
-export type MergeEntityBodyTwo = Entity & unknown & {
+export type MergeEntityBodyTwo = Entity & {
   '@context'?: LdContext;
 };
 
@@ -2785,7 +2785,7 @@ type?: QueryTypeParameter;
 local?: QueryLocalParameter;
 };
 
-export type ReplaceEntityBodyTwo = Entity & unknown & {
+export type ReplaceEntityBodyTwo = Entity & {
   '@context'?: LdContext;
 };
 
@@ -2806,7 +2806,7 @@ options?: QueryOptionsNoOverwriteParameter;
 local?: QueryLocalParameter;
 };
 
-export type AppendAttrsBodyTwo = Entity & unknown & {
+export type AppendAttrsBodyTwo = Entity & {
   '@context'?: LdContext;
 };
 
@@ -2826,7 +2826,7 @@ local?: QueryLocalParameter;
 type?: QueryTypeParameter;
 };
 
-export type UpdateEntityBodyTwo = Entity & unknown & {
+export type UpdateEntityBodyTwo = Entity & {
   '@context'?: LdContext;
 };
 
@@ -2889,7 +2889,7 @@ local?: QueryLocalParameter;
 type?: QueryTypeParameter;
 };
 
-export type CreateCSRBodyTwo = CsourceRegistration & unknown & {
+export type CreateCSRBodyTwo = CsourceRegistration & {
   '@context'?: LdContext;
 };
 
@@ -2995,7 +2995,7 @@ limit?: QueryLimitParameter;
 count?: QueryCountParameter;
 };
 
-export type QueryCSR200TwoItem = CsourceRegistration & unknown & {
+export type QueryCSR200TwoItem = CsourceRegistration & {
   '@context'?: LdContext;
 };
 
@@ -3003,11 +3003,11 @@ export type RetrieveCSRParams = {
 options?: QueryOptionsSysAttrsParameter;
 };
 
-export type RetrieveCSR200Two = CsourceRegistration & unknown & {
+export type RetrieveCSR200Two = CsourceRegistration & {
   '@context'?: LdContext;
 };
 
-export type UpdateCSRBodyTwo = CsourceRegistration & unknown & {
+export type UpdateCSRBodyTwo = CsourceRegistration & {
   '@context'?: LdContext;
 };
 
@@ -3047,7 +3047,7 @@ count?: QueryCountParameter;
 local?: QueryLocalParameter;
 };
 
-export type QuerySubscription200TwoItem = Subscription & unknown & {
+export type QuerySubscription200TwoItem = Subscription & {
   '@context'?: LdContext;
 };
 
@@ -3063,7 +3063,7 @@ options?: QueryOptionsSysAttrsParameter;
 local?: QueryLocalParameter;
 };
 
-export type RetrieveSubscription200Two = Subscription & unknown & {
+export type RetrieveSubscription200Two = Subscription & {
   '@context'?: LdContext;
 };
 
@@ -3106,7 +3106,7 @@ limit?: QueryLimitParameter;
 count?: QueryCountParameter;
 };
 
-export type QueryCSRSubscription200TwoItem = Subscription & unknown & {
+export type QueryCSRSubscription200TwoItem = Subscription & {
   '@context'?: LdContext;
 };
 
@@ -3114,7 +3114,7 @@ export type RetrieveCSRSubscriptionParams = {
 options?: QueryOptionsSysAttrsParameter;
 };
 
-export type RetrieveCSRSubscription200Two = Subscription & unknown & {
+export type RetrieveCSRSubscription200Two = Subscription & {
   '@context'?: LdContext;
 };
 
@@ -3129,7 +3129,7 @@ export type CreateBatchParams = {
 local?: QueryLocalParameter;
 };
 
-export type CreateBatchBodyTwoItem = Entity & unknown & {
+export type CreateBatchBodyTwoItem = Entity & {
   '@context'?: LdContext;
 };
 
@@ -3145,7 +3145,7 @@ options?: QueryOptionsUpsertParameter;
 local?: QueryLocalParameter;
 };
 
-export type UpsertBatchBodyTwoItem = Entity & unknown & {
+export type UpsertBatchBodyTwoItem = Entity & {
   '@context'?: LdContext;
 };
 
@@ -3161,7 +3161,7 @@ options?: QueryOptionsNoOverwriteParameter;
 local?: QueryLocalParameter;
 };
 
-export type UpdateBatchBodyTwoItem = Entity & unknown & {
+export type UpdateBatchBodyTwoItem = Entity & {
   '@context'?: LdContext;
 };
 
@@ -3202,11 +3202,11 @@ options?: typeof QueryBatchOptionsItem[keyof typeof QueryBatchOptionsItem][];
 };
 
 export const QueryBatchOptionsItem = {...OptionsRepresentation,...OptionsSysAttrs,} as const
-export type QueryBatchBodyTwo = Query & unknown & {
+export type QueryBatchBodyTwo = Query & {
   '@context'?: LdContext;
 };
 
-export type QueryBatch200TwoItem = Entity & unknown & {
+export type QueryBatch200TwoItem = Entity & {
   '@context'?: LdContext;
 };
 
@@ -3221,7 +3221,7 @@ export type MergeBatchParams = {
 local?: QueryLocalParameter;
 };
 
-export type MergeBatchBodyTwoItem = Entity & unknown & {
+export type MergeBatchBodyTwoItem = Entity & {
   '@context'?: LdContext;
 };
 
@@ -3385,7 +3385,7 @@ format?: QueryFormatTemporalParameter;
 local?: QueryLocalParameter;
 };
 
-export type QueryTemporal200TwoItem = EntityTemporal & unknown & {
+export type QueryTemporal200TwoItem = EntityTemporal & {
   '@context'?: LdContext;
 };
 
@@ -3481,7 +3481,7 @@ format?: QueryFormatTemporalParameter;
 local?: QueryLocalParameter;
 };
 
-export type RetrieveTemporal200Two = EntityTemporal & unknown & {
+export type RetrieveTemporal200Two = EntityTemporal & {
   '@context'?: LdContext;
 };
 
@@ -3562,7 +3562,7 @@ export type TemporalQueryBatchParams = {
 local?: QueryLocalParameter;
 };
 
-export type TemporalQueryBatch200TwoItem = EntityTemporal & unknown & {
+export type TemporalQueryBatch200TwoItem = EntityTemporal & {
   '@context'?: LdContext;
 };
 
@@ -3681,15 +3681,15 @@ export type DeleteContextParams = {
 reload?: QueryReloadParameter;
 };
 
-export type RetrieveEntityMap200Two = EntityMap & unknown & {
+export type RetrieveEntityMap200Two = EntityMap & {
   '@context'?: LdContext;
 };
 
-export type UpdateEntityMapBodyTwo = EntityMap & unknown & {
+export type UpdateEntityMapBodyTwo = EntityMap & {
   '@context'?: LdContext;
 };
 
-export type RetrieveCSIdentityInfo200Two = ContextSourceIdentity & unknown & {
+export type RetrieveCSIdentityInfo200Two = ContextSourceIdentity & {
   '@context'?: LdContext;
 };
 
