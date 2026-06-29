@@ -1,0 +1,40 @@
+services:
+  mongo:
+    image: docker.io/library/mongo:4.4
+    container_name: test-orion-temporal-mongo
+    command: --nojournal
+    tmpfs:
+      - /data/db
+      - /data/configdb
+
+  troe-db:
+    image: docker.io/timescale/timescaledb-postgis:latest-pg12
+    container_name: test-orion-temporal-troe-db
+    environment:
+      POSTGRES_USER: orion
+      POSTGRES_PASSWORD: orion
+      POSTGRES_DB: orion
+      POSTGRES_HOST_AUTH_METHOD: trust
+    tmpfs:
+      - /var/lib/postgresql/data
+
+  orion-ld:
+    image: docker.io/fiware/orion-ld
+    container_name: test-orion-temporal-ld
+    links:
+      - mongo
+      - troe-db
+    environment:
+      ORIONLD_TROE: "TRUE"
+      ORIONLD_TROE_HOST: troe-db
+      ORIONLD_TROE_PORT: "5432"
+      ORIONLD_TROE_USER: orion
+      ORIONLD_TROE_PWD: orion
+    command:
+      - -dbhost
+      - mongo
+      - -logLevel
+      - INFO
+      - -experimental
+    ports:
+      - "1026:1026"

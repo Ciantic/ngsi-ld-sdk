@@ -13,10 +13,10 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "generate:api": "test -f ngsi-ld-api.yaml || curl -sL https://forge.etsi.org/rep/cim/ngsi-ld-openapi/-/raw/v1.8.1/openapi-3.0.3/ngsi-ld-api.yaml -o ngsi-ld-api.yaml; orval",
-    "orion:up": "podman compose -f docker-test-orion/compose.yaml up -d",
-    "orion:down": "podman compose -f docker-test-orion/compose.yaml down",
-    "orion-temporal:up": "podman compose -f docker-test-orion-with-temporal/compose.yaml up -d",
-    "orion-temporal:down": "podman compose -f docker-test-orion-with-temporal/compose.yaml down"
+    "orion:up": "podman compose -f tests/docker-test-orion/compose.yaml up -d",
+    "orion:down": "podman compose -f tests/docker-test-orion/compose.yaml down",
+    "orion-temporal:up": "podman compose -f tests/docker-test-orion-with-temporal/compose.yaml up -d",
+    "orion-temporal:down": "podman compose -f tests/docker-test-orion-with-temporal/compose.yaml down"
   },
   "license": "MIT",
   "devDependencies": {

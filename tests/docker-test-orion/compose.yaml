@@ -1,0 +1,22 @@
+services:
+  mongo:
+    image: docker.io/library/mongo:4.4
+    container_name: test-orion-mongo
+    command: --nojournal
+    tmpfs:
+      - /data/db
+      - /data/configdb
+
+  orion-ld:
+    image: docker.io/fiware/orion-ld
+    container_name: test-orion-ld
+    links:
+      - mongo
+    command:
+      - -dbhost
+      - mongo
+      - -logLevel
+      - INFO
+      - -experimental
+    ports:
+      - "1026:1026"
