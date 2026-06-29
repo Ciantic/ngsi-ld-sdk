@@ -74,7 +74,11 @@ describe("queryEntity", () => {
     expectOk(response);
     expect(response.status).toBe(200);
     expect(Array.isArray(response.data)).toBe(true);
-    expect(response.data.length).toBeGreaterThan(0);
+    if (Array.isArray(response.data)) {
+        expect(response.data.length).toBeGreaterThan(0);
+    } else {
+        throw new Error("Expected response data to be an array");
+    }
   });
 });
 
