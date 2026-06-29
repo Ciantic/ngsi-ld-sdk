@@ -272,6 +272,9 @@ export default defineConfig({
       client: "fetch",
       mode: "split",
       clean: true,
+      baseUrl: {
+        runtime: "process.env.NGSILD_BROKER_URL",
+      },
     },
     hooks: {
       afterAllFilesWrite: () => {
@@ -285,6 +288,14 @@ export default defineConfig({
         fixUnknowns(schemasFile);
         renameTwoTypes(schemasFile, apiFile);
         fix200ItemTypes(schemasFile, apiFile);
+
+        // Inject a declare shim so the generated code can reference
+        // process.env.NGSILD_BROKER_URL without requiring @types/node.
+        apiFile.insertText(0, `/* eslint-disable */
+declare var process: {
+  env: Record<string, string | undefined>;
+};
+`);
 
         schemasFile.saveSync();
         apiFile.saveSync();
