@@ -171,3 +171,17 @@ export function expectStatus<T extends { status: number }>(
     );
   }
 }
+
+/**
+ * Warn if the broker returned 501 (Not Implemented), indicating that
+ * the feature is not enabled. Use this in temporal tests.
+ * Pass a human-readable operation name to describe what's missing.
+ */
+export function warnIf501(status: number, operation?: string): void {
+  if (status === 501) {
+    const what = operation ? `: ${operation}` : "";
+    console.warn(
+      `Not implemented (501)${what}. `
+    );
+  }
+}
