@@ -165,10 +165,101 @@ function loadAndPreprocessSpec(): Record<string, unknown> {
   const doc = parseDocument(raw);
   const data = doc.toJSON() as Record<string, unknown>;
   walk(data);
+  preprocessedSpec = data;
   return data;
 }
 
 // --- End preprocess ---
+
+/** Preprocessed OpenAPI spec, available to hooks after config load. */
+let preprocessedSpec: Record<string, unknown> = {};
+
+/**
+ * Walk the preprocessed spec and return a map of
+ * operationId → required body field names (for "application/ld+json").
+ *
+ * The NGSI-LD spec layers `required` on top of base schemas via `allOf`:
+ *
+ *   schema:
+ *     allOf:
+ *       - $ref: '#/components/schemas/Entity'
+ *       - required: [id, type, @context]
+ *
+ * Orval ignores standalone `required` in allOf, so we extract it here.
+ */
+function collectRequiredFromSpec(
+  spec: Record<string, unknown>,
+): Record<string, string[]> {
+  const result: Record<string, string[]> = {};
+
+  const paths = spec.paths as Record<string, unknown> | undefined;
+  if (!paths) return result;
+
+  // Helper: resolve a $ref string like "#/components/requestBodies/Subscription"
+  function resolveRef(ref: string): Record<string, unknown> | null {
+    const parts = ref.replace(/^#\//, "").split("/");
+    let node: unknown = spec;
+    for (const part of parts) {
+      if (typeof node !== "object" || node === null) return null;
+      node = (node as Record<string, unknown>)[part];
+    }
+    return node as Record<string, unknown> | null;
+  }
+
+  // Helper: extract required from a schema object
+  function extractRequired(
+    mediaType: Record<string, unknown>,
+  ): string[] | null {
+    const schema = mediaType.schema as Record<string, unknown> | undefined;
+    if (!schema) return null;
+
+    const allOf = schema.allOf as Record<string, unknown>[] | undefined;
+    if (!allOf) return null;
+
+    const last = allOf[allOf.length - 1];
+    if (!last || typeof last !== "object") return null;
+
+    const required = last.required as string[] | undefined;
+    return required && required.length > 0 ? required : null;
+  }
+
+  for (const [, pathItem] of Object.entries(paths)) {
+    const operations = pathItem as Record<string, unknown>;
+    if (!operations || typeof operations !== "object") continue;
+
+    for (const [method, op] of Object.entries(operations)) {
+      if (method !== "post" && method !== "put" && method !== "patch") continue;
+      const operation = op as Record<string, unknown>;
+      const operationId = operation.operationId as string | undefined;
+      if (!operationId) continue;
+
+      let requestBody = operation.requestBody as
+        Record<string, unknown> | undefined;
+      if (!requestBody) continue;
+
+      // Resolve $ref if present
+      if (requestBody.$ref) {
+        const resolved = resolveRef(requestBody.$ref as string);
+        if (resolved) requestBody = resolved;
+      }
+
+      const content = requestBody.content as
+        Record<string, unknown> | undefined;
+      if (!content) continue;
+
+      // Prefer ld+json, fall back to json
+      const mediaType =
+        (content["application/ld+json"] as Record<string, unknown>) ??
+        (content["application/json"] as Record<string, unknown>);
+      if (!mediaType) continue;
+
+      const required = extractRequired(mediaType);
+      if (required) result[operationId] = required;
+    }
+  }
+
+  return result;
+}
 
 /**
  * Inline *200Item types (e.g. QueryEntity200Item) into their base type
@@ -307,24 +398,68 @@ function desyncFunctions(apiFile: SourceFile): void {
     arrowFn.setIsAsync(false);
     // Remove return type, allowing it to be inferred from fetcher
     arrowFn.removeReturnType();
+  }
+}
 
-    // const fn = apiFile.addFunction({
-    //   name: vd.getName() + "Test",
-    // });
+/**
+ * Some NGSI-LD endpoints require specific fields in the request body
+ * (via `allOf` + `required` in the spec), but orval doesn't propagate
+ * `required` from `allOf` compositions.  Wrap the relevant body types
+ * with a custom `PickRequired` helper so that TypeScript enforces those
+ * fields at the call site.
+ */
+const PICK_REQUIRED_TYPE =
+  "// Makes the given keys required in a type (useful when the OpenAPI spec\n" +
+  "// layers `required` via allOf, which orval doesn't propagate).\n" +
+  "type PickRequired<Type, Key extends keyof Type> = Type &\n" +
+  "  Required<Pick<Type, Key>>;\n";
 
-    // fn.setIsExported(true);
-    // fn.addTypeParameter({ name: "T", constraint: "RequestInit" });
-    // fn.addParameters(
-    //   arrowFn.getParameters().map((p) => {
-    //     let type = p.getTypeNode()?.getText();
-    //     if (type === "RequestInit") type = "T";
-    //     return {
-    //       name: p.getName(),
-    //       type: type,
-    //     };
-    //   }),
-    // );
-    // fn.setBodyText(arrowFn.getBody().getText());
+/**
+ * Orval doesn't propagate `required` from `allOf` compositions in
+ * OpenAPI request bodies.  This function walks the NGSI-LD spec to
+ * discover which fields are required for each operationId, then
+ * wraps the corresponding TypeScript body parameters with
+ * `PickRequired` so TypeScript enforces those fields.
+ *
+ * See https://github.com/orval-labs/orval/issues/3663
+ */
+function fixPickRequired(apiFile: SourceFile): void {
+  const requiredMap = collectRequiredFromSpec(preprocessedSpec);
+
+  // 1. Inject PickRequired after the NonReadonly helper block
+  let text = apiFile.getText();
+  const nonReadonlyEnd = text.indexOf("type NonReadonly");
+  if (nonReadonlyEnd === -1) return;
+  const afterBlock = text.indexOf("\nexport type", nonReadonlyEnd);
+  if (afterBlock === -1) return;
+
+  text =
+    text.slice(0, afterBlock) +
+    "\n\n" +
+    PICK_REQUIRED_TYPE +
+    text.slice(afterBlock);
+  apiFile.replaceWithText(text);
+
+  // 2. Apply PickRequired to the body parameter of each function.
+  //    Body parameters are named `*Body` or `*BodyItem`.
+  for (const vd of apiFile.getVariableDeclarations()) {
+    const fnName = vd.getName();
+    const required = requiredMap[fnName];
+    if (!required || required.length === 0) continue;
+
+    const arrowFn = vd.getInitializerIfKind(SyntaxKind.ArrowFunction);
+    if (!arrowFn) continue;
+
+    const bodyParam = arrowFn
+      .getParameters()
+      .find(
+        (p) => p.getName().endsWith("Body") || p.getName().endsWith("BodyItem"),
+      );
+    if (!bodyParam) continue;
+
+    const typeText = bodyParam.getTypeNode()!.getText();
+    const keys = required.map((k) => `"${k}"`).join(" | ");
+    bodyParam.setType(`PickRequired<${typeText}, ${keys}>`);
   }
 }
 
@@ -358,6 +493,7 @@ export default defineConfig({
         fix200ItemTypes(schemasFile, apiFile);
         fixResponseTypeCasing(apiFile);
         desyncFunctions(apiFile);
+        fixPickRequired(apiFile);
 
         // Inject a declare shim so the generated code can reference
         // process.env.NGSILD_BROKER_URL without requiring @types/node.

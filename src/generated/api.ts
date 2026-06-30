@@ -123,6 +123,11 @@ type NonReadonly<T> = [T] extends [UnionToIntersection<T>]
     }
   : DistributeReadOnlyOverUnions<T>;
 
+// Makes the given keys required in a type (useful when the OpenAPI spec
+// layers `required` via allOf, which orval doesn't propagate).
+type PickRequired<Type, Key extends keyof Type> = Type &
+  Required<Pick<Type, Key>>;
+
 export type CreateEntityResponse201 = {
   data: void;
   status: 201;
@@ -186,7 +191,10 @@ export const getCreateEntityUrl = (params?: CreateEntityParams) => {
 
  */
 export const createEntity = (
-  createEntityBody?: NonReadonly<CreateEntityBody>,
+  createEntityBody?: PickRequired<
+    NonReadonly<CreateEntityBody>,
+    "id" | "type" | "@context"
+  >,
   params?: CreateEntityParams,
   options?: RequestInit,
 ) => {
@@ -501,7 +509,7 @@ export const getMergeEntityUrl = (
  */
 export const mergeEntity = (
   entityId: string,
-  mergeEntityBody?: NonReadonly<MergeEntityBody>,
+  mergeEntityBody?: PickRequired<NonReadonly<MergeEntityBody>, "@context">,
   params?: MergeEntityParams,
   options?: RequestInit,
 ) => {
@@ -576,7 +584,7 @@ export const getReplaceEntityUrl = (
  */
 export const replaceEntity = (
   entityId: string,
-  replaceEntityBody?: NonReadonly<ReplaceEntityBody>,
+  replaceEntityBody?: PickRequired<NonReadonly<ReplaceEntityBody>, "@context">,
   params?: ReplaceEntityParams,
   options?: RequestInit,
 ) => {
@@ -651,7 +659,7 @@ export const getAppendAttrsUrl = (
  */
 export const appendAttrs = (
   entityId: string,
-  appendAttrsBody?: NonReadonly<AppendAttrsBody>,
+  appendAttrsBody?: PickRequired<NonReadonly<AppendAttrsBody>, "@context">,
   params?: AppendAttrsParams,
   options?: RequestInit,
 ) => {
@@ -726,7 +734,7 @@ export const getUpdateEntityUrl = (
  */
 export const updateEntity = (
   entityId: string,
-  updateEntityBody?: NonReadonly<UpdateEntityBody>,
+  updateEntityBody?: PickRequired<NonReadonly<UpdateEntityBody>, "@context">,
   params?: UpdateEntityParams,
   options?: RequestInit,
 ) => {
@@ -804,7 +812,7 @@ export const getUpdateAttrsUrl = (
 export const updateAttrs = (
   entityId: string,
   attrId: string,
-  attributeFragmentBody?: AttributeFragmentBody,
+  attributeFragmentBody?: PickRequired<AttributeFragmentBody, "@context">,
   params?: UpdateAttrsParams,
   options?: RequestInit,
 ) => {
@@ -970,7 +978,7 @@ export const getReplaceAttrsUrl = (
 export const replaceAttrs = (
   entityId: string,
   attrId: string,
-  attributeFragmentBody?: AttributeFragmentBody,
+  attributeFragmentBody?: PickRequired<AttributeFragmentBody, "@context">,
   params?: ReplaceAttrsParams,
   options?: RequestInit,
 ) => {
@@ -1029,7 +1037,10 @@ export const getCreateCSRUrl = () => {
 
  */
 export const createCSR = (
-  createCSRBody?: NonReadonly<CreateCSRBody>,
+  createCSRBody?: PickRequired<
+    NonReadonly<CreateCSRBody>,
+    "type" | "information" | "endpoint" | "@context"
+  >,
   options?: RequestInit,
 ) => {
   return fetcher<CreateCSRResponse>(getCreateCSRUrl(), {
@@ -1217,7 +1228,7 @@ export const getUpdateCSRUrl = (registrationId: string) => {
  */
 export const updateCSR = (
   registrationId: string,
-  updateCSRBody?: NonReadonly<UpdateCSRBody>,
+  updateCSRBody?: PickRequired<NonReadonly<UpdateCSRBody>, "@context">,
   options?: RequestInit,
 ) => {
   return fetcher<UpdateCSRResponse>(getUpdateCSRUrl(registrationId), {
@@ -1325,7 +1336,10 @@ export const getCreateSubscriptionUrl = (params?: CreateSubscriptionParams) => {
 
  */
 export const createSubscription = (
-  subscriptionBody?: SubscriptionBody,
+  subscriptionBody?: PickRequired<
+    SubscriptionBody,
+    "type" | "notification" | "@context"
+  >,
   params?: CreateSubscriptionParams,
   options?: RequestInit,
 ) => {
@@ -1514,7 +1528,7 @@ export const getUpdateSubscriptionUrl = (
  */
 export const updateSubscription = (
   subscriptionId: string,
-  subscriptionFragmentBody?: SubscriptionFragmentBody,
+  subscriptionFragmentBody?: PickRequired<SubscriptionFragmentBody, "@context">,
   params?: UpdateSubscriptionParams,
   options?: RequestInit,
 ) => {
@@ -1637,7 +1651,10 @@ export const getCreateCSRSubscriptionUrl = () => {
 
  */
 export const createCSRSubscription = (
-  subscriptionBody?: SubscriptionBody,
+  subscriptionBody?: PickRequired<
+    SubscriptionBody,
+    "type" | "notification" | "@context"
+  >,
   options?: RequestInit,
 ) => {
   return fetcher<CreateCSRSubscriptionResponse>(getCreateCSRSubscriptionUrl(), {
@@ -1817,7 +1834,7 @@ export const getUpdateCSRSubscriptionUrl = (subscriptionId: string) => {
  */
 export const updateCSRSubscription = (
   subscriptionId: string,
-  subscriptionFragmentBody?: SubscriptionFragmentBody,
+  subscriptionFragmentBody?: PickRequired<SubscriptionFragmentBody, "@context">,
   options?: RequestInit,
 ) => {
   return fetcher<UpdateCSRSubscriptionResponse>(
@@ -2193,7 +2210,7 @@ export const getQueryBatchUrl = (params?: QueryBatchParams) => {
 
  */
 export const queryBatch = (
-  queryBatchBody?: QueryBatchBody,
+  queryBatchBody?: PickRequired<QueryBatchBody, "@context">,
   params?: QueryBatchParams,
   options?: RequestInit,
 ) => {
@@ -2329,7 +2346,10 @@ export const getUpsertTemporalUrl = (params?: UpsertTemporalParams) => {
 
  */
 export const upsertTemporal = (
-  entityTemporalBody?: EntityTemporalBody,
+  entityTemporalBody?: PickRequired<
+    EntityTemporalBody,
+    "id" | "type" | "@context"
+  >,
   params?: UpsertTemporalParams,
   options?: RequestInit,
 ) => {
@@ -2605,7 +2625,10 @@ export const getAppendAttrsTemporalUrl = (
  */
 export const appendAttrsTemporal = (
   entityId: string,
-  entityTemporalFragmentBody?: EntityTemporalFragmentBody,
+  entityTemporalFragmentBody?: PickRequired<
+    EntityTemporalFragmentBody,
+    "@context"
+  >,
   params?: AppendAttrsTemporalParams,
   options?: RequestInit,
 ) => {
@@ -2764,7 +2787,10 @@ export const updateAttrsTemporal = (
   entityId: string,
   attrId: string,
   instanceId: string,
-  entityTemporalFragmentBody?: EntityTemporalFragmentBody,
+  entityTemporalFragmentBody?: PickRequired<
+    EntityTemporalFragmentBody,
+    "@context"
+  >,
   params?: UpdateAttrsTemporalParams,
   options?: RequestInit,
 ) => {
@@ -2902,7 +2928,7 @@ export const getTemporalQueryBatchUrl = (params?: TemporalQueryBatchParams) => {
 
  */
 export const temporalQueryBatch = (
-  queryTemporalBody?: QueryTemporalBody,
+  queryTemporalBody?: PickRequired<QueryTemporalBody, "@context">,
   params?: TemporalQueryBatchParams,
   options?: RequestInit,
 ) => {
@@ -3535,7 +3561,10 @@ export const getUpdateEntityMapUrl = (entityMapId: string) => {
  */
 export const updateEntityMap = (
   entityMapId: string,
-  updateEntityMapBody?: NonReadonly<UpdateEntityMapBody>,
+  updateEntityMapBody?: PickRequired<
+    NonReadonly<UpdateEntityMapBody>,
+    "@context"
+  >,
   options?: RequestInit,
 ) => {
   return fetcher<UpdateEntityMapResponse>(getUpdateEntityMapUrl(entityMapId), {
