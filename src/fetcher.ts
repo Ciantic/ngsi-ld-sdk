@@ -1,6 +1,3 @@
-declare var process: {
-  env: Record<string, string | undefined>;
-};
 
 const baseURL = process.env.NGSILD_BROKER_URL || "";
 
