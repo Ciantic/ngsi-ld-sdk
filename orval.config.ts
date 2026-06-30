@@ -463,6 +463,173 @@ function fixPickRequired(apiFile: SourceFile): void {
   }
 }
 
+/**
+ * The NGSI-LD spec defines `additionalProperties` on Entity, EntityTemporal,
+ * FeatureProperties, and all attribute types (Property, GeoProperty,
+ * LanguageProperty, VocabProperty, JsonProperty, ListProperty, Relationship,
+ * ListRelationship) as a oneOf of all NGSI-LD attribute types (each as
+ * single or array). Orval can't resolve oneOf inside additionalProperties
+ * and emits `[key: string]: unknown` instead.
+ *
+ * This function defines a `NgsildAttribute` union type and converts the
+ * relevant interfaces into type aliases with an intersection so that named
+ * properties (like `id?: string`) don't need to be assignable to the
+ * index signature type.
+ */
+function fixIndexSignatures(schemasFile: SourceFile): void {
+  const NGSILD_ATTRIBUTE_TYPE = `
+/**
+ * Union of all NGSI-LD attribute types that can appear as additional
+ * properties on Entity, EntityTemporal, FeatureProperties, and
+ * attribute types (Property, GeoProperty, etc.).
+ *
+ * Derived from the oneOf in the OpenAPI spec's additionalProperties.
+ */
+export type NgsildAttribute =
+  | Property
+  | Property[]
+  | GeoProperty
+  | GeoProperty[]
+  | LanguageProperty
+  | LanguageProperty[]
+  | VocabProperty
+  | VocabProperty[]
+  | JsonProperty
+  | JsonProperty[]
+  | ListProperty
+  | ListProperty[]
+  | Relationship
+  | Relationship[]
+  | ListRelationship
+  | ListRelationship[]
+  | LdContext
+  | JsonValue
+  | Geometry
+  | DateTimeValue
+  | Entity
+  | Entity[]
+  | Record<string, unknown>
+  | Record<string, unknown>[];`;
+
+  /** Interfaces whose index signatures should be replaced with NgsildAttribute. */
+  const INTERFACES_WITH_ATTRIBUTES = new Set([
+    "Entity",
+    "EntityTemporal",
+    "FeatureProperties",
+    "Property",
+    "GeoProperty",
+    "LanguageProperty",
+    "VocabProperty",
+    "JsonProperty",
+    "ListProperty",
+    "Relationship",
+    "ListRelationship",
+  ]);
+
+  // 1. Append NgsildAttribute type at the end of the schemas file
+  schemasFile.insertText(schemasFile.getEnd(), NGSILD_ATTRIBUTE_TYPE);
+
+  // 2. Convert interfaces to type aliases with intersection.
+  //    Reason: TS interfaces require all named properties to be assignable
+  //    to the index signature type, but type aliases with intersection don't.
+  for (const iface of schemasFile.getInterfaces()) {
+    if (!INTERFACES_WITH_ATTRIBUTES.has(iface.getName())) continue;
+
+    const text = iface.getText();
+    const name = iface.getName();
+    const prefix = iface.isExported() ? "export " : "";
+
+    // Extract body between first { and last }
+    const openBrace = text.indexOf("{");
+    const closeBrace = text.lastIndexOf("}");
+    let body = text.slice(openBrace + 1, closeBrace);
+
+    // Remove the index signature line(s)
+    body = body.replace(
+      /\n\s*\[key: string\]: (?:unknown|NgsildAttribute);\s*/g,
+      "",
+    );
+    body = body.trimEnd();
+
+    iface.replaceWithText(
+      `${prefix}type ${name} = {\n${body}\n} & {\n  [key: string]: NgsildAttribute;\n};`,
+    );
+  }
+}
+
+/**
+ * The NGSI-LD spec marks `type` as optional on attribute type aliases
+ * (Property, GeoProperty, Relationship, etc.) because it is defined
+ * in a base schema with `additionalProperties`.  Make it required so
+ * TypeScript enforces that every NGSI-LD attribute carries a `type`
+ * discriminator.
+ */
+function fixProperties(schemasFile: SourceFile): void {
+  const targetTypeAliases = new Set([
+    "GeoProperty",
+    "LanguageProperty",
+    "Property",
+    "Relationship",
+    "VocabProperty",
+    "ListProperty",
+    "ListRelationship",
+    "JsonProperty",
+  ]);
+
+  let fixCount = 0;
+  for (const typeAlias of schemasFile.getTypeAliases()) {
+    if (!targetTypeAliases.has(typeAlias.getName())) continue;
+
+    const typeNode = typeAlias.getTypeNode();
+    if (!typeNode || !typeNode.isKind(SyntaxKind.IntersectionType)) continue;
+
+    const firstType = typeNode.getTypeNodes()[0];
+    if (!firstType?.isKind(SyntaxKind.TypeLiteral)) continue;
+
+    const typeLiteral = firstType.asKindOrThrow(SyntaxKind.TypeLiteral);
+    const typeProp = typeLiteral.getProperty("type");
+
+    if (typeProp?.hasQuestionToken()) {
+      typeProp.setHasQuestionToken(false);
+      fixCount++;
+    }
+  }
+}
+
+/**
+ * Orval emits `AnyValue` as an empty interface (`export interface AnyValue {}`)
+ * which is effectively `{}` — too loose. Replace it with a proper recursive
+ * `JsonValue` type matching IETF RFC 8259.
+ */
+function fixAnyValue(schemasFile: SourceFile): void {
+  const anyValue = schemasFile.getInterface("AnyValue");
+  if (!anyValue) return;
+
+  anyValue.replaceWithText(
+    "/**\n" +
+      " * Any JSON value as defined by IETF RFC 8259.\n" +
+      " */\n" +
+      "export type JsonValue =\n" +
+      "  | string\n" +
+      "  | number\n" +
+      "  | boolean\n" +
+      "  | null\n" +
+      "  | JsonValue[]\n" +
+      "  | { [key: string]: JsonValue };",
+  );
+
+  // Replace remaining AnyValue references with JsonValue
+  schemasFile.forEachDescendant((node, traversal) => {
+    if (
+      node.getKind() === SyntaxKind.TypeReference &&
+      node.getText() === "AnyValue"
+    ) {
+      node.replaceWithText("JsonValue");
+      traversal.skip();
+    }
+  });
+}
+
 export default defineConfig({
   "ngsi-ld": {
     input: {
@@ -489,6 +656,9 @@ export default defineConfig({
 
         fixDuplicateOptions(schemasFile);
         fixUnknowns(schemasFile);
+        fixAnyValue(schemasFile);
+        fixIndexSignatures(schemasFile);
+        fixProperties(schemasFile);
         renameTwoTypes(schemasFile, apiFile);
         fix200ItemTypes(schemasFile, apiFile);
         fixResponseTypeCasing(apiFile);

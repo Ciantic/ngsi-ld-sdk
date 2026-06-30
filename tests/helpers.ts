@@ -43,7 +43,11 @@ export function makeEntity() {
       type: "Property" as const,
       value: 25 + entityCounter,
     },
-  } as const satisfies Entity & { id: string; type: string };
+  } as const satisfies Entity & {
+    id: string;
+    type: string;
+    "@context": string[];
+  };
 }
 
 /** Create a test entity with a GeoProperty. */
@@ -125,7 +129,9 @@ export async function cleanUpCSR(registrationId: string): Promise<void> {
 }
 
 /** DELETE a subscription if it exists. */
-export async function cleanUpSubscription(subscriptionId: string): Promise<void> {
+export async function cleanUpSubscription(
+  subscriptionId: string,
+): Promise<void> {
   try {
     await deleteSubscription(subscriptionId);
   } catch {
@@ -134,7 +140,9 @@ export async function cleanUpSubscription(subscriptionId: string): Promise<void>
 }
 
 /** DELETE a CSR subscription if it exists. */
-export async function cleanUpCSRSubscription(subscriptionId: string): Promise<void> {
+export async function cleanUpCSRSubscription(
+  subscriptionId: string,
+): Promise<void> {
   try {
     await deleteCSRSubscription(subscriptionId);
   } catch {
@@ -153,9 +161,7 @@ export function expectOk<T extends { status: number }>(
 ): asserts response is T & { status: 200 | 201 | 204 } {
   if (response.status < 200 || response.status >= 300) {
     const body = "data" in response ? JSON.stringify(response.data) : "";
-    throw new Error(
-      `Expected 2xx status but got ${response.status}: ${body}`,
-    );
+    throw new Error(`Expected 2xx status but got ${response.status}: ${body}`);
   }
 }
 
@@ -180,8 +186,6 @@ export function expectStatus<T extends { status: number }>(
 export function warnIf501(status: number, operation?: string): void {
   if (status === 501) {
     const what = operation ? `: ${operation}` : "";
-    console.warn(
-      `Not implemented (501)${what}. `
-    );
+    console.warn(`Not implemented (501)${what}. `);
   }
 }
