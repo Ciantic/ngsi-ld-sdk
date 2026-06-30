@@ -295,6 +295,28 @@ function renameTwoTypes(schemasFile: SourceFile, apiFile: SourceFile): void {
   }
 }
 
+/**
+ * Convert async API functions into pure descriptor factories using ts-morph.
+ *
+ *   Before: export const foo = async (...): Promise<XxxResponse> => { ... }
+ *   After:  export const foo = (...) => { ... }
+ *
+ * The return type is inferred from `customInstance<T>(...)` inside the body.
+ */
+function desyncFunctions(apiFile: SourceFile): void {
+  for (const vd of apiFile.getVariableDeclarations()) {
+    const init = vd.getInitializer();
+    if (!init || init.getKind() !== SyntaxKind.ArrowFunction) continue;
+    const arrowFn = init.asKindOrThrow(SyntaxKind.ArrowFunction);
+    if (!arrowFn.isAsync()) continue;
+
+    // Remove `async` keyword
+    arrowFn.setIsAsync(false);
+    // Remove return type, allowing it to be inferred from fetcher
+    arrowFn.removeReturnType();
+  }
+}
+
 export default defineConfig({
   "ngsi-ld": {
     input: {
@@ -308,6 +330,12 @@ export default defineConfig({
       formatter: "prettier",
       baseUrl: {
         runtime: "process.env.NGSILD_BROKER_URL",
+      },
+      override: {
+        mutator: {
+          path: './src/fetcher.ts',
+          name: 'customInstance',
+        },
       },
     },
     hooks: {
@@ -323,6 +351,7 @@ export default defineConfig({
         renameTwoTypes(schemasFile, apiFile);
         fix200ItemTypes(schemasFile, apiFile);
         fixResponseTypeCasing(apiFile);
+        desyncFunctions(apiFile);
 
         // Inject a declare shim so the generated code can reference
         // process.env.NGSILD_BROKER_URL without requiring @types/node.

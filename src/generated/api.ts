@@ -96,6 +96,8 @@ import type {
   JsonLdContext,
 } from "./api.schemas";
 
+import { customInstance } from "../fetcher";
+
 // https://stackoverflow.com/questions/49579094/typescript-conditional-types-filter-out-readonly-properties-pick-only-requir/49579497#49579497
 type IfEquals<X, Y, A = X, B = never> =
   (<T>() => T extends X ? 1 : 2) extends <T>() => T extends Y ? 1 : 2 ? A : B;
@@ -186,26 +188,17 @@ export const getCreateEntityUrl = (params?: CreateEntityParams) => {
  * @summary Entity creation
 
  */
-export const createEntity = async (
+export const createEntity = (
   createEntityBody?: NonReadonly<CreateEntityBody>,
   params?: CreateEntityParams,
   options?: RequestInit,
-): Promise<CreateEntityResponse> => {
-  const res = await fetch(getCreateEntityUrl(params), {
+) => {
+  return customInstance<CreateEntityResponse>(getCreateEntityUrl(params), {
     ...options,
     method: "POST",
     headers: { "Content-Type": "application/ld+json", ...options?.headers },
     body: JSON.stringify(createEntityBody),
   });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: CreateEntityResponse["data"] = body ? JSON.parse(body) : {};
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as CreateEntityResponse;
 };
 
 export type QueryEntityResponse200ApplicationLdJson = {
@@ -275,23 +268,14 @@ export const getQueryEntityUrl = (params?: QueryEntityParams) => {
  * @summary Query entities
 
  */
-export const queryEntity = async (
+export const queryEntity = (
   params?: QueryEntityParams,
   options?: RequestInit,
-): Promise<QueryEntityResponse> => {
-  const res = await fetch(getQueryEntityUrl(params), {
+) => {
+  return customInstance<QueryEntityResponse>(getQueryEntityUrl(params), {
     ...options,
     method: "GET",
   });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: QueryEntityResponse["data"] = body ? JSON.parse(body) : {};
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as QueryEntityResponse;
 };
 
 export type RetrieveEntityResponse200ApplicationLdJson = {
@@ -371,24 +355,18 @@ export const getRetrieveEntityUrl = (
  * @summary Entity retrieval by id
 
  */
-export const retrieveEntity = async (
+export const retrieveEntity = (
   entityId: string,
   params?: RetrieveEntityParams,
   options?: RequestInit,
-): Promise<RetrieveEntityResponse> => {
-  const res = await fetch(getRetrieveEntityUrl(entityId, params), {
-    ...options,
-    method: "GET",
-  });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: RetrieveEntityResponse["data"] = body ? JSON.parse(body) : {};
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as RetrieveEntityResponse;
+) => {
+  return customInstance<RetrieveEntityResponse>(
+    getRetrieveEntityUrl(entityId, params),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
 };
 
 export type DeleteEntityResponse204 = {
@@ -451,24 +429,18 @@ export const getDeleteEntityUrl = (
  * @summary Entity deletion by id
 
  */
-export const deleteEntity = async (
+export const deleteEntity = (
   entityId: string,
   params?: DeleteEntityParams,
   options?: RequestInit,
-): Promise<DeleteEntityResponse> => {
-  const res = await fetch(getDeleteEntityUrl(entityId, params), {
-    ...options,
-    method: "DELETE",
-  });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: DeleteEntityResponse["data"] = body ? JSON.parse(body) : {};
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as DeleteEntityResponse;
+) => {
+  return customInstance<DeleteEntityResponse>(
+    getDeleteEntityUrl(entityId, params),
+    {
+      ...options,
+      method: "DELETE",
+    },
+  );
 };
 
 export type MergeEntityResponse204 = {
@@ -533,27 +505,21 @@ export const getMergeEntityUrl = (
  * @summary Entity merge by id
 
  */
-export const mergeEntity = async (
+export const mergeEntity = (
   entityId: string,
   mergeEntityBody?: NonReadonly<MergeEntityBody>,
   params?: MergeEntityParams,
   options?: RequestInit,
-): Promise<MergeEntityResponse> => {
-  const res = await fetch(getMergeEntityUrl(entityId, params), {
-    ...options,
-    method: "PATCH",
-    headers: { "Content-Type": "application/ld+json", ...options?.headers },
-    body: JSON.stringify(mergeEntityBody),
-  });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: MergeEntityResponse["data"] = body ? JSON.parse(body) : {};
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as MergeEntityResponse;
+) => {
+  return customInstance<MergeEntityResponse>(
+    getMergeEntityUrl(entityId, params),
+    {
+      ...options,
+      method: "PATCH",
+      headers: { "Content-Type": "application/ld+json", ...options?.headers },
+      body: JSON.stringify(mergeEntityBody),
+    },
+  );
 };
 
 export type ReplaceEntityResponse204 = {
@@ -617,27 +583,21 @@ export const getReplaceEntityUrl = (
  * @summary Entity replacement by id
 
  */
-export const replaceEntity = async (
+export const replaceEntity = (
   entityId: string,
   replaceEntityBody?: NonReadonly<ReplaceEntityBody>,
   params?: ReplaceEntityParams,
   options?: RequestInit,
-): Promise<ReplaceEntityResponse> => {
-  const res = await fetch(getReplaceEntityUrl(entityId, params), {
-    ...options,
-    method: "PUT",
-    headers: { "Content-Type": "application/ld+json", ...options?.headers },
-    body: JSON.stringify(replaceEntityBody),
-  });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: ReplaceEntityResponse["data"] = body ? JSON.parse(body) : {};
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as ReplaceEntityResponse;
+) => {
+  return customInstance<ReplaceEntityResponse>(
+    getReplaceEntityUrl(entityId, params),
+    {
+      ...options,
+      method: "PUT",
+      headers: { "Content-Type": "application/ld+json", ...options?.headers },
+      body: JSON.stringify(replaceEntityBody),
+    },
+  );
 };
 
 export type AppendAttrsResponse204 = {
@@ -701,27 +661,21 @@ export const getAppendAttrsUrl = (
  * @summary Append Attributes to Entity
 
  */
-export const appendAttrs = async (
+export const appendAttrs = (
   entityId: string,
   appendAttrsBody?: NonReadonly<AppendAttrsBody>,
   params?: AppendAttrsParams,
   options?: RequestInit,
-): Promise<AppendAttrsResponse> => {
-  const res = await fetch(getAppendAttrsUrl(entityId, params), {
-    ...options,
-    method: "POST",
-    headers: { "Content-Type": "application/ld+json", ...options?.headers },
-    body: JSON.stringify(appendAttrsBody),
-  });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: AppendAttrsResponse["data"] = body ? JSON.parse(body) : {};
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as AppendAttrsResponse;
+) => {
+  return customInstance<AppendAttrsResponse>(
+    getAppendAttrsUrl(entityId, params),
+    {
+      ...options,
+      method: "POST",
+      headers: { "Content-Type": "application/ld+json", ...options?.headers },
+      body: JSON.stringify(appendAttrsBody),
+    },
+  );
 };
 
 export type UpdateEntityResponse204 = {
@@ -785,27 +739,21 @@ export const getUpdateEntityUrl = (
  * @summary Update Attributes of an Entity
 
  */
-export const updateEntity = async (
+export const updateEntity = (
   entityId: string,
   updateEntityBody?: NonReadonly<UpdateEntityBody>,
   params?: UpdateEntityParams,
   options?: RequestInit,
-): Promise<UpdateEntityResponse> => {
-  const res = await fetch(getUpdateEntityUrl(entityId, params), {
-    ...options,
-    method: "PATCH",
-    headers: { "Content-Type": "application/ld+json", ...options?.headers },
-    body: JSON.stringify(updateEntityBody),
-  });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: UpdateEntityResponse["data"] = body ? JSON.parse(body) : {};
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as UpdateEntityResponse;
+) => {
+  return customInstance<UpdateEntityResponse>(
+    getUpdateEntityUrl(entityId, params),
+    {
+      ...options,
+      method: "PATCH",
+      headers: { "Content-Type": "application/ld+json", ...options?.headers },
+      body: JSON.stringify(updateEntityBody),
+    },
+  );
 };
 
 export type UpdateAttrsResponse204 = {
@@ -871,28 +819,22 @@ export const getUpdateAttrsUrl = (
  * @summary Partial Attribute Update
 
  */
-export const updateAttrs = async (
+export const updateAttrs = (
   entityId: string,
   attrId: string,
   attributeFragmentBody?: AttributeFragmentBody,
   params?: UpdateAttrsParams,
   options?: RequestInit,
-): Promise<UpdateAttrsResponse> => {
-  const res = await fetch(getUpdateAttrsUrl(entityId, attrId, params), {
-    ...options,
-    method: "PATCH",
-    headers: { "Content-Type": "application/ld+json", ...options?.headers },
-    body: JSON.stringify(attributeFragmentBody),
-  });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: UpdateAttrsResponse["data"] = body ? JSON.parse(body) : {};
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as UpdateAttrsResponse;
+) => {
+  return customInstance<UpdateAttrsResponse>(
+    getUpdateAttrsUrl(entityId, attrId, params),
+    {
+      ...options,
+      method: "PATCH",
+      headers: { "Content-Type": "application/ld+json", ...options?.headers },
+      body: JSON.stringify(attributeFragmentBody),
+    },
+  );
 };
 
 export type DeleteAttrsResponse204 = {
@@ -966,25 +908,19 @@ export const getDeleteAttrsUrl = (
  * @summary Attribute delete
 
  */
-export const deleteAttrs = async (
+export const deleteAttrs = (
   entityId: string,
   attrId: string,
   params?: DeleteAttrsParams,
   options?: RequestInit,
-): Promise<DeleteAttrsResponse> => {
-  const res = await fetch(getDeleteAttrsUrl(entityId, attrId, params), {
-    ...options,
-    method: "DELETE",
-  });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: DeleteAttrsResponse["data"] = body ? JSON.parse(body) : {};
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as DeleteAttrsResponse;
+) => {
+  return customInstance<DeleteAttrsResponse>(
+    getDeleteAttrsUrl(entityId, attrId, params),
+    {
+      ...options,
+      method: "DELETE",
+    },
+  );
 };
 
 export type ReplaceAttrsResponse204 = {
@@ -1049,28 +985,22 @@ export const getReplaceAttrsUrl = (
  * @summary Attribute replace
 
  */
-export const replaceAttrs = async (
+export const replaceAttrs = (
   entityId: string,
   attrId: string,
   attributeFragmentBody?: AttributeFragmentBody,
   params?: ReplaceAttrsParams,
   options?: RequestInit,
-): Promise<ReplaceAttrsResponse> => {
-  const res = await fetch(getReplaceAttrsUrl(entityId, attrId, params), {
-    ...options,
-    method: "PUT",
-    headers: { "Content-Type": "application/ld+json", ...options?.headers },
-    body: JSON.stringify(attributeFragmentBody),
-  });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: ReplaceAttrsResponse["data"] = body ? JSON.parse(body) : {};
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as ReplaceAttrsResponse;
+) => {
+  return customInstance<ReplaceAttrsResponse>(
+    getReplaceAttrsUrl(entityId, attrId, params),
+    {
+      ...options,
+      method: "PUT",
+      headers: { "Content-Type": "application/ld+json", ...options?.headers },
+      body: JSON.stringify(attributeFragmentBody),
+    },
+  );
 };
 
 export type CreateCSRResponse201 = {
@@ -1116,25 +1046,16 @@ export const getCreateCSRUrl = () => {
  * @summary Csource registration creation
 
  */
-export const createCSR = async (
+export const createCSR = (
   createCSRBody?: NonReadonly<CreateCSRBody>,
   options?: RequestInit,
-): Promise<CreateCSRResponse> => {
-  const res = await fetch(getCreateCSRUrl(), {
+) => {
+  return customInstance<CreateCSRResponse>(getCreateCSRUrl(), {
     ...options,
     method: "POST",
     headers: { "Content-Type": "application/ld+json", ...options?.headers },
     body: JSON.stringify(createCSRBody),
   });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: CreateCSRResponse["data"] = body ? JSON.parse(body) : undefined;
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as CreateCSRResponse;
 };
 
 export type QueryCSRResponse200 = {
@@ -1200,19 +1121,11 @@ export const getQueryCSRUrl = (params?: QueryCSRParams) => {
  * @summary Discover Csource registrations
 
  */
-export const queryCSR = async (
-  params?: QueryCSRParams,
-  options?: RequestInit,
-): Promise<QueryCSRResponse> => {
-  const res = await fetch(getQueryCSRUrl(params), {
+export const queryCSR = (params?: QueryCSRParams, options?: RequestInit) => {
+  return customInstance<QueryCSRResponse>(getQueryCSRUrl(params), {
     ...options,
     method: "GET",
   });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: QueryCSRResponse["data"] = body ? JSON.parse(body) : {};
-  return { data, status: res.status, headers: res.headers } as QueryCSRResponse;
 };
 
 export type RetrieveCSRResponse200 = {
@@ -1268,24 +1181,18 @@ export const getRetrieveCSRUrl = (
  * @summary Csource registration retrieval by id
 
  */
-export const retrieveCSR = async (
+export const retrieveCSR = (
   registrationId: string,
   params?: RetrieveCSRParams,
   options?: RequestInit,
-): Promise<RetrieveCSRResponse> => {
-  const res = await fetch(getRetrieveCSRUrl(registrationId, params), {
-    ...options,
-    method: "GET",
-  });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: RetrieveCSRResponse["data"] = body ? JSON.parse(body) : {};
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as RetrieveCSRResponse;
+) => {
+  return customInstance<RetrieveCSRResponse>(
+    getRetrieveCSRUrl(registrationId, params),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
 };
 
 export type UpdateCSRResponse204 = {
@@ -1326,26 +1233,17 @@ export const getUpdateCSRUrl = (registrationId: string) => {
  * @summary Csource registration update by id
 
  */
-export const updateCSR = async (
+export const updateCSR = (
   registrationId: string,
   updateCSRBody?: NonReadonly<UpdateCSRBody>,
   options?: RequestInit,
-): Promise<UpdateCSRResponse> => {
-  const res = await fetch(getUpdateCSRUrl(registrationId), {
+) => {
+  return customInstance<UpdateCSRResponse>(getUpdateCSRUrl(registrationId), {
     ...options,
     method: "PATCH",
     headers: { "Content-Type": "application/ld+json", ...options?.headers },
     body: JSON.stringify(updateCSRBody),
   });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: UpdateCSRResponse["data"] = body ? JSON.parse(body) : undefined;
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as UpdateCSRResponse;
 };
 
 export type DeleteCSRResponse204 = {
@@ -1386,23 +1284,11 @@ export const getDeleteCSRUrl = (registrationId: string) => {
  * @summary Csource registration deletion by id
 
  */
-export const deleteCSR = async (
-  registrationId: string,
-  options?: RequestInit,
-): Promise<DeleteCSRResponse> => {
-  const res = await fetch(getDeleteCSRUrl(registrationId), {
+export const deleteCSR = (registrationId: string, options?: RequestInit) => {
+  return customInstance<DeleteCSRResponse>(getDeleteCSRUrl(registrationId), {
     ...options,
     method: "DELETE",
   });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: DeleteCSRResponse["data"] = body ? JSON.parse(body) : undefined;
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as DeleteCSRResponse;
 };
 
 export type CreateSubscriptionResponse201 = {
@@ -1456,28 +1342,20 @@ export const getCreateSubscriptionUrl = (params?: CreateSubscriptionParams) => {
  * @summary Create Subscription
 
  */
-export const createSubscription = async (
+export const createSubscription = (
   subscriptionBody?: SubscriptionBody,
   params?: CreateSubscriptionParams,
   options?: RequestInit,
-): Promise<CreateSubscriptionResponse> => {
-  const res = await fetch(getCreateSubscriptionUrl(params), {
-    ...options,
-    method: "POST",
-    headers: { "Content-Type": "application/ld+json", ...options?.headers },
-    body: JSON.stringify(subscriptionBody),
-  });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: CreateSubscriptionResponse["data"] = body
-    ? JSON.parse(body)
-    : undefined;
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as CreateSubscriptionResponse;
+) => {
+  return customInstance<CreateSubscriptionResponse>(
+    getCreateSubscriptionUrl(params),
+    {
+      ...options,
+      method: "POST",
+      headers: { "Content-Type": "application/ld+json", ...options?.headers },
+      body: JSON.stringify(subscriptionBody),
+    },
+  );
 };
 
 export type QuerySubscriptionResponse200 = {
@@ -1523,23 +1401,17 @@ export const getQuerySubscriptionUrl = (params?: QuerySubscriptionParams) => {
  * @summary Retrieve list of Subscriptions
 
  */
-export const querySubscription = async (
+export const querySubscription = (
   params?: QuerySubscriptionParams,
   options?: RequestInit,
-): Promise<QuerySubscriptionResponse> => {
-  const res = await fetch(getQuerySubscriptionUrl(params), {
-    ...options,
-    method: "GET",
-  });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: QuerySubscriptionResponse["data"] = body ? JSON.parse(body) : {};
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as QuerySubscriptionResponse;
+) => {
+  return customInstance<QuerySubscriptionResponse>(
+    getQuerySubscriptionUrl(params),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
 };
 
 export type RetrieveSubscriptionResponse200 = {
@@ -1596,26 +1468,18 @@ export const getRetrieveSubscriptionUrl = (
  * @summary Subscription retrieval by id
 
  */
-export const retrieveSubscription = async (
+export const retrieveSubscription = (
   subscriptionId: string,
   params?: RetrieveSubscriptionParams,
   options?: RequestInit,
-): Promise<RetrieveSubscriptionResponse> => {
-  const res = await fetch(getRetrieveSubscriptionUrl(subscriptionId, params), {
-    ...options,
-    method: "GET",
-  });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: RetrieveSubscriptionResponse["data"] = body
-    ? JSON.parse(body)
-    : {};
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as RetrieveSubscriptionResponse;
+) => {
+  return customInstance<RetrieveSubscriptionResponse>(
+    getRetrieveSubscriptionUrl(subscriptionId, params),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
 };
 
 export type UpdateSubscriptionResponse204 = {
@@ -1672,29 +1536,21 @@ export const getUpdateSubscriptionUrl = (
  * @summary Subscription update by id
 
  */
-export const updateSubscription = async (
+export const updateSubscription = (
   subscriptionId: string,
   subscriptionFragmentBody?: SubscriptionFragmentBody,
   params?: UpdateSubscriptionParams,
   options?: RequestInit,
-): Promise<UpdateSubscriptionResponse> => {
-  const res = await fetch(getUpdateSubscriptionUrl(subscriptionId, params), {
-    ...options,
-    method: "PATCH",
-    headers: { "Content-Type": "application/ld+json", ...options?.headers },
-    body: JSON.stringify(subscriptionFragmentBody),
-  });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: UpdateSubscriptionResponse["data"] = body
-    ? JSON.parse(body)
-    : undefined;
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as UpdateSubscriptionResponse;
+) => {
+  return customInstance<UpdateSubscriptionResponse>(
+    getUpdateSubscriptionUrl(subscriptionId, params),
+    {
+      ...options,
+      method: "PATCH",
+      headers: { "Content-Type": "application/ld+json", ...options?.headers },
+      body: JSON.stringify(subscriptionFragmentBody),
+    },
+  );
 };
 
 export type DeleteSubscriptionResponse204 = {
@@ -1751,26 +1607,18 @@ export const getDeleteSubscriptionUrl = (
  * @summary Subscription deletion by id
 
  */
-export const deleteSubscription = async (
+export const deleteSubscription = (
   subscriptionId: string,
   params?: DeleteSubscriptionParams,
   options?: RequestInit,
-): Promise<DeleteSubscriptionResponse> => {
-  const res = await fetch(getDeleteSubscriptionUrl(subscriptionId, params), {
-    ...options,
-    method: "DELETE",
-  });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: DeleteSubscriptionResponse["data"] = body
-    ? JSON.parse(body)
-    : undefined;
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as DeleteSubscriptionResponse;
+) => {
+  return customInstance<DeleteSubscriptionResponse>(
+    getDeleteSubscriptionUrl(subscriptionId, params),
+    {
+      ...options,
+      method: "DELETE",
+    },
+  );
 };
 
 export type CreateCSRSubscriptionResponse201 = {
@@ -1812,27 +1660,19 @@ export const getCreateCSRSubscriptionUrl = () => {
  * @summary Create subscription to Csource registration
 
  */
-export const createCSRSubscription = async (
+export const createCSRSubscription = (
   subscriptionBody?: SubscriptionBody,
   options?: RequestInit,
-): Promise<CreateCSRSubscriptionResponse> => {
-  const res = await fetch(getCreateCSRSubscriptionUrl(), {
-    ...options,
-    method: "POST",
-    headers: { "Content-Type": "application/ld+json", ...options?.headers },
-    body: JSON.stringify(subscriptionBody),
-  });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: CreateCSRSubscriptionResponse["data"] = body
-    ? JSON.parse(body)
-    : undefined;
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as CreateCSRSubscriptionResponse;
+) => {
+  return customInstance<CreateCSRSubscriptionResponse>(
+    getCreateCSRSubscriptionUrl(),
+    {
+      ...options,
+      method: "POST",
+      headers: { "Content-Type": "application/ld+json", ...options?.headers },
+      body: JSON.stringify(subscriptionBody),
+    },
+  );
 };
 
 export type QueryCSRSubscriptionResponse200 = {
@@ -1882,25 +1722,17 @@ export const getQueryCSRSubscriptionUrl = (
  * @summary Retrieval of list of subscriptions to Csource registrations
 
  */
-export const queryCSRSubscription = async (
+export const queryCSRSubscription = (
   params?: QueryCSRSubscriptionParams,
   options?: RequestInit,
-): Promise<QueryCSRSubscriptionResponse> => {
-  const res = await fetch(getQueryCSRSubscriptionUrl(params), {
-    ...options,
-    method: "GET",
-  });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: QueryCSRSubscriptionResponse["data"] = body
-    ? JSON.parse(body)
-    : {};
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as QueryCSRSubscriptionResponse;
+) => {
+  return customInstance<QueryCSRSubscriptionResponse>(
+    getQueryCSRSubscriptionUrl(params),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
 };
 
 export type RetrieveCSRSubscriptionResponse200 = {
@@ -1957,29 +1789,18 @@ export const getRetrieveCSRSubscriptionUrl = (
  * @summary Csource registration subscription update by id
 
  */
-export const retrieveCSRSubscription = async (
+export const retrieveCSRSubscription = (
   subscriptionId: string,
   params?: RetrieveCSRSubscriptionParams,
   options?: RequestInit,
-): Promise<RetrieveCSRSubscriptionResponse> => {
-  const res = await fetch(
+) => {
+  return customInstance<RetrieveCSRSubscriptionResponse>(
     getRetrieveCSRSubscriptionUrl(subscriptionId, params),
     {
       ...options,
       method: "GET",
     },
   );
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: RetrieveCSRSubscriptionResponse["data"] = body
-    ? JSON.parse(body)
-    : {};
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as RetrieveCSRSubscriptionResponse;
 };
 
 export type UpdateCSRSubscriptionResponse204 = {
@@ -2021,28 +1842,20 @@ export const getUpdateCSRSubscriptionUrl = (subscriptionId: string) => {
  * @summary Csource registration subscription update by id
 
  */
-export const updateCSRSubscription = async (
+export const updateCSRSubscription = (
   subscriptionId: string,
   subscriptionFragmentBody?: SubscriptionFragmentBody,
   options?: RequestInit,
-): Promise<UpdateCSRSubscriptionResponse> => {
-  const res = await fetch(getUpdateCSRSubscriptionUrl(subscriptionId), {
-    ...options,
-    method: "PATCH",
-    headers: { "Content-Type": "application/ld+json", ...options?.headers },
-    body: JSON.stringify(subscriptionFragmentBody),
-  });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: UpdateCSRSubscriptionResponse["data"] = body
-    ? JSON.parse(body)
-    : undefined;
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as UpdateCSRSubscriptionResponse;
+) => {
+  return customInstance<UpdateCSRSubscriptionResponse>(
+    getUpdateCSRSubscriptionUrl(subscriptionId),
+    {
+      ...options,
+      method: "PATCH",
+      headers: { "Content-Type": "application/ld+json", ...options?.headers },
+      body: JSON.stringify(subscriptionFragmentBody),
+    },
+  );
 };
 
 export type DeleteCSRSubscriptionResponse204 = {
@@ -2084,25 +1897,17 @@ export const getDeleteCSRSubscriptionUrl = (subscriptionId: string) => {
  * @summary Csource registration subscription deletion by id
 
  */
-export const deleteCSRSubscription = async (
+export const deleteCSRSubscription = (
   subscriptionId: string,
   options?: RequestInit,
-): Promise<DeleteCSRSubscriptionResponse> => {
-  const res = await fetch(getDeleteCSRSubscriptionUrl(subscriptionId), {
-    ...options,
-    method: "DELETE",
-  });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: DeleteCSRSubscriptionResponse["data"] = body
-    ? JSON.parse(body)
-    : undefined;
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as DeleteCSRSubscriptionResponse;
+) => {
+  return customInstance<DeleteCSRSubscriptionResponse>(
+    getDeleteCSRSubscriptionUrl(subscriptionId),
+    {
+      ...options,
+      method: "DELETE",
+    },
+  );
 };
 
 export type CreateBatchResponse201 = {
@@ -2155,26 +1960,17 @@ export const getCreateBatchUrl = (params?: CreateBatchParams) => {
  * @summary Batch Entity Creation
 
  */
-export const createBatch = async (
+export const createBatch = (
   createBatchBodyItem?: NonReadonly<CreateBatchBodyItem[]>,
   params?: CreateBatchParams,
   options?: RequestInit,
-): Promise<CreateBatchResponse> => {
-  const res = await fetch(getCreateBatchUrl(params), {
+) => {
+  return customInstance<CreateBatchResponse>(getCreateBatchUrl(params), {
     ...options,
     method: "POST",
     headers: { "Content-Type": "application/ld+json", ...options?.headers },
     body: JSON.stringify(createBatchBodyItem),
   });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: CreateBatchResponse["data"] = body ? JSON.parse(body) : {};
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as CreateBatchResponse;
 };
 
 export type UpsertBatchResponse201 = {
@@ -2233,26 +2029,17 @@ export const getUpsertBatchUrl = (params?: UpsertBatchParams) => {
  * @summary Batch Entity Creation or Update (Upsert)
 
  */
-export const upsertBatch = async (
+export const upsertBatch = (
   upsertBatchBodyItem?: NonReadonly<UpsertBatchBodyItem[]>,
   params?: UpsertBatchParams,
   options?: RequestInit,
-): Promise<UpsertBatchResponse> => {
-  const res = await fetch(getUpsertBatchUrl(params), {
+) => {
+  return customInstance<UpsertBatchResponse>(getUpsertBatchUrl(params), {
     ...options,
     method: "POST",
     headers: { "Content-Type": "application/ld+json", ...options?.headers },
     body: JSON.stringify(upsertBatchBodyItem),
   });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: UpsertBatchResponse["data"] = body ? JSON.parse(body) : {};
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as UpsertBatchResponse;
 };
 
 export type UpdateBatchResponse204 = {
@@ -2305,26 +2092,17 @@ export const getUpdateBatchUrl = (params?: UpdateBatchParams) => {
  * @summary Batch Entity Update
 
  */
-export const updateBatch = async (
+export const updateBatch = (
   updateBatchBodyItem?: NonReadonly<UpdateBatchBodyItem[]>,
   params?: UpdateBatchParams,
   options?: RequestInit,
-): Promise<UpdateBatchResponse> => {
-  const res = await fetch(getUpdateBatchUrl(params), {
+) => {
+  return customInstance<UpdateBatchResponse>(getUpdateBatchUrl(params), {
     ...options,
     method: "POST",
     headers: { "Content-Type": "application/ld+json", ...options?.headers },
     body: JSON.stringify(updateBatchBodyItem),
   });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: UpdateBatchResponse["data"] = body ? JSON.parse(body) : {};
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as UpdateBatchResponse;
 };
 
 export type DeleteBatchResponse204 = {
@@ -2377,26 +2155,17 @@ export const getDeleteBatchUrl = (params?: DeleteBatchParams) => {
  * @summary Batch Entity Delete
 
  */
-export const deleteBatch = async (
+export const deleteBatch = (
   deleteBatchBody?: string[],
   params?: DeleteBatchParams,
   options?: RequestInit,
-): Promise<DeleteBatchResponse> => {
-  const res = await fetch(getDeleteBatchUrl(params), {
+) => {
+  return customInstance<DeleteBatchResponse>(getDeleteBatchUrl(params), {
     ...options,
     method: "POST",
     headers: { "Content-Type": "application/json", ...options?.headers },
     body: JSON.stringify(deleteBatchBody),
   });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: DeleteBatchResponse["data"] = body ? JSON.parse(body) : {};
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as DeleteBatchResponse;
 };
 
 export type QueryBatchResponse200ApplicationLdJson = {
@@ -2450,26 +2219,17 @@ export const getQueryBatchUrl = (params?: QueryBatchParams) => {
  * @summary Query entities based on POST
 
  */
-export const queryBatch = async (
+export const queryBatch = (
   queryBatchBody?: QueryBatchBody,
   params?: QueryBatchParams,
   options?: RequestInit,
-): Promise<QueryBatchResponse> => {
-  const res = await fetch(getQueryBatchUrl(params), {
+) => {
+  return customInstance<QueryBatchResponse>(getQueryBatchUrl(params), {
     ...options,
     method: "POST",
     headers: { "Content-Type": "application/ld+json", ...options?.headers },
     body: JSON.stringify(queryBatchBody),
   });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: QueryBatchResponse["data"] = body ? JSON.parse(body) : {};
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as QueryBatchResponse;
 };
 
 export type MergeBatchResponse204 = {
@@ -2524,26 +2284,17 @@ export const getMergeBatchUrl = (params?: MergeBatchParams) => {
  * @summary Batch Entity Merge
 
  */
-export const mergeBatch = async (
+export const mergeBatch = (
   mergeBatchBodyItem?: NonReadonly<MergeBatchBodyItem[]>,
   params?: MergeBatchParams,
   options?: RequestInit,
-): Promise<MergeBatchResponse> => {
-  const res = await fetch(getMergeBatchUrl(params), {
+) => {
+  return customInstance<MergeBatchResponse>(getMergeBatchUrl(params), {
     ...options,
     method: "POST",
     headers: { "Content-Type": "application/ld+json", ...options?.headers },
     body: JSON.stringify(mergeBatchBodyItem),
   });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: MergeBatchResponse["data"] = body ? JSON.parse(body) : {};
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as MergeBatchResponse;
 };
 
 export type UpsertTemporalResponse201 = {
@@ -2604,28 +2355,17 @@ export const getUpsertTemporalUrl = (params?: UpsertTemporalParams) => {
  * @summary Temporal Representation of Entity creation
 
  */
-export const upsertTemporal = async (
+export const upsertTemporal = (
   entityTemporalBody?: EntityTemporalBody,
   params?: UpsertTemporalParams,
   options?: RequestInit,
-): Promise<UpsertTemporalResponse> => {
-  const res = await fetch(getUpsertTemporalUrl(params), {
+) => {
+  return customInstance<UpsertTemporalResponse>(getUpsertTemporalUrl(params), {
     ...options,
     method: "POST",
     headers: { "Content-Type": "application/ld+json", ...options?.headers },
     body: JSON.stringify(entityTemporalBody),
   });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: UpsertTemporalResponse["data"] = body
-    ? JSON.parse(body)
-    : undefined;
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as UpsertTemporalResponse;
 };
 
 export type QueryTemporalResponse200 = {
@@ -2683,23 +2423,14 @@ export const getQueryTemporalUrl = (params?: QueryTemporalParams) => {
  * @summary Query temporal evolution of Entities
 
  */
-export const queryTemporal = async (
+export const queryTemporal = (
   params?: QueryTemporalParams,
   options?: RequestInit,
-): Promise<QueryTemporalResponse> => {
-  const res = await fetch(getQueryTemporalUrl(params), {
+) => {
+  return customInstance<QueryTemporalResponse>(getQueryTemporalUrl(params), {
     ...options,
     method: "GET",
   });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: QueryTemporalResponse["data"] = body ? JSON.parse(body) : {};
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as QueryTemporalResponse;
 };
 
 export type RetrieveTemporalResponse200 = {
@@ -2764,24 +2495,18 @@ export const getRetrieveTemporalUrl = (
  * @summary Temporal Representation of Entity retrieval by id
 
  */
-export const retrieveTemporal = async (
+export const retrieveTemporal = (
   entityId: string,
   params?: RetrieveTemporalParams,
   options?: RequestInit,
-): Promise<RetrieveTemporalResponse> => {
-  const res = await fetch(getRetrieveTemporalUrl(entityId, params), {
-    ...options,
-    method: "GET",
-  });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: RetrieveTemporalResponse["data"] = body ? JSON.parse(body) : {};
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as RetrieveTemporalResponse;
+) => {
+  return customInstance<RetrieveTemporalResponse>(
+    getRetrieveTemporalUrl(entityId, params),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
 };
 
 export type DeleteTemporalResponse204 = {
@@ -2837,26 +2562,18 @@ export const getDeleteTemporalUrl = (
  * @summary Temporal Representation of Entity deletion by id
 
  */
-export const deleteTemporal = async (
+export const deleteTemporal = (
   entityId: string,
   params?: DeleteTemporalParams,
   options?: RequestInit,
-): Promise<DeleteTemporalResponse> => {
-  const res = await fetch(getDeleteTemporalUrl(entityId, params), {
-    ...options,
-    method: "DELETE",
-  });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: DeleteTemporalResponse["data"] = body
-    ? JSON.parse(body)
-    : undefined;
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as DeleteTemporalResponse;
+) => {
+  return customInstance<DeleteTemporalResponse>(
+    getDeleteTemporalUrl(entityId, params),
+    {
+      ...options,
+      method: "DELETE",
+    },
+  );
 };
 
 export type AppendAttrsTemporalResponse204 = {
@@ -2913,29 +2630,21 @@ export const getAppendAttrsTemporalUrl = (
  * @summary Temporal Representation of Entity Attribute instance addition
 
  */
-export const appendAttrsTemporal = async (
+export const appendAttrsTemporal = (
   entityId: string,
   entityTemporalFragmentBody?: EntityTemporalFragmentBody,
   params?: AppendAttrsTemporalParams,
   options?: RequestInit,
-): Promise<AppendAttrsTemporalResponse> => {
-  const res = await fetch(getAppendAttrsTemporalUrl(entityId, params), {
-    ...options,
-    method: "POST",
-    headers: { "Content-Type": "application/ld+json", ...options?.headers },
-    body: JSON.stringify(entityTemporalFragmentBody),
-  });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: AppendAttrsTemporalResponse["data"] = body
-    ? JSON.parse(body)
-    : undefined;
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as AppendAttrsTemporalResponse;
+) => {
+  return customInstance<AppendAttrsTemporalResponse>(
+    getAppendAttrsTemporalUrl(entityId, params),
+    {
+      ...options,
+      method: "POST",
+      headers: { "Content-Type": "application/ld+json", ...options?.headers },
+      body: JSON.stringify(entityTemporalFragmentBody),
+    },
+  );
 };
 
 export type DeleteAttrsTemporalResponse204 = {
@@ -3003,27 +2712,19 @@ export const getDeleteAttrsTemporalUrl = (
  * @summary Attribute from Temporal Representation of Entity deletion
 
  */
-export const deleteAttrsTemporal = async (
+export const deleteAttrsTemporal = (
   entityId: string,
   attrId: string,
   params?: DeleteAttrsTemporalParams,
   options?: RequestInit,
-): Promise<DeleteAttrsTemporalResponse> => {
-  const res = await fetch(getDeleteAttrsTemporalUrl(entityId, attrId, params), {
-    ...options,
-    method: "DELETE",
-  });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: DeleteAttrsTemporalResponse["data"] = body
-    ? JSON.parse(body)
-    : undefined;
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as DeleteAttrsTemporalResponse;
+) => {
+  return customInstance<DeleteAttrsTemporalResponse>(
+    getDeleteAttrsTemporalUrl(entityId, attrId, params),
+    {
+      ...options,
+      method: "DELETE",
+    },
+  );
 };
 
 export type UpdateAttrsTemporalResponse204 = {
@@ -3086,15 +2787,15 @@ export const getUpdateAttrsTemporalUrl = (
  * @summary Attribute Instance update
 
  */
-export const updateAttrsTemporal = async (
+export const updateAttrsTemporal = (
   entityId: string,
   attrId: string,
   instanceId: string,
   entityTemporalFragmentBody?: EntityTemporalFragmentBody,
   params?: UpdateAttrsTemporalParams,
   options?: RequestInit,
-): Promise<UpdateAttrsTemporalResponse> => {
-  const res = await fetch(
+) => {
+  return customInstance<UpdateAttrsTemporalResponse>(
     getUpdateAttrsTemporalUrl(entityId, attrId, instanceId, params),
     {
       ...options,
@@ -3103,17 +2804,6 @@ export const updateAttrsTemporal = async (
       body: JSON.stringify(entityTemporalFragmentBody),
     },
   );
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: UpdateAttrsTemporalResponse["data"] = body
-    ? JSON.parse(body)
-    : undefined;
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as UpdateAttrsTemporalResponse;
 };
 
 export type DeleteAttrInstanceTemporalResponse204 = {
@@ -3177,31 +2867,20 @@ export const getDeleteAttrInstanceTemporalUrl = (
  * @summary Attribute Instance deletion by instance id
 
  */
-export const deleteAttrInstanceTemporal = async (
+export const deleteAttrInstanceTemporal = (
   entityId: string,
   attrId: string,
   instanceId: string,
   params?: DeleteAttrInstanceTemporalParams,
   options?: RequestInit,
-): Promise<DeleteAttrInstanceTemporalResponse> => {
-  const res = await fetch(
+) => {
+  return customInstance<DeleteAttrInstanceTemporalResponse>(
     getDeleteAttrInstanceTemporalUrl(entityId, attrId, instanceId, params),
     {
       ...options,
       method: "DELETE",
     },
   );
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: DeleteAttrInstanceTemporalResponse["data"] = body
-    ? JSON.parse(body)
-    : undefined;
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as DeleteAttrInstanceTemporalResponse;
 };
 
 export type TemporalQueryBatchResponse200 = {
@@ -3249,26 +2928,20 @@ export const getTemporalQueryBatchUrl = (params?: TemporalQueryBatchParams) => {
  * @summary Temporal Representation of Entity Query based on POST
 
  */
-export const temporalQueryBatch = async (
+export const temporalQueryBatch = (
   queryTemporalBody?: QueryTemporalBody,
   params?: TemporalQueryBatchParams,
   options?: RequestInit,
-): Promise<TemporalQueryBatchResponse> => {
-  const res = await fetch(getTemporalQueryBatchUrl(params), {
-    ...options,
-    method: "POST",
-    headers: { "Content-Type": "application/ld+json", ...options?.headers },
-    body: JSON.stringify(queryTemporalBody),
-  });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: TemporalQueryBatchResponse["data"] = body ? JSON.parse(body) : {};
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as TemporalQueryBatchResponse;
+) => {
+  return customInstance<TemporalQueryBatchResponse>(
+    getTemporalQueryBatchUrl(params),
+    {
+      ...options,
+      method: "POST",
+      headers: { "Content-Type": "application/ld+json", ...options?.headers },
+      body: JSON.stringify(queryTemporalBody),
+    },
+  );
 };
 
 export type RetrieveEntityTypesResponse200 = {
@@ -3324,25 +2997,17 @@ export const getRetrieveEntityTypesUrl = (
  * @summary Retrieve available entity types
 
  */
-export const retrieveEntityTypes = async (
+export const retrieveEntityTypes = (
   params?: RetrieveEntityTypesParams,
   options?: RequestInit,
-): Promise<RetrieveEntityTypesResponse> => {
-  const res = await fetch(getRetrieveEntityTypesUrl(params), {
-    ...options,
-    method: "GET",
-  });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: RetrieveEntityTypesResponse["data"] = body
-    ? JSON.parse(body)
-    : {};
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as RetrieveEntityTypesResponse;
+) => {
+  return customInstance<RetrieveEntityTypesResponse>(
+    getRetrieveEntityTypesUrl(params),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
 };
 
 export type RetrieveEntityTypeInfoResponse200 = {
@@ -3404,26 +3069,18 @@ export const getRetrieveEntityTypeInfoUrl = (
  * @summary Details about available entity type
 
  */
-export const retrieveEntityTypeInfo = async (
+export const retrieveEntityTypeInfo = (
   type: string,
   params?: RetrieveEntityTypeInfoParams,
   options?: RequestInit,
-): Promise<RetrieveEntityTypeInfoResponse> => {
-  const res = await fetch(getRetrieveEntityTypeInfoUrl(type, params), {
-    ...options,
-    method: "GET",
-  });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: RetrieveEntityTypeInfoResponse["data"] = body
-    ? JSON.parse(body)
-    : {};
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as RetrieveEntityTypeInfoResponse;
+) => {
+  return customInstance<RetrieveEntityTypeInfoResponse>(
+    getRetrieveEntityTypeInfoUrl(type, params),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
 };
 
 export type RetrieveAttrTypesResponse200 = {
@@ -3475,23 +3132,17 @@ export const getRetrieveAttrTypesUrl = (params?: RetrieveAttrTypesParams) => {
  * @summary Available attributes
 
  */
-export const retrieveAttrTypes = async (
+export const retrieveAttrTypes = (
   params?: RetrieveAttrTypesParams,
   options?: RequestInit,
-): Promise<RetrieveAttrTypesResponse> => {
-  const res = await fetch(getRetrieveAttrTypesUrl(params), {
-    ...options,
-    method: "GET",
-  });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: RetrieveAttrTypesResponse["data"] = body ? JSON.parse(body) : {};
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as RetrieveAttrTypesResponse;
+) => {
+  return customInstance<RetrieveAttrTypesResponse>(
+    getRetrieveAttrTypesUrl(params),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
 };
 
 export type RetrieveAttrTypeInfoResponse200 = {
@@ -3552,26 +3203,18 @@ export const getRetrieveAttrTypeInfoUrl = (
  * @summary Details about available attribute
 
  */
-export const retrieveAttrTypeInfo = async (
+export const retrieveAttrTypeInfo = (
   attrId: string,
   params?: RetrieveAttrTypeInfoParams,
   options?: RequestInit,
-): Promise<RetrieveAttrTypeInfoResponse> => {
-  const res = await fetch(getRetrieveAttrTypeInfoUrl(attrId, params), {
-    ...options,
-    method: "GET",
-  });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: RetrieveAttrTypeInfoResponse["data"] = body
-    ? JSON.parse(body)
-    : {};
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as RetrieveAttrTypeInfoResponse;
+) => {
+  return customInstance<RetrieveAttrTypeInfoResponse>(
+    getRetrieveAttrTypeInfoUrl(attrId, params),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
 };
 
 export type CreateContextResponse201 = {
@@ -3606,27 +3249,16 @@ export const getCreateContextUrl = () => {
  * @summary Add a user @context to the internal cache
 
  */
-export const createContext = async (
+export const createContext = (
   createContextBody?: CreateContextBody,
   options?: RequestInit,
-): Promise<CreateContextResponse> => {
-  const res = await fetch(getCreateContextUrl(), {
+) => {
+  return customInstance<CreateContextResponse>(getCreateContextUrl(), {
     ...options,
     method: "POST",
     headers: { "Content-Type": "application/ld+json", ...options?.headers },
     body: JSON.stringify(createContextBody),
   });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: CreateContextResponse["data"] = body
-    ? JSON.parse(body)
-    : undefined;
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as CreateContextResponse;
 };
 
 export type ListContextsResponse200 = {
@@ -3681,23 +3313,14 @@ export const getListContextsUrl = (params?: ListContextsParams) => {
  * @summary List all cached @contexts
 
  */
-export const listContexts = async (
+export const listContexts = (
   params?: ListContextsParams,
   options?: RequestInit,
-): Promise<ListContextsResponse> => {
-  const res = await fetch(getListContextsUrl(params), {
+) => {
+  return customInstance<ListContextsResponse>(getListContextsUrl(params), {
     ...options,
     method: "GET",
   });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: ListContextsResponse["data"] = body ? JSON.parse(body) : {};
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as ListContextsResponse;
 };
 
 export type RetrieveContextResponse200 = {
@@ -3762,24 +3385,18 @@ export const getRetrieveContextUrl = (
  * @summary Serve one specific user @context
 
  */
-export const retrieveContext = async (
+export const retrieveContext = (
   contextId: string,
   params?: RetrieveContextParams,
   options?: RequestInit,
-): Promise<RetrieveContextResponse> => {
-  const res = await fetch(getRetrieveContextUrl(contextId, params), {
-    ...options,
-    method: "GET",
-  });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: RetrieveContextResponse["data"] = body ? JSON.parse(body) : {};
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as RetrieveContextResponse;
+) => {
+  return customInstance<RetrieveContextResponse>(
+    getRetrieveContextUrl(contextId, params),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
 };
 
 export type DeleteContextResponse204 = {
@@ -3845,26 +3462,18 @@ export const getDeleteContextUrl = (
  * @summary Delete one specific @context from internal cache, possibly re-inserting a freshly downloaded copy of it
 
  */
-export const deleteContext = async (
+export const deleteContext = (
   contextId: string,
   params?: DeleteContextParams,
   options?: RequestInit,
-): Promise<DeleteContextResponse> => {
-  const res = await fetch(getDeleteContextUrl(contextId, params), {
-    ...options,
-    method: "DELETE",
-  });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: DeleteContextResponse["data"] = body
-    ? JSON.parse(body)
-    : undefined;
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as DeleteContextResponse;
+) => {
+  return customInstance<DeleteContextResponse>(
+    getDeleteContextUrl(contextId, params),
+    {
+      ...options,
+      method: "DELETE",
+    },
+  );
 };
 
 export type RetrieveEntityMapResponse200 = {
@@ -3905,23 +3514,17 @@ export const getRetrieveEntityMapUrl = (entityMapId: string) => {
  * @summary EntityMap Retrieval by id
 
  */
-export const retrieveEntityMap = async (
+export const retrieveEntityMap = (
   entityMapId: string,
   options?: RequestInit,
-): Promise<RetrieveEntityMapResponse> => {
-  const res = await fetch(getRetrieveEntityMapUrl(entityMapId), {
-    ...options,
-    method: "GET",
-  });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: RetrieveEntityMapResponse["data"] = body ? JSON.parse(body) : {};
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as RetrieveEntityMapResponse;
+) => {
+  return customInstance<RetrieveEntityMapResponse>(
+    getRetrieveEntityMapUrl(entityMapId),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
 };
 
 export type UpdateEntityMapResponse204 = {
@@ -3963,28 +3566,20 @@ export const getUpdateEntityMapUrl = (entityMapId: string) => {
  * @summary EntityMap Update by id
 
  */
-export const updateEntityMap = async (
+export const updateEntityMap = (
   entityMapId: string,
   updateEntityMapBody?: NonReadonly<UpdateEntityMapBody>,
   options?: RequestInit,
-): Promise<UpdateEntityMapResponse> => {
-  const res = await fetch(getUpdateEntityMapUrl(entityMapId), {
-    ...options,
-    method: "PATCH",
-    headers: { "Content-Type": "application/ld+json", ...options?.headers },
-    body: JSON.stringify(updateEntityMapBody),
-  });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: UpdateEntityMapResponse["data"] = body
-    ? JSON.parse(body)
-    : undefined;
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as UpdateEntityMapResponse;
+) => {
+  return customInstance<UpdateEntityMapResponse>(
+    getUpdateEntityMapUrl(entityMapId),
+    {
+      ...options,
+      method: "PATCH",
+      headers: { "Content-Type": "application/ld+json", ...options?.headers },
+      body: JSON.stringify(updateEntityMapBody),
+    },
+  );
 };
 
 export type DeleteEntityMapResponse204 = {
@@ -4025,25 +3620,14 @@ export const getDeleteEntityMapUrl = (entityMapId: string) => {
  * @summary EntityMap Deletion by id
 
  */
-export const deleteEntityMap = async (
-  entityMapId: string,
-  options?: RequestInit,
-): Promise<DeleteEntityMapResponse> => {
-  const res = await fetch(getDeleteEntityMapUrl(entityMapId), {
-    ...options,
-    method: "DELETE",
-  });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: DeleteEntityMapResponse["data"] = body
-    ? JSON.parse(body)
-    : undefined;
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as DeleteEntityMapResponse;
+export const deleteEntityMap = (entityMapId: string, options?: RequestInit) => {
+  return customInstance<DeleteEntityMapResponse>(
+    getDeleteEntityMapUrl(entityMapId),
+    {
+      ...options,
+      method: "DELETE",
+    },
+  );
 };
 
 export type RetrieveCSIdentityInfoResponse200 = {
@@ -4080,22 +3664,12 @@ export const getRetrieveCSIdentityInfoUrl = () => {
  * @summary Context Source Identity Retrieval
 
  */
-export const retrieveCSIdentityInfo = async (
-  options?: RequestInit,
-): Promise<RetrieveCSIdentityInfoResponse> => {
-  const res = await fetch(getRetrieveCSIdentityInfoUrl(), {
-    ...options,
-    method: "GET",
-  });
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-
-  const data: RetrieveCSIdentityInfoResponse["data"] = body
-    ? JSON.parse(body)
-    : {};
-  return {
-    data,
-    status: res.status,
-    headers: res.headers,
-  } as RetrieveCSIdentityInfoResponse;
+export const retrieveCSIdentityInfo = (options?: RequestInit) => {
+  return customInstance<RetrieveCSIdentityInfoResponse>(
+    getRetrieveCSIdentityInfoUrl(),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
 };
