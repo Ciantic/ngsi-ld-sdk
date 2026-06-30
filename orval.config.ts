@@ -331,7 +331,7 @@ export default defineConfig({
       override: {
         mutator: {
           path: './src/fetcher.ts',
-          name: 'customInstance',
+          name: 'fetcher',
         },
       },
     },

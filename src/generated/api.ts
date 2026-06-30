@@ -93,7 +93,7 @@ import type {
   JsonLdContext,
 } from "./api.schemas";
 
-import { customInstance } from "../fetcher";
+import { fetcher } from "../fetcher";
 
 // https://stackoverflow.com/questions/49579094/typescript-conditional-types-filter-out-readonly-properties-pick-only-requir/49579497#49579497
 type IfEquals<X, Y, A = X, B = never> =
@@ -190,7 +190,7 @@ export const createEntity = (
   params?: CreateEntityParams,
   options?: RequestInit,
 ) => {
-  return customInstance<CreateEntityResponse>(getCreateEntityUrl(params), {
+  return fetcher<CreateEntityResponse>(getCreateEntityUrl(params), {
     ...options,
     method: "POST",
     headers: { "Content-Type": "application/ld+json", ...options?.headers },
@@ -269,7 +269,7 @@ export const queryEntity = (
   params?: QueryEntityParams,
   options?: RequestInit,
 ) => {
-  return customInstance<QueryEntityResponse>(getQueryEntityUrl(params), {
+  return fetcher<QueryEntityResponse>(getQueryEntityUrl(params), {
     ...options,
     method: "GET",
   });
@@ -357,7 +357,7 @@ export const retrieveEntity = (
   params?: RetrieveEntityParams,
   options?: RequestInit,
 ) => {
-  return customInstance<RetrieveEntityResponse>(
+  return fetcher<RetrieveEntityResponse>(
     getRetrieveEntityUrl(entityId, params),
     {
       ...options,
@@ -431,13 +431,10 @@ export const deleteEntity = (
   params?: DeleteEntityParams,
   options?: RequestInit,
 ) => {
-  return customInstance<DeleteEntityResponse>(
-    getDeleteEntityUrl(entityId, params),
-    {
-      ...options,
-      method: "DELETE",
-    },
-  );
+  return fetcher<DeleteEntityResponse>(getDeleteEntityUrl(entityId, params), {
+    ...options,
+    method: "DELETE",
+  });
 };
 
 export type MergeEntityResponse204 = {
@@ -508,15 +505,12 @@ export const mergeEntity = (
   params?: MergeEntityParams,
   options?: RequestInit,
 ) => {
-  return customInstance<MergeEntityResponse>(
-    getMergeEntityUrl(entityId, params),
-    {
-      ...options,
-      method: "PATCH",
-      headers: { "Content-Type": "application/ld+json", ...options?.headers },
-      body: JSON.stringify(mergeEntityBody),
-    },
-  );
+  return fetcher<MergeEntityResponse>(getMergeEntityUrl(entityId, params), {
+    ...options,
+    method: "PATCH",
+    headers: { "Content-Type": "application/ld+json", ...options?.headers },
+    body: JSON.stringify(mergeEntityBody),
+  });
 };
 
 export type ReplaceEntityResponse204 = {
@@ -586,15 +580,12 @@ export const replaceEntity = (
   params?: ReplaceEntityParams,
   options?: RequestInit,
 ) => {
-  return customInstance<ReplaceEntityResponse>(
-    getReplaceEntityUrl(entityId, params),
-    {
-      ...options,
-      method: "PUT",
-      headers: { "Content-Type": "application/ld+json", ...options?.headers },
-      body: JSON.stringify(replaceEntityBody),
-    },
-  );
+  return fetcher<ReplaceEntityResponse>(getReplaceEntityUrl(entityId, params), {
+    ...options,
+    method: "PUT",
+    headers: { "Content-Type": "application/ld+json", ...options?.headers },
+    body: JSON.stringify(replaceEntityBody),
+  });
 };
 
 export type AppendAttrsResponse204 = {
@@ -664,15 +655,12 @@ export const appendAttrs = (
   params?: AppendAttrsParams,
   options?: RequestInit,
 ) => {
-  return customInstance<AppendAttrsResponse>(
-    getAppendAttrsUrl(entityId, params),
-    {
-      ...options,
-      method: "POST",
-      headers: { "Content-Type": "application/ld+json", ...options?.headers },
-      body: JSON.stringify(appendAttrsBody),
-    },
-  );
+  return fetcher<AppendAttrsResponse>(getAppendAttrsUrl(entityId, params), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/ld+json", ...options?.headers },
+    body: JSON.stringify(appendAttrsBody),
+  });
 };
 
 export type UpdateEntityResponse204 = {
@@ -742,15 +730,12 @@ export const updateEntity = (
   params?: UpdateEntityParams,
   options?: RequestInit,
 ) => {
-  return customInstance<UpdateEntityResponse>(
-    getUpdateEntityUrl(entityId, params),
-    {
-      ...options,
-      method: "PATCH",
-      headers: { "Content-Type": "application/ld+json", ...options?.headers },
-      body: JSON.stringify(updateEntityBody),
-    },
-  );
+  return fetcher<UpdateEntityResponse>(getUpdateEntityUrl(entityId, params), {
+    ...options,
+    method: "PATCH",
+    headers: { "Content-Type": "application/ld+json", ...options?.headers },
+    body: JSON.stringify(updateEntityBody),
+  });
 };
 
 export type UpdateAttrsResponse204 = {
@@ -823,7 +808,7 @@ export const updateAttrs = (
   params?: UpdateAttrsParams,
   options?: RequestInit,
 ) => {
-  return customInstance<UpdateAttrsResponse>(
+  return fetcher<UpdateAttrsResponse>(
     getUpdateAttrsUrl(entityId, attrId, params),
     {
       ...options,
@@ -911,7 +896,7 @@ export const deleteAttrs = (
   params?: DeleteAttrsParams,
   options?: RequestInit,
 ) => {
-  return customInstance<DeleteAttrsResponse>(
+  return fetcher<DeleteAttrsResponse>(
     getDeleteAttrsUrl(entityId, attrId, params),
     {
       ...options,
@@ -989,7 +974,7 @@ export const replaceAttrs = (
   params?: ReplaceAttrsParams,
   options?: RequestInit,
 ) => {
-  return customInstance<ReplaceAttrsResponse>(
+  return fetcher<ReplaceAttrsResponse>(
     getReplaceAttrsUrl(entityId, attrId, params),
     {
       ...options,
@@ -1047,7 +1032,7 @@ export const createCSR = (
   createCSRBody?: NonReadonly<CreateCSRBody>,
   options?: RequestInit,
 ) => {
-  return customInstance<CreateCSRResponse>(getCreateCSRUrl(), {
+  return fetcher<CreateCSRResponse>(getCreateCSRUrl(), {
     ...options,
     method: "POST",
     headers: { "Content-Type": "application/ld+json", ...options?.headers },
@@ -1119,7 +1104,7 @@ export const getQueryCSRUrl = (params?: QueryCSRParams) => {
 
  */
 export const queryCSR = (params?: QueryCSRParams, options?: RequestInit) => {
-  return customInstance<QueryCSRResponse>(getQueryCSRUrl(params), {
+  return fetcher<QueryCSRResponse>(getQueryCSRUrl(params), {
     ...options,
     method: "GET",
   });
@@ -1183,7 +1168,7 @@ export const retrieveCSR = (
   params?: RetrieveCSRParams,
   options?: RequestInit,
 ) => {
-  return customInstance<RetrieveCSRResponse>(
+  return fetcher<RetrieveCSRResponse>(
     getRetrieveCSRUrl(registrationId, params),
     {
       ...options,
@@ -1235,7 +1220,7 @@ export const updateCSR = (
   updateCSRBody?: NonReadonly<UpdateCSRBody>,
   options?: RequestInit,
 ) => {
-  return customInstance<UpdateCSRResponse>(getUpdateCSRUrl(registrationId), {
+  return fetcher<UpdateCSRResponse>(getUpdateCSRUrl(registrationId), {
     ...options,
     method: "PATCH",
     headers: { "Content-Type": "application/ld+json", ...options?.headers },
@@ -1282,7 +1267,7 @@ export const getDeleteCSRUrl = (registrationId: string) => {
 
  */
 export const deleteCSR = (registrationId: string, options?: RequestInit) => {
-  return customInstance<DeleteCSRResponse>(getDeleteCSRUrl(registrationId), {
+  return fetcher<DeleteCSRResponse>(getDeleteCSRUrl(registrationId), {
     ...options,
     method: "DELETE",
   });
@@ -1344,15 +1329,12 @@ export const createSubscription = (
   params?: CreateSubscriptionParams,
   options?: RequestInit,
 ) => {
-  return customInstance<CreateSubscriptionResponse>(
-    getCreateSubscriptionUrl(params),
-    {
-      ...options,
-      method: "POST",
-      headers: { "Content-Type": "application/ld+json", ...options?.headers },
-      body: JSON.stringify(subscriptionBody),
-    },
-  );
+  return fetcher<CreateSubscriptionResponse>(getCreateSubscriptionUrl(params), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/ld+json", ...options?.headers },
+    body: JSON.stringify(subscriptionBody),
+  });
 };
 
 export type QuerySubscriptionResponse200 = {
@@ -1402,13 +1384,10 @@ export const querySubscription = (
   params?: QuerySubscriptionParams,
   options?: RequestInit,
 ) => {
-  return customInstance<QuerySubscriptionResponse>(
-    getQuerySubscriptionUrl(params),
-    {
-      ...options,
-      method: "GET",
-    },
-  );
+  return fetcher<QuerySubscriptionResponse>(getQuerySubscriptionUrl(params), {
+    ...options,
+    method: "GET",
+  });
 };
 
 export type RetrieveSubscriptionResponse200 = {
@@ -1470,7 +1449,7 @@ export const retrieveSubscription = (
   params?: RetrieveSubscriptionParams,
   options?: RequestInit,
 ) => {
-  return customInstance<RetrieveSubscriptionResponse>(
+  return fetcher<RetrieveSubscriptionResponse>(
     getRetrieveSubscriptionUrl(subscriptionId, params),
     {
       ...options,
@@ -1539,7 +1518,7 @@ export const updateSubscription = (
   params?: UpdateSubscriptionParams,
   options?: RequestInit,
 ) => {
-  return customInstance<UpdateSubscriptionResponse>(
+  return fetcher<UpdateSubscriptionResponse>(
     getUpdateSubscriptionUrl(subscriptionId, params),
     {
       ...options,
@@ -1609,7 +1588,7 @@ export const deleteSubscription = (
   params?: DeleteSubscriptionParams,
   options?: RequestInit,
 ) => {
-  return customInstance<DeleteSubscriptionResponse>(
+  return fetcher<DeleteSubscriptionResponse>(
     getDeleteSubscriptionUrl(subscriptionId, params),
     {
       ...options,
@@ -1661,15 +1640,12 @@ export const createCSRSubscription = (
   subscriptionBody?: SubscriptionBody,
   options?: RequestInit,
 ) => {
-  return customInstance<CreateCSRSubscriptionResponse>(
-    getCreateCSRSubscriptionUrl(),
-    {
-      ...options,
-      method: "POST",
-      headers: { "Content-Type": "application/ld+json", ...options?.headers },
-      body: JSON.stringify(subscriptionBody),
-    },
-  );
+  return fetcher<CreateCSRSubscriptionResponse>(getCreateCSRSubscriptionUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/ld+json", ...options?.headers },
+    body: JSON.stringify(subscriptionBody),
+  });
 };
 
 export type QueryCSRSubscriptionResponse200 = {
@@ -1723,7 +1699,7 @@ export const queryCSRSubscription = (
   params?: QueryCSRSubscriptionParams,
   options?: RequestInit,
 ) => {
-  return customInstance<QueryCSRSubscriptionResponse>(
+  return fetcher<QueryCSRSubscriptionResponse>(
     getQueryCSRSubscriptionUrl(params),
     {
       ...options,
@@ -1791,7 +1767,7 @@ export const retrieveCSRSubscription = (
   params?: RetrieveCSRSubscriptionParams,
   options?: RequestInit,
 ) => {
-  return customInstance<RetrieveCSRSubscriptionResponse>(
+  return fetcher<RetrieveCSRSubscriptionResponse>(
     getRetrieveCSRSubscriptionUrl(subscriptionId, params),
     {
       ...options,
@@ -1844,7 +1820,7 @@ export const updateCSRSubscription = (
   subscriptionFragmentBody?: SubscriptionFragmentBody,
   options?: RequestInit,
 ) => {
-  return customInstance<UpdateCSRSubscriptionResponse>(
+  return fetcher<UpdateCSRSubscriptionResponse>(
     getUpdateCSRSubscriptionUrl(subscriptionId),
     {
       ...options,
@@ -1898,7 +1874,7 @@ export const deleteCSRSubscription = (
   subscriptionId: string,
   options?: RequestInit,
 ) => {
-  return customInstance<DeleteCSRSubscriptionResponse>(
+  return fetcher<DeleteCSRSubscriptionResponse>(
     getDeleteCSRSubscriptionUrl(subscriptionId),
     {
       ...options,
@@ -1962,7 +1938,7 @@ export const createBatch = (
   params?: CreateBatchParams,
   options?: RequestInit,
 ) => {
-  return customInstance<CreateBatchResponse>(getCreateBatchUrl(params), {
+  return fetcher<CreateBatchResponse>(getCreateBatchUrl(params), {
     ...options,
     method: "POST",
     headers: { "Content-Type": "application/ld+json", ...options?.headers },
@@ -2031,7 +2007,7 @@ export const upsertBatch = (
   params?: UpsertBatchParams,
   options?: RequestInit,
 ) => {
-  return customInstance<UpsertBatchResponse>(getUpsertBatchUrl(params), {
+  return fetcher<UpsertBatchResponse>(getUpsertBatchUrl(params), {
     ...options,
     method: "POST",
     headers: { "Content-Type": "application/ld+json", ...options?.headers },
@@ -2094,7 +2070,7 @@ export const updateBatch = (
   params?: UpdateBatchParams,
   options?: RequestInit,
 ) => {
-  return customInstance<UpdateBatchResponse>(getUpdateBatchUrl(params), {
+  return fetcher<UpdateBatchResponse>(getUpdateBatchUrl(params), {
     ...options,
     method: "POST",
     headers: { "Content-Type": "application/ld+json", ...options?.headers },
@@ -2157,7 +2133,7 @@ export const deleteBatch = (
   params?: DeleteBatchParams,
   options?: RequestInit,
 ) => {
-  return customInstance<DeleteBatchResponse>(getDeleteBatchUrl(params), {
+  return fetcher<DeleteBatchResponse>(getDeleteBatchUrl(params), {
     ...options,
     method: "POST",
     headers: { "Content-Type": "application/json", ...options?.headers },
@@ -2221,7 +2197,7 @@ export const queryBatch = (
   params?: QueryBatchParams,
   options?: RequestInit,
 ) => {
-  return customInstance<QueryBatchResponse>(getQueryBatchUrl(params), {
+  return fetcher<QueryBatchResponse>(getQueryBatchUrl(params), {
     ...options,
     method: "POST",
     headers: { "Content-Type": "application/ld+json", ...options?.headers },
@@ -2286,7 +2262,7 @@ export const mergeBatch = (
   params?: MergeBatchParams,
   options?: RequestInit,
 ) => {
-  return customInstance<MergeBatchResponse>(getMergeBatchUrl(params), {
+  return fetcher<MergeBatchResponse>(getMergeBatchUrl(params), {
     ...options,
     method: "POST",
     headers: { "Content-Type": "application/ld+json", ...options?.headers },
@@ -2357,7 +2333,7 @@ export const upsertTemporal = (
   params?: UpsertTemporalParams,
   options?: RequestInit,
 ) => {
-  return customInstance<UpsertTemporalResponse>(getUpsertTemporalUrl(params), {
+  return fetcher<UpsertTemporalResponse>(getUpsertTemporalUrl(params), {
     ...options,
     method: "POST",
     headers: { "Content-Type": "application/ld+json", ...options?.headers },
@@ -2424,7 +2400,7 @@ export const queryTemporal = (
   params?: QueryTemporalParams,
   options?: RequestInit,
 ) => {
-  return customInstance<QueryTemporalResponse>(getQueryTemporalUrl(params), {
+  return fetcher<QueryTemporalResponse>(getQueryTemporalUrl(params), {
     ...options,
     method: "GET",
   });
@@ -2497,7 +2473,7 @@ export const retrieveTemporal = (
   params?: RetrieveTemporalParams,
   options?: RequestInit,
 ) => {
-  return customInstance<RetrieveTemporalResponse>(
+  return fetcher<RetrieveTemporalResponse>(
     getRetrieveTemporalUrl(entityId, params),
     {
       ...options,
@@ -2564,7 +2540,7 @@ export const deleteTemporal = (
   params?: DeleteTemporalParams,
   options?: RequestInit,
 ) => {
-  return customInstance<DeleteTemporalResponse>(
+  return fetcher<DeleteTemporalResponse>(
     getDeleteTemporalUrl(entityId, params),
     {
       ...options,
@@ -2633,7 +2609,7 @@ export const appendAttrsTemporal = (
   params?: AppendAttrsTemporalParams,
   options?: RequestInit,
 ) => {
-  return customInstance<AppendAttrsTemporalResponse>(
+  return fetcher<AppendAttrsTemporalResponse>(
     getAppendAttrsTemporalUrl(entityId, params),
     {
       ...options,
@@ -2715,7 +2691,7 @@ export const deleteAttrsTemporal = (
   params?: DeleteAttrsTemporalParams,
   options?: RequestInit,
 ) => {
-  return customInstance<DeleteAttrsTemporalResponse>(
+  return fetcher<DeleteAttrsTemporalResponse>(
     getDeleteAttrsTemporalUrl(entityId, attrId, params),
     {
       ...options,
@@ -2792,7 +2768,7 @@ export const updateAttrsTemporal = (
   params?: UpdateAttrsTemporalParams,
   options?: RequestInit,
 ) => {
-  return customInstance<UpdateAttrsTemporalResponse>(
+  return fetcher<UpdateAttrsTemporalResponse>(
     getUpdateAttrsTemporalUrl(entityId, attrId, instanceId, params),
     {
       ...options,
@@ -2871,7 +2847,7 @@ export const deleteAttrInstanceTemporal = (
   params?: DeleteAttrInstanceTemporalParams,
   options?: RequestInit,
 ) => {
-  return customInstance<DeleteAttrInstanceTemporalResponse>(
+  return fetcher<DeleteAttrInstanceTemporalResponse>(
     getDeleteAttrInstanceTemporalUrl(entityId, attrId, instanceId, params),
     {
       ...options,
@@ -2930,15 +2906,12 @@ export const temporalQueryBatch = (
   params?: TemporalQueryBatchParams,
   options?: RequestInit,
 ) => {
-  return customInstance<TemporalQueryBatchResponse>(
-    getTemporalQueryBatchUrl(params),
-    {
-      ...options,
-      method: "POST",
-      headers: { "Content-Type": "application/ld+json", ...options?.headers },
-      body: JSON.stringify(queryTemporalBody),
-    },
-  );
+  return fetcher<TemporalQueryBatchResponse>(getTemporalQueryBatchUrl(params), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/ld+json", ...options?.headers },
+    body: JSON.stringify(queryTemporalBody),
+  });
 };
 
 export type RetrieveEntityTypesResponse200 = {
@@ -2998,7 +2971,7 @@ export const retrieveEntityTypes = (
   params?: RetrieveEntityTypesParams,
   options?: RequestInit,
 ) => {
-  return customInstance<RetrieveEntityTypesResponse>(
+  return fetcher<RetrieveEntityTypesResponse>(
     getRetrieveEntityTypesUrl(params),
     {
       ...options,
@@ -3071,7 +3044,7 @@ export const retrieveEntityTypeInfo = (
   params?: RetrieveEntityTypeInfoParams,
   options?: RequestInit,
 ) => {
-  return customInstance<RetrieveEntityTypeInfoResponse>(
+  return fetcher<RetrieveEntityTypeInfoResponse>(
     getRetrieveEntityTypeInfoUrl(type, params),
     {
       ...options,
@@ -3133,13 +3106,10 @@ export const retrieveAttrTypes = (
   params?: RetrieveAttrTypesParams,
   options?: RequestInit,
 ) => {
-  return customInstance<RetrieveAttrTypesResponse>(
-    getRetrieveAttrTypesUrl(params),
-    {
-      ...options,
-      method: "GET",
-    },
-  );
+  return fetcher<RetrieveAttrTypesResponse>(getRetrieveAttrTypesUrl(params), {
+    ...options,
+    method: "GET",
+  });
 };
 
 export type RetrieveAttrTypeInfoResponse200 = {
@@ -3205,7 +3175,7 @@ export const retrieveAttrTypeInfo = (
   params?: RetrieveAttrTypeInfoParams,
   options?: RequestInit,
 ) => {
-  return customInstance<RetrieveAttrTypeInfoResponse>(
+  return fetcher<RetrieveAttrTypeInfoResponse>(
     getRetrieveAttrTypeInfoUrl(attrId, params),
     {
       ...options,
@@ -3250,7 +3220,7 @@ export const createContext = (
   createContextBody?: CreateContextBody,
   options?: RequestInit,
 ) => {
-  return customInstance<CreateContextResponse>(getCreateContextUrl(), {
+  return fetcher<CreateContextResponse>(getCreateContextUrl(), {
     ...options,
     method: "POST",
     headers: { "Content-Type": "application/ld+json", ...options?.headers },
@@ -3314,7 +3284,7 @@ export const listContexts = (
   params?: ListContextsParams,
   options?: RequestInit,
 ) => {
-  return customInstance<ListContextsResponse>(getListContextsUrl(params), {
+  return fetcher<ListContextsResponse>(getListContextsUrl(params), {
     ...options,
     method: "GET",
   });
@@ -3387,7 +3357,7 @@ export const retrieveContext = (
   params?: RetrieveContextParams,
   options?: RequestInit,
 ) => {
-  return customInstance<RetrieveContextResponse>(
+  return fetcher<RetrieveContextResponse>(
     getRetrieveContextUrl(contextId, params),
     {
       ...options,
@@ -3464,7 +3434,7 @@ export const deleteContext = (
   params?: DeleteContextParams,
   options?: RequestInit,
 ) => {
-  return customInstance<DeleteContextResponse>(
+  return fetcher<DeleteContextResponse>(
     getDeleteContextUrl(contextId, params),
     {
       ...options,
@@ -3515,7 +3485,7 @@ export const retrieveEntityMap = (
   entityMapId: string,
   options?: RequestInit,
 ) => {
-  return customInstance<RetrieveEntityMapResponse>(
+  return fetcher<RetrieveEntityMapResponse>(
     getRetrieveEntityMapUrl(entityMapId),
     {
       ...options,
@@ -3568,15 +3538,12 @@ export const updateEntityMap = (
   updateEntityMapBody?: NonReadonly<UpdateEntityMapBody>,
   options?: RequestInit,
 ) => {
-  return customInstance<UpdateEntityMapResponse>(
-    getUpdateEntityMapUrl(entityMapId),
-    {
-      ...options,
-      method: "PATCH",
-      headers: { "Content-Type": "application/ld+json", ...options?.headers },
-      body: JSON.stringify(updateEntityMapBody),
-    },
-  );
+  return fetcher<UpdateEntityMapResponse>(getUpdateEntityMapUrl(entityMapId), {
+    ...options,
+    method: "PATCH",
+    headers: { "Content-Type": "application/ld+json", ...options?.headers },
+    body: JSON.stringify(updateEntityMapBody),
+  });
 };
 
 export type DeleteEntityMapResponse204 = {
@@ -3618,13 +3585,10 @@ export const getDeleteEntityMapUrl = (entityMapId: string) => {
 
  */
 export const deleteEntityMap = (entityMapId: string, options?: RequestInit) => {
-  return customInstance<DeleteEntityMapResponse>(
-    getDeleteEntityMapUrl(entityMapId),
-    {
-      ...options,
-      method: "DELETE",
-    },
-  );
+  return fetcher<DeleteEntityMapResponse>(getDeleteEntityMapUrl(entityMapId), {
+    ...options,
+    method: "DELETE",
+  });
 };
 
 export type RetrieveCSIdentityInfoResponse200 = {
@@ -3662,7 +3626,7 @@ export const getRetrieveCSIdentityInfoUrl = () => {
 
  */
 export const retrieveCSIdentityInfo = (options?: RequestInit) => {
-  return customInstance<RetrieveCSIdentityInfoResponse>(
+  return fetcher<RetrieveCSIdentityInfoResponse>(
     getRetrieveCSIdentityInfoUrl(),
     {
       ...options,

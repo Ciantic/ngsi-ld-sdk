@@ -1,7 +1,7 @@
 
 const BASE_URL = process.env.NGSILD_BROKER_URL || "http://localhost:1026/ngsi-ld/v1";
 
-export const customInstance = async <T extends { status: number; data: any }>(
+export const fetcher = async <T extends { status: number; data: any }>(
   url: string,
   {
     method,
