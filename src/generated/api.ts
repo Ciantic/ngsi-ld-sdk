@@ -174,8 +174,8 @@ export const getCreateEntityUrl = (params?: CreateEntityParams) => {
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `${process.env.NGSILD_BROKER_URL}/entities?${stringifiedParams}`
-    : `${process.env.NGSILD_BROKER_URL}/entities`;
+    ? `/entities?${stringifiedParams}`
+    : `/entities`;
 };
 
 /**
@@ -254,8 +254,8 @@ export const getQueryEntityUrl = (params?: QueryEntityParams) => {
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `${process.env.NGSILD_BROKER_URL}/entities?${stringifiedParams}`
-    : `${process.env.NGSILD_BROKER_URL}/entities`;
+    ? `/entities?${stringifiedParams}`
+    : `/entities`;
 };
 
 /**
@@ -341,8 +341,8 @@ export const getRetrieveEntityUrl = (
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `${process.env.NGSILD_BROKER_URL}/entities/${entityId}?${stringifiedParams}`
-    : `${process.env.NGSILD_BROKER_URL}/entities/${entityId}`;
+    ? `/entities/${entityId}?${stringifiedParams}`
+    : `/entities/${entityId}`;
 };
 
 /**
@@ -415,8 +415,8 @@ export const getDeleteEntityUrl = (
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `${process.env.NGSILD_BROKER_URL}/entities/${entityId}?${stringifiedParams}`
-    : `${process.env.NGSILD_BROKER_URL}/entities/${entityId}`;
+    ? `/entities/${entityId}?${stringifiedParams}`
+    : `/entities/${entityId}`;
 };
 
 /**
@@ -489,8 +489,8 @@ export const getMergeEntityUrl = (
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `${process.env.NGSILD_BROKER_URL}/entities/${entityId}?${stringifiedParams}`
-    : `${process.env.NGSILD_BROKER_URL}/entities/${entityId}`;
+    ? `/entities/${entityId}?${stringifiedParams}`
+    : `/entities/${entityId}`;
 };
 
 /**
@@ -568,8 +568,8 @@ export const getReplaceEntityUrl = (
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `${process.env.NGSILD_BROKER_URL}/entities/${entityId}?${stringifiedParams}`
-    : `${process.env.NGSILD_BROKER_URL}/entities/${entityId}`;
+    ? `/entities/${entityId}?${stringifiedParams}`
+    : `/entities/${entityId}`;
 };
 
 /**
@@ -646,8 +646,8 @@ export const getAppendAttrsUrl = (
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `${process.env.NGSILD_BROKER_URL}/entities/${entityId}/attrs?${stringifiedParams}`
-    : `${process.env.NGSILD_BROKER_URL}/entities/${entityId}/attrs`;
+    ? `/entities/${entityId}/attrs?${stringifiedParams}`
+    : `/entities/${entityId}/attrs`;
 };
 
 /**
@@ -724,8 +724,8 @@ export const getUpdateEntityUrl = (
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `${process.env.NGSILD_BROKER_URL}/entities/${entityId}/attrs?${stringifiedParams}`
-    : `${process.env.NGSILD_BROKER_URL}/entities/${entityId}/attrs`;
+    ? `/entities/${entityId}/attrs?${stringifiedParams}`
+    : `/entities/${entityId}/attrs`;
 };
 
 /**
@@ -803,8 +803,8 @@ export const getUpdateAttrsUrl = (
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `${process.env.NGSILD_BROKER_URL}/entities/${entityId}/attrs/${attrId}?${stringifiedParams}`
-    : `${process.env.NGSILD_BROKER_URL}/entities/${entityId}/attrs/${attrId}`;
+    ? `/entities/${entityId}/attrs/${attrId}?${stringifiedParams}`
+    : `/entities/${entityId}/attrs/${attrId}`;
 };
 
 /**
@@ -893,8 +893,8 @@ export const getDeleteAttrsUrl = (
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `${process.env.NGSILD_BROKER_URL}/entities/${entityId}/attrs/${attrId}?${stringifiedParams}`
-    : `${process.env.NGSILD_BROKER_URL}/entities/${entityId}/attrs/${attrId}`;
+    ? `/entities/${entityId}/attrs/${attrId}?${stringifiedParams}`
+    : `/entities/${entityId}/attrs/${attrId}`;
 };
 
 /**
@@ -970,8 +970,8 @@ export const getReplaceAttrsUrl = (
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `${process.env.NGSILD_BROKER_URL}/entities/${entityId}/attrs/${attrId}?${stringifiedParams}`
-    : `${process.env.NGSILD_BROKER_URL}/entities/${entityId}/attrs/${attrId}`;
+    ? `/entities/${entityId}/attrs/${attrId}?${stringifiedParams}`
+    : `/entities/${entityId}/attrs/${attrId}`;
 };
 
 /**
@@ -1033,7 +1033,7 @@ export type CreateCSRResponse =
   CreateCSRResponseSuccess | CreateCSRResponseError;
 
 export const getCreateCSRUrl = () => {
-  return `${process.env.NGSILD_BROKER_URL}/csourceRegistrations`;
+  return `/csourceRegistrations`;
 };
 
 /**
@@ -1095,8 +1095,8 @@ export const getQueryCSRUrl = (params?: QueryCSRParams) => {
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `${process.env.NGSILD_BROKER_URL}/csourceRegistrations?${stringifiedParams}`
-    : `${process.env.NGSILD_BROKER_URL}/csourceRegistrations`;
+    ? `/csourceRegistrations?${stringifiedParams}`
+    : `/csourceRegistrations`;
 };
 
 /**
@@ -1167,8 +1167,8 @@ export const getRetrieveCSRUrl = (
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `${process.env.NGSILD_BROKER_URL}/csourceRegistrations/${registrationId}?${stringifiedParams}`
-    : `${process.env.NGSILD_BROKER_URL}/csourceRegistrations/${registrationId}`;
+    ? `/csourceRegistrations/${registrationId}?${stringifiedParams}`
+    : `/csourceRegistrations/${registrationId}`;
 };
 
 /**
@@ -1220,7 +1220,7 @@ export type UpdateCSRResponse =
   UpdateCSRResponseSuccess | UpdateCSRResponseError;
 
 export const getUpdateCSRUrl = (registrationId: string) => {
-  return `${process.env.NGSILD_BROKER_URL}/csourceRegistrations/${registrationId}`;
+  return `/csourceRegistrations/${registrationId}`;
 };
 
 /**
@@ -1271,7 +1271,7 @@ export type DeleteCSRResponse =
   DeleteCSRResponseSuccess | DeleteCSRResponseError;
 
 export const getDeleteCSRUrl = (registrationId: string) => {
-  return `${process.env.NGSILD_BROKER_URL}/csourceRegistrations/${registrationId}`;
+  return `/csourceRegistrations/${registrationId}`;
 };
 
 /**
@@ -1328,8 +1328,8 @@ export const getCreateSubscriptionUrl = (params?: CreateSubscriptionParams) => {
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `${process.env.NGSILD_BROKER_URL}/subscriptions?${stringifiedParams}`
-    : `${process.env.NGSILD_BROKER_URL}/subscriptions`;
+    ? `/subscriptions?${stringifiedParams}`
+    : `/subscriptions`;
 };
 
 /**
@@ -1387,8 +1387,8 @@ export const getQuerySubscriptionUrl = (params?: QuerySubscriptionParams) => {
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `${process.env.NGSILD_BROKER_URL}/subscriptions?${stringifiedParams}`
-    : `${process.env.NGSILD_BROKER_URL}/subscriptions`;
+    ? `/subscriptions?${stringifiedParams}`
+    : `/subscriptions`;
 };
 
 /**
@@ -1454,8 +1454,8 @@ export const getRetrieveSubscriptionUrl = (
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `${process.env.NGSILD_BROKER_URL}/subscriptions/${subscriptionId}?${stringifiedParams}`
-    : `${process.env.NGSILD_BROKER_URL}/subscriptions/${subscriptionId}`;
+    ? `/subscriptions/${subscriptionId}?${stringifiedParams}`
+    : `/subscriptions/${subscriptionId}`;
 };
 
 /**
@@ -1522,8 +1522,8 @@ export const getUpdateSubscriptionUrl = (
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `${process.env.NGSILD_BROKER_URL}/subscriptions/${subscriptionId}?${stringifiedParams}`
-    : `${process.env.NGSILD_BROKER_URL}/subscriptions/${subscriptionId}`;
+    ? `/subscriptions/${subscriptionId}?${stringifiedParams}`
+    : `/subscriptions/${subscriptionId}`;
 };
 
 /**
@@ -1593,8 +1593,8 @@ export const getDeleteSubscriptionUrl = (
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `${process.env.NGSILD_BROKER_URL}/subscriptions/${subscriptionId}?${stringifiedParams}`
-    : `${process.env.NGSILD_BROKER_URL}/subscriptions/${subscriptionId}`;
+    ? `/subscriptions/${subscriptionId}?${stringifiedParams}`
+    : `/subscriptions/${subscriptionId}`;
 };
 
 /**
@@ -1647,7 +1647,7 @@ export type CreateCSRSubscriptionResponse =
   CreateCSRSubscriptionResponseSuccess | CreateCSRSubscriptionResponseError;
 
 export const getCreateCSRSubscriptionUrl = () => {
-  return `${process.env.NGSILD_BROKER_URL}/csourceSubscriptions`;
+  return `/csourceSubscriptions`;
 };
 
 /**
@@ -1708,8 +1708,8 @@ export const getQueryCSRSubscriptionUrl = (
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `${process.env.NGSILD_BROKER_URL}/csourceSubscriptions?${stringifiedParams}`
-    : `${process.env.NGSILD_BROKER_URL}/csourceSubscriptions`;
+    ? `/csourceSubscriptions?${stringifiedParams}`
+    : `/csourceSubscriptions`;
 };
 
 /**
@@ -1775,8 +1775,8 @@ export const getRetrieveCSRSubscriptionUrl = (
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `${process.env.NGSILD_BROKER_URL}/csourceSubscriptions/${subscriptionId}?${stringifiedParams}`
-    : `${process.env.NGSILD_BROKER_URL}/csourceSubscriptions/${subscriptionId}`;
+    ? `/csourceSubscriptions/${subscriptionId}?${stringifiedParams}`
+    : `/csourceSubscriptions/${subscriptionId}`;
 };
 
 /**
@@ -1829,7 +1829,7 @@ export type UpdateCSRSubscriptionResponse =
   UpdateCSRSubscriptionResponseSuccess | UpdateCSRSubscriptionResponseError;
 
 export const getUpdateCSRSubscriptionUrl = (subscriptionId: string) => {
-  return `${process.env.NGSILD_BROKER_URL}/csourceSubscriptions/${subscriptionId}`;
+  return `/csourceSubscriptions/${subscriptionId}`;
 };
 
 /**
@@ -1884,7 +1884,7 @@ export type DeleteCSRSubscriptionResponse =
   DeleteCSRSubscriptionResponseSuccess | DeleteCSRSubscriptionResponseError;
 
 export const getDeleteCSRSubscriptionUrl = (subscriptionId: string) => {
-  return `${process.env.NGSILD_BROKER_URL}/csourceSubscriptions/${subscriptionId}`;
+  return `/csourceSubscriptions/${subscriptionId}`;
 };
 
 /**
@@ -1946,8 +1946,8 @@ export const getCreateBatchUrl = (params?: CreateBatchParams) => {
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `${process.env.NGSILD_BROKER_URL}/entityOperations/create?${stringifiedParams}`
-    : `${process.env.NGSILD_BROKER_URL}/entityOperations/create`;
+    ? `/entityOperations/create?${stringifiedParams}`
+    : `/entityOperations/create`;
 };
 
 /**
@@ -2014,8 +2014,8 @@ export const getUpsertBatchUrl = (params?: UpsertBatchParams) => {
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `${process.env.NGSILD_BROKER_URL}/entityOperations/upsert?${stringifiedParams}`
-    : `${process.env.NGSILD_BROKER_URL}/entityOperations/upsert`;
+    ? `/entityOperations/upsert?${stringifiedParams}`
+    : `/entityOperations/upsert`;
 };
 
 /**
@@ -2078,8 +2078,8 @@ export const getUpdateBatchUrl = (params?: UpdateBatchParams) => {
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `${process.env.NGSILD_BROKER_URL}/entityOperations/update?${stringifiedParams}`
-    : `${process.env.NGSILD_BROKER_URL}/entityOperations/update`;
+    ? `/entityOperations/update?${stringifiedParams}`
+    : `/entityOperations/update`;
 };
 
 /**
@@ -2141,8 +2141,8 @@ export const getDeleteBatchUrl = (params?: DeleteBatchParams) => {
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `${process.env.NGSILD_BROKER_URL}/entityOperations/delete?${stringifiedParams}`
-    : `${process.env.NGSILD_BROKER_URL}/entityOperations/delete`;
+    ? `/entityOperations/delete?${stringifiedParams}`
+    : `/entityOperations/delete`;
 };
 
 /**
@@ -2205,8 +2205,8 @@ export const getQueryBatchUrl = (params?: QueryBatchParams) => {
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `${process.env.NGSILD_BROKER_URL}/entityOperations/query?${stringifiedParams}`
-    : `${process.env.NGSILD_BROKER_URL}/entityOperations/query`;
+    ? `/entityOperations/query?${stringifiedParams}`
+    : `/entityOperations/query`;
 };
 
 /**
@@ -2268,8 +2268,8 @@ export const getMergeBatchUrl = (params?: MergeBatchParams) => {
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `${process.env.NGSILD_BROKER_URL}/entityOperations/merge?${stringifiedParams}`
-    : `${process.env.NGSILD_BROKER_URL}/entityOperations/merge`;
+    ? `/entityOperations/merge?${stringifiedParams}`
+    : `/entityOperations/merge`;
 };
 
 /**
@@ -2340,8 +2340,8 @@ export const getUpsertTemporalUrl = (params?: UpsertTemporalParams) => {
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `${process.env.NGSILD_BROKER_URL}/temporal/entities?${stringifiedParams}`
-    : `${process.env.NGSILD_BROKER_URL}/temporal/entities`;
+    ? `/temporal/entities?${stringifiedParams}`
+    : `/temporal/entities`;
 };
 
 /**
@@ -2406,8 +2406,8 @@ export const getQueryTemporalUrl = (params?: QueryTemporalParams) => {
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `${process.env.NGSILD_BROKER_URL}/temporal/entities?${stringifiedParams}`
-    : `${process.env.NGSILD_BROKER_URL}/temporal/entities`;
+    ? `/temporal/entities?${stringifiedParams}`
+    : `/temporal/entities`;
 };
 
 /**
@@ -2481,8 +2481,8 @@ export const getRetrieveTemporalUrl = (
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `${process.env.NGSILD_BROKER_URL}/temporal/entities/${entityId}?${stringifiedParams}`
-    : `${process.env.NGSILD_BROKER_URL}/temporal/entities/${entityId}`;
+    ? `/temporal/entities/${entityId}?${stringifiedParams}`
+    : `/temporal/entities/${entityId}`;
 };
 
 /**
@@ -2548,8 +2548,8 @@ export const getDeleteTemporalUrl = (
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `${process.env.NGSILD_BROKER_URL}/temporal/entities/${entityId}?${stringifiedParams}`
-    : `${process.env.NGSILD_BROKER_URL}/temporal/entities/${entityId}`;
+    ? `/temporal/entities/${entityId}?${stringifiedParams}`
+    : `/temporal/entities/${entityId}`;
 };
 
 /**
@@ -2616,8 +2616,8 @@ export const getAppendAttrsTemporalUrl = (
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `${process.env.NGSILD_BROKER_URL}/temporal/entities/${entityId}/attrs?${stringifiedParams}`
-    : `${process.env.NGSILD_BROKER_URL}/temporal/entities/${entityId}/attrs`;
+    ? `/temporal/entities/${entityId}/attrs?${stringifiedParams}`
+    : `/temporal/entities/${entityId}/attrs`;
 };
 
 /**
@@ -2697,8 +2697,8 @@ export const getDeleteAttrsTemporalUrl = (
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `${process.env.NGSILD_BROKER_URL}/temporal/entities/${entityId}/attrs/${attrId}?${stringifiedParams}`
-    : `${process.env.NGSILD_BROKER_URL}/temporal/entities/${entityId}/attrs/${attrId}`;
+    ? `/temporal/entities/${entityId}/attrs/${attrId}?${stringifiedParams}`
+    : `/temporal/entities/${entityId}/attrs/${attrId}`;
 };
 
 /**
@@ -2769,8 +2769,8 @@ export const getUpdateAttrsTemporalUrl = (
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `${process.env.NGSILD_BROKER_URL}/temporal/entities/${entityId}/attrs/${attrId}/${instanceId}?${stringifiedParams}`
-    : `${process.env.NGSILD_BROKER_URL}/temporal/entities/${entityId}/attrs/${attrId}/${instanceId}`;
+    ? `/temporal/entities/${entityId}/attrs/${attrId}/${instanceId}?${stringifiedParams}`
+    : `/temporal/entities/${entityId}/attrs/${attrId}/${instanceId}`;
 };
 
 /**
@@ -2849,8 +2849,8 @@ export const getDeleteAttrInstanceTemporalUrl = (
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `${process.env.NGSILD_BROKER_URL}/temporal/entities/${entityId}/attrs/${attrId}/${instanceId}?${stringifiedParams}`
-    : `${process.env.NGSILD_BROKER_URL}/temporal/entities/${entityId}/attrs/${attrId}/${instanceId}`;
+    ? `/temporal/entities/${entityId}/attrs/${attrId}/${instanceId}?${stringifiedParams}`
+    : `/temporal/entities/${entityId}/attrs/${attrId}/${instanceId}`;
 };
 
 /**
@@ -2913,8 +2913,8 @@ export const getTemporalQueryBatchUrl = (params?: TemporalQueryBatchParams) => {
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `${process.env.NGSILD_BROKER_URL}/temporal/entityOperations/query?${stringifiedParams}`
-    : `${process.env.NGSILD_BROKER_URL}/temporal/entityOperations/query`;
+    ? `/temporal/entityOperations/query?${stringifiedParams}`
+    : `/temporal/entityOperations/query`;
 };
 
 /**
@@ -2977,8 +2977,8 @@ export const getRetrieveEntityTypesUrl = (
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `${process.env.NGSILD_BROKER_URL}/types?${stringifiedParams}`
-    : `${process.env.NGSILD_BROKER_URL}/types`;
+    ? `/types?${stringifiedParams}`
+    : `/types`;
 };
 
 /**
@@ -3050,8 +3050,8 @@ export const getRetrieveEntityTypeInfoUrl = (
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `${process.env.NGSILD_BROKER_URL}/types/${type}?${stringifiedParams}`
-    : `${process.env.NGSILD_BROKER_URL}/types/${type}`;
+    ? `/types/${type}?${stringifiedParams}`
+    : `/types/${type}`;
 };
 
 /**
@@ -3112,8 +3112,8 @@ export const getRetrieveAttrTypesUrl = (params?: RetrieveAttrTypesParams) => {
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `${process.env.NGSILD_BROKER_URL}/attributes?${stringifiedParams}`
-    : `${process.env.NGSILD_BROKER_URL}/attributes`;
+    ? `/attributes?${stringifiedParams}`
+    : `/attributes`;
 };
 
 /**
@@ -3185,8 +3185,8 @@ export const getRetrieveAttrTypeInfoUrl = (
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `${process.env.NGSILD_BROKER_URL}/attributes/${attrId}?${stringifiedParams}`
-    : `${process.env.NGSILD_BROKER_URL}/attributes/${attrId}`;
+    ? `/attributes/${attrId}?${stringifiedParams}`
+    : `/attributes/${attrId}`;
 };
 
 /**
@@ -3235,7 +3235,7 @@ export type CreateContextResponse =
   CreateContextResponseSuccess | CreateContextResponseError;
 
 export const getCreateContextUrl = () => {
-  return `${process.env.NGSILD_BROKER_URL}/jsonldContexts`;
+  return `/jsonldContexts`;
 };
 
 /**
@@ -3290,8 +3290,8 @@ export const getListContextsUrl = (params?: ListContextsParams) => {
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `${process.env.NGSILD_BROKER_URL}/jsonldContexts?${stringifiedParams}`
-    : `${process.env.NGSILD_BROKER_URL}/jsonldContexts`;
+    ? `/jsonldContexts?${stringifiedParams}`
+    : `/jsonldContexts`;
 };
 
 /**
@@ -3369,8 +3369,8 @@ export const getRetrieveContextUrl = (
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `${process.env.NGSILD_BROKER_URL}/jsonldContexts/${contextId}?${stringifiedParams}`
-    : `${process.env.NGSILD_BROKER_URL}/jsonldContexts/${contextId}`;
+    ? `/jsonldContexts/${contextId}?${stringifiedParams}`
+    : `/jsonldContexts/${contextId}`;
 };
 
 /**
@@ -3443,8 +3443,8 @@ export const getDeleteContextUrl = (
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `${process.env.NGSILD_BROKER_URL}/jsonldContexts/${contextId}?${stringifiedParams}`
-    : `${process.env.NGSILD_BROKER_URL}/jsonldContexts/${contextId}`;
+    ? `/jsonldContexts/${contextId}?${stringifiedParams}`
+    : `/jsonldContexts/${contextId}`;
 };
 
 /**
@@ -3501,7 +3501,7 @@ export type RetrieveEntityMapResponse =
   RetrieveEntityMapResponseSuccess | RetrieveEntityMapResponseError;
 
 export const getRetrieveEntityMapUrl = (entityMapId: string) => {
-  return `${process.env.NGSILD_BROKER_URL}/entityMap/${entityMapId}`;
+  return `/entityMap/${entityMapId}`;
 };
 
 /**
@@ -3552,7 +3552,7 @@ export type UpdateEntityMapResponse =
   UpdateEntityMapResponseSuccess | UpdateEntityMapResponseError;
 
 export const getUpdateEntityMapUrl = (entityMapId: string) => {
-  return `${process.env.NGSILD_BROKER_URL}/entityMap/${entityMapId}`;
+  return `/entityMap/${entityMapId}`;
 };
 
 /**
@@ -3607,7 +3607,7 @@ export type DeleteEntityMapResponse =
   DeleteEntityMapResponseSuccess | DeleteEntityMapResponseError;
 
 export const getDeleteEntityMapUrl = (entityMapId: string) => {
-  return `${process.env.NGSILD_BROKER_URL}/entityMap/${entityMapId}`;
+  return `/entityMap/${entityMapId}`;
 };
 
 /**
@@ -3650,7 +3650,7 @@ export type RetrieveCSIdentityInfoResponse =
   RetrieveCSIdentityInfoResponseSuccess | RetrieveCSIdentityInfoResponseError;
 
 export const getRetrieveCSIdentityInfoUrl = () => {
-  return `${process.env.NGSILD_BROKER_URL}/info/sourceIdentity`;
+  return `/info/sourceIdentity`;
 };
 
 /**

@@ -328,9 +328,6 @@ export default defineConfig({
       mode: "split",
       clean: true,
       formatter: "prettier",
-      baseUrl: {
-        runtime: "process.env.NGSILD_BROKER_URL",
-      },
       override: {
         mutator: {
           path: './src/fetcher.ts',

@@ -1,5 +1,5 @@
 
-const baseURL = process.env.NGSILD_BROKER_URL || "";
+const BASE_URL = process.env.NGSILD_BROKER_URL || "http://localhost:1026/ngsi-ld/v1";
 
 export const customInstance = async <T extends { status: number; data: any }>(
   url: string,
@@ -16,7 +16,7 @@ export const customInstance = async <T extends { status: number; data: any }>(
     responseType?: string;
   },
 ): Promise<T> => {
-  let targetUrl = `${baseURL}${url}`;
+  let targetUrl = `${BASE_URL}${url}`;
   if (params) {
     targetUrl += "?" + new URLSearchParams(params);
   }
