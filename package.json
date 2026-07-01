@@ -19,7 +19,10 @@
     "orion-temporal:down": "podman compose -f tests/docker-test-orion-with-temporal/compose.yaml down",
     "stellio:up": "podman compose -f tests/docker-test-stellio/compose.yaml up -d",
     "stellio:down": "podman compose -f tests/docker-test-stellio/compose.yaml down",
-    "test:stellio": "NGSILD_BROKER_URL=http://localhost:8080/ngsi-ld/v1 vitest run"
+    "test:stellio": "NGSILD_BROKER_URL=http://localhost:8080/ngsi-ld/v1 vitest run",
+    "test:docker-orion": "node tests/docker-test-sdk/test-runner.ts docker-test-orion http://orion-ld:1026/ngsi-ld/v1",
+    "test:docker-orion-temporal": "node tests/docker-test-sdk/test-runner.ts docker-test-orion-with-temporal http://orion-ld:1026/ngsi-ld/v1",
+    "test:docker-stellio": "node tests/docker-test-sdk/test-runner.ts docker-test-stellio http://api-gateway:8080/ngsi-ld/v1"
   },
   "license": "MIT",
   "devDependencies": {

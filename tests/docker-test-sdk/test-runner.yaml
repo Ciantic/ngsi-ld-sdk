@@ -1,0 +1,29 @@
+# Reusable test-runner service — attach to any broker compose file.
+# Usage:
+#   NGSILD_BROKER_URL=http://orion-ld:1026/ngsi-ld/v1 \
+#     podman compose -f tests/docker-test-orion/compose.yaml -f tests/docker-test-sdk/test-runner.yaml up --abort-on-container-exit --timeout 10
+#
+#   NGSILD_BROKER_URL=http://api-gateway:8080/ngsi-ld/v1 \
+#     podman compose -f tests/docker-test-stellio/compose.yaml -f tests/docker-test-sdk/test-runner.yaml up --abort-on-container-exit --timeout 10
+
+services:
+  test-runner:
+    image: docker.io/library/node:22
+    container_name: test-sdk-runner
+    working_dir: /app
+    environment:
+      NGSILD_BROKER_URL: ${NGSILD_BROKER_URL}
+      CI: "true"
+      COREPACK_ENABLE_STRICT: "0"
+    volumes:
+      - ../../:/app:O
+    command:
+      - sh
+      - -c
+      - |
+        BROKER_BASE="$$(echo "$$NGSILD_BROKER_URL" | sed 's|\(http://[^/]*\).*|\1|')"
+        echo "Waiting for broker at $$BROKER_BASE/version ..."
+        curl -fsS --retry 60 --retry-delay 2 --retry-connrefused "$$BROKER_BASE/version" -o /dev/null
+        corepack enable pnpm
+        pnpm install --frozen-lockfile --store-dir /tmp/pnpm-store
+        pnpm test
