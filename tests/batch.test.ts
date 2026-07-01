@@ -196,9 +196,6 @@ describe("queryBatch", () => {
     trackIds([entity1.id!, entity2.id!]);
 
     const response = await queryBatch({
-      "@context": [
-        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
-      ],
       type: "Query",
       entities: [{ type: "TestEntity" }],
     });
@@ -213,9 +210,6 @@ describe("queryBatch", () => {
 
   it("should return empty array for query matching no entities", async () => {
     const response = await queryBatch({
-      "@context": [
-        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
-      ],
       type: "Query",
       entities: [{ type: "NonExistentType" }],
     });

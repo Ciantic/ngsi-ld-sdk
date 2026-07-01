@@ -37,7 +37,7 @@ import type {
   MultiStatusUpdateResultResponse,
   NotFoundResponse,
   NotImplementedResponse,
-  QueryBatchBody,
+  Query,
   QueryBatchParams,
   QueryCSRParams,
   QueryCSRSubscriptionParams,
@@ -2210,15 +2210,15 @@ export const getQueryBatchUrl = (params?: QueryBatchParams) => {
 
  */
 export const queryBatch = (
-  queryBatchBody?: PickRequired<QueryBatchBody, "@context">,
+  query?: Query,
   params?: QueryBatchParams,
   options?: RequestInit,
 ) => {
   return fetcher<QueryBatchResponse>(getQueryBatchUrl(params), {
     ...options,
     method: "POST",
-    headers: { "Content-Type": "application/ld+json", ...options?.headers },
-    body: JSON.stringify(queryBatchBody),
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(query),
   });
 };
 
@@ -2928,14 +2928,14 @@ export const getTemporalQueryBatchUrl = (params?: TemporalQueryBatchParams) => {
 
  */
 export const temporalQueryBatch = (
-  queryTemporalBody?: PickRequired<QueryTemporalBody, "@context">,
+  queryTemporalBody?: QueryTemporalBody,
   params?: TemporalQueryBatchParams,
   options?: RequestInit,
 ) => {
   return fetcher<TemporalQueryBatchResponse>(getTemporalQueryBatchUrl(params), {
     ...options,
     method: "POST",
-    headers: { "Content-Type": "application/ld+json", ...options?.headers },
+    headers: { "Content-Type": "application/json", ...options?.headers },
     body: JSON.stringify(queryTemporalBody),
   });
 };

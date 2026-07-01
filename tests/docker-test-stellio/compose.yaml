@@ -1,0 +1,132 @@
+# Stellio NGSI-LD Context Broker — test compose stack
+#
+# Stellio is composed of:
+#   - api-gateway (port 8080) — dispatches NGSI-LD API requests
+#   - search-service (port 8083) — manages context & temporal queries
+#   - subscription-service (port 8084) — manages subscriptions & notifications
+#   - PostgreSQL + TimescaleDB + PostGIS — persistent storage
+#   - Kafka — internal event streaming
+#
+# NGSI-LD API is exposed at http://localhost:8080/ngsi-ld/v1
+
+services:
+  # --------------------------------------------------------------------------
+  # PostgreSQL with TimescaleDB and PostGIS extensions
+  # --------------------------------------------------------------------------
+  postgres:
+    image: docker.io/stellio/stellio-timescale-postgis:16-2.26.4-3.6
+    container_name: test-stellio-postgres
+    environment:
+      POSTGRES_USER: stellio
+      POSTGRES_PASS: stellio_password
+      POSTGRES_DBNAME: stellio_search,stellio_subscription
+      POSTGRES_MULTIPLE_EXTENSIONS: postgis,timescaledb,pgcrypto
+      ACCEPT_TIMESCALE_TUNING: "TRUE"
+    tmpfs:
+      - /var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h localhost -U stellio"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 15s
+
+  # --------------------------------------------------------------------------
+  # Kafka (single-node KRaft mode — no ZooKeeper needed)
+  # --------------------------------------------------------------------------
+  kafka:
+    image: docker.io/confluentinc/cp-kafka:8.1.0
+    container_name: test-stellio-kafka
+    hostname: stellio-kafka
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://stellio-kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_NODE_ID: 1
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@stellio-kafka:29093
+      KAFKA_LISTENERS: CONTROLLER://stellio-kafka:29093,PLAINTEXT://stellio-kafka:9092,PLAINTEXT_HOST://0.0.0.0:29092
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LOG4J_ROOT_LOGLEVEL: INFO
+      CLUSTER_ID: ZGE2MTQ4NDk4NGU3NDE2Mm
+
+  # --------------------------------------------------------------------------
+  # Search service — context management & temporal queries
+  # --------------------------------------------------------------------------
+  search-service:
+    image: docker.io/stellio/stellio-search-service:latest-dev
+    container_name: test-stellio-search-service
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_R2DBC_URL: r2dbc:pool:postgresql://postgres/stellio_search
+      SPRING_FLYWAY_URL: jdbc:postgresql://postgres/stellio_search
+      SPRING_R2DBC_USERNAME: stellio
+      SPRING_R2DBC_PASSWORD: stellio_password
+      APPLICATION_AUTHENTICATION_ENABLED: "false"
+      STELLIO_AUTHENTICATION_ALLOW_PUBLIC_PERMISSION: "false"
+      APPLICATION_TENANTS_0_ISSUER: https://sso.eglobalmark.com/auth/realms/stellio
+      APPLICATION_TENANTS_0_NAME: urn:ngsi-ld:tenant:default
+      APPLICATION_TENANTS_0_DBSCHEMA: public
+      APPLICATION_PAGINATION_LIMIT_DEFAULT: 30
+      APPLICATION_PAGINATION_LIMIT_MAX: 100
+      APPLICATION_PAGINATION_TEMPORAL_LIMIT: 10000
+    ports:
+      - "8083:8083"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      kafka:
+        condition: service_started
+
+  # --------------------------------------------------------------------------
+  # Subscription service — subscription management & notifications
+  # --------------------------------------------------------------------------
+  subscription-service:
+    image: docker.io/stellio/stellio-subscription-service:latest-dev
+    container_name: test-stellio-subscription-service
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_R2DBC_URL: r2dbc:pool:postgresql://postgres/stellio_subscription
+      SPRING_FLYWAY_URL: jdbc:postgresql://postgres/stellio_subscription
+      SPRING_R2DBC_USERNAME: stellio
+      SPRING_R2DBC_PASSWORD: stellio_password
+      APPLICATION_AUTHENTICATION_ENABLED: "false"
+      STELLIO_AUTHENTICATION_ALLOW_PUBLIC_PERMISSION: "false"
+      APPLICATION_TENANTS_0_ISSUER: https://sso.eglobalmark.com/auth/realms/stellio
+      APPLICATION_TENANTS_0_NAME: urn:ngsi-ld:tenant:default
+      APPLICATION_TENANTS_0_DBSCHEMA: public
+      APPLICATION_TENANTS_0_CLIENTID: ""
+      APPLICATION_TENANTS_0_CLIENTSECRET: ""
+      SUBSCRIPTION_ENTITY_SERVICE_URL: http://search-service:8083
+      SUBSCRIPTION_STELLIO_URL: http://api-gateway:8080
+      APPLICATION_PAGINATION_LIMIT_DEFAULT: 30
+      APPLICATION_PAGINATION_LIMIT_MAX: 100
+    ports:
+      - "8084:8084"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      kafka:
+        condition: service_started
+
+  # --------------------------------------------------------------------------
+  # API Gateway — routes NGSI-LD requests to downstream services
+  # --------------------------------------------------------------------------
+  api-gateway:
+    image: docker.io/stellio/stellio-api-gateway:latest-dev
+    container_name: test-stellio-api-gateway
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      kafka:
+        condition: service_started
+      search-service:
+        condition: service_started
+      subscription-service:
+        condition: service_started

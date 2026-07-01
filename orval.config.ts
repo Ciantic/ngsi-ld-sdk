@@ -83,6 +83,68 @@ function fixUnknowns(sourceFile: SourceFile): void {
 }
 
 /**
+ * For queryBatch and temporalQueryBatch, the NGSI-LD spec defines
+ * `@context` as required under Content-Type: application/ld+json.
+ * But `@context` doesn't belong in a query payload — brokers like
+ * Stellio reject it outright, and Orion-LD doesn't need it.
+ *
+ * For these two operations only, we keep application/json and drop
+ * application/ld+json (the opposite of the default behavior), so
+ * orval generates `Content-Type: application/json` and doesn't
+ * require `@context` in the body.
+ */
+function fixQueryBatchSpec(spec: Record<string, unknown>): void {
+  const QUERY_OPS = new Set(["queryBatch", "temporalQueryBatch"]);
+
+  const paths = spec.paths as Record<string, unknown> | undefined;
+  if (!paths) return;
+
+  // Resolve a $ref like "#/components/requestBodies/QueryTemporal"
+  function resolveRef(ref: string): Record<string, unknown> | null {
+    const parts = ref.replace(/^#\//, "").split("/");
+    let node: unknown = spec;
+    for (const part of parts) {
+      if (typeof node !== "object" || node === null) return null;
+      node = (node as Record<string, unknown>)[part];
+    }
+    return node as Record<string, unknown> | null;
+  }
+
+  for (const [, pathItem] of Object.entries(paths)) {
+    const operations = pathItem as Record<string, unknown>;
+    if (!operations || typeof operations !== "object") continue;
+
+    for (const [method, op] of Object.entries(operations)) {
+      const operation = op as Record<string, unknown>;
+      const operationId = operation.operationId as string | undefined;
+      if (!operationId || !QUERY_OPS.has(operationId)) continue;
+
+      let requestBody = operation.requestBody as
+        Record<string, unknown> | undefined;
+      if (!requestBody) continue;
+
+      // Resolve $ref if present (e.g. $ref: '#/components/requestBodies/QueryTemporal')
+      if (requestBody.$ref) {
+        const resolved = resolveRef(requestBody.$ref as string);
+        if (resolved) requestBody = resolved;
+      }
+
+      const content = requestBody.content as
+        Record<string, unknown> | undefined;
+      if (!content) continue;
+
+      // For query ops: keep application/json, drop application/ld+json
+      if (
+        Object.hasOwn(content, "application/json") &&
+        Object.hasOwn(content, "application/ld+json")
+      ) {
+        delete content["application/ld+json"];
+      }
+    }
+  }
+}
+
+/**
  * Orval derives response type names from the operationId (e.g.
  * `deleteEntity` → `deleteEntityResponse204`). Uppercase the first
  * character so they follow PascalCase convention.
@@ -164,6 +226,7 @@ function loadAndPreprocessSpec(): Record<string, unknown> {
   const raw = fixMime(readFileSync(SPEC_FILE, "utf-8"));
   const doc = parseDocument(raw);
   const data = doc.toJSON() as Record<string, unknown>;
+  fixQueryBatchSpec(data);
   walk(data);
   preprocessedSpec = data;
   return data;

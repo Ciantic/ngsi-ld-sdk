@@ -2152,9 +2152,7 @@ export type EntityTemporalFragmentBody = EntityTemporal & {
   "@context"?: LdContext;
 };
 
-export type QueryTemporalBody = QueryTemporal & {
-  "@context"?: LdContext;
-};
+export type QueryTemporalBody = QueryTemporal;
 
 export type SubscriptionBody = Subscription & {
   "@context"?: LdContext;
@@ -3215,9 +3213,6 @@ export const QueryBatchOptionsItem = {
   ...OptionsRepresentation,
   ...OptionsSysAttrs,
 } as const;
-export type QueryBatchBody = Query & {
-  "@context"?: LdContext;
-};
 export type MergeBatchParams = {
   /**
    * 6.3.18 Limiting Distributed Operations. If local=true then no Context Source Registrations shall be
