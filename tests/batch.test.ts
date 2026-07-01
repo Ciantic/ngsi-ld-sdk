@@ -97,7 +97,7 @@ describe("upsertBatch", () => {
     const updated = {
       ...makeEntity(),
       id: entity.id,
-      properties: {
+      $props: {
         temperature: {
           type: "Property" as const,
           value: 99,
@@ -125,7 +125,7 @@ describe("updateBatch", () => {
     const update1 = {
       ...makeEntity(),
       id: entity1.id,
-      properties: {
+      $props: {
         temperature: { type: "Property" as const, value: 100 },
       },
     };
@@ -133,7 +133,7 @@ describe("updateBatch", () => {
     const update2 = {
       ...makeEntity(),
       id: entity2.id,
-      properties: {
+      $props: {
         temperature: { type: "Property" as const, value: 200 },
       },
     };
@@ -240,7 +240,7 @@ describe("mergeBatch", () => {
       ],
       id: entity1.id,
       type: "TestEntity",
-      properties: {
+      $props: {
         humidity: {
           type: "Property" as const,
           value: 55,
@@ -254,7 +254,7 @@ describe("mergeBatch", () => {
       ],
       id: entity2.id,
       type: "TestEntity",
-      properties: {
+      $props: {
         humidity: {
           type: "Property" as const,
           value: 65,

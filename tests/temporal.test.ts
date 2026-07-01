@@ -36,7 +36,7 @@ function makeTemporalEntity(overrides?: {
     "@context": NGSILD_CORE_CONTEXT,
     id,
     type: overrides?.type ?? "TemporalTestEntity",
-    properties: {
+    $props: {
       temperature: [
         {
           type: "Property" as const,
@@ -277,7 +277,7 @@ describe("updateAttrsTemporal", () => {
           type: "Property" as const,
           value: 999,
           observedAt: (
-            entity.properties.temperature as Array<{ observedAt?: string }>
+            entity.$props.temperature as Array<{ observedAt?: string }>
           )?.[0]?.observedAt,
         },
       ],
@@ -286,7 +286,7 @@ describe("updateAttrsTemporal", () => {
     // InstanceId format varies; Orion-LD may use the observedAt as URI-encoded
     // Try with a simple timestamp-based instanceId
     const instanceId = encodeURIComponent(
-      (entity.properties.temperature as Array<{ observedAt?: string }>)?.[0]
+      (entity.$props.temperature as Array<{ observedAt?: string }>)?.[0]
         ?.observedAt ?? new Date().toISOString(),
     );
 
@@ -340,7 +340,7 @@ describe("deleteAttrInstanceTemporal", () => {
     trackId(entity.id!);
 
     const instanceId = encodeURIComponent(
-      (entity.properties.temperature as Array<{ observedAt?: string }>)[0]
+      (entity.$props.temperature as Array<{ observedAt?: string }>)[0]
         ?.observedAt ?? new Date().toISOString(),
     );
 

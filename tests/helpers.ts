@@ -39,7 +39,7 @@ export function makeEntity() {
     "@context": NGSILD_CORE_CONTEXT,
     id,
     type: "TestEntity",
-    properties: {
+    $props: {
       temperature: {
         type: "Property" as const,
         value: 25 + entityCounter,

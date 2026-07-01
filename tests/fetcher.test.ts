@@ -57,7 +57,7 @@ describe("fromApi", () => {
     expect(result).toEqual({
       id: "urn:ngsi-ld:Test:1",
       type: "TestType",
-      properties: {
+      $props: {
         temperature: { type: "Property", value: 25 },
         humidity: { type: "Property", value: 55 },
       },
@@ -65,9 +65,9 @@ describe("fromApi", () => {
   });
 
   // -------------------------------------------------------------------------
-  // Entity with only structural keys — no `properties` key
+  // Entity with only structural keys — no `props` key
   // -------------------------------------------------------------------------
-  it("does not add `properties` when there are no dynamic attributes", () => {
+  it("does not add `props` when there are no dynamic attributes", () => {
     const wire = {
       id: "urn:ngsi-ld:Test:1",
       type: "TestType",
@@ -83,7 +83,7 @@ describe("fromApi", () => {
       createdAt: "2024-01-01T00:00:00Z",
       modifiedAt: "2024-01-02T00:00:00Z",
     });
-    expect(result).not.toHaveProperty("properties");
+    expect(result).not.toHaveProperty("$props");
   });
 
   // -------------------------------------------------------------------------
@@ -107,7 +107,7 @@ describe("fromApi", () => {
       "@context": [
         "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
       ],
-      properties: {
+      $props: {
         temperature: { type: "Property", value: 25 },
       },
     });
@@ -130,7 +130,7 @@ describe("fromApi", () => {
       id: "urn:ngsi-ld:Test:1",
       type: "TestType",
       scope: "tenantA",
-      properties: {
+      $props: {
         temperature: { type: "Property", value: 25 },
       },
     });
@@ -240,12 +240,12 @@ describe("fromApi", () => {
       {
         id: "urn:ngsi-ld:Test:1",
         type: "T",
-        properties: { temperature: { type: "Property", value: 25 } },
+        $props: { temperature: { type: "Property", value: 25 } },
       },
       {
         id: "urn:ngsi-ld:Test:2",
         type: "T",
-        properties: { humidity: { type: "Property", value: 55 } },
+        $props: { humidity: { type: "Property", value: 55 } },
       },
     ]);
   });
@@ -273,7 +273,7 @@ describe("fromApi", () => {
       location: {
         type: "GeoProperty",
         value: { type: "Point", coordinates: [24, 60] },
-        properties: {
+        $props: {
           accuracy: { type: "Property", value: 0.95 },
         },
       },
@@ -301,7 +301,7 @@ describe("fromApi", () => {
       modifiedAt: "2024-01-02T00:00:00Z",
       deletedAt: "2024-01-03T00:00:00Z",
     });
-    expect(result).not.toHaveProperty("properties");
+    expect(result).not.toHaveProperty("$props");
   });
 
   // -------------------------------------------------------------------------
@@ -345,13 +345,13 @@ describe("toApi", () => {
   });
 
   // -------------------------------------------------------------------------
-  // Object with `properties` — spread to top level
+  // Object with `props` — spread to top level
   // -------------------------------------------------------------------------
-  it("spreads `properties` to the top level", () => {
+  it("spreads `props` to the top level", () => {
     const sdk = {
       id: "urn:ngsi-ld:Test:1",
       type: "TestType",
-      properties: {
+      $props: {
         temperature: { type: "Property", value: 25 },
         humidity: { type: "Property", value: 55 },
       },
@@ -368,9 +368,9 @@ describe("toApi", () => {
   });
 
   // -------------------------------------------------------------------------
-  // Object without `properties` — pass through unchanged
+  // Object without `props` — pass through unchanged
   // -------------------------------------------------------------------------
-  it("passes through objects without `properties`", () => {
+  it("passes through objects without `props`", () => {
     const sdk = {
       id: "urn:ngsi-ld:Test:1",
       type: "TestType",
@@ -380,44 +380,44 @@ describe("toApi", () => {
   });
 
   // -------------------------------------------------------------------------
-  // `properties` is null — pass through
+  // `props` is null — pass through
   // -------------------------------------------------------------------------
-  it("passes through when `properties` is null", () => {
+  it("passes through when `props` is null", () => {
     const sdk = {
       id: "urn:ngsi-ld:Test:1",
       type: "TestType",
-      properties: null,
+      $props: null,
     };
 
     expect(toApi(sdk)).toEqual(sdk);
   });
 
   // -------------------------------------------------------------------------
-  // `properties` is not an object (e.g., string) — pass through
+  // `props` is not an object (e.g., string) — pass through
   // -------------------------------------------------------------------------
-  it("passes through when `properties` is a non-object", () => {
+  it("passes through when `props` is a non-object", () => {
     const sdk = {
       id: "urn:ngsi-ld:Test:1",
-      properties: "not-an-object",
+      $props: "not-an-object",
     };
 
     expect(toApi(sdk)).toEqual(sdk);
   });
 
   // -------------------------------------------------------------------------
-  // Array of objects with `properties` — each spread
+  // Array of objects with `props` — each spread
   // -------------------------------------------------------------------------
   it("handles arrays of SDK objects", () => {
     const sdk = [
       {
         id: "urn:ngsi-ld:Test:1",
         type: "T",
-        properties: { temperature: { type: "Property", value: 25 } },
+        $props: { temperature: { type: "Property", value: 25 } },
       },
       {
         id: "urn:ngsi-ld:Test:2",
         type: "T",
-        properties: { humidity: { type: "Property", value: 55 } },
+        $props: { humidity: { type: "Property", value: 55 } },
       },
     ];
 
@@ -438,17 +438,17 @@ describe("toApi", () => {
   });
 
   // -------------------------------------------------------------------------
-  // Nested `properties` — recursive spread
+  // Nested `props` — recursive spread
   // -------------------------------------------------------------------------
-  it("recursively spreads nested `properties`", () => {
+  it("recursively spreads nested `props`", () => {
     const sdk = {
       id: "urn:ngsi-ld:Test:1",
       type: "TestType",
-      properties: {
+      $props: {
         location: {
           type: "GeoProperty",
           value: { type: "Point", coordinates: [24, 60] },
-          properties: {
+          $props: {
             accuracy: { type: "Property", value: 0.95 },
           },
         },
@@ -475,7 +475,7 @@ describe("toApi", () => {
     const sdk = {
       id: "urn:ngsi-ld:Test:1",
       type: "TestType",
-      properties: {},
+      $props: {},
     };
 
     const result = toApi(sdk);
@@ -484,20 +484,20 @@ describe("toApi", () => {
       id: "urn:ngsi-ld:Test:1",
       type: "TestType",
     });
-    expect(result).not.toHaveProperty("properties");
+    expect(result).not.toHaveProperty("$props");
   });
 
   // -------------------------------------------------------------------------
-  // `properties` alongside `@context` — all survive
+  // `props` alongside `@context` — all survive
   // -------------------------------------------------------------------------
-  it("preserves @context alongside spread properties", () => {
+  it("preserves @context alongside spread props", () => {
     const sdk = {
       id: "urn:ngsi-ld:Test:1",
       type: "TestType",
       "@context": [
         "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
       ],
-      properties: {
+      $props: {
         temperature: { type: "Property", value: 25 },
       },
     };
@@ -610,7 +610,7 @@ describe("fromApi ↔ toApi round-trip", () => {
     const sdk = {
       id: "urn:ngsi-ld:Test:1",
       type: "TestType",
-      properties: {
+      $props: {
         temperature: { type: "Property", value: 25 },
         humidity: { type: "Property", value: 55 },
       },
@@ -629,7 +629,7 @@ describe("fromApi ↔ toApi round-trip", () => {
       "@context": [
         "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
       ],
-      properties: {
+      $props: {
         temperature: { type: "Property", value: 25 },
       },
     };
@@ -659,10 +659,10 @@ describe("fromApi / toApi edge cases", () => {
   // -------------------------------------------------------------------------
   // Properties that conflict with structural keys
   // -------------------------------------------------------------------------
-  it("handles `properties` attribute in wire data (known limitation)", () => {
+  it("handles `properties` attribute in wire data — no collision with `props`", () => {
     // An entity where `properties` is a legitimate NGSI-LD attribute name.
-    // This is an edge case with inherent ambiguity: the SDK uses
-    // `properties` as its internal grouping key.
+    // Since the SDK uses `props` as its internal grouping key, a wire-level
+    // `properties` is just another dynamic attribute — no collision.
     const wire = {
       id: "urn:ngsi-ld:Test:1",
       type: "TestType",
@@ -671,27 +671,18 @@ describe("fromApi / toApi edge cases", () => {
 
     const sdk = fromApi(wire);
 
-    // The `properties` attribute (dynamic) gets nested inside the SDK
-    // `properties` container — this is technically a transformation
-    // but `properties` as an attribute name is extremely rare.
+    // The `properties` attribute gets wrapped in `props` like any other.
     expect(sdk).toEqual({
       id: "urn:ngsi-ld:Test:1",
       type: "TestType",
-      properties: {
+      $props: {
         properties: { type: "Property", value: "some value" },
       },
     });
 
-    // Round-tripping through toApi produces a flat structure again,
-    // but the outer entity `type` is shadowed by the inner attribute's
-    // `type`.  This is a known limitation when an NGSI-LD attribute
-    // is literally named "properties".
+    // Round-tripping through toApi produces the original structure.
     const back = toApi(sdk);
-    expect(back).toEqual({
-      id: "urn:ngsi-ld:Test:1",
-      type: "Property",
-      value: "some value",
-    });
+    expect(back).toEqual(wire);
   });
 
   it("handles `properties` key in wire data that is not an NGSI-LD object", () => {
@@ -701,10 +692,8 @@ describe("fromApi / toApi edge cases", () => {
     // fromApi — not NGSI-LD (no id, no type), so passthrough
     expect(fromApi(plain)).toEqual(plain);
 
-    // toApi — has `properties` that is an object, so it would spread
-    // This is handled correctly: non-NGSI-LD data shouldn't go through
-    // these transforms normally. The user should only use toApi/fromApi
-    // on NGSI-LD payloads.
+    // toApi — only unwraps `props`, not `properties`, so passthrough
+    expect(toApi(plain)).toEqual(plain);
   });
 
   // -------------------------------------------------------------------------
@@ -731,15 +720,15 @@ describe("fromApi / toApi edge cases", () => {
     expect(sdk).toEqual({
       id: "urn:ngsi-ld:Test:1",
       type: "TestType",
-      properties: {
+      $props: {
         temperature: {
           type: "Property",
           value: 25,
-          properties: {
+          $props: {
             nestedEntity: {
               id: "urn:ngsi-ld:Nested:1",
               type: "NestedType",
-              properties: {
+              $props: {
                 nestedAttr: { type: "Property", value: "deep" },
               },
             },
@@ -773,7 +762,7 @@ describe("fromApi / toApi edge cases", () => {
     expect(result).toEqual({
       id: "urn:ngsi-ld:Test:1",
       type: "TestType",
-      properties: {
+      $props: {
         managedBy: {
           type: "Relationship",
           object: "urn:ngsi-ld:Device:1",
@@ -808,11 +797,11 @@ describe("fromApi / toApi edge cases", () => {
 
     const result = fromApi(wire);
 
-    // All sub-keys are structural → no nested properties
+    // All sub-keys are structural → no nested props
     expect(result).toEqual({
       id: "urn:ngsi-ld:Test:1",
       type: "TestType",
-      properties: {
+      $props: {
         temperature: {
           type: "Property",
           value: 25,

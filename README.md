@@ -36,7 +36,7 @@ The types containing such dictionaries are almost useless. Thus this SDK wrapper
 }
 ```
 
-This SDK outputs and expects additional properties in its own bag of properties like:
+This SDK outputs and expects additional properties in its own bag of properties (`$props`) like:
 
 ```json
 {
@@ -46,7 +46,7 @@ This SDK outputs and expects additional properties in its own bag of properties 
   ],
   "id": "urn:ngsi-ld:Person:John_Lennon",
   "type": "Person",
-  "properties": {
+  "$props": {
     "name": { "type": "Property", "value": "John Lennon" },
     "born": { "type": "Property", "value": "1940-10-09" },
     "spouse": {

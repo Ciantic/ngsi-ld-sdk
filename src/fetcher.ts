@@ -26,7 +26,7 @@ function isGeoJsonGeometry(obj: Record<string, unknown>): boolean {
 /**
  * Recursively checks whether a value contains any NGSI-LD attribute objects
  * (objects with `type` ∈ {"Property","GeoProperty",…}).  This determines
- * whether the value should be wrapped in `properties`.
+ * whether the value should be wrapped in `$props`.
  */
 function containsNgsildAttribute(v: unknown): boolean {
   if (v === null || typeof v !== "object") return false;
@@ -42,7 +42,7 @@ function containsNgsildAttribute(v: unknown): boolean {
 
 /**
  * Transform a response body from the Orion wire format into the SDK
- * shape.  Moves all dynamic NGSI-LD attribute keys into a `properties`
+ * shape.  Moves all dynamic NGSI-LD attribute keys into a `$props`
  * sub-object so users can access them without an index signature.
  *
  * Only wraps when at least one non-structural key's value looks like an
@@ -79,7 +79,7 @@ export function fromApi<T>(data: T): T {
   const hasNgsildAttrs = Object.values(dynamic).some(containsNgsildAttribute);
 
   if (hasNgsildAttrs && Object.keys(dynamic).length > 0) {
-    structural["properties"] = dynamic;
+    structural["$props"] = dynamic;
   } else {
     // No wrapping needed — merge dynamic back into structural
     Object.assign(structural, dynamic);
@@ -90,9 +90,9 @@ export function fromApi<T>(data: T): T {
 
 /**
  * Transform an SDK-shaped request body back into the Orion wire format.
- * Spreads the `properties` sub-object to the top level so Orion receives
+ * Spreads the `$props` sub-object to the top level so Orion receives
  * the flat JSON-LD it expects.  Recurses into all nested values so
- * deeply nested `properties` are also unwound.
+ * deeply nested `$props` are also unwound.
  */
 export function toApi<T>(body: T): T {
   if (body === null || body === undefined) return body;
@@ -101,24 +101,24 @@ export function toApi<T>(body: T): T {
 
   const obj = body as Record<string, unknown>;
 
-  // First, recurse into all values (they might themselves have `properties`)
+  // First, recurse into all values (they might themselves have `props`)
   const processed: Record<string, unknown> = {};
   let hasProperties = false;
   for (const key of Object.keys(obj)) {
     processed[key] = toApi(obj[key]);
-    if (key === "properties" && isObject(processed[key])) {
+    if (key === "$props" && isObject(processed[key])) {
       hasProperties = true;
     }
   }
 
   if (!hasProperties) return processed as unknown as T;
 
-  const { properties, ...rest } = processed;
-  // properties is already recursively processed from above,
+  const { $props, ...rest } = processed;
+  // $props is already recursively processed from above,
   // spread its keys to the top level
   return {
     ...rest,
-    ...(properties as Record<string, unknown>),
+    ...($props as Record<string, unknown>),
   } as unknown as T;
 }
 

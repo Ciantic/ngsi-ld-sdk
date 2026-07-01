@@ -837,7 +837,7 @@ export interface GeoProperty {
    */
   readonly previousValue?: Geometry;
   /** Dynamic NGSI-LD attributes (Properties, Relationships, etc.). */
-  properties?: { [key: string]: NgsildAttribute };
+  $props?: { [key: string]: NgsildAttribute };
 }
 
 /**
@@ -860,7 +860,7 @@ export interface Entity {
   readonly modifiedAt?: ModifiedAt;
   readonly deletedAt?: DeletedAt;
   /** Dynamic NGSI-LD attributes (Properties, Relationships, etc.). */
-  properties?: { [key: string]: NgsildAttribute };
+  $props?: { [key: string]: NgsildAttribute };
 }
 
 /**
@@ -905,7 +905,7 @@ export interface EntityTemporal {
   readonly modifiedAt?: ModifiedAt;
   readonly deletedAt?: DeletedAt;
   /** Dynamic NGSI-LD attributes (Properties, Relationships, etc.). */
-  properties?: { [key: string]: NgsildAttributeTemporal };
+  $props?: { [key: string]: NgsildAttributeTemporal };
 }
 
 /**
@@ -1003,7 +1003,7 @@ export interface FeatureProperties {
    */
   type: string | string[];
   /** Dynamic NGSI-LD attributes (Properties, Relationships, etc.). */
-  properties?: { [key: string]: NgsildAttribute };
+  $props?: { [key: string]: NgsildAttribute };
 }
 
 /**
@@ -1156,7 +1156,7 @@ export interface LanguageProperty {
    */
   readonly previousLanguageMap?: LanguagePropertyPreviousLanguageMap;
   /** Dynamic NGSI-LD attributes (Properties, Relationships, etc.). */
-  properties?: { [key: string]: NgsildAttribute };
+  $props?: { [key: string]: NgsildAttribute };
 }
 
 export type LdContextMetadataItemKind =
@@ -1406,7 +1406,7 @@ export interface Property {
    */
   readonly previousValue?: DateTimeValue | JsonValue;
   /** Dynamic NGSI-LD attributes (Properties, Relationships, etc.). */
-  properties?: { [key: string]: NgsildAttribute };
+  $props?: { [key: string]: NgsildAttribute };
 }
 
 /**
@@ -1586,7 +1586,7 @@ export interface Relationship {
    */
   readonly entity?: Entity | Entity[];
   /** Dynamic NGSI-LD attributes (Properties, Relationships, etc.). */
-  properties?: { [key: string]: NgsildAttribute };
+  $props?: { [key: string]: NgsildAttribute };
 }
 
 /**
@@ -1775,7 +1775,7 @@ export interface VocabProperty {
    */
   readonly instanceId?: string;
   /** Dynamic NGSI-LD attributes (Properties, Relationships, etc.). */
-  properties?: { [key: string]: NgsildAttribute };
+  $props?: { [key: string]: NgsildAttribute };
 }
 
 /**
@@ -1817,7 +1817,7 @@ export interface ListProperty {
    */
   readonly previousValueList?: readonly (DateTimeValue | JsonValue)[];
   /** Dynamic NGSI-LD attributes (Properties, Relationships, etc.). */
-  properties?: { [key: string]: NgsildAttribute };
+  $props?: { [key: string]: NgsildAttribute };
 }
 
 /**
@@ -1897,7 +1897,7 @@ export interface ListRelationship {
    */
   readonly entityList?: readonly Entity[];
   /** Dynamic NGSI-LD attributes (Properties, Relationships, etc.). */
-  properties?: { [key: string]: NgsildAttribute };
+  $props?: { [key: string]: NgsildAttribute };
 }
 
 /**
@@ -1948,7 +1948,7 @@ export interface JsonProperty {
    */
   readonly instanceId?: string;
   /** Dynamic NGSI-LD attributes (Properties, Relationships, etc.). */
-  properties?: { [key: string]: NgsildAttribute };
+  $props?: { [key: string]: NgsildAttribute };
 }
 
 /**

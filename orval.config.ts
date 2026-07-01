@@ -537,7 +537,7 @@ function fixPickRequired(apiFile: SourceFile): void {
  * and emits `[key: string]: unknown` instead.
  *
  * This function defines a `NgsildAttribute` union type and moves dynamic
- * NGSI-LD attributes into a `properties` sub-object so that named
+ * NGSI-LD attributes into a `$props` sub-object so that named
  * properties (like `id?: string`) don't need to be assignable to the
  * index signature type.
  */
@@ -585,9 +585,9 @@ export type NgsildAttributeTemporal = NgsildAttribute | NgsildAttribute[];`;
   // 1. Append NgsildAttribute + NgsildAttributeTemporal types at the end
   schemasFile.insertText(schemasFile.getEnd(), NGSILD_ATTR_TYPES);
 
-  // 2. Add a `properties` sub-object to interfaces with index signatures.
+  // 2. Add a `$props` sub-object to interfaces with index signatures.
   //    Dynamic NGSI-LD attributes (temperature, speed, etc.) are moved
-  //    into `properties: { [key: string]: NgsildAttribute }` so they don't
+  //    into `$props: { [key: string]: NgsildAttribute }` so they don't
   //    pollute the top-level type with an index signature.
   //    The fetcher handles `fromApi` (wire → SDK) and `toApi` (SDK → wire)
   //    transformations.
@@ -600,9 +600,9 @@ export type NgsildAttributeTemporal = NgsildAttribute | NgsildAttribute[];`;
       sig.remove();
     }
 
-    // Add a `properties` member for dynamic NGSI-LD attributes
+    // Add a `$props` member for dynamic NGSI-LD attributes
     iface.addProperty({
-      name: "properties",
+      name: "$props",
       type: `{ [key: string]: ${attrType} }`,
       hasQuestionToken: true,
       docs: [

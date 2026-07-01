@@ -132,7 +132,7 @@ describe("mergeEntity", () => {
       "@context": [
         "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
       ],
-      properties: {
+      $props: {
         humidity: {
           type: "Property" as const,
           value: 55,
@@ -147,7 +147,7 @@ describe("mergeEntity", () => {
     const retrieved = await retrieveEntity(entity.id!);
     if (!Array.isArray(retrieved.data)) {
       const data = retrieved.data as Record<string, unknown>;
-      const props = data["properties"] as Record<string, unknown> | undefined;
+      const props = data["$props"] as Record<string, unknown> | undefined;
       expect(props?.["humidity"]).toBeDefined();
     }
   });
@@ -168,7 +168,7 @@ describe("replaceEntity", () => {
       ],
       id: entity.id,
       type: "TestEntity",
-      properties: {
+      $props: {
         replacedAttr: {
           type: "Property" as const,
           value: 100,
@@ -194,7 +194,7 @@ describe("appendAttrs", () => {
       "@context": [
         "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
       ],
-      properties: {
+      $props: {
         newProperty: {
           type: "Property" as const,
           value: 42,
@@ -220,7 +220,7 @@ describe("updateEntity", () => {
       "@context": [
         "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
       ],
-      properties: {
+      $props: {
         temperature: {
           type: "Property" as const,
           value: 99,
@@ -279,8 +279,8 @@ describe("deleteAttrs", () => {
   it("should delete a single attribute from an entity", async () => {
     const entity = {
       ...makeEntity(),
-      properties: {
-        ...makeEntity().properties,
+      $props: {
+        ...makeEntity().$props,
         extraAttr: { type: "Property" as const, value: 1 },
       },
     };
