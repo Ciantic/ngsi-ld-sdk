@@ -180,10 +180,12 @@ let preprocessedSpec: Record<string, unknown> = {};
  *
  * The NGSI-LD spec layers `required` on top of base schemas via `allOf`:
  *
- *   schema:
- *     allOf:
- *       - $ref: '#/components/schemas/Entity'
- *       - required: [id, type, @context]
+ * ```
+ *    schema:
+ *      allOf:
+ *        - $ref: '#/components/schemas/Entity'
+ *        - required: [id, type, @context]
+ * ```
  *
  * Orval ignores standalone `required` in allOf, so we extract it here.
  */
