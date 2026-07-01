@@ -30,6 +30,7 @@ const podmanArgs = [
   "-f",
   "tests/docker-test-sdk/test-runner.yaml",
   "up",
+  "--build",
   "--force-recreate",
   "--abort-on-container-exit",
   "--timeout",

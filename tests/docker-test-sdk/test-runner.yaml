@@ -8,22 +8,22 @@
 
 services:
   test-runner:
-    image: docker.io/library/node:22
+    build:
+      context: ../..
+      dockerfile: tests/docker-test-sdk/Dockerfile
     container_name: test-sdk-runner
     working_dir: /app
     environment:
       NGSILD_BROKER_URL: ${NGSILD_BROKER_URL}
       CI: "true"
-      COREPACK_ENABLE_STRICT: "0"
     volumes:
       - ../../:/app:O
+      - /app/node_modules
     command:
       - sh
       - -c
       - |
         BROKER_BASE="$$(echo "$$NGSILD_BROKER_URL" | sed 's|\(http://[^/]*\).*|\1|')"
-        corepack enable pnpm
-        pnpm install --frozen-lockfile --store-dir /tmp/pnpm-store
         echo "Waiting for broker at $$BROKER_BASE/version ..."
         curl -sS --retry 60 --retry-delay 2 --retry-all-errors "$$BROKER_BASE/version" -o /dev/null
         pnpm test
