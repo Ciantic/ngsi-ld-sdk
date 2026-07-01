@@ -12,9 +12,9 @@
     "build": "tsc",
     "test": "vitest run",
     "generate:api": "orval",
-    "test:docker-orion": "node tests/docker-test-sdk/test-runner.ts docker-test-orion http://orion-ld:1026/ngsi-ld/v1",
-    "test:docker-orion-temporal": "node tests/docker-test-sdk/test-runner.ts docker-test-orion-with-temporal http://orion-ld:1026/ngsi-ld/v1",
-    "test:docker-stellio": "node tests/docker-test-sdk/test-runner.ts docker-test-stellio http://api-gateway:8080/ngsi-ld/v1"
+    "test:docker-orion": "node test-runner.ts docker-test-orion http://orion-ld:1026/ngsi-ld/v1",
+    "test:docker-orion-temporal": "node test-runner.ts docker-test-orion-with-temporal http://orion-ld:1026/ngsi-ld/v1",
+    "test:docker-stellio": "node test-runner.ts docker-test-stellio http://api-gateway:8080/ngsi-ld/v1"
   },
   "license": "MIT",
   "devDependencies": {
