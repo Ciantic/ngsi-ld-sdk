@@ -1,5 +1,5 @@
 // Usage: node test-runner.ts <compose-dir> <broker-url>
-import { spawn } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
 
 const composeDir = process.argv[2];
 const brokerUrl = process.argv[3];
@@ -11,6 +11,19 @@ if (!composeDir || !brokerUrl) {
 
 const stripAnsi = (s: string) => s.replace(/\x1b\[[0-9;]*m/g, "");
 
+function cleanup() {
+  spawnSync("podman", [
+    "compose",
+    "-f",
+    `tests/${composeDir}/compose.yaml`,
+    "-f",
+    "tests/docker-test-sdk/test-runner.yaml",
+    "down",
+    "--timeout",
+    "5",
+  ]);
+}
+
 const podmanArgs = [
   "compose",
   "-f",
@@ -18,6 +31,7 @@ const podmanArgs = [
   "-f",
   "tests/docker-test-sdk/test-runner.yaml",
   "up",
+  "--force-recreate",
   "--abort-on-container-exit",
   "--timeout",
   "10",
@@ -66,5 +80,15 @@ child.stderr?.on("data", filterLine);
 
 child.on("close", (code) => {
   clearTimeout(timeout);
+  cleanup();
   process.exitCode = code ?? 0;
+});
+
+process.on("SIGINT", () => {
+  cleanup();
+  process.exit();
+});
+process.on("SIGTERM", () => {
+  cleanup();
+  process.exit();
 });
