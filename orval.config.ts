@@ -471,8 +471,8 @@ function fixPickRequired(apiFile: SourceFile): void {
  * single or array). Orval can't resolve oneOf inside additionalProperties
  * and emits `[key: string]: unknown` instead.
  *
- * This function defines a `NgsildAttribute` union type and converts the
- * relevant interfaces into type aliases with an intersection so that named
+ * This function defines a `NgsildAttribute` union type and moves dynamic
+ * NGSI-LD attributes into a `properties` sub-object so that named
  * properties (like `id?: string`) don't need to be assignable to the
  * index signature type.
  */
@@ -520,7 +520,7 @@ export type NgsildAttributeTemporal = NgsildAttribute | NgsildAttribute[];`;
   // 1. Append NgsildAttribute + NgsildAttributeTemporal types at the end
   schemasFile.insertText(schemasFile.getEnd(), NGSILD_ATTR_TYPES);
 
-  // 2. Convert interfaces to type aliases with a `properties` sub-object.
+  // 2. Add a `properties` sub-object to interfaces with index signatures.
   //    Dynamic NGSI-LD attributes (temperature, speed, etc.) are moved
   //    into `properties: { [key: string]: NgsildAttribute }` so they don't
   //    pollute the top-level type with an index signature.
@@ -530,25 +530,23 @@ export type NgsildAttributeTemporal = NgsildAttribute | NgsildAttribute[];`;
     const attrType = INTERFACES_WITH_ATTRIBUTES[iface.getName()];
     if (!attrType) continue;
 
-    const text = iface.getText();
-    const name = iface.getName();
-    const prefix = iface.isExported() ? "export " : "";
+    // Remove index signature(s) like [key: string]: unknown
+    for (const sig of iface.getIndexSignatures()) {
+      sig.remove();
+    }
 
-    // Extract body between first { and last }
-    const openBrace = text.indexOf("{");
-    const closeBrace = text.lastIndexOf("}");
-    let body = text.slice(openBrace + 1, closeBrace);
-
-    // Remove the index signature line(s)
-    body = body.replace(
-      /\n\s*\[key: string\]: (?:unknown|NgsildAttribute);\s*/g,
-      "",
-    );
-    body = body.trimEnd();
-
-    iface.replaceWithText(
-      `${prefix}type ${name} = {\n${body}\n\n  /** Dynamic NGSI-LD attributes (Properties, Relationships, etc.). */\n  properties?: { [key: string]: ${attrType} };\n};`,
-    );
+    // Add a `properties` member for dynamic NGSI-LD attributes
+    iface.addProperty({
+      name: "properties",
+      type: `{ [key: string]: ${attrType} }`,
+      hasQuestionToken: true,
+      docs: [
+        {
+          description:
+            "Dynamic NGSI-LD attributes (Properties, Relationships, etc.).",
+        },
+      ],
+    });
   }
 }
 

@@ -810,9 +810,12 @@ export const GeoPropertyType = {
   GeoProperty: "GeoProperty",
 } as const;
 
-export type GeoProperty = {
+/**
+ * 5.2.7 NGSI-LD GeoProperty.
+ */
+export interface GeoProperty {
   /** Node type. */
-  type: GeoPropertyType;
+  type?: GeoPropertyType;
   /** Geolocation encoded as GeoJSON. As mandated by clause 4.7. */
   value?: Geometry;
   /** Timestamp. See clause 4.8. */
@@ -833,12 +836,14 @@ export type GeoProperty = {
    * option is explicitly requested.
    */
   readonly previousValue?: Geometry;
-
   /** Dynamic NGSI-LD attributes (Properties, Relationships, etc.). */
   properties?: { [key: string]: NgsildAttribute };
-};
+}
 
-export type Entity = {
+/**
+ * 5.2.4 NGSI-LD Entity.
+ */
+export interface Entity {
   /** Entity id. */
   id?: string;
   /** Entity Type(s). Both short hand string(s) (type name) or URI(s) are allowed. */
@@ -854,10 +859,9 @@ export type Entity = {
   readonly createdAt?: CreatedAt;
   readonly modifiedAt?: ModifiedAt;
   readonly deletedAt?: DeletedAt;
-
   /** Dynamic NGSI-LD attributes (Properties, Relationships, etc.). */
   properties?: { [key: string]: NgsildAttribute };
-};
+}
 
 /**
  * 5.2.33 This type selects which entity or group of entities are queried or subscribed to by Context Consumers.
@@ -876,7 +880,15 @@ export interface EntitySelector {
   type: string;
 }
 
-export type EntityTemporal = {
+/**
+ * 5.2.20 This is the same data type as mandated by clause 5.2.4 with the only deviation that
+ * the representation of Properties and Relationships shall be the temporal one
+ * (arrays of (Property or Relationship) instances represented by JSON-LD objects)
+ * as defined in clauses 4.5.7 and 4.5.8. Alternatively it is possible to specify
+ * the EntityTemporal by using the "Simplified Temporal Representation of an Entity",
+ * as defined in clause 4.5.9.
+ */
+export interface EntityTemporal {
   /** Entity id. */
   id?: string;
   /** Entity Type(s). Both short hand string(s) (type name) or URI(s) are allowed. */
@@ -892,10 +904,9 @@ export type EntityTemporal = {
   readonly createdAt?: CreatedAt;
   readonly modifiedAt?: ModifiedAt;
   readonly deletedAt?: DeletedAt;
-
   /** Dynamic NGSI-LD attributes (Properties, Relationships, etc.). */
   properties?: { [key: string]: NgsildAttributeTemporal };
-};
+}
 
 /**
  * JSON-LD @type.
@@ -981,16 +992,19 @@ export const FeatureType = {
   Feature: "Feature",
 } as const;
 
-export type FeatureProperties = {
+/**
+ * 5.2.31 This data type represents the type and the associated attributes
+ * (Properties and Relationships) of an Entity in GeoJSON format.
+ */
+export interface FeatureProperties {
   /**
    * Entity Type (or JSON array, in case of Entities with multiple Entity Types).
    * Both short hand string (type name) or URI are allowed.
    */
   type: string | string[];
-
   /** Dynamic NGSI-LD attributes (Properties, Relationships, etc.). */
   properties?: { [key: string]: NgsildAttribute };
-};
+}
 
 /**
  * 5.2.3 JSON-LD @context
@@ -1115,9 +1129,12 @@ export type LanguagePropertyLanguageMap = { [key: string]: unknown };
  */
 export type LanguagePropertyPreviousLanguageMap = { [key: string]: unknown };
 
-export type LanguageProperty = {
+/**
+ * 5.2.32 NGSI-LD LanguageProperty.
+ */
+export interface LanguageProperty {
   /** Node type. */
-  type: LanguagePropertyType;
+  type?: LanguagePropertyType;
   /** String Property Values defined in multiple natural languages. */
   languageMap?: LanguagePropertyLanguageMap;
   /** Timestamp. See clause 4.8. */
@@ -1138,10 +1155,9 @@ export type LanguageProperty = {
    * option is explicitly requested.
    */
   readonly previousLanguageMap?: LanguagePropertyPreviousLanguageMap;
-
   /** Dynamic NGSI-LD attributes (Properties, Relationships, etc.). */
   properties?: { [key: string]: NgsildAttribute };
-};
+}
 
 export type LdContextMetadataItemKind =
   (typeof LdContextMetadataItemKind)[keyof typeof LdContextMetadataItemKind];
@@ -1361,9 +1377,12 @@ export const PropertyType = {
   Property: "Property",
 } as const;
 
-export type Property = {
+/**
+ * 5.2.5 NGSI-LD Property.
+ */
+export interface Property {
   /** Node type. */
-  type: PropertyType;
+  type?: PropertyType;
   /** Property value. */
   value?: DateTimeValue | JsonValue;
   /** Timestamp. See clause 4.8. */
@@ -1386,10 +1405,9 @@ export type Property = {
    * option is explicitly requested.
    */
   readonly previousValue?: DateTimeValue | JsonValue;
-
   /** Dynamic NGSI-LD attributes (Properties, Relationships, etc.). */
   properties?: { [key: string]: NgsildAttribute };
-};
+}
 
 /**
  * JSON-LD @type.
@@ -1530,9 +1548,12 @@ export const RelationshipType = {
   Relationship: "Relationship",
 } as const;
 
-export type Relationship = {
+/**
+ * 5.2.6 NGSI-LD Relationship.
+ */
+export interface Relationship {
   /** Node type. */
-  type: RelationshipType;
+  type?: RelationshipType;
   /** Relationship's target object. */
   object?: string | string[];
   /**
@@ -1564,10 +1585,9 @@ export type Relationship = {
    * Retrieval, if the join=inline option is explicitly requested.
    */
   readonly entity?: Entity | Entity[];
-
   /** Dynamic NGSI-LD attributes (Properties, Relationships, etc.). */
   properties?: { [key: string]: NgsildAttribute };
-};
+}
 
 /**
  * JSON-LD @type.
@@ -1728,9 +1748,12 @@ export const VocabPropertyType = {
   VocabProperty: "VocabProperty",
 } as const;
 
-export type VocabProperty = {
+/**
+ * 5.2.35 NGSI-LD VocabProperty.
+ */
+export interface VocabProperty {
   /** Node type. */
-  type: VocabPropertyType;
+  type?: VocabPropertyType;
   /** String Values which shall be type coerced to URIs based on the supplied @context. */
   vocab?: string | string[];
   /**
@@ -1751,10 +1774,9 @@ export type VocabProperty = {
    * Only used in temporal representation of VocabProperties.
    */
   readonly instanceId?: string;
-
   /** Dynamic NGSI-LD attributes (Properties, Relationships, etc.). */
   properties?: { [key: string]: NgsildAttribute };
-};
+}
 
 /**
  * Node type.
@@ -1766,9 +1788,12 @@ export const ListPropertyType = {
   ListProperty: "ListProperty",
 } as const;
 
-export type ListProperty = {
+/**
+ * 5.2.36 NGSI-LD ListProperty.
+ */
+export interface ListProperty {
   /** Node type. */
-  type: ListPropertyType;
+  type?: ListPropertyType;
   /** Ordered array of Property Values. */
   valueList?: (DateTimeValue | JsonValue)[];
   /** Timestamp. See clause 4.8. */
@@ -1791,10 +1816,9 @@ export type ListProperty = {
    * definition in clause 3.1
    */
   readonly previousValueList?: readonly (DateTimeValue | JsonValue)[];
-
   /** Dynamic NGSI-LD attributes (Properties, Relationships, etc.). */
   properties?: { [key: string]: NgsildAttribute };
-};
+}
 
 /**
  * Node type.
@@ -1826,9 +1850,12 @@ export type ListRelationshipObjectList =
 export type ListRelationshipPreviousObjectList =
   { [key: string]: unknown }[] | string[];
 
-export type ListRelationship = {
+/**
+ * 5.2.37 NGSI-LD ListRelationship.
+ */
+export interface ListRelationship {
   /** Node type. */
-  type: ListRelationshipType;
+  type?: ListRelationshipType;
   /**
    * Ordered array of Relationship target objects.
    * In the normalized form, each array element holds a JSON object
@@ -1869,10 +1896,9 @@ export type ListRelationship = {
    * Linked Entity Retrieval, if the join=inline option is explicitly requested.
    */
   readonly entityList?: readonly Entity[];
-
   /** Dynamic NGSI-LD attributes (Properties, Relationships, etc.). */
   properties?: { [key: string]: NgsildAttribute };
-};
+}
 
 /**
  * Node type.
@@ -1895,9 +1921,12 @@ export type JsonPropertyJson = { [key: string]: unknown };
  */
 export type JsonPropertyPreviousJson = { [key: string]: unknown };
 
-export type JsonProperty = {
+/**
+ * 5.2.38 NGSI-LD JsonProperty.
+ */
+export interface JsonProperty {
   /** Node type. */
-  type: JsonPropertyType;
+  type?: JsonPropertyType;
   /** Raw unexpandable JSON which shall not be interpreted as JSON-LD using the supplied @context. */
   json?: JsonPropertyJson;
   /**
@@ -1918,10 +1947,9 @@ export type JsonProperty = {
    * Only used in temporal representation of JsonProperties.
    */
   readonly instanceId?: string;
-
   /** Dynamic NGSI-LD attributes (Properties, Relationships, etc.). */
   properties?: { [key: string]: NgsildAttribute };
-};
+}
 
 /**
  * Node type.
