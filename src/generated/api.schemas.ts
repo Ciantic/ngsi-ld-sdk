@@ -3712,3 +3712,72 @@ export type NgsildAttribute =
  * keyed by observedAt.
  */
 export type NgsildAttributeTemporal = NgsildAttribute | NgsildAttribute[];
+// ─── Generated runtime constants for fetcher.ts ──────────────────────────────
+// Derived from the preprocessed NGSI-LD OpenAPI spec.
+// Do not edit manually — regenerate with `pnpm run generate:api`.
+
+/** Every property name defined on NGSI-LD structural schemas (Entity,
+ *  EntityTemporal, FeatureProperties, and all attribute types).  Keys
+ *  not in this set are dynamic NGSI-LD attributes. */
+export const STRUCTURAL_KEYS = new Set([
+  "@context",
+  "bbox",
+  "coordinates",
+  "createdAt",
+  "datasetId",
+  "deletedAt",
+  "entity",
+  "entityList",
+  "features",
+  "geometry",
+  "id",
+  "instanceId",
+  "json",
+  "languageMap",
+  "location",
+  "modifiedAt",
+  "object",
+  "objectList",
+  "objectType",
+  "observationSpace",
+  "observedAt",
+  "operationSpace",
+  "previousJson",
+  "previousLanguageMap",
+  "previousObject",
+  "previousObjectList",
+  "previousValue",
+  "previousValueList",
+  "previousVocab",
+  "scope",
+  "type",
+  "unitCode",
+  "value",
+  "valueList",
+  "vocab",
+]);
+
+/** NGSI-LD attribute "type" discriminator values. */
+export const NGSILD_ATTR_TYPES = new Set([
+  "GeoProperty",
+  "JsonProperty",
+  "LanguageProperty",
+  "ListProperty",
+  "ListRelationship",
+  "Property",
+  "Relationship",
+  "VocabProperty",
+]);
+
+/** GeoJSON "type" discriminator values (RFC 7946). */
+export const GEOJSON_TYPES = new Set([
+  "Feature",
+  "FeatureCollection",
+  "GeometryCollection",
+  "LineString",
+  "MultiLineString",
+  "MultiPoint",
+  "MultiPolygon",
+  "Point",
+  "Polygon",
+]);

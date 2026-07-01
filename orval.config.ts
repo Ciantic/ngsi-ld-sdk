@@ -623,6 +623,201 @@ function fixAnyValue(schemasFile: SourceFile): void {
   });
 }
 
+/**
+ * Schemas whose top-level `properties` define the complete set of
+ * structural NGSI-LD keys.  Everything else on the wire is a dynamic
+ * NGSI-LD attribute (Property, Relationship, etc.) and gets moved into
+ * the `properties` sub-object by `fromApi` / `toApi`.
+ */
+const STRUCTURAL_KEY_SCHEMAS = new Set([
+  "Entity",
+  "EntityTemporal",
+  "FeatureProperties",
+  // GeoJSON structural schemas (surface-level wire keys)
+  "Feature",
+  "FeatureCollection",
+  "Geometry.Point",
+  "Geometry.MultiPoint",
+  "Geometry.Polygon",
+  "Geometry.LineString",
+  "Geometry.MultiLineString",
+  "Geometry.MultiPolygon",
+  // Attribute schemas — their own properties (value, object, etc.)
+  "Property",
+  "GeoProperty",
+  "Relationship",
+  "LanguageProperty",
+  "VocabProperty",
+  "JsonProperty",
+  "ListProperty",
+  "ListRelationship",
+]);
+
+/**
+ * Schemas whose `properties` → `type` → `enum` gives us the set of
+ * NGSI-LD attribute discriminator values (e.g. "Property", "GeoProperty").
+ */
+const ATTR_DISCRIMINATOR_SCHEMAS = new Set([
+  "Property",
+  "GeoProperty",
+  "Relationship",
+  "LanguageProperty",
+  "VocabProperty",
+  "JsonProperty",
+  "ListProperty",
+  "ListRelationship",
+]);
+
+/**
+ * GeoJSON geometry schemas whose `properties` → `type` → `enum` gives us
+ * the set of GeoJSON type discriminator values (e.g. "Point", "Feature").
+ */
+const GEOJSON_SCHEMAS = new Set([
+  "Geometry.Point",
+  "Geometry.MultiPoint",
+  "Geometry.Polygon",
+  "Geometry.LineString",
+  "Geometry.MultiLineString",
+  "Geometry.MultiPolygon",
+]);
+
+/**
+ * Walk the preprocessed OpenAPI spec and extract three generated sets:
+ *
+ * 1) STRUCTURAL_KEYS  – every property name defined on the NGSI-LD
+ *    Entity / EntityTemporal / FeatureProperties / attribute types.
+ *
+ * 2) NGSILD_ATTR_TYPES – the `type` discriminator enum values from all
+ *    NGSI-LD attribute schemas.
+ *
+ * 3) GEOJSON_TYPES – the `type` discriminator enum values from GeoJSON
+ *    geometry schemas, plus the GeoJSON collection types "Feature",
+ *    "FeatureCollection", and "GeometryCollection".
+ */
+function collectConstants(spec: Record<string, unknown>): {
+  structuralKeys: string[];
+  ngsildAttrTypes: string[];
+  geoJsonTypes: string[];
+} {
+  const components = spec.components as Record<string, unknown> | undefined;
+  const schemas = components?.schemas as Record<string, unknown> | undefined;
+  if (!schemas)
+    return { structuralKeys: [], ngsildAttrTypes: [], geoJsonTypes: [] };
+
+  const structuralKeys = new Set<string>([
+    // @context is always structural on the wire (it's layered via
+    // allOf in request/response schemas, not as a property of the
+    // structural schemas themselves).
+    "@context",
+    // bbox is defined in RFC 7946 but not as a property of any
+    // schema in the NGSI-LD spec — add it manually.
+    "bbox",
+  ]);
+
+  // Keys that appear in GeoJSON schemas but should NOT be treated as
+  // structural NGSI-LD keys (they're valid NGSI-LD attribute names).
+  const EXCLUDED_KEYS = new Set(["properties"]);
+
+  const ngsildAttrTypes = new Set<string>();
+  const geoJsonTypes = new Set<string>([
+    // These GeoJSON types don't have their own schemas in the spec
+    // but are part of RFC 7946 and used in `isGeoJsonGeometry`.
+    "Feature",
+    "FeatureCollection",
+    "GeometryCollection",
+  ]);
+
+  for (const [schemaName, schemaObj] of Object.entries(schemas)) {
+    if (typeof schemaObj !== "object" || schemaObj === null) continue;
+    const schema = schemaObj as Record<string, unknown>;
+
+    // --- Collect structural keys ---
+    if (STRUCTURAL_KEY_SCHEMAS.has(schemaName)) {
+      const props = schema.properties as Record<string, unknown> | undefined;
+      if (props) {
+        for (const key of Object.keys(props)) {
+          if (!EXCLUDED_KEYS.has(key)) {
+            structuralKeys.add(key);
+          }
+        }
+      }
+    }
+
+    // --- Collect NGSI-LD attribute type discriminators ---
+    if (ATTR_DISCRIMINATOR_SCHEMAS.has(schemaName)) {
+      const props = schema.properties as Record<string, unknown> | undefined;
+      if (props?.type) {
+        const typeSchema = props.type as Record<string, unknown>;
+        if (Array.isArray(typeSchema.enum)) {
+          for (const v of typeSchema.enum) {
+            if (typeof v === "string") ngsildAttrTypes.add(v);
+          }
+        }
+      }
+    }
+
+    // --- Collect GeoJSON type discriminators ---
+    if (GEOJSON_SCHEMAS.has(schemaName)) {
+      const props = schema.properties as Record<string, unknown> | undefined;
+      if (props?.type) {
+        const typeSchema = props.type as Record<string, unknown>;
+        if (Array.isArray(typeSchema.enum)) {
+          for (const v of typeSchema.enum) {
+            if (typeof v === "string") geoJsonTypes.add(v);
+          }
+        }
+      }
+    }
+  }
+
+  return {
+    structuralKeys: [...structuralKeys].sort(),
+    ngsildAttrTypes: [...ngsildAttrTypes].sort(),
+    geoJsonTypes: [...geoJsonTypes].sort(),
+  };
+}
+
+/**
+ * Append generated STRUCTURAL_KEYS, NGSILD_ATTR_TYPES, and GEOJSON_TYPES
+ * runtime arrays to the end of api.schemas.ts, sourced from the preprocessed
+ * OpenAPI spec.  The `fetcher` module imports them so the sets don't
+ * need to be maintained by hand.
+ *
+ * Written to api.schemas.ts instead of api.ts because api.ts imports
+ * fetcher.ts (the mutator) which would create a circular dependency.
+ */
+function generateFetcherConstants(schemasFile: SourceFile): void {
+  const { structuralKeys, ngsildAttrTypes, geoJsonTypes } =
+    collectConstants(preprocessedSpec);
+
+  const fmt = (arr: string[]) => arr.map((s) => `  "${s}"`).join(",\n");
+
+  const code = `
+// ─── Generated runtime constants for fetcher.ts ──────────────────────────────
+// Derived from the preprocessed NGSI-LD OpenAPI spec.
+// Do not edit manually — regenerate with \`pnpm run generate:api\`.
+
+/** Every property name defined on NGSI-LD structural schemas (Entity,
+ *  EntityTemporal, FeatureProperties, and all attribute types).  Keys
+ *  not in this set are dynamic NGSI-LD attributes. */
+export const STRUCTURAL_KEYS = new Set([
+${fmt(structuralKeys)}
+]);
+
+/** NGSI-LD attribute "type" discriminator values. */
+export const NGSILD_ATTR_TYPES = new Set([
+${fmt(ngsildAttrTypes)}
+]);
+
+/** GeoJSON "type" discriminator values (RFC 7946). */
+export const GEOJSON_TYPES = new Set([
+${fmt(geoJsonTypes)}
+]);
+`;
+
+  schemasFile.insertText(schemasFile.getEnd(), code);
+}
+
 export default defineConfig({
   "ngsi-ld": {
     input: {
@@ -657,6 +852,7 @@ export default defineConfig({
         fixResponseTypeCasing(apiFile);
         desyncFunctions(apiFile);
         fixPickRequired(apiFile);
+        generateFetcherConstants(schemasFile);
 
         // Inject a declare shim so the generated code can reference
         // process.env.NGSILD_BROKER_URL without requiring @types/node.

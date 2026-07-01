@@ -1,91 +1,11 @@
+import {
+  GEOJSON_TYPES,
+  NGSILD_ATTR_TYPES,
+  STRUCTURAL_KEYS,
+} from "./generated/api.schemas";
+
 const BASE_URL =
   process.env.NGSILD_BROKER_URL || "http://localhost:1026/ngsi-ld/v1";
-
-/**
- * Keys that are structural/schema-defined on NGSI-LD types — they are
- * never dynamic attribute names.  Everything else is a dynamic NGSI-LD
- * attribute (Property, Relationship, etc.) and gets moved into the
- * `properties` sub-object by `fromApi`.
- */
-const STRUCTURAL_KEYS = new Set([
-  // Entity / EntityTemporal / FeatureProperties
-  "id",
-  "type",
-  "@context",
-  "scope",
-  "location",
-  "observationSpace",
-  "operationSpace",
-  // System timestamps
-  "createdAt",
-  "modifiedAt",
-  "deletedAt",
-  "observedAt",
-  // Common
-  "datasetId",
-  "instanceId",
-  // Property / ListProperty
-  "value",
-  "previousValue",
-  "valueList",
-  "previousValueList",
-  "unitCode",
-  // Relationship / ListRelationship
-  "object",
-  "previousObject",
-  "objectType",
-  "objectList",
-  "previousObjectList",
-  "entity",
-  "entityList",
-  // LanguageProperty
-  "languageMap",
-  "previousLanguageMap",
-  // VocabProperty
-  "vocab",
-  "previousVocab",
-  // JsonProperty
-  "json",
-  "previousJson",
-  // GeoJSON geometry (RFC 7946)
-  "coordinates",
-  "geometry",
-  "features",
-  "bbox",
-]);
-
-/**
- * NGSI-LD attribute `type` values.  If a dynamic key's value is an
- * object with one of these types, it's an NGSI-LD attribute and should
- * be moved into `properties`.
- */
-const NGSILD_ATTR_TYPES = new Set([
-  "Property",
-  "GeoProperty",
-  "Relationship",
-  "LanguageProperty",
-  "VocabProperty",
-  "JsonProperty",
-  "ListProperty",
-  "ListRelationship",
-]);
-
-/**
- * GeoJSON `type` values.  Objects with one of these types + a
- * `coordinates` key are plain geometry and should never be
- * treated as NGSI-LD structures.
- */
-const GEOJSON_TYPES = new Set([
-  "Point",
-  "MultiPoint",
-  "LineString",
-  "MultiLineString",
-  "Polygon",
-  "MultiPolygon",
-  "GeometryCollection",
-  "Feature",
-  "FeatureCollection",
-]);
 
 /**
  * Returns true if the object looks like a plain GeoJSON geometry
