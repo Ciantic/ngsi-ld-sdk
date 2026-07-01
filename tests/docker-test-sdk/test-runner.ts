@@ -1,5 +1,5 @@
 // Usage: node test-runner.ts <compose-dir> <broker-url>
-import { spawn, spawnSync } from "node:child_process";
+import { spawn } from "node:child_process";
 
 const composeDir = process.argv[2];
 const brokerUrl = process.argv[3];
@@ -11,23 +11,60 @@ if (!composeDir || !brokerUrl) {
 
 const stripAnsi = (s: string) => s.replace(/\x1b\[[0-9;]*m/g, "");
 
-const child = spawnSync(
-  "podman",
+const podmanArgs = [
+  "compose",
+  "-f",
+  `tests/${composeDir}/compose.yaml`,
+  "-f",
+  "tests/docker-test-sdk/test-runner.yaml",
+  "up",
+  "--abort-on-container-exit",
+  "--timeout",
+  "10",
+];
+
+// `script` allocates a PTY so the child (and grandchildren like vitest) see a
+// TTY and line-buffer their output, preserving colors and true streaming.
+//
+// Alternatives considered:
+//  - `stdio: "inherit"` with spawnSync: streams + colors, but no filtering.
+//  - `node-pty` (native addon): cleanest PTY allocation, but requires a native
+//    build dependency.
+//  - `stdbuf -oL podman ...`: only affects direct children, not grandchildren
+//    (vitest re-execs), so ineffective here.
+const child = spawn(
+  "script",
   [
-    "compose",
-    "-f",
-    `tests/${composeDir}/compose.yaml`,
-    "-f",
-    "tests/docker-test-sdk/test-runner.yaml",
-    "up",
-    "--abort-on-container-exit",
-    "--timeout",
-    "10",
+    "-q",
+    "-c",
+    `podman ${podmanArgs.map((a) => `"${a}"`).join(" ")}`,
+    "/dev/null",
   ],
   {
-    stdio: "inherit",
-    // stdio: ["pipe", "pipe", "pipe"],
+    stdio: ["pipe", "pipe", "pipe"],
     env: { ...process.env, NGSILD_BROKER_URL: brokerUrl },
-    timeout: 11_000, // 11 sec safety net
   },
 );
+
+const timeout = setTimeout(() => {
+  child.kill("SIGTERM");
+}, 11_000); // 11 sec safety net
+
+const filterLine = (data: Buffer) => {
+  const text = data.toString();
+  for (const line of text.split("\r")) {
+    for (const sub of line.split("\n")) {
+      if (stripAnsi(sub).startsWith("[test-runner]")) {
+        process.stdout.write(sub + "\n");
+      }
+    }
+  }
+};
+
+child.stdout?.on("data", filterLine);
+child.stderr?.on("data", filterLine);
+
+child.on("close", (code) => {
+  clearTimeout(timeout);
+  process.exitCode = code ?? 0;
+});
