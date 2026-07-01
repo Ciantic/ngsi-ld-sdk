@@ -58,3 +58,7 @@ This SDK outputs and expects additional properties in its own bag of properties 
 ```
 
 This allows the normal properties such as `id`, `type`, `@context` etc to be still typed.
+
+## Notes
+
+This wrapper intentionally sets the Content-Type and Accept headers to `application/ld+json` for all requests. One exception: `queryBatch` and `temporalQueryBatch` are still using `application/json`, reason being that Stellio didn't support `@context` proeprty in query batch and temporal query batch, but Orion-LD did. Thus the SDK wrapper sets the Content-Type and Accept headers to `application/json` for those two requests.
