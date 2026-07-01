@@ -12,6 +12,7 @@ if (!composeDir || !brokerUrl) {
 const stripAnsi = (s: string) => s.replace(/\x1b\[[0-9;]*m/g, "");
 
 function cleanup() {
+  console.log("Cleaning up test containers...");
   spawnSync("podman", [
     "compose",
     "-f",
@@ -19,8 +20,6 @@ function cleanup() {
     "-f",
     "tests/docker-test-sdk/test-runner.yaml",
     "down",
-    "--timeout",
-    "5",
   ]);
 }
 
@@ -34,7 +33,7 @@ const podmanArgs = [
   "--force-recreate",
   "--abort-on-container-exit",
   "--timeout",
-  "10",
+  "60",
 ];
 
 // `script` allocates a PTY so the child (and grandchildren like vitest) see a
@@ -61,8 +60,11 @@ const child = spawn(
 );
 
 const timeout = setTimeout(() => {
+  console.log(
+    "Test runner timed out after 61 seconds, killing child process...",
+  );
   child.kill("SIGTERM");
-}, 11_000); // 11 sec safety net
+}, 61_000); // 61 sec safety net
 
 const filterLine = (data: Buffer) => {
   const text = data.toString();

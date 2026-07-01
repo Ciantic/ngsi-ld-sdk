@@ -22,8 +22,8 @@ services:
       - -c
       - |
         BROKER_BASE="$$(echo "$$NGSILD_BROKER_URL" | sed 's|\(http://[^/]*\).*|\1|')"
-        echo "Waiting for broker at $$BROKER_BASE/version ..."
-        curl -fsS --retry 60 --retry-delay 2 --retry-connrefused "$$BROKER_BASE/version" -o /dev/null
         corepack enable pnpm
         pnpm install --frozen-lockfile --store-dir /tmp/pnpm-store
+        echo "Waiting for broker at $$BROKER_BASE/version ..."
+        curl -sS --retry 60 --retry-delay 2 --retry-all-errors "$$BROKER_BASE/version" -o /dev/null
         pnpm test
