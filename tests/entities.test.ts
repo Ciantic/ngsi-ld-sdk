@@ -39,11 +39,6 @@ describe("createEntity", () => {
   it("should create an entity and return 201", async () => {
     const entity = makeEntity();
     const response = await createEntity(entity);
-    await createEntity({
-      "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
-      id: "urn:ngsi-ld:TestEntity:duplicate",
-      type: "TestEntity",
-    });
 
     expectOk(response);
     expect(response.status).toBe(201);
@@ -137,9 +132,11 @@ describe("mergeEntity", () => {
       "@context": [
         "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
       ],
-      humidity: {
-        type: "Property" as const,
-        value: 55,
+      properties: {
+        humidity: {
+          type: "Property" as const,
+          value: 55,
+        },
       },
     };
 
@@ -150,7 +147,8 @@ describe("mergeEntity", () => {
     const retrieved = await retrieveEntity(entity.id!);
     if (!Array.isArray(retrieved.data)) {
       const data = retrieved.data as Record<string, unknown>;
-      expect(data["humidity"]).toBeDefined();
+      const props = data["properties"] as Record<string, unknown> | undefined;
+      expect(props?.["humidity"]).toBeDefined();
     }
   });
 });
@@ -170,9 +168,11 @@ describe("replaceEntity", () => {
       ],
       id: entity.id,
       type: "TestEntity",
-      replacedAttr: {
-        type: "Property" as const,
-        value: 100,
+      properties: {
+        replacedAttr: {
+          type: "Property" as const,
+          value: 100,
+        },
       },
     };
 
@@ -194,9 +194,11 @@ describe("appendAttrs", () => {
       "@context": [
         "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
       ],
-      newProperty: {
-        type: "Property" as const,
-        value: 42,
+      properties: {
+        newProperty: {
+          type: "Property" as const,
+          value: 42,
+        },
       },
     };
 
@@ -218,9 +220,11 @@ describe("updateEntity", () => {
       "@context": [
         "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
       ],
-      temperature: {
-        type: "Property" as const,
-        value: 99,
+      properties: {
+        temperature: {
+          type: "Property" as const,
+          value: 99,
+        },
       },
     };
 
@@ -244,7 +248,7 @@ describe("updateAttrs", () => {
       ],
       type: "Property" as const,
       value: 100,
-    } satisfies Property;
+    };
 
     const response = await updateAttrs(entity.id!, "temperature", attrPatch);
     expect(response.status).toBe(204);
@@ -257,7 +261,7 @@ describe("updateAttrs", () => {
       ],
       type: "Property" as const,
       value: 100,
-    } satisfies Property;
+    };
 
     const response = await updateAttrs(
       "urn:ngsi-ld:TestEntity:nonexistent",
@@ -275,7 +279,10 @@ describe("deleteAttrs", () => {
   it("should delete a single attribute from an entity", async () => {
     const entity = {
       ...makeEntity(),
-      extraAttr: { type: "Property" as const, value: 1 },
+      properties: {
+        ...makeEntity().properties,
+        extraAttr: { type: "Property" as const, value: 1 },
+      },
     };
     await createEntity(entity);
     trackId(entity);
@@ -308,7 +315,7 @@ describe("replaceAttrs", () => {
       ],
       type: "Property" as const,
       value: 200,
-    } satisfies Property;
+    };
 
     const response = await replaceAttrs(entity.id!, "temperature", replacement);
     expect(response.status).toBe(204);

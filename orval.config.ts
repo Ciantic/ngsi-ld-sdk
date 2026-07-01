@@ -477,63 +477,58 @@ function fixPickRequired(apiFile: SourceFile): void {
  * index signature type.
  */
 function fixIndexSignatures(schemasFile: SourceFile): void {
-  const NGSILD_ATTRIBUTE_TYPE = `
+  const NGSILD_ATTR_TYPES = `
 /**
- * Union of all NGSI-LD attribute types that can appear as additional
- * properties on Entity, EntityTemporal, FeatureProperties, and
- * attribute types (Property, GeoProperty, etc.).
+ * NGSI-LD attribute types valid in normalized non-temporal
+ * representations (Entity, FeatureProperties, and attribute types).
+ * Each dynamic key maps to exactly one attribute instance.
  *
  * Derived from the oneOf in the OpenAPI spec's additionalProperties.
  */
 export type NgsildAttribute =
   | Property
-  | Property[]
   | GeoProperty
-  | GeoProperty[]
   | LanguageProperty
-  | LanguageProperty[]
   | VocabProperty
-  | VocabProperty[]
   | JsonProperty
-  | JsonProperty[]
   | ListProperty
-  | ListProperty[]
   | Relationship
-  | Relationship[]
-  | ListRelationship
-  | ListRelationship[]
-  | LdContext
-  | JsonValue
-  | Geometry
-  | DateTimeValue
-  | Entity
-  | Entity[]
-  | Record<string, unknown>
-  | Record<string, unknown>[];`;
+  | ListRelationship;
 
-  /** Interfaces whose index signatures should be replaced with NgsildAttribute. */
-  const INTERFACES_WITH_ATTRIBUTES = new Set([
-    "Entity",
-    "EntityTemporal",
-    "FeatureProperties",
-    "Property",
-    "GeoProperty",
-    "LanguageProperty",
-    "VocabProperty",
-    "JsonProperty",
-    "ListProperty",
-    "Relationship",
-    "ListRelationship",
-  ]);
+/**
+ * NGSI-LD attribute types valid in normalized temporal representations
+ * (EntityTemporal).  Temporal entities have arrays of attribute instances
+ * keyed by observedAt.
+ */
+export type NgsildAttributeTemporal = NgsildAttribute | NgsildAttribute[];`;
 
-  // 1. Append NgsildAttribute type at the end of the schemas file
-  schemasFile.insertText(schemasFile.getEnd(), NGSILD_ATTRIBUTE_TYPE);
+  /** Interfaces and which attribute type they use. */
+  const INTERFACES_WITH_ATTRIBUTES: Record<string, string> = {
+    Entity: "NgsildAttribute",
+    EntityTemporal: "NgsildAttributeTemporal",
+    FeatureProperties: "NgsildAttribute",
+    Property: "NgsildAttribute",
+    GeoProperty: "NgsildAttribute",
+    LanguageProperty: "NgsildAttribute",
+    VocabProperty: "NgsildAttribute",
+    JsonProperty: "NgsildAttribute",
+    ListProperty: "NgsildAttribute",
+    Relationship: "NgsildAttribute",
+    ListRelationship: "NgsildAttribute",
+  };
 
-  // 2. Convert interfaces to type aliases with intersection.
-  //    Reason: TS interfaces require all named properties to be assignable
-  //    to the index signature type, but type aliases with intersection don't.
+  // 1. Append NgsildAttribute + NgsildAttributeTemporal types at the end
+  schemasFile.insertText(schemasFile.getEnd(), NGSILD_ATTR_TYPES);
+
+  // 2. Convert interfaces to type aliases with a `properties` sub-object.
+  //    Dynamic NGSI-LD attributes (temperature, speed, etc.) are moved
+  //    into `properties: { [key: string]: NgsildAttribute }` so they don't
+  //    pollute the top-level type with an index signature.
+  //    The fetcher handles `fromApi` (wire → SDK) and `toApi` (SDK → wire)
+  //    transformations.
   for (const iface of schemasFile.getInterfaces()) {
-    if (!INTERFACES_WITH_ATTRIBUTES.has(iface.getName())) continue;
+    const attrType = INTERFACES_WITH_ATTRIBUTES[iface.getName()];
+    if (!attrType) continue;
 
     const text = iface.getText();
     const name = iface.getName();
@@ -552,7 +547,7 @@ export type NgsildAttribute =
     body = body.trimEnd();
 
     iface.replaceWithText(
-      `${prefix}type ${name} = {\n${body}\n} & {\n  [key: string]: NgsildAttribute;\n};`,
+      `${prefix}type ${name} = {\n${body}\n\n  /** Dynamic NGSI-LD attributes (Properties, Relationships, etc.). */\n  properties?: { [key: string]: ${attrType} };\n};`,
     );
   }
 }
@@ -581,12 +576,10 @@ function fixProperties(schemasFile: SourceFile): void {
     if (!targetTypeAliases.has(typeAlias.getName())) continue;
 
     const typeNode = typeAlias.getTypeNode();
-    if (!typeNode || !typeNode.isKind(SyntaxKind.IntersectionType)) continue;
+    if (!typeNode) continue;
+    if (!typeNode.isKind(SyntaxKind.TypeLiteral)) continue;
 
-    const firstType = typeNode.getTypeNodes()[0];
-    if (!firstType?.isKind(SyntaxKind.TypeLiteral)) continue;
-
-    const typeLiteral = firstType.asKindOrThrow(SyntaxKind.TypeLiteral);
+    const typeLiteral = typeNode.asKindOrThrow(SyntaxKind.TypeLiteral);
     const typeProp = typeLiteral.getProperty("type");
 
     if (typeProp?.hasQuestionToken()) {

@@ -94,10 +94,15 @@ describe("upsertBatch", () => {
     trackId(entity.id!);
 
     // Second upsert with modified attribute
-    const updated = { ...makeEntity(), id: entity.id };
-    (updated as Record<string, unknown>)["temperature"] = {
-      type: "Property",
-      value: 99,
+    const updated = {
+      ...makeEntity(),
+      id: entity.id,
+      properties: {
+        temperature: {
+          type: "Property" as const,
+          value: 99,
+        },
+      },
     };
 
     const response = await upsertBatch([updated]);
@@ -117,16 +122,20 @@ describe("updateBatch", () => {
     trackIds([entity1.id!, entity2.id!]);
 
     // Prepare updated versions
-    const update1 = { ...makeEntity(), id: entity1.id };
-    (update1 as Record<string, unknown>)["temperature"] = {
-      type: "Property",
-      value: 100,
+    const update1 = {
+      ...makeEntity(),
+      id: entity1.id,
+      properties: {
+        temperature: { type: "Property" as const, value: 100 },
+      },
     };
 
-    const update2 = { ...makeEntity(), id: entity2.id };
-    (update2 as Record<string, unknown>)["temperature"] = {
-      type: "Property",
-      value: 200,
+    const update2 = {
+      ...makeEntity(),
+      id: entity2.id,
+      properties: {
+        temperature: { type: "Property" as const, value: 200 },
+      },
     };
 
     const response = await updateBatch([update1, update2]);
@@ -166,7 +175,9 @@ describe("deleteBatch", () => {
   });
 
   it("should return 207 for non-existent entity IDs in delete batch", async () => {
-    const response = await deleteBatch(["urn:ngsi-ld:TestEntity:nonexistent-1"]);
+    const response = await deleteBatch([
+      "urn:ngsi-ld:TestEntity:nonexistent-1",
+    ]);
 
     // Non-existent: 207 (multi-status with errors)
     expect([207, 400]).toContain(response.status);
@@ -185,7 +196,9 @@ describe("queryBatch", () => {
     trackIds([entity1.id!, entity2.id!]);
 
     const response = await queryBatch({
-      "@context": ["https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"],
+      "@context": [
+        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
+      ],
       type: "Query",
       entities: [{ type: "TestEntity" }],
     });
@@ -200,7 +213,9 @@ describe("queryBatch", () => {
 
   it("should return empty array for query matching no entities", async () => {
     const response = await queryBatch({
-      "@context": ["https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"],
+      "@context": [
+        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
+      ],
       type: "Query",
       entities: [{ type: "NonExistentType" }],
     });
@@ -226,22 +241,30 @@ describe("mergeBatch", () => {
     trackIds([entity1.id!, entity2.id!]);
 
     const patch1 = {
-      "@context": ["https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"],
+      "@context": [
+        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
+      ],
       id: entity1.id,
       type: "TestEntity",
-      humidity: {
-        type: "Property" as const,
-        value: 55,
+      properties: {
+        humidity: {
+          type: "Property" as const,
+          value: 55,
+        },
       },
     };
 
     const patch2 = {
-      "@context": ["https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"],
+      "@context": [
+        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
+      ],
       id: entity2.id,
       type: "TestEntity",
-      humidity: {
-        type: "Property" as const,
-        value: 65,
+      properties: {
+        humidity: {
+          type: "Property" as const,
+          value: 65,
+        },
       },
     };
 

@@ -36,13 +36,15 @@ function makeTemporalEntity(overrides?: {
     "@context": NGSILD_CORE_CONTEXT,
     id,
     type: overrides?.type ?? "TemporalTestEntity",
-    temperature: [
-      {
-        type: "Property" as const,
-        value: 25 + temporalCounter,
-        observedAt,
-      },
-    ],
+    properties: {
+      temperature: [
+        {
+          type: "Property" as const,
+          value: 25 + temporalCounter,
+          observedAt,
+        },
+      ],
+    },
   };
 }
 
@@ -232,7 +234,10 @@ describe("deleteAttrsTemporal", () => {
 
     const response = await deleteAttrsTemporal(entity.id!, "humidity");
     // 204 on success, 404 if not found, 501 if temporal not enabled
-    warnIf501(response.status, "DELETE /temporal/entities/{entityId}/attrs/{attrId}");
+    warnIf501(
+      response.status,
+      "DELETE /temporal/entities/{entityId}/attrs/{attrId}",
+    );
     expect([204, 404, 200, 501]).toContain(response.status);
   });
 
@@ -241,7 +246,10 @@ describe("deleteAttrsTemporal", () => {
       "urn:ngsi-ld:TemporalEntity:nonexistent-attr-99999",
       "temperature",
     );
-    warnIf501(response.status, "DELETE /temporal/entities/{entityId}/attrs/{attrId}");
+    warnIf501(
+      response.status,
+      "DELETE /temporal/entities/{entityId}/attrs/{attrId}",
+    );
     expect([404, 400, 501]).toContain(response.status);
   });
 });
@@ -265,8 +273,9 @@ describe("updateAttrsTemporal", () => {
         {
           type: "Property" as const,
           value: 999,
-          observedAt: (entity.temperature as Array<{ observedAt?: string }>)?.[0]
-            ?.observedAt,
+          observedAt: (
+            entity.properties.temperature as Array<{ observedAt?: string }>
+          )?.[0]?.observedAt,
         },
       ],
     };
@@ -274,8 +283,8 @@ describe("updateAttrsTemporal", () => {
     // InstanceId format varies; Orion-LD may use the observedAt as URI-encoded
     // Try with a simple timestamp-based instanceId
     const instanceId = encodeURIComponent(
-      (entity.temperature as Array<{ observedAt?: string }>)?.[0]?.observedAt ??
-        new Date().toISOString(),
+      (entity.properties.temperature as Array<{ observedAt?: string }>)?.[0]
+        ?.observedAt ?? new Date().toISOString(),
     );
 
     const response = await updateAttrsTemporal(
@@ -285,7 +294,10 @@ describe("updateAttrsTemporal", () => {
       patch,
     );
     // Can be 204 (success), 404 (instance not found), 400 (bad request), 501 (not implemented)
-    warnIf501(response.status, "PATCH /temporal/entities/{entityId}/attrs/{attrId}/{instanceId}");
+    warnIf501(
+      response.status,
+      "PATCH /temporal/entities/{entityId}/attrs/{attrId}/{instanceId}",
+    );
     expect([204, 400, 404, 501]).toContain(response.status);
   });
 
@@ -307,7 +319,10 @@ describe("updateAttrsTemporal", () => {
       "someInstanceId",
       patch,
     );
-    warnIf501(response.status, "PATCH /temporal/entities/{entityId}/attrs/{attrId}/{instanceId}");
+    warnIf501(
+      response.status,
+      "PATCH /temporal/entities/{entityId}/attrs/{attrId}/{instanceId}",
+    );
     expect([404, 400, 501]).toContain(response.status);
   });
 });
@@ -322,8 +337,8 @@ describe("deleteAttrInstanceTemporal", () => {
     trackId(entity.id!);
 
     const instanceId = encodeURIComponent(
-      (entity.temperature as Array<{ observedAt?: string }>)?.[0]?.observedAt ??
-        new Date().toISOString(),
+      (entity.properties.temperature as Array<{ observedAt?: string }>)[0]
+        ?.observedAt ?? new Date().toISOString(),
     );
 
     const response = await deleteAttrInstanceTemporal(
@@ -332,7 +347,10 @@ describe("deleteAttrInstanceTemporal", () => {
       instanceId,
     );
     // 204 (deleted), 404 (instance not found), 400 (bad request), 501 (not implemented)
-    warnIf501(response.status, "DELETE /temporal/entities/{entityId}/attrs/{attrId}/{instanceId}");
+    warnIf501(
+      response.status,
+      "DELETE /temporal/entities/{entityId}/attrs/{attrId}/{instanceId}",
+    );
     expect([204, 400, 404, 501]).toContain(response.status);
   });
 
@@ -342,7 +360,10 @@ describe("deleteAttrInstanceTemporal", () => {
       "temperature",
       "someInstanceId",
     );
-    warnIf501(response.status, "DELETE /temporal/entities/{entityId}/attrs/{attrId}/{instanceId}");
+    warnIf501(
+      response.status,
+      "DELETE /temporal/entities/{entityId}/attrs/{attrId}/{instanceId}",
+    );
     expect([404, 400, 501]).toContain(response.status);
   });
 });

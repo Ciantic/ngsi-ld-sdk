@@ -833,8 +833,9 @@ export type GeoProperty = {
    * option is explicitly requested.
    */
   readonly previousValue?: Geometry;
-} & {
-  [key: string]: NgsildAttribute;
+
+  /** Dynamic NGSI-LD attributes (Properties, Relationships, etc.). */
+  properties?: { [key: string]: NgsildAttribute };
 };
 
 export type Entity = {
@@ -853,8 +854,9 @@ export type Entity = {
   readonly createdAt?: CreatedAt;
   readonly modifiedAt?: ModifiedAt;
   readonly deletedAt?: DeletedAt;
-} & {
-  [key: string]: NgsildAttribute;
+
+  /** Dynamic NGSI-LD attributes (Properties, Relationships, etc.). */
+  properties?: { [key: string]: NgsildAttribute };
 };
 
 /**
@@ -890,8 +892,9 @@ export type EntityTemporal = {
   readonly createdAt?: CreatedAt;
   readonly modifiedAt?: ModifiedAt;
   readonly deletedAt?: DeletedAt;
-} & {
-  [key: string]: NgsildAttribute;
+
+  /** Dynamic NGSI-LD attributes (Properties, Relationships, etc.). */
+  properties?: { [key: string]: NgsildAttributeTemporal };
 };
 
 /**
@@ -984,8 +987,9 @@ export type FeatureProperties = {
    * Both short hand string (type name) or URI are allowed.
    */
   type: string | string[];
-} & {
-  [key: string]: NgsildAttribute;
+
+  /** Dynamic NGSI-LD attributes (Properties, Relationships, etc.). */
+  properties?: { [key: string]: NgsildAttribute };
 };
 
 /**
@@ -1134,8 +1138,9 @@ export type LanguageProperty = {
    * option is explicitly requested.
    */
   readonly previousLanguageMap?: LanguagePropertyPreviousLanguageMap;
-} & {
-  [key: string]: NgsildAttribute;
+
+  /** Dynamic NGSI-LD attributes (Properties, Relationships, etc.). */
+  properties?: { [key: string]: NgsildAttribute };
 };
 
 export type LdContextMetadataItemKind =
@@ -1381,8 +1386,9 @@ export type Property = {
    * option is explicitly requested.
    */
   readonly previousValue?: DateTimeValue | JsonValue;
-} & {
-  [key: string]: NgsildAttribute;
+
+  /** Dynamic NGSI-LD attributes (Properties, Relationships, etc.). */
+  properties?: { [key: string]: NgsildAttribute };
 };
 
 /**
@@ -1558,8 +1564,9 @@ export type Relationship = {
    * Retrieval, if the join=inline option is explicitly requested.
    */
   readonly entity?: Entity | Entity[];
-} & {
-  [key: string]: NgsildAttribute;
+
+  /** Dynamic NGSI-LD attributes (Properties, Relationships, etc.). */
+  properties?: { [key: string]: NgsildAttribute };
 };
 
 /**
@@ -1744,8 +1751,9 @@ export type VocabProperty = {
    * Only used in temporal representation of VocabProperties.
    */
   readonly instanceId?: string;
-} & {
-  [key: string]: NgsildAttribute;
+
+  /** Dynamic NGSI-LD attributes (Properties, Relationships, etc.). */
+  properties?: { [key: string]: NgsildAttribute };
 };
 
 /**
@@ -1783,8 +1791,9 @@ export type ListProperty = {
    * definition in clause 3.1
    */
   readonly previousValueList?: readonly (DateTimeValue | JsonValue)[];
-} & {
-  [key: string]: NgsildAttribute;
+
+  /** Dynamic NGSI-LD attributes (Properties, Relationships, etc.). */
+  properties?: { [key: string]: NgsildAttribute };
 };
 
 /**
@@ -1860,8 +1869,9 @@ export type ListRelationship = {
    * Linked Entity Retrieval, if the join=inline option is explicitly requested.
    */
   readonly entityList?: readonly Entity[];
-} & {
-  [key: string]: NgsildAttribute;
+
+  /** Dynamic NGSI-LD attributes (Properties, Relationships, etc.). */
+  properties?: { [key: string]: NgsildAttribute };
 };
 
 /**
@@ -1908,8 +1918,9 @@ export type JsonProperty = {
    * Only used in temporal representation of JsonProperties.
    */
   readonly instanceId?: string;
-} & {
-  [key: string]: NgsildAttribute;
+
+  /** Dynamic NGSI-LD attributes (Properties, Relationships, etc.). */
+  properties?: { [key: string]: NgsildAttribute };
 };
 
 /**
@@ -3651,34 +3662,25 @@ export type RetrieveCSIdentityInfo200 = ContextSourceIdentity & {
 };
 
 /**
- * Union of all NGSI-LD attribute types that can appear as additional
- * properties on Entity, EntityTemporal, FeatureProperties, and
- * attribute types (Property, GeoProperty, etc.).
+ * NGSI-LD attribute types valid in normalized non-temporal
+ * representations (Entity, FeatureProperties, and attribute types).
+ * Each dynamic key maps to exactly one attribute instance.
  *
  * Derived from the oneOf in the OpenAPI spec's additionalProperties.
  */
 export type NgsildAttribute =
   | Property
-  | Property[]
   | GeoProperty
-  | GeoProperty[]
   | LanguageProperty
-  | LanguageProperty[]
   | VocabProperty
-  | VocabProperty[]
   | JsonProperty
-  | JsonProperty[]
   | ListProperty
-  | ListProperty[]
   | Relationship
-  | Relationship[]
-  | ListRelationship
-  | ListRelationship[]
-  | LdContext
-  | JsonValue
-  | Geometry
-  | DateTimeValue
-  | Entity
-  | Entity[]
-  | Record<string, unknown>
-  | Record<string, unknown>[];
+  | ListRelationship;
+
+/**
+ * NGSI-LD attribute types valid in normalized temporal representations
+ * (EntityTemporal).  Temporal entities have arrays of attribute instances
+ * keyed by observedAt.
+ */
+export type NgsildAttributeTemporal = NgsildAttribute | NgsildAttribute[];
