@@ -4,15 +4,12 @@
     "target": "ESNext",
     "module": "ESNext",
     "moduleResolution": "bundler",
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
-    "outDir": "./dist",
-    "rootDir": "./src",
+    "noEmit": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
+    "allowImportingTsExtensions": true,
     "skipLibCheck": true
   },
-  "include": ["src"],
-  "exclude": ["tests", "dist", "node_modules"]
+  "include": ["src", "tests"],
+  "exclude": ["dist", "node_modules"]
 }
