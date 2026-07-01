@@ -17,7 +17,7 @@ TypeScript has particular problems with typed parameters intersected with dictio
 }
 ```
 
-The types generated are almost useless if that is allowed to be in the types. Thus the wrapper does further normalization, given the normalized LD-JSON entry such as:
+The types containing such dictionaries are almost useless. Thus this SDK wrapper does further normalization and doesn't allow those, given the normalized LD-JSON entry such as:
 
 ```json
 {
