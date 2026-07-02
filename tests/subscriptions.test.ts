@@ -212,15 +212,14 @@ describe("createCSRSubscription", () => {
 
     expectOk(response);
     expect(response.status).toBe(201);
+    if (response.status !== 201) throw new Error("Expected 201");
 
     // Extract the ID from the Location header for cleanup
-    const location = response.headers.get("location");
-    if (location) {
-      // Location looks like /csourceSubscriptions/<id>
-      const parts = location.split("/");
-      const csrSubId = parts[parts.length - 1];
-      createdCSRSubIds.push(csrSubId);
-    }
+    const location = response.location;
+    // Location looks like /csourceSubscriptions/<id>
+    const parts = location.split("/");
+    const csrSubId = parts[parts.length - 1];
+    createdCSRSubIds.push(csrSubId);
   });
 
   it("should reject duplicate CSR subscription", async () => {
@@ -229,14 +228,14 @@ describe("createCSRSubscription", () => {
 
     // Skip if endpoint not implemented
     if ((response1 as { status: number }).status === 404) return;
+    expect(response1.status).toBe(201);
+    if (response1.status !== 201) throw new Error("Expected 201");
 
     // Extract ID from first creation
-    const location = response1.headers.get("location");
-    if (location) {
-      const parts = location.split("/");
-      const csrSubId = parts[parts.length - 1];
-      createdCSRSubIds.push(csrSubId);
-    }
+    const location = response1.location;
+    const parts = location.split("/");
+    const csrSubId = parts[parts.length - 1];
+    createdCSRSubIds.push(csrSubId);
 
     const response2 = await createCSRSubscription(sub);
     expect(response2.status).toBe(409);
@@ -254,7 +253,7 @@ describe("queryCSRSubscription", () => {
     // Skip if endpoint not implemented
     if ((createResp as { status: number }).status === 404) return;
 
-    const location = createResp.headers.get("location");
+    const location = createResp.status === 201 && createResp.location;
     if (location) {
       const parts = location.split("/");
       createdCSRSubIds.push(parts[parts.length - 1]);
@@ -279,7 +278,7 @@ describe("retrieveCSRSubscription", () => {
 
     if ((createResp as { status: number }).status === 404) return;
 
-    const location = createResp.headers.get("location");
+    const location = createResp.status === 201 && createResp.location;
     if (!location) {
       // Cannot test retrieve without an ID
       return;
@@ -314,7 +313,7 @@ describe("updateCSRSubscription", () => {
 
     if ((createResp as { status: number }).status === 404) return;
 
-    const location = createResp.headers.get("location");
+    const location = createResp.status === 201 && createResp.location;
     if (!location) return;
     const parts = location.split("/");
     const csrSubId = parts[parts.length - 1];
@@ -370,7 +369,7 @@ describe("deleteCSRSubscription", () => {
 
     if ((createResp as { status: number }).status === 404) return;
 
-    const location = createResp.headers.get("location");
+    const location = createResp.status === 201 && createResp.location;
     if (!location) return;
     const parts = location.split("/");
     const csrSubId = parts[parts.length - 1];

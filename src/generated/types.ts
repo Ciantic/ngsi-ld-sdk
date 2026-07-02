@@ -63,6 +63,8 @@ export type PickRequired<Type, Key extends keyof Type> = Type &
 export type CreateEntityResponse201 = {
   data: void;
   status: 201;
+  /** URI of the created entity from the Location header. */
+  location: string;
 };
 
 export type CreateEntityResponse207 = {
@@ -85,16 +87,10 @@ export type CreateEntityResponse422 = {
   status: 422;
 };
 
-export type CreateEntityResponseSuccess = (
-  CreateEntityResponse201 | CreateEntityResponse207
-) & {
-  headers: Headers;
-};
-export type CreateEntityResponseError = (
-  CreateEntityResponse400 | CreateEntityResponse409 | CreateEntityResponse422
-) & {
-  headers: Headers;
-};
+export type CreateEntityResponseSuccess =
+  CreateEntityResponse201 | CreateEntityResponse207;
+export type CreateEntityResponseError =
+  CreateEntityResponse400 | CreateEntityResponse409 | CreateEntityResponse422;
 
 export type CreateEntityResponse =
   CreateEntityResponseSuccess | CreateEntityResponseError;
@@ -113,14 +109,9 @@ export type QueryEntityResponse501 = {
   status: 501;
 };
 
-export type QueryEntityResponseSuccess = QueryEntityResponse200 & {
-  headers: Headers;
-};
-export type QueryEntityResponseError = (
-  QueryEntityResponse400 | QueryEntityResponse501
-) & {
-  headers: Headers;
-};
+export type QueryEntityResponseSuccess = QueryEntityResponse200;
+export type QueryEntityResponseError =
+  QueryEntityResponse400 | QueryEntityResponse501;
 
 export type QueryEntityResponse =
   QueryEntityResponseSuccess | QueryEntityResponseError;
@@ -144,16 +135,11 @@ export type RetrieveEntityResponse501 = {
   status: 501;
 };
 
-export type RetrieveEntityResponseSuccess = RetrieveEntityResponse200 & {
-  headers: Headers;
-};
-export type RetrieveEntityResponseError = (
+export type RetrieveEntityResponseSuccess = RetrieveEntityResponse200;
+export type RetrieveEntityResponseError =
   | RetrieveEntityResponse400
   | RetrieveEntityResponse404
-  | RetrieveEntityResponse501
-) & {
-  headers: Headers;
-};
+  | RetrieveEntityResponse501;
 
 export type RetrieveEntityResponse =
   RetrieveEntityResponseSuccess | RetrieveEntityResponseError;
@@ -166,16 +152,11 @@ export type RetrieveGeoEntityResponse200 = {
   status: 200;
 };
 
-export type RetrieveGeoEntityResponseSuccess = RetrieveGeoEntityResponse200 & {
-  headers: Headers;
-};
-export type RetrieveGeoEntityResponseError = (
+export type RetrieveGeoEntityResponseSuccess = RetrieveGeoEntityResponse200;
+export type RetrieveGeoEntityResponseError =
   | RetrieveEntityResponse400
   | RetrieveEntityResponse404
-  | RetrieveEntityResponse501
-) & {
-  headers: Headers;
-};
+  | RetrieveEntityResponse501;
 
 export type RetrieveGeoEntityResponse =
   RetrieveGeoEntityResponseSuccess | RetrieveGeoEntityResponseError;
@@ -185,9 +166,7 @@ export type QueryGeoEntityResponse200 = {
   status: 200;
 };
 
-export type QueryGeoEntityResponseSuccess = QueryGeoEntityResponse200 & {
-  headers: Headers;
-};
+export type QueryGeoEntityResponseSuccess = QueryGeoEntityResponse200;
 export type QueryGeoEntityResponseError = QueryEntityResponseError;
 
 export type QueryGeoEntityResponse =
@@ -198,9 +177,7 @@ export type QueryGeoBatchResponse200 = {
   status: 200;
 };
 
-export type QueryGeoBatchResponseSuccess = QueryGeoBatchResponse200 & {
-  headers: Headers;
-};
+export type QueryGeoBatchResponseSuccess = QueryGeoBatchResponse200;
 export type QueryGeoBatchResponseError = QueryBatchResponseError;
 
 export type QueryGeoBatchResponse =
@@ -226,16 +203,10 @@ export type DeleteEntityResponse404 = {
   status: 404;
 };
 
-export type DeleteEntityResponseSuccess = (
-  DeleteEntityResponse204 | DeleteEntityResponse207
-) & {
-  headers: Headers;
-};
-export type DeleteEntityResponseError = (
-  DeleteEntityResponse400 | DeleteEntityResponse404
-) & {
-  headers: Headers;
-};
+export type DeleteEntityResponseSuccess =
+  DeleteEntityResponse204 | DeleteEntityResponse207;
+export type DeleteEntityResponseError =
+  DeleteEntityResponse400 | DeleteEntityResponse404;
 
 export type DeleteEntityResponse =
   DeleteEntityResponseSuccess | DeleteEntityResponseError;
@@ -259,16 +230,10 @@ export type MergeEntityResponse404 = {
   status: 404;
 };
 
-export type MergeEntityResponseSuccess = (
-  MergeEntityResponse204 | MergeEntityResponse207
-) & {
-  headers: Headers;
-};
-export type MergeEntityResponseError = (
-  MergeEntityResponse400 | MergeEntityResponse404
-) & {
-  headers: Headers;
-};
+export type MergeEntityResponseSuccess =
+  MergeEntityResponse204 | MergeEntityResponse207;
+export type MergeEntityResponseError =
+  MergeEntityResponse400 | MergeEntityResponse404;
 
 export type MergeEntityResponse =
   MergeEntityResponseSuccess | MergeEntityResponseError;
@@ -292,16 +257,10 @@ export type ReplaceEntityResponse404 = {
   status: 404;
 };
 
-export type ReplaceEntityResponseSuccess = (
-  ReplaceEntityResponse204 | ReplaceEntityResponse207
-) & {
-  headers: Headers;
-};
-export type ReplaceEntityResponseError = (
-  ReplaceEntityResponse400 | ReplaceEntityResponse404
-) & {
-  headers: Headers;
-};
+export type ReplaceEntityResponseSuccess =
+  ReplaceEntityResponse204 | ReplaceEntityResponse207;
+export type ReplaceEntityResponseError =
+  ReplaceEntityResponse400 | ReplaceEntityResponse404;
 
 export type ReplaceEntityResponse =
   ReplaceEntityResponseSuccess | ReplaceEntityResponseError;
@@ -325,16 +284,10 @@ export type AppendAttrsResponse404 = {
   status: 404;
 };
 
-export type AppendAttrsResponseSuccess = (
-  AppendAttrsResponse204 | AppendAttrsResponse207
-) & {
-  headers: Headers;
-};
-export type AppendAttrsResponseError = (
-  AppendAttrsResponse400 | AppendAttrsResponse404
-) & {
-  headers: Headers;
-};
+export type AppendAttrsResponseSuccess =
+  AppendAttrsResponse204 | AppendAttrsResponse207;
+export type AppendAttrsResponseError =
+  AppendAttrsResponse400 | AppendAttrsResponse404;
 
 export type AppendAttrsResponse =
   AppendAttrsResponseSuccess | AppendAttrsResponseError;
@@ -358,16 +311,10 @@ export type UpdateEntityResponse404 = {
   status: 404;
 };
 
-export type UpdateEntityResponseSuccess = (
-  UpdateEntityResponse204 | UpdateEntityResponse207
-) & {
-  headers: Headers;
-};
-export type UpdateEntityResponseError = (
-  UpdateEntityResponse400 | UpdateEntityResponse404
-) & {
-  headers: Headers;
-};
+export type UpdateEntityResponseSuccess =
+  UpdateEntityResponse204 | UpdateEntityResponse207;
+export type UpdateEntityResponseError =
+  UpdateEntityResponse400 | UpdateEntityResponse404;
 
 export type UpdateEntityResponse =
   UpdateEntityResponseSuccess | UpdateEntityResponseError;
@@ -391,16 +338,10 @@ export type UpdateAttrsResponse404 = {
   status: 404;
 };
 
-export type UpdateAttrsResponseSuccess = (
-  UpdateAttrsResponse204 | UpdateAttrsResponse207
-) & {
-  headers: Headers;
-};
-export type UpdateAttrsResponseError = (
-  UpdateAttrsResponse400 | UpdateAttrsResponse404
-) & {
-  headers: Headers;
-};
+export type UpdateAttrsResponseSuccess =
+  UpdateAttrsResponse204 | UpdateAttrsResponse207;
+export type UpdateAttrsResponseError =
+  UpdateAttrsResponse400 | UpdateAttrsResponse404;
 
 export type UpdateAttrsResponse =
   UpdateAttrsResponseSuccess | UpdateAttrsResponseError;
@@ -424,16 +365,10 @@ export type DeleteAttrsResponse404 = {
   status: 404;
 };
 
-export type DeleteAttrsResponseSuccess = (
-  DeleteAttrsResponse204 | DeleteAttrsResponse207
-) & {
-  headers: Headers;
-};
-export type DeleteAttrsResponseError = (
-  DeleteAttrsResponse400 | DeleteAttrsResponse404
-) & {
-  headers: Headers;
-};
+export type DeleteAttrsResponseSuccess =
+  DeleteAttrsResponse204 | DeleteAttrsResponse207;
+export type DeleteAttrsResponseError =
+  DeleteAttrsResponse400 | DeleteAttrsResponse404;
 
 export type DeleteAttrsResponse =
   DeleteAttrsResponseSuccess | DeleteAttrsResponseError;
@@ -457,22 +392,18 @@ export type ReplaceAttrsResponse404 = {
   status: 404;
 };
 
-export type ReplaceAttrsResponseSuccess = (
-  ReplaceAttrsResponse204 | ReplaceAttrsResponse207
-) & {
-  headers: Headers;
-};
-export type ReplaceAttrsResponseError = (
-  ReplaceAttrsResponse400 | ReplaceAttrsResponse404
-) & {
-  headers: Headers;
-};
+export type ReplaceAttrsResponseSuccess =
+  ReplaceAttrsResponse204 | ReplaceAttrsResponse207;
+export type ReplaceAttrsResponseError =
+  ReplaceAttrsResponse400 | ReplaceAttrsResponse404;
 
 export type ReplaceAttrsResponse =
   ReplaceAttrsResponseSuccess | ReplaceAttrsResponseError;
 export type CreateCSRResponse201 = {
   data: void;
   status: 201;
+  /** URI of the created CSR from the Location header. */
+  location: string;
 };
 
 export type CreateCSRResponse400 = {
@@ -490,14 +421,9 @@ export type CreateCSRResponse422 = {
   status: 422;
 };
 
-export type CreateCSRResponseSuccess = CreateCSRResponse201 & {
-  headers: Headers;
-};
-export type CreateCSRResponseError = (
-  CreateCSRResponse400 | CreateCSRResponse409 | CreateCSRResponse422
-) & {
-  headers: Headers;
-};
+export type CreateCSRResponseSuccess = CreateCSRResponse201;
+export type CreateCSRResponseError =
+  CreateCSRResponse400 | CreateCSRResponse409 | CreateCSRResponse422;
 
 export type CreateCSRResponse =
   CreateCSRResponseSuccess | CreateCSRResponseError;
@@ -511,12 +437,8 @@ export type QueryCSRResponse400 = {
   status: 400;
 };
 
-export type QueryCSRResponseSuccess = QueryCSRResponse200 & {
-  headers: Headers;
-};
-export type QueryCSRResponseError = QueryCSRResponse400 & {
-  headers: Headers;
-};
+export type QueryCSRResponseSuccess = QueryCSRResponse200;
+export type QueryCSRResponseError = QueryCSRResponse400;
 
 export type QueryCSRResponse = QueryCSRResponseSuccess | QueryCSRResponseError;
 export type RetrieveCSRResponse200 = {
@@ -534,14 +456,9 @@ export type RetrieveCSRResponse404 = {
   status: 404;
 };
 
-export type RetrieveCSRResponseSuccess = RetrieveCSRResponse200 & {
-  headers: Headers;
-};
-export type RetrieveCSRResponseError = (
-  RetrieveCSRResponse400 | RetrieveCSRResponse404
-) & {
-  headers: Headers;
-};
+export type RetrieveCSRResponseSuccess = RetrieveCSRResponse200;
+export type RetrieveCSRResponseError =
+  RetrieveCSRResponse400 | RetrieveCSRResponse404;
 
 export type RetrieveCSRResponse =
   RetrieveCSRResponseSuccess | RetrieveCSRResponseError;
@@ -560,14 +477,9 @@ export type UpdateCSRResponse404 = {
   status: 404;
 };
 
-export type UpdateCSRResponseSuccess = UpdateCSRResponse204 & {
-  headers: Headers;
-};
-export type UpdateCSRResponseError = (
-  UpdateCSRResponse400 | UpdateCSRResponse404
-) & {
-  headers: Headers;
-};
+export type UpdateCSRResponseSuccess = UpdateCSRResponse204;
+export type UpdateCSRResponseError =
+  UpdateCSRResponse400 | UpdateCSRResponse404;
 
 export type UpdateCSRResponse =
   UpdateCSRResponseSuccess | UpdateCSRResponseError;
@@ -586,20 +498,17 @@ export type DeleteCSRResponse404 = {
   status: 404;
 };
 
-export type DeleteCSRResponseSuccess = DeleteCSRResponse204 & {
-  headers: Headers;
-};
-export type DeleteCSRResponseError = (
-  DeleteCSRResponse400 | DeleteCSRResponse404
-) & {
-  headers: Headers;
-};
+export type DeleteCSRResponseSuccess = DeleteCSRResponse204;
+export type DeleteCSRResponseError =
+  DeleteCSRResponse400 | DeleteCSRResponse404;
 
 export type DeleteCSRResponse =
   DeleteCSRResponseSuccess | DeleteCSRResponseError;
 export type CreateSubscriptionResponse201 = {
   data: void;
   status: 201;
+  /** URI of the created subscription from the Location header. */
+  location: string;
 };
 
 export type CreateSubscriptionResponse400 = {
@@ -612,15 +521,9 @@ export type CreateSubscriptionResponse409 = {
   status: 409;
 };
 
-export type CreateSubscriptionResponseSuccess =
-  CreateSubscriptionResponse201 & {
-    headers: Headers;
-  };
-export type CreateSubscriptionResponseError = (
-  CreateSubscriptionResponse400 | CreateSubscriptionResponse409
-) & {
-  headers: Headers;
-};
+export type CreateSubscriptionResponseSuccess = CreateSubscriptionResponse201;
+export type CreateSubscriptionResponseError =
+  CreateSubscriptionResponse400 | CreateSubscriptionResponse409;
 
 export type CreateSubscriptionResponse =
   CreateSubscriptionResponseSuccess | CreateSubscriptionResponseError;
@@ -634,12 +537,8 @@ export type QuerySubscriptionResponse400 = {
   status: 400;
 };
 
-export type QuerySubscriptionResponseSuccess = QuerySubscriptionResponse200 & {
-  headers: Headers;
-};
-export type QuerySubscriptionResponseError = QuerySubscriptionResponse400 & {
-  headers: Headers;
-};
+export type QuerySubscriptionResponseSuccess = QuerySubscriptionResponse200;
+export type QuerySubscriptionResponseError = QuerySubscriptionResponse400;
 
 export type QuerySubscriptionResponse =
   QuerySubscriptionResponseSuccess | QuerySubscriptionResponseError;
@@ -659,14 +558,9 @@ export type RetrieveSubscriptionResponse404 = {
 };
 
 export type RetrieveSubscriptionResponseSuccess =
-  RetrieveSubscriptionResponse200 & {
-    headers: Headers;
-  };
-export type RetrieveSubscriptionResponseError = (
-  RetrieveSubscriptionResponse400 | RetrieveSubscriptionResponse404
-) & {
-  headers: Headers;
-};
+  RetrieveSubscriptionResponse200;
+export type RetrieveSubscriptionResponseError =
+  RetrieveSubscriptionResponse400 | RetrieveSubscriptionResponse404;
 
 export type RetrieveSubscriptionResponse =
   RetrieveSubscriptionResponseSuccess | RetrieveSubscriptionResponseError;
@@ -685,15 +579,9 @@ export type UpdateSubscriptionResponse404 = {
   status: 404;
 };
 
-export type UpdateSubscriptionResponseSuccess =
-  UpdateSubscriptionResponse204 & {
-    headers: Headers;
-  };
-export type UpdateSubscriptionResponseError = (
-  UpdateSubscriptionResponse400 | UpdateSubscriptionResponse404
-) & {
-  headers: Headers;
-};
+export type UpdateSubscriptionResponseSuccess = UpdateSubscriptionResponse204;
+export type UpdateSubscriptionResponseError =
+  UpdateSubscriptionResponse400 | UpdateSubscriptionResponse404;
 
 export type UpdateSubscriptionResponse =
   UpdateSubscriptionResponseSuccess | UpdateSubscriptionResponseError;
@@ -712,21 +600,17 @@ export type DeleteSubscriptionResponse404 = {
   status: 404;
 };
 
-export type DeleteSubscriptionResponseSuccess =
-  DeleteSubscriptionResponse204 & {
-    headers: Headers;
-  };
-export type DeleteSubscriptionResponseError = (
-  DeleteSubscriptionResponse400 | DeleteSubscriptionResponse404
-) & {
-  headers: Headers;
-};
+export type DeleteSubscriptionResponseSuccess = DeleteSubscriptionResponse204;
+export type DeleteSubscriptionResponseError =
+  DeleteSubscriptionResponse400 | DeleteSubscriptionResponse404;
 
 export type DeleteSubscriptionResponse =
   DeleteSubscriptionResponseSuccess | DeleteSubscriptionResponseError;
 export type CreateCSRSubscriptionResponse201 = {
   data: void;
   status: 201;
+  /** URI of the created CSR subscription from the Location header. */
+  location: string;
 };
 
 export type CreateCSRSubscriptionResponse400 = {
@@ -740,14 +624,9 @@ export type CreateCSRSubscriptionResponse409 = {
 };
 
 export type CreateCSRSubscriptionResponseSuccess =
-  CreateCSRSubscriptionResponse201 & {
-    headers: Headers;
-  };
-export type CreateCSRSubscriptionResponseError = (
-  CreateCSRSubscriptionResponse400 | CreateCSRSubscriptionResponse409
-) & {
-  headers: Headers;
-};
+  CreateCSRSubscriptionResponse201;
+export type CreateCSRSubscriptionResponseError =
+  CreateCSRSubscriptionResponse400 | CreateCSRSubscriptionResponse409;
 
 export type CreateCSRSubscriptionResponse =
   CreateCSRSubscriptionResponseSuccess | CreateCSRSubscriptionResponseError;
@@ -762,13 +641,8 @@ export type QueryCSRSubscriptionResponse400 = {
 };
 
 export type QueryCSRSubscriptionResponseSuccess =
-  QueryCSRSubscriptionResponse200 & {
-    headers: Headers;
-  };
-export type QueryCSRSubscriptionResponseError =
-  QueryCSRSubscriptionResponse400 & {
-    headers: Headers;
-  };
+  QueryCSRSubscriptionResponse200;
+export type QueryCSRSubscriptionResponseError = QueryCSRSubscriptionResponse400;
 
 export type QueryCSRSubscriptionResponse =
   QueryCSRSubscriptionResponseSuccess | QueryCSRSubscriptionResponseError;
@@ -788,14 +662,9 @@ export type RetrieveCSRSubscriptionResponse404 = {
 };
 
 export type RetrieveCSRSubscriptionResponseSuccess =
-  RetrieveCSRSubscriptionResponse200 & {
-    headers: Headers;
-  };
-export type RetrieveCSRSubscriptionResponseError = (
-  RetrieveCSRSubscriptionResponse400 | RetrieveCSRSubscriptionResponse404
-) & {
-  headers: Headers;
-};
+  RetrieveCSRSubscriptionResponse200;
+export type RetrieveCSRSubscriptionResponseError =
+  RetrieveCSRSubscriptionResponse400 | RetrieveCSRSubscriptionResponse404;
 
 export type RetrieveCSRSubscriptionResponse =
   RetrieveCSRSubscriptionResponseSuccess | RetrieveCSRSubscriptionResponseError;
@@ -815,14 +684,9 @@ export type UpdateCSRSubscriptionResponse404 = {
 };
 
 export type UpdateCSRSubscriptionResponseSuccess =
-  UpdateCSRSubscriptionResponse204 & {
-    headers: Headers;
-  };
-export type UpdateCSRSubscriptionResponseError = (
-  UpdateCSRSubscriptionResponse400 | UpdateCSRSubscriptionResponse404
-) & {
-  headers: Headers;
-};
+  UpdateCSRSubscriptionResponse204;
+export type UpdateCSRSubscriptionResponseError =
+  UpdateCSRSubscriptionResponse400 | UpdateCSRSubscriptionResponse404;
 
 export type UpdateCSRSubscriptionResponse =
   UpdateCSRSubscriptionResponseSuccess | UpdateCSRSubscriptionResponseError;
@@ -842,14 +706,9 @@ export type DeleteCSRSubscriptionResponse404 = {
 };
 
 export type DeleteCSRSubscriptionResponseSuccess =
-  DeleteCSRSubscriptionResponse204 & {
-    headers: Headers;
-  };
-export type DeleteCSRSubscriptionResponseError = (
-  DeleteCSRSubscriptionResponse400 | DeleteCSRSubscriptionResponse404
-) & {
-  headers: Headers;
-};
+  DeleteCSRSubscriptionResponse204;
+export type DeleteCSRSubscriptionResponseError =
+  DeleteCSRSubscriptionResponse400 | DeleteCSRSubscriptionResponse404;
 
 export type DeleteCSRSubscriptionResponse =
   DeleteCSRSubscriptionResponseSuccess | DeleteCSRSubscriptionResponseError;
@@ -868,14 +727,9 @@ export type CreateBatchResponse400 = {
   status: 400;
 };
 
-export type CreateBatchResponseSuccess = (
-  CreateBatchResponse201 | CreateBatchResponse207
-) & {
-  headers: Headers;
-};
-export type CreateBatchResponseError = CreateBatchResponse400 & {
-  headers: Headers;
-};
+export type CreateBatchResponseSuccess =
+  CreateBatchResponse201 | CreateBatchResponse207;
+export type CreateBatchResponseError = CreateBatchResponse400;
 
 export type CreateBatchResponse =
   CreateBatchResponseSuccess | CreateBatchResponseError;
@@ -899,14 +753,9 @@ export type UpsertBatchResponse400 = {
   status: 400;
 };
 
-export type UpsertBatchResponseSuccess = (
-  UpsertBatchResponse201 | UpsertBatchResponse204 | UpsertBatchResponse207
-) & {
-  headers: Headers;
-};
-export type UpsertBatchResponseError = UpsertBatchResponse400 & {
-  headers: Headers;
-};
+export type UpsertBatchResponseSuccess =
+  UpsertBatchResponse201 | UpsertBatchResponse204 | UpsertBatchResponse207;
+export type UpsertBatchResponseError = UpsertBatchResponse400;
 
 export type UpsertBatchResponse =
   UpsertBatchResponseSuccess | UpsertBatchResponseError;
@@ -925,14 +774,9 @@ export type UpdateBatchResponse400 = {
   status: 400;
 };
 
-export type UpdateBatchResponseSuccess = (
-  UpdateBatchResponse204 | UpdateBatchResponse207
-) & {
-  headers: Headers;
-};
-export type UpdateBatchResponseError = UpdateBatchResponse400 & {
-  headers: Headers;
-};
+export type UpdateBatchResponseSuccess =
+  UpdateBatchResponse204 | UpdateBatchResponse207;
+export type UpdateBatchResponseError = UpdateBatchResponse400;
 
 export type UpdateBatchResponse =
   UpdateBatchResponseSuccess | UpdateBatchResponseError;
@@ -951,14 +795,9 @@ export type DeleteBatchResponse400 = {
   status: 400;
 };
 
-export type DeleteBatchResponseSuccess = (
-  DeleteBatchResponse204 | DeleteBatchResponse207
-) & {
-  headers: Headers;
-};
-export type DeleteBatchResponseError = DeleteBatchResponse400 & {
-  headers: Headers;
-};
+export type DeleteBatchResponseSuccess =
+  DeleteBatchResponse204 | DeleteBatchResponse207;
+export type DeleteBatchResponseError = DeleteBatchResponse400;
 
 export type DeleteBatchResponse =
   DeleteBatchResponseSuccess | DeleteBatchResponseError;
@@ -972,12 +811,8 @@ export type QueryBatchResponse400 = {
   status: 400;
 };
 
-export type QueryBatchResponseSuccess = QueryBatchResponse200 & {
-  headers: Headers;
-};
-export type QueryBatchResponseError = QueryBatchResponse400 & {
-  headers: Headers;
-};
+export type QueryBatchResponseSuccess = QueryBatchResponse200;
+export type QueryBatchResponseError = QueryBatchResponse400;
 
 export type QueryBatchResponse =
   QueryBatchResponseSuccess | QueryBatchResponseError;
@@ -996,20 +831,17 @@ export type MergeBatchResponse400 = {
   status: 400;
 };
 
-export type MergeBatchResponseSuccess = (
-  MergeBatchResponse204 | MergeBatchResponse207
-) & {
-  headers: Headers;
-};
-export type MergeBatchResponseError = MergeBatchResponse400 & {
-  headers: Headers;
-};
+export type MergeBatchResponseSuccess =
+  MergeBatchResponse204 | MergeBatchResponse207;
+export type MergeBatchResponseError = MergeBatchResponse400;
 
 export type MergeBatchResponse =
   MergeBatchResponseSuccess | MergeBatchResponseError;
 export type UpsertTemporalResponse201 = {
   data: void;
   status: 201;
+  /** URI of the created temporal entity from the Location header. */
+  location: string;
 };
 
 export type UpsertTemporalResponse204 = {
@@ -1027,16 +859,10 @@ export type UpsertTemporalResponse422 = {
   status: 422;
 };
 
-export type UpsertTemporalResponseSuccess = (
-  UpsertTemporalResponse201 | UpsertTemporalResponse204
-) & {
-  headers: Headers;
-};
-export type UpsertTemporalResponseError = (
-  UpsertTemporalResponse400 | UpsertTemporalResponse422
-) & {
-  headers: Headers;
-};
+export type UpsertTemporalResponseSuccess =
+  UpsertTemporalResponse201 | UpsertTemporalResponse204;
+export type UpsertTemporalResponseError =
+  UpsertTemporalResponse400 | UpsertTemporalResponse422;
 
 export type UpsertTemporalResponse =
   UpsertTemporalResponseSuccess | UpsertTemporalResponseError;
@@ -1050,12 +876,8 @@ export type QueryTemporalResponse400 = {
   status: 400;
 };
 
-export type QueryTemporalResponseSuccess = QueryTemporalResponse200 & {
-  headers: Headers;
-};
-export type QueryTemporalResponseError = QueryTemporalResponse400 & {
-  headers: Headers;
-};
+export type QueryTemporalResponseSuccess = QueryTemporalResponse200;
+export type QueryTemporalResponseError = QueryTemporalResponse400;
 
 export type QueryTemporalResponse =
   QueryTemporalResponseSuccess | QueryTemporalResponseError;
@@ -1074,14 +896,9 @@ export type RetrieveTemporalResponse404 = {
   status: 404;
 };
 
-export type RetrieveTemporalResponseSuccess = RetrieveTemporalResponse200 & {
-  headers: Headers;
-};
-export type RetrieveTemporalResponseError = (
-  RetrieveTemporalResponse400 | RetrieveTemporalResponse404
-) & {
-  headers: Headers;
-};
+export type RetrieveTemporalResponseSuccess = RetrieveTemporalResponse200;
+export type RetrieveTemporalResponseError =
+  RetrieveTemporalResponse400 | RetrieveTemporalResponse404;
 
 export type RetrieveTemporalResponse =
   RetrieveTemporalResponseSuccess | RetrieveTemporalResponseError;
@@ -1100,14 +917,9 @@ export type DeleteTemporalResponse404 = {
   status: 404;
 };
 
-export type DeleteTemporalResponseSuccess = DeleteTemporalResponse204 & {
-  headers: Headers;
-};
-export type DeleteTemporalResponseError = (
-  DeleteTemporalResponse400 | DeleteTemporalResponse404
-) & {
-  headers: Headers;
-};
+export type DeleteTemporalResponseSuccess = DeleteTemporalResponse204;
+export type DeleteTemporalResponseError =
+  DeleteTemporalResponse400 | DeleteTemporalResponse404;
 
 export type DeleteTemporalResponse =
   DeleteTemporalResponseSuccess | DeleteTemporalResponseError;
@@ -1126,15 +938,9 @@ export type AppendAttrsTemporalResponse404 = {
   status: 404;
 };
 
-export type AppendAttrsTemporalResponseSuccess =
-  AppendAttrsTemporalResponse204 & {
-    headers: Headers;
-  };
-export type AppendAttrsTemporalResponseError = (
-  AppendAttrsTemporalResponse400 | AppendAttrsTemporalResponse404
-) & {
-  headers: Headers;
-};
+export type AppendAttrsTemporalResponseSuccess = AppendAttrsTemporalResponse204;
+export type AppendAttrsTemporalResponseError =
+  AppendAttrsTemporalResponse400 | AppendAttrsTemporalResponse404;
 
 export type AppendAttrsTemporalResponse =
   AppendAttrsTemporalResponseSuccess | AppendAttrsTemporalResponseError;
@@ -1153,15 +959,9 @@ export type DeleteAttrsTemporalResponse404 = {
   status: 404;
 };
 
-export type DeleteAttrsTemporalResponseSuccess =
-  DeleteAttrsTemporalResponse204 & {
-    headers: Headers;
-  };
-export type DeleteAttrsTemporalResponseError = (
-  DeleteAttrsTemporalResponse400 | DeleteAttrsTemporalResponse404
-) & {
-  headers: Headers;
-};
+export type DeleteAttrsTemporalResponseSuccess = DeleteAttrsTemporalResponse204;
+export type DeleteAttrsTemporalResponseError =
+  DeleteAttrsTemporalResponse400 | DeleteAttrsTemporalResponse404;
 
 export type DeleteAttrsTemporalResponse =
   DeleteAttrsTemporalResponseSuccess | DeleteAttrsTemporalResponseError;
@@ -1180,15 +980,9 @@ export type UpdateAttrsTemporalResponse404 = {
   status: 404;
 };
 
-export type UpdateAttrsTemporalResponseSuccess =
-  UpdateAttrsTemporalResponse204 & {
-    headers: Headers;
-  };
-export type UpdateAttrsTemporalResponseError = (
-  UpdateAttrsTemporalResponse400 | UpdateAttrsTemporalResponse404
-) & {
-  headers: Headers;
-};
+export type UpdateAttrsTemporalResponseSuccess = UpdateAttrsTemporalResponse204;
+export type UpdateAttrsTemporalResponseError =
+  UpdateAttrsTemporalResponse400 | UpdateAttrsTemporalResponse404;
 
 export type UpdateAttrsTemporalResponse =
   UpdateAttrsTemporalResponseSuccess | UpdateAttrsTemporalResponseError;
@@ -1208,14 +1002,9 @@ export type DeleteAttrInstanceTemporalResponse404 = {
 };
 
 export type DeleteAttrInstanceTemporalResponseSuccess =
-  DeleteAttrInstanceTemporalResponse204 & {
-    headers: Headers;
-  };
-export type DeleteAttrInstanceTemporalResponseError = (
-  DeleteAttrInstanceTemporalResponse400 | DeleteAttrInstanceTemporalResponse404
-) & {
-  headers: Headers;
-};
+  DeleteAttrInstanceTemporalResponse204;
+export type DeleteAttrInstanceTemporalResponseError =
+  DeleteAttrInstanceTemporalResponse400 | DeleteAttrInstanceTemporalResponse404;
 
 export type DeleteAttrInstanceTemporalResponse =
   | DeleteAttrInstanceTemporalResponseSuccess
@@ -1230,13 +1019,8 @@ export type TemporalQueryBatchResponse400 = {
   status: 400;
 };
 
-export type TemporalQueryBatchResponseSuccess =
-  TemporalQueryBatchResponse200 & {
-    headers: Headers;
-  };
-export type TemporalQueryBatchResponseError = TemporalQueryBatchResponse400 & {
-  headers: Headers;
-};
+export type TemporalQueryBatchResponseSuccess = TemporalQueryBatchResponse200;
+export type TemporalQueryBatchResponseError = TemporalQueryBatchResponse400;
 
 export type TemporalQueryBatchResponse =
   TemporalQueryBatchResponseSuccess | TemporalQueryBatchResponseError;
@@ -1250,14 +1034,8 @@ export type RetrieveEntityTypesResponse400 = {
   status: 400;
 };
 
-export type RetrieveEntityTypesResponseSuccess =
-  RetrieveEntityTypesResponse200 & {
-    headers: Headers;
-  };
-export type RetrieveEntityTypesResponseError =
-  RetrieveEntityTypesResponse400 & {
-    headers: Headers;
-  };
+export type RetrieveEntityTypesResponseSuccess = RetrieveEntityTypesResponse200;
+export type RetrieveEntityTypesResponseError = RetrieveEntityTypesResponse400;
 
 export type RetrieveEntityTypesResponse =
   RetrieveEntityTypesResponseSuccess | RetrieveEntityTypesResponseError;
@@ -1277,14 +1055,9 @@ export type RetrieveEntityTypeInfoResponse404 = {
 };
 
 export type RetrieveEntityTypeInfoResponseSuccess =
-  RetrieveEntityTypeInfoResponse200 & {
-    headers: Headers;
-  };
-export type RetrieveEntityTypeInfoResponseError = (
-  RetrieveEntityTypeInfoResponse400 | RetrieveEntityTypeInfoResponse404
-) & {
-  headers: Headers;
-};
+  RetrieveEntityTypeInfoResponse200;
+export type RetrieveEntityTypeInfoResponseError =
+  RetrieveEntityTypeInfoResponse400 | RetrieveEntityTypeInfoResponse404;
 
 export type RetrieveEntityTypeInfoResponse =
   RetrieveEntityTypeInfoResponseSuccess | RetrieveEntityTypeInfoResponseError;
@@ -1298,12 +1071,8 @@ export type RetrieveAttrTypesResponse400 = {
   status: 400;
 };
 
-export type RetrieveAttrTypesResponseSuccess = RetrieveAttrTypesResponse200 & {
-  headers: Headers;
-};
-export type RetrieveAttrTypesResponseError = RetrieveAttrTypesResponse400 & {
-  headers: Headers;
-};
+export type RetrieveAttrTypesResponseSuccess = RetrieveAttrTypesResponse200;
+export type RetrieveAttrTypesResponseError = RetrieveAttrTypesResponse400;
 
 export type RetrieveAttrTypesResponse =
   RetrieveAttrTypesResponseSuccess | RetrieveAttrTypesResponseError;
@@ -1323,20 +1092,17 @@ export type RetrieveAttrTypeInfoResponse404 = {
 };
 
 export type RetrieveAttrTypeInfoResponseSuccess =
-  RetrieveAttrTypeInfoResponse200 & {
-    headers: Headers;
-  };
-export type RetrieveAttrTypeInfoResponseError = (
-  RetrieveAttrTypeInfoResponse400 | RetrieveAttrTypeInfoResponse404
-) & {
-  headers: Headers;
-};
+  RetrieveAttrTypeInfoResponse200;
+export type RetrieveAttrTypeInfoResponseError =
+  RetrieveAttrTypeInfoResponse400 | RetrieveAttrTypeInfoResponse404;
 
 export type RetrieveAttrTypeInfoResponse =
   RetrieveAttrTypeInfoResponseSuccess | RetrieveAttrTypeInfoResponseError;
 export type CreateContextResponse201 = {
   data: void;
   status: 201;
+  /** URI of the created @context from the Location header. */
+  location: string;
 };
 
 export type CreateContextResponse400 = {
@@ -1344,12 +1110,8 @@ export type CreateContextResponse400 = {
   status: 400;
 };
 
-export type CreateContextResponseSuccess = CreateContextResponse201 & {
-  headers: Headers;
-};
-export type CreateContextResponseError = CreateContextResponse400 & {
-  headers: Headers;
-};
+export type CreateContextResponseSuccess = CreateContextResponse201;
+export type CreateContextResponseError = CreateContextResponse400;
 
 export type CreateContextResponse =
   CreateContextResponseSuccess | CreateContextResponseError;
@@ -1363,12 +1125,8 @@ export type ListContextsResponse400 = {
   status: 400;
 };
 
-export type ListContextsResponseSuccess = ListContextsResponse200 & {
-  headers: Headers;
-};
-export type ListContextsResponseError = ListContextsResponse400 & {
-  headers: Headers;
-};
+export type ListContextsResponseSuccess = ListContextsResponse200;
+export type ListContextsResponseError = ListContextsResponse400;
 
 export type ListContextsResponse =
   ListContextsResponseSuccess | ListContextsResponseError;
@@ -1392,16 +1150,11 @@ export type RetrieveContextResponse422 = {
   status: 422;
 };
 
-export type RetrieveContextResponseSuccess = RetrieveContextResponse200 & {
-  headers: Headers;
-};
-export type RetrieveContextResponseError = (
+export type RetrieveContextResponseSuccess = RetrieveContextResponse200;
+export type RetrieveContextResponseError =
   | RetrieveContextResponse400
   | RetrieveContextResponse404
-  | RetrieveContextResponse422
-) & {
-  headers: Headers;
-};
+  | RetrieveContextResponse422;
 
 export type RetrieveContextResponse =
   RetrieveContextResponseSuccess | RetrieveContextResponseError;
@@ -1425,14 +1178,11 @@ export type DeleteContextResponse504 = {
   status: 504;
 };
 
-export type DeleteContextResponseSuccess = DeleteContextResponse204 & {
-  headers: Headers;
-};
-export type DeleteContextResponseError = (
-  DeleteContextResponse400 | DeleteContextResponse404 | DeleteContextResponse504
-) & {
-  headers: Headers;
-};
+export type DeleteContextResponseSuccess = DeleteContextResponse204;
+export type DeleteContextResponseError =
+  | DeleteContextResponse400
+  | DeleteContextResponse404
+  | DeleteContextResponse504;
 
 export type DeleteContextResponse =
   DeleteContextResponseSuccess | DeleteContextResponseError;
@@ -1451,14 +1201,9 @@ export type RetrieveEntityMapResponse404 = {
   status: 404;
 };
 
-export type RetrieveEntityMapResponseSuccess = RetrieveEntityMapResponse200 & {
-  headers: Headers;
-};
-export type RetrieveEntityMapResponseError = (
-  RetrieveEntityMapResponse400 | RetrieveEntityMapResponse404
-) & {
-  headers: Headers;
-};
+export type RetrieveEntityMapResponseSuccess = RetrieveEntityMapResponse200;
+export type RetrieveEntityMapResponseError =
+  RetrieveEntityMapResponse400 | RetrieveEntityMapResponse404;
 
 export type RetrieveEntityMapResponse =
   RetrieveEntityMapResponseSuccess | RetrieveEntityMapResponseError;
@@ -1477,14 +1222,9 @@ export type UpdateEntityMapResponse404 = {
   status: 404;
 };
 
-export type UpdateEntityMapResponseSuccess = UpdateEntityMapResponse204 & {
-  headers: Headers;
-};
-export type UpdateEntityMapResponseError = (
-  UpdateEntityMapResponse400 | UpdateEntityMapResponse404
-) & {
-  headers: Headers;
-};
+export type UpdateEntityMapResponseSuccess = UpdateEntityMapResponse204;
+export type UpdateEntityMapResponseError =
+  UpdateEntityMapResponse400 | UpdateEntityMapResponse404;
 
 export type UpdateEntityMapResponse =
   UpdateEntityMapResponseSuccess | UpdateEntityMapResponseError;
@@ -1503,14 +1243,9 @@ export type DeleteEntityMapResponse404 = {
   status: 404;
 };
 
-export type DeleteEntityMapResponseSuccess = DeleteEntityMapResponse204 & {
-  headers: Headers;
-};
-export type DeleteEntityMapResponseError = (
-  DeleteEntityMapResponse400 | DeleteEntityMapResponse404
-) & {
-  headers: Headers;
-};
+export type DeleteEntityMapResponseSuccess = DeleteEntityMapResponse204;
+export type DeleteEntityMapResponseError =
+  DeleteEntityMapResponse400 | DeleteEntityMapResponse404;
 
 export type DeleteEntityMapResponse =
   DeleteEntityMapResponseSuccess | DeleteEntityMapResponseError;
@@ -1525,13 +1260,9 @@ export type RetrieveCSIdentityInfoResponse501 = {
 };
 
 export type RetrieveCSIdentityInfoResponseSuccess =
-  RetrieveCSIdentityInfoResponse200 & {
-    headers: Headers;
-  };
+  RetrieveCSIdentityInfoResponse200;
 export type RetrieveCSIdentityInfoResponseError =
-  RetrieveCSIdentityInfoResponse501 & {
-    headers: Headers;
-  };
+  RetrieveCSIdentityInfoResponse501;
 
 export type RetrieveCSIdentityInfoResponse =
   RetrieveCSIdentityInfoResponseSuccess | RetrieveCSIdentityInfoResponseError;

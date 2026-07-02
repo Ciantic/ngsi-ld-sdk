@@ -166,5 +166,11 @@ export const fetcher = async <T extends { status: number; data: any }>(
   const data = responseBody ? JSON.parse(responseBody) : {};
 
   // Transform Orion wire format → SDK shape on the way back
-  return { status: response.status, data: fromApi(data) } as T;
+  const location =
+    response.status === 201
+      ? (response.headers.get("location") ?? undefined)
+      : undefined;
+  return { status: response.status, data: fromApi(data), location } as T & {
+    location?: string;
+  };
 };

@@ -192,3 +192,14 @@ export function warnIf501(status: number, operation?: string): void {
     console.warn(`Not implemented (501)${what}. `);
   }
 }
+
+/**
+ * Warn if the broker returned 500 (Internal Server Error), typically because
+ * the endpoint is not yet wired (Stellio latest-dev).
+ */
+export function warnIf500(status: number, operation?: string): void {
+  if (status === 500) {
+    const what = operation ? `: ${operation}` : "";
+    console.warn(`Endpoint not wired (500)${what}. `);
+  }
+}

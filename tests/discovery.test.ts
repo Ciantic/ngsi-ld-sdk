@@ -14,7 +14,13 @@ import {
   retrieveCSIdentityInfo,
   createEntity,
 } from "../src";
-import { makeEntity, expectOk, cleanUpEntity, warnIf501 } from "./helpers";
+import {
+  makeEntity,
+  expectOk,
+  cleanUpEntity,
+  warnIf501,
+  warnIf500,
+} from "./helpers";
 
 // --- Track entities created during discovery tests ---
 const createdEntityIds: string[] = [];
@@ -170,14 +176,24 @@ describe("createContext", () => {
 
     const response = await createContext(contextBody);
     // Stellio latest-dev returns 500 (endpoint not yet wired); Orion-LD returns 201/204
-    expect([201, 204, 500]).toContain(response.status);
-    if (response.status >= 400) return; // skip cleanup for unsupported
+    if ((response.status as number) === 500) {
+      warnIf500(response.status as number, "createContext");
+      return;
+    }
+    if (response.status !== 201) {
+      throw new Error(
+        `Expected 201 Created but got ${response.status}: ${JSON.stringify(
+          response.data,
+        )}`,
+      );
+    }
+    expect(response.status).toBe(201);
+    expect(response.location).toBeDefined();
 
     // Extract context ID from Location header for cleanup
-    const location = response.headers?.get("location");
+    const location = response.location;
     if (location) {
       // Location may be a full path like /ngsi-ld/v1/jsonldContexts/<id>
-      // Extract just the last path segment as the context ID
       const contextId = decodeURIComponent(location.split("/").pop()!);
       contextIds.push(contextId);
     }
@@ -191,16 +207,22 @@ describe("listContexts", () => {
   it("should list all contexts and return 200", async () => {
     const response = await listContexts();
     // Stellio latest-dev returns 500 (endpoint not yet wired); Orion-LD returns 200
-    expect([200, 500]).toContain(response.status);
-    if (response.status === 200) {
-      expect(response.data).toBeDefined();
+    if ((response.status as number) === 500) {
+      warnIf500(response.status as number, "listContexts");
+      return;
     }
+    expect(response.status).toBe(200);
+    expect(response.data).toBeDefined();
   });
 
   it("should support details=true query parameter", async () => {
     const response = await listContexts({ details: true });
     // Stellio latest-dev returns 500 (endpoint not yet wired); Orion-LD returns 200
-    expect([200, 500]).toContain(response.status);
+    if ((response.status as number) === 500) {
+      warnIf500(response.status as number, "listContexts?details=true");
+      return;
+    }
+    expect(response.status).toBe(200);
   });
 });
 
@@ -234,10 +256,13 @@ describe("retrieveContext", () => {
 
     const createResp = await createContext(contextBody);
     // Stellio latest-dev returns 500 (endpoint not yet wired); Orion-LD returns 201/204
-    expect([201, 204, 500]).toContain(createResp.status);
-    if (createResp.status >= 400) return;
+    if ((createResp.status as number) === 500) {
+      warnIf500(createResp.status as number, "createContext (retrieve test)");
+      return;
+    }
+    expect([201, 204]).toContain(createResp.status);
 
-    const location = createResp.headers?.get("location");
+    const location = createResp.status === 201 && createResp.location;
     if (!location) {
       // If no Location header, skip the retrieve test gracefully
       return;
@@ -260,9 +285,17 @@ describe("retrieveContext", () => {
     };
 
     const createResp = await createContext(contextBody);
-    if (createResp.status >= 400) return; // Stellio: endpoint not yet wired
+    // Stellio latest-dev returns 500 (endpoint not yet wired); Orion-LD returns 201/204
+    if ((createResp.status as number) === 500) {
+      warnIf500(
+        createResp.status as number,
+        "createContext (retrieve details test)",
+      );
+      return;
+    }
+    if (createResp.status >= 400) return;
 
-    const location = createResp.headers?.get("location");
+    const location = createResp.status === 201 && createResp.location;
     if (!location) return;
 
     const contextId = decodeURIComponent(location.split("/").pop()!);
@@ -296,10 +329,13 @@ describe("deleteContext", () => {
 
     const createResp = await createContext(contextBody);
     // Stellio latest-dev returns 500 (endpoint not yet wired); Orion-LD returns 201/204
-    expect([201, 204, 500]).toContain(createResp.status);
-    if (createResp.status >= 400) return;
+    if ((createResp.status as number) === 500) {
+      warnIf500(createResp.status as number, "createContext (delete test)");
+      return;
+    }
+    expect([201, 204]).toContain(createResp.status);
 
-    const location = createResp.headers?.get("location");
+    const location = createResp.status === 201 && createResp.location;
     if (!location) return;
 
     const contextId = decodeURIComponent(location.split("/").pop()!);
