@@ -1016,6 +1016,10 @@ export interface FeatureProperties {
 export type LdContext =
   string | { [key: string]: unknown } | (string | { [key: string]: unknown })[];
 
+export type WithContext<T> = T & {
+  "@context": LdContext;
+};
+
 /**
  * Helper: wraps any type with an optional JSON-LD @context.
  */

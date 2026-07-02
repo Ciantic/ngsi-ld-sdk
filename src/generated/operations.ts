@@ -61,6 +61,7 @@ import type {
   UpsertBatchBodyItem,
   UpsertBatchParams,
   UpsertTemporalParams,
+  WithContext,
 } from "./schemas";
 
 import {
@@ -193,9 +194,8 @@ import { fetcher } from "../fetcher";
 
  */
 export const createEntity = (
-  createEntityBody?: PickRequired<
-    NonReadonly<CreateEntityBody>,
-    "id" | "type" | "@context"
+  createEntityBody?: WithContext<
+    PickRequired<NonReadonly<CreateEntityBody>, "id" | "type">
   >,
   params?: CreateEntityParams,
   options?: RequestInit,
@@ -301,7 +301,7 @@ export const deleteEntity = (
  */
 export const mergeEntity = (
   entityId: string,
-  mergeEntityBody?: PickRequired<NonReadonly<MergeEntityBody>, "@context">,
+  mergeEntityBody?: WithContext<NonReadonly<MergeEntityBody>>,
   params?: MergeEntityParams,
   options?: RequestInit,
 ) => {
@@ -330,7 +330,7 @@ export const mergeEntity = (
  */
 export const replaceEntity = (
   entityId: string,
-  replaceEntityBody?: PickRequired<NonReadonly<ReplaceEntityBody>, "@context">,
+  replaceEntityBody?: WithContext<NonReadonly<ReplaceEntityBody>>,
   params?: ReplaceEntityParams,
   options?: RequestInit,
 ) => {
@@ -359,7 +359,7 @@ export const replaceEntity = (
  */
 export const appendAttrs = (
   entityId: string,
-  appendAttrsBody?: PickRequired<NonReadonly<AppendAttrsBody>, "@context">,
+  appendAttrsBody?: WithContext<NonReadonly<AppendAttrsBody>>,
   params?: AppendAttrsParams,
   options?: RequestInit,
 ) => {
@@ -388,7 +388,7 @@ export const appendAttrs = (
  */
 export const updateEntity = (
   entityId: string,
-  updateEntityBody?: PickRequired<NonReadonly<UpdateEntityBody>, "@context">,
+  updateEntityBody?: WithContext<NonReadonly<UpdateEntityBody>>,
   params?: UpdateEntityParams,
   options?: RequestInit,
 ) => {
@@ -420,7 +420,7 @@ export const updateEntity = (
 export const updateAttrs = (
   entityId: string,
   attrId: string,
-  attributeFragmentBody?: PickRequired<AttributeFragmentBody, "@context">,
+  attributeFragmentBody?: WithContext<AttributeFragmentBody>,
   params?: UpdateAttrsParams,
   options?: RequestInit,
 ) => {
@@ -483,7 +483,7 @@ export const deleteAttrs = (
 export const replaceAttrs = (
   entityId: string,
   attrId: string,
-  attributeFragmentBody?: PickRequired<AttributeFragmentBody, "@context">,
+  attributeFragmentBody?: WithContext<AttributeFragmentBody>,
   params?: ReplaceAttrsParams,
   options?: RequestInit,
 ) => {
@@ -512,9 +512,11 @@ export const replaceAttrs = (
 
  */
 export const createCSR = (
-  createCSRBody?: PickRequired<
-    NonReadonly<CreateCSRBody>,
-    "type" | "information" | "endpoint" | "@context"
+  createCSRBody?: WithContext<
+    PickRequired<
+      NonReadonly<CreateCSRBody>,
+      "type" | "information" | "endpoint"
+    >
   >,
   options?: RequestInit,
 ) => {
@@ -612,7 +614,7 @@ export const retrieveCSR = (
  */
 export const updateCSR = (
   registrationId: string,
-  updateCSRBody?: PickRequired<NonReadonly<UpdateCSRBody>, "@context">,
+  updateCSRBody?: WithContext<NonReadonly<UpdateCSRBody>>,
   options?: RequestInit,
 ) => {
   return fetcher<UpdateCSRResponse>(getUpdateCSRUrl(registrationId), {
@@ -657,9 +659,8 @@ export const deleteCSR = (registrationId: string, options?: RequestInit) => {
 
  */
 export const createSubscription = (
-  subscriptionBody?: PickRequired<
-    SubscriptionBody,
-    "type" | "notification" | "@context"
+  subscriptionBody?: WithContext<
+    PickRequired<SubscriptionBody, "type" | "notification">
   >,
   params?: CreateSubscriptionParams,
   options?: RequestInit,
@@ -737,7 +738,7 @@ export const retrieveSubscription = (
  */
 export const updateSubscription = (
   subscriptionId: string,
-  subscriptionFragmentBody?: PickRequired<SubscriptionFragmentBody, "@context">,
+  subscriptionFragmentBody?: WithContext<SubscriptionFragmentBody>,
   params?: UpdateSubscriptionParams,
   options?: RequestInit,
 ) => {
@@ -793,9 +794,8 @@ export const deleteSubscription = (
 
  */
 export const createCSRSubscription = (
-  subscriptionBody?: PickRequired<
-    SubscriptionBody,
-    "type" | "notification" | "@context"
+  subscriptionBody?: WithContext<
+    PickRequired<SubscriptionBody, "type" | "notification">
   >,
   options?: RequestInit,
 ) => {
@@ -875,7 +875,7 @@ export const retrieveCSRSubscription = (
  */
 export const updateCSRSubscription = (
   subscriptionId: string,
-  subscriptionFragmentBody?: PickRequired<SubscriptionFragmentBody, "@context">,
+  subscriptionFragmentBody?: WithContext<SubscriptionFragmentBody>,
   options?: RequestInit,
 ) => {
   return fetcher<UpdateCSRSubscriptionResponse>(
@@ -1093,9 +1093,8 @@ export const mergeBatch = (
 
  */
 export const upsertTemporal = (
-  entityTemporalBody?: PickRequired<
-    EntityTemporalBody,
-    "id" | "type" | "@context"
+  entityTemporalBody?: WithContext<
+    PickRequired<EntityTemporalBody, "id" | "type">
   >,
   params?: UpsertTemporalParams,
   options?: RequestInit,
@@ -1206,10 +1205,7 @@ export const deleteTemporal = (
  */
 export const appendAttrsTemporal = (
   entityId: string,
-  entityTemporalFragmentBody?: PickRequired<
-    EntityTemporalFragmentBody,
-    "@context"
-  >,
+  entityTemporalFragmentBody?: WithContext<EntityTemporalFragmentBody>,
   params?: AppendAttrsTemporalParams,
   options?: RequestInit,
 ) => {
@@ -1279,10 +1275,7 @@ export const updateAttrsTemporal = (
   entityId: string,
   attrId: string,
   instanceId: string,
-  entityTemporalFragmentBody?: PickRequired<
-    EntityTemporalFragmentBody,
-    "@context"
-  >,
+  entityTemporalFragmentBody?: WithContext<EntityTemporalFragmentBody>,
   params?: UpdateAttrsTemporalParams,
   options?: RequestInit,
 ) => {
@@ -1686,10 +1679,7 @@ export const retrieveEntityMap = (
  */
 export const updateEntityMap = (
   entityMapId: string,
-  updateEntityMapBody?: PickRequired<
-    NonReadonly<UpdateEntityMapBody>,
-    "@context"
-  >,
+  updateEntityMapBody?: WithContext<NonReadonly<UpdateEntityMapBody>>,
   options?: RequestInit,
 ) => {
   return fetcher<UpdateEntityMapResponse>(getUpdateEntityMapUrl(entityMapId), {
