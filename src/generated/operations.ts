@@ -1,5 +1,4 @@
 import type {
-  AppendAttrsBody,
   AppendAttrsParams,
   AppendAttrsTemporalParams,
   AttributeFragmentBody,
@@ -7,7 +6,6 @@ import type {
   CreateBatchParams,
   CreateCSRBody,
   CreateContextBody,
-  CreateEntityBody,
   CreateEntityParams,
   CreateSubscriptionParams,
   DeleteAttrInstanceTemporalParams,
@@ -18,12 +16,11 @@ import type {
   DeleteEntityParams,
   DeleteSubscriptionParams,
   DeleteTemporalParams,
-  EntityTemporalBody,
-  EntityTemporalFragmentBody,
+  Entity,
+  EntityTemporal,
   ListContextsParams,
   MergeBatchBodyItem,
   MergeBatchParams,
-  MergeEntityBody,
   MergeEntityParams,
   Query,
   QueryBatchParams,
@@ -34,7 +31,6 @@ import type {
   QueryTemporalBody,
   QueryTemporalParams,
   ReplaceAttrsParams,
-  ReplaceEntityBody,
   ReplaceEntityParams,
   RetrieveAttrTypeInfoParams,
   RetrieveAttrTypesParams,
@@ -54,7 +50,6 @@ import type {
   UpdateBatchBodyItem,
   UpdateBatchParams,
   UpdateCSRBody,
-  UpdateEntityBody,
   UpdateEntityMapBody,
   UpdateEntityParams,
   UpdateSubscriptionParams,
@@ -195,7 +190,7 @@ import { fetcher } from "../fetcher";
  */
 export const createEntity = (
   createEntityBody?: WithContext<
-    PickRequired<NonReadonly<CreateEntityBody>, "id" | "type">
+    PickRequired<NonReadonly<Entity>, "id" | "type">
   >,
   params?: CreateEntityParams,
   options?: RequestInit,
@@ -301,7 +296,7 @@ export const deleteEntity = (
  */
 export const mergeEntity = (
   entityId: string,
-  mergeEntityBody?: WithContext<NonReadonly<MergeEntityBody>>,
+  mergeEntityBody?: WithContext<NonReadonly<Entity>>,
   params?: MergeEntityParams,
   options?: RequestInit,
 ) => {
@@ -330,7 +325,7 @@ export const mergeEntity = (
  */
 export const replaceEntity = (
   entityId: string,
-  replaceEntityBody?: WithContext<NonReadonly<ReplaceEntityBody>>,
+  replaceEntityBody?: WithContext<NonReadonly<Entity>>,
   params?: ReplaceEntityParams,
   options?: RequestInit,
 ) => {
@@ -359,7 +354,7 @@ export const replaceEntity = (
  */
 export const appendAttrs = (
   entityId: string,
-  appendAttrsBody?: WithContext<NonReadonly<AppendAttrsBody>>,
+  appendAttrsBody?: WithContext<NonReadonly<Entity>>,
   params?: AppendAttrsParams,
   options?: RequestInit,
 ) => {
@@ -388,7 +383,7 @@ export const appendAttrs = (
  */
 export const updateEntity = (
   entityId: string,
-  updateEntityBody?: WithContext<NonReadonly<UpdateEntityBody>>,
+  updateEntityBody?: WithContext<NonReadonly<Entity>>,
   params?: UpdateEntityParams,
   options?: RequestInit,
 ) => {
@@ -1093,9 +1088,7 @@ export const mergeBatch = (
 
  */
 export const upsertTemporal = (
-  entityTemporalBody?: WithContext<
-    PickRequired<EntityTemporalBody, "id" | "type">
-  >,
+  entityTemporalBody?: WithContext<PickRequired<EntityTemporal, "id" | "type">>,
   params?: UpsertTemporalParams,
   options?: RequestInit,
 ) => {
@@ -1205,7 +1198,7 @@ export const deleteTemporal = (
  */
 export const appendAttrsTemporal = (
   entityId: string,
-  entityTemporalFragmentBody?: WithContext<EntityTemporalFragmentBody>,
+  entityTemporalFragmentBody?: WithContext<EntityTemporal>,
   params?: AppendAttrsTemporalParams,
   options?: RequestInit,
 ) => {
@@ -1275,7 +1268,7 @@ export const updateAttrsTemporal = (
   entityId: string,
   attrId: string,
   instanceId: string,
-  entityTemporalFragmentBody?: WithContext<EntityTemporalFragmentBody>,
+  entityTemporalFragmentBody?: WithContext<EntityTemporal>,
   params?: UpdateAttrsTemporalParams,
   options?: RequestInit,
 ) => {

@@ -2148,14 +2148,6 @@ export type AttributeFragmentBody = (
   "@context"?: LdContext;
 };
 
-export type EntityTemporalBody = EntityTemporal & {
-  "@context"?: LdContext;
-};
-
-export type EntityTemporalFragmentBody = EntityTemporal & {
-  "@context"?: LdContext;
-};
-
 export type QueryTemporalBody = QueryTemporal;
 
 export type SubscriptionBody = Subscription & {
@@ -2489,10 +2481,6 @@ export type CreateEntityParams = {
   local?: QueryLocalParameter;
 };
 
-export type CreateEntityBody = Entity & {
-  "@context"?: LdContext;
-};
-
 export type QueryEntityParams = {
   /**
    * List of entity ids to be retrieved.
@@ -2792,10 +2780,6 @@ export type MergeEntityParams = {
   local?: QueryLocalParameter;
 };
 
-export type MergeEntityBody = Entity & {
-  "@context"?: LdContext;
-};
-
 export type ReplaceEntityParams = {
   /**
    * Selection of Entity Types as per clause 4.17. "*" is also allowed as a value and local is
@@ -2810,10 +2794,6 @@ export type ReplaceEntityParams = {
    * or Context Broker (clause 5.5.13).
    */
   local?: QueryLocalParameter;
-};
-
-export type ReplaceEntityBody = Entity & {
-  "@context"?: LdContext;
 };
 
 export type AppendAttrsParams = {
@@ -2833,10 +2813,6 @@ export type AppendAttrsParams = {
   local?: QueryLocalParameter;
 };
 
-export type AppendAttrsBody = Entity & {
-  "@context"?: LdContext;
-};
-
 export type UpdateEntityParams = {
   /**
    * 6.3.18 Limiting Distributed Operations. If local=true then no Context Source Registrations shall be
@@ -2851,10 +2827,6 @@ export type UpdateEntityParams = {
    * implicitly set to true and shall not be explicitly set to false.
    */
   type?: QueryTypeParameter;
-};
-
-export type UpdateEntityBody = Entity & {
-  "@context"?: LdContext;
 };
 
 export type UpdateAttrsParams = {
