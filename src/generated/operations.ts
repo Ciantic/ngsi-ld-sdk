@@ -184,9 +184,7 @@ import { fetcher } from "../fetcher";
 
  */
 export const createEntity = (
-  createEntityBody?: WithContext<
-    PickRequired<NonReadonly<Entity>, "id" | "type">
-  >,
+  createEntityBody?: WithContext<NonReadonly<Entity>>,
   params?: CreateEntityParams,
   options?: RequestInit,
 ) => {
@@ -291,7 +289,7 @@ export const deleteEntity = (
  */
 export const mergeEntity = (
   entityId: string,
-  mergeEntityBody?: WithContext<NonReadonly<Entity>>,
+  mergeEntityBody?: WithContext<NonReadonly<Partial<Entity>>>,
   params?: MergeEntityParams,
   options?: RequestInit,
 ) => {
@@ -320,7 +318,7 @@ export const mergeEntity = (
  */
 export const replaceEntity = (
   entityId: string,
-  replaceEntityBody?: WithContext<NonReadonly<Entity>>,
+  replaceEntityBody?: WithContext<NonReadonly<Partial<Entity>>>,
   params?: ReplaceEntityParams,
   options?: RequestInit,
 ) => {
@@ -349,7 +347,7 @@ export const replaceEntity = (
  */
 export const appendAttrs = (
   entityId: string,
-  appendAttrsBody?: WithContext<NonReadonly<Entity>>,
+  appendAttrsBody?: WithContext<NonReadonly<Partial<Entity>>>,
   params?: AppendAttrsParams,
   options?: RequestInit,
 ) => {
@@ -378,7 +376,7 @@ export const appendAttrs = (
  */
 export const updateEntity = (
   entityId: string,
-  updateEntityBody?: WithContext<NonReadonly<Entity>>,
+  updateEntityBody?: WithContext<NonReadonly<Partial<Entity>>>,
   params?: UpdateEntityParams,
   options?: RequestInit,
 ) => {
@@ -919,7 +917,7 @@ export const deleteCSRSubscription = (
 
  */
 export const createBatch = (
-  createBatchBodyItem?: NonReadonly<MaybeContext<Entity>[]>,
+  createBatchBodyItem?: NonReadonly<MaybeContext<Entity>>[],
   params?: CreateBatchParams,
   options?: RequestInit,
 ) => {
@@ -947,7 +945,7 @@ export const createBatch = (
 
  */
 export const upsertBatch = (
-  upsertBatchBodyItem?: NonReadonly<MaybeContext<Entity>[]>,
+  upsertBatchBodyItem?: NonReadonly<MaybeContext<Entity>>[],
   params?: UpsertBatchParams,
   options?: RequestInit,
 ) => {
@@ -973,7 +971,7 @@ export const upsertBatch = (
 
  */
 export const updateBatch = (
-  updateBatchBodyItem?: NonReadonly<MaybeContext<Entity>[]>,
+  updateBatchBodyItem?: NonReadonly<MaybeContext<Entity>>[],
   params?: UpdateBatchParams,
   options?: RequestInit,
 ) => {
@@ -1055,7 +1053,7 @@ export const queryBatch = (
 
  */
 export const mergeBatch = (
-  mergeBatchBodyItem?: NonReadonly<MaybeContext<Entity>[]>,
+  mergeBatchBodyItem?: NonReadonly<MaybeContext<Entity>>[],
   params?: MergeBatchParams,
   options?: RequestInit,
 ) => {

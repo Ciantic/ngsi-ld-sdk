@@ -145,11 +145,14 @@ describe("mergeEntity", () => {
 
     // Verify the merge worked: retrieve and check the new attribute exists
     const retrieved = await retrieveEntity(entity.id!);
-    if (!Array.isArray(retrieved.data)) {
-      const data = retrieved.data as Record<string, unknown>;
-      const props = data["$props"] as Record<string, unknown> | undefined;
-      expect(props?.["humidity"]).toBeDefined();
+    if (retrieved.status !== 200) {
+      throw new Error(
+        `Failed to retrieve entity after merge: ${retrieved.status}`,
+      );
     }
+    const data = retrieved.data as unknown as Record<string, unknown>;
+    const props = data["$props"] as Record<string, unknown> | undefined;
+    expect(props?.["humidity"]).toBeDefined();
   });
 });
 

@@ -845,9 +845,9 @@ export interface GeoProperty {
  */
 export interface Entity {
   /** Entity id. */
-  id?: string;
+  id: string;
   /** Entity Type(s). Both short hand string(s) (type name) or URI(s) are allowed. */
-  type?: string | string[];
+  type: string | string[];
   /** Scope. */
   scope?: string | string[];
   /** Default geospatial Property of an entity. See clause 4.7. */
