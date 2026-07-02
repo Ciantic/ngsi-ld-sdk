@@ -6,10 +6,11 @@ import {
   deleteEntity,
   mergeBatch,
   queryBatch,
+  queryGeoBatch,
   updateBatch,
   upsertBatch,
 } from "../src";
-import { expectOk, makeEntity } from "./helpers";
+import { expectOk, makeEntity, makeEntityWithGeo } from "./helpers";
 
 // Track created entities for cleanup
 const createdIds: string[] = [];
@@ -203,9 +204,7 @@ describe("queryBatch", () => {
     expectOk(response);
     expect(response.status).toBe(200);
     expect(Array.isArray(response.data)).toBe(true);
-    if (Array.isArray(response.data)) {
-      expect(response.data.length).toBeGreaterThanOrEqual(2);
-    }
+    expect(response.data.length).toBeGreaterThanOrEqual(2);
   });
 
   it("should return empty array for query matching no entities", async () => {
@@ -217,9 +216,48 @@ describe("queryBatch", () => {
     expectOk(response);
     expect(response.status).toBe(200);
     expect(Array.isArray(response.data)).toBe(true);
-    if (Array.isArray(response.data)) {
-      expect(response.data.length).toBe(0);
-    }
+    expect(response.data.length).toBe(0);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// 5b. queryGeoBatch
+// ---------------------------------------------------------------------------
+describe("queryGeoBatch", () => {
+  it("should query entities as a GeoJSON FeatureCollection via batch", async () => {
+    const entity = makeEntityWithGeo();
+    await createEntity(entity);
+    trackId(entity.id!);
+
+    const response = await queryGeoBatch({
+      type: "Query",
+      entities: [{ type: "TestEntity" }],
+    });
+
+    expectOk(response);
+    expect(response.status).toBe(200);
+
+    const fc = response.data;
+    expect(fc.type).toBe("FeatureCollection");
+    expect(fc.features).toBeDefined();
+    expect(fc.features!.length).toBeGreaterThan(0);
+
+    const feature = fc.features![0]!;
+    expect(feature.type).toBe("Feature");
+    expect(feature.id).toBe(entity.id);
+    expect(feature.properties).toBeDefined();
+  });
+
+  it("should return empty FeatureCollection for batch query with no matches", async () => {
+    const response = await queryGeoBatch({
+      type: "Query",
+      entities: [{ type: "NonExistentType" }],
+    });
+
+    expectOk(response);
+    expect(response.status).toBe(200);
+    expect(response.data.type).toBe("FeatureCollection");
+    expect(response.data.features).toEqual([]);
   });
 });
 

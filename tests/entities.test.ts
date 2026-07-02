@@ -2,7 +2,9 @@ import { describe, it, expect, afterEach } from "vitest";
 import {
   createEntity,
   queryEntity,
+  queryGeoEntity,
   retrieveEntity,
+  retrieveGeoEntity,
   deleteEntity,
   mergeEntity,
   replaceEntity,
@@ -13,7 +15,13 @@ import {
   replaceAttrs,
 } from "../src";
 import type { Property } from "../src/generated/schemas";
-import { makeEntity, expectOk, expectStatus, cleanUpEntity } from "./helpers";
+import {
+  makeEntity,
+  makeEntityWithGeo,
+  expectOk,
+  expectStatus,
+  cleanUpEntity,
+} from "./helpers";
 
 // Track created entities for cleanup
 const createdIds: string[] = [];
@@ -68,12 +76,42 @@ describe("queryEntity", () => {
     const response = await queryEntity({ type: "TestEntity" });
     expectOk(response);
     expect(response.status).toBe(200);
-    expect(Array.isArray(response.data)).toBe(true);
-    if (Array.isArray(response.data)) {
-      expect(response.data.length).toBeGreaterThan(0);
-    } else {
-      throw new Error("Expected response data to be an array");
-    }
+    expect(response.data.length).toBeGreaterThan(0);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// 2b. queryGeoEntity
+// ---------------------------------------------------------------------------
+describe("queryGeoEntity", () => {
+  it("should query entities as a GeoJSON FeatureCollection", async () => {
+    const entity = makeEntityWithGeo();
+    await createEntity(entity);
+    trackId(entity);
+
+    const response = await queryGeoEntity({ type: "TestEntity" });
+    expectOk(response);
+    expect(response.status).toBe(200);
+
+    // Should be a GeoJSON FeatureCollection
+    const fc = response.data;
+    expect(fc.type).toBe("FeatureCollection");
+    expect(fc.features).toBeDefined();
+    expect(fc.features!.length).toBeGreaterThan(0);
+
+    // Each feature should have geometry and properties
+    const feature = fc.features![0]!;
+    expect(feature.type).toBe("Feature");
+    expect(feature.id).toBe(entity.id);
+    expect(feature.properties).toBeDefined();
+  });
+
+  it("should return empty FeatureCollection for no matches", async () => {
+    const response = await queryGeoEntity({ type: "NonExistentType" });
+    expectOk(response);
+    expect(response.status).toBe(200);
+    expect(response.data.type).toBe("FeatureCollection");
+    expect(response.data.features).toEqual([]);
   });
 });
 
@@ -89,15 +127,56 @@ describe("retrieveEntity", () => {
     const response = await retrieveEntity(entity.id!);
     expectOk(response);
     expect(response.status).toBe(200);
-    // data may be an array or object depending on Accept header
-    if (!Array.isArray(response.data)) {
-      expect(response.data).toBeDefined();
-    }
+    expect(response.data).toBeDefined();
   });
 
   it("should return 404 for a non-existent entity", async () => {
     const response = await retrieveEntity("urn:ngsi-ld:TestEntity:nonexistent");
     expect(response.status).toBe(404);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// 3b. retrieveGeoEntity
+// ---------------------------------------------------------------------------
+describe("retrieveGeoEntity", () => {
+  it("should retrieve an entity as a GeoJSON Feature", async () => {
+    const entity = makeEntityWithGeo();
+    await createEntity(entity);
+    trackId(entity);
+
+    const response = await retrieveGeoEntity(entity.id!);
+    expectOk(response);
+    expect(response.status).toBe(200);
+
+    // Should be a GeoJSON Feature
+    const feature = response.data;
+    expect(feature.type).toBe("Feature");
+    expect(feature.id).toBe(entity.id);
+    expect(feature.geometry).toBeDefined();
+    // Properties should contain the entity's attributes
+    expect(feature.properties).toBeDefined();
+  });
+
+  it("should return 404 for a non-existent entity", async () => {
+    const response = await retrieveGeoEntity(
+      "urn:ngsi-ld:TestEntity:nonexistent",
+    );
+    expect(response.status).toBe(404);
+  });
+
+  it("should return 200 but null geometry for entity without GeoProperty", async () => {
+    const entity = makeEntity();
+    await createEntity(entity);
+    trackId(entity);
+
+    const response = await retrieveGeoEntity(entity.id!);
+    expectOk(response);
+    expect(response.status).toBe(200);
+
+    // Feature with null geometry when no GeoProperty exists
+    expect(response.data.type).toBe("Feature");
+    expect(response.data.geometry).toBeNull();
   });
 });
 
@@ -150,8 +229,8 @@ describe("mergeEntity", () => {
         `Failed to retrieve entity after merge: ${retrieved.status}`,
       );
     }
-    const data = retrieved.data as unknown as Record<string, unknown>;
-    const props = data["$props"] as Record<string, unknown> | undefined;
+    const data = retrieved.data;
+    const props = data["$props"];
     expect(props?.["humidity"]).toBeDefined();
   });
 });

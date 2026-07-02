@@ -98,13 +98,8 @@ export type CreateEntityResponseError = (
 
 export type CreateEntityResponse =
   CreateEntityResponseSuccess | CreateEntityResponseError;
-export type QueryEntityResponse200ApplicationLdJson = {
+export type QueryEntityResponse200 = {
   data: (Entity & JsonLdContext)[];
-  status: 200;
-};
-
-export type QueryEntityResponse200ApplicationGeoJson = {
-  data: FeatureCollection;
   status: 200;
 };
 
@@ -118,10 +113,7 @@ export type QueryEntityResponse501 = {
   status: 501;
 };
 
-export type QueryEntityResponseSuccess = (
-  | QueryEntityResponse200ApplicationLdJson
-  | QueryEntityResponse200ApplicationGeoJson
-) & {
+export type QueryEntityResponseSuccess = QueryEntityResponse200 & {
   headers: Headers;
 };
 export type QueryEntityResponseError = (
@@ -132,13 +124,8 @@ export type QueryEntityResponseError = (
 
 export type QueryEntityResponse =
   QueryEntityResponseSuccess | QueryEntityResponseError;
-export type RetrieveEntityResponse200ApplicationLdJson = {
+export type RetrieveEntityResponse200 = {
   data: MaybeContext<Entity>;
-  status: 200;
-};
-
-export type RetrieveEntityResponse200ApplicationGeoJson = {
-  data: Feature;
   status: 200;
 };
 
@@ -157,10 +144,7 @@ export type RetrieveEntityResponse501 = {
   status: 501;
 };
 
-export type RetrieveEntityResponseSuccess = (
-  | RetrieveEntityResponse200ApplicationLdJson
-  | RetrieveEntityResponse200ApplicationGeoJson
-) & {
+export type RetrieveEntityResponseSuccess = RetrieveEntityResponse200 & {
   headers: Headers;
 };
 export type RetrieveEntityResponseError = (
@@ -173,6 +157,55 @@ export type RetrieveEntityResponseError = (
 
 export type RetrieveEntityResponse =
   RetrieveEntityResponseSuccess | RetrieveEntityResponseError;
+
+// Narrowed types for GeoJSON content negotiation.
+// When a consumer explicitly requests application/geo+json, the response
+// data is a GeoJSON Feature (single) or FeatureCollection (query).
+export type RetrieveGeoEntityResponse200 = {
+  data: Feature;
+  status: 200;
+};
+
+export type RetrieveGeoEntityResponseSuccess = RetrieveGeoEntityResponse200 & {
+  headers: Headers;
+};
+export type RetrieveGeoEntityResponseError = (
+  | RetrieveEntityResponse400
+  | RetrieveEntityResponse404
+  | RetrieveEntityResponse501
+) & {
+  headers: Headers;
+};
+
+export type RetrieveGeoEntityResponse =
+  RetrieveGeoEntityResponseSuccess | RetrieveGeoEntityResponseError;
+
+export type QueryGeoEntityResponse200 = {
+  data: FeatureCollection;
+  status: 200;
+};
+
+export type QueryGeoEntityResponseSuccess = QueryGeoEntityResponse200 & {
+  headers: Headers;
+};
+export type QueryGeoEntityResponseError = QueryEntityResponseError;
+
+export type QueryGeoEntityResponse =
+  QueryGeoEntityResponseSuccess | QueryGeoEntityResponseError;
+
+export type QueryGeoBatchResponse200 = {
+  data: FeatureCollection;
+  status: 200;
+};
+
+export type QueryGeoBatchResponseSuccess = QueryGeoBatchResponse200 & {
+  headers: Headers;
+};
+export type QueryGeoBatchResponseError = QueryBatchResponseError;
+
+export type QueryGeoBatchResponse =
+  QueryGeoBatchResponseSuccess | QueryGeoBatchResponseError;
+
 export type DeleteEntityResponse204 = {
   data: void;
   status: 204;
@@ -929,13 +962,8 @@ export type DeleteBatchResponseError = DeleteBatchResponse400 & {
 
 export type DeleteBatchResponse =
   DeleteBatchResponseSuccess | DeleteBatchResponseError;
-export type QueryBatchResponse200ApplicationLdJson = {
+export type QueryBatchResponse200 = {
   data: (Entity & JsonLdContext)[];
-  status: 200;
-};
-
-export type QueryBatchResponse200ApplicationGeoJson = {
-  data: FeatureCollection;
   status: 200;
 };
 
@@ -944,10 +972,7 @@ export type QueryBatchResponse400 = {
   status: 400;
 };
 
-export type QueryBatchResponseSuccess = (
-  | QueryBatchResponse200ApplicationLdJson
-  | QueryBatchResponse200ApplicationGeoJson
-) & {
+export type QueryBatchResponseSuccess = QueryBatchResponse200 & {
   headers: Headers;
 };
 export type QueryBatchResponseError = QueryBatchResponse400 & {

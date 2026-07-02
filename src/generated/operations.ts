@@ -80,9 +80,11 @@ import {
   NonReadonly,
   PickRequired,
   QueryBatchResponse,
+  QueryGeoBatchResponse,
   QueryCSRResponse,
   QueryCSRSubscriptionResponse,
   QueryEntityResponse,
+  QueryGeoEntityResponse,
   QuerySubscriptionResponse,
   QueryTemporalResponse,
   ReplaceAttrsResponse,
@@ -95,6 +97,7 @@ import {
   RetrieveContextResponse,
   RetrieveEntityMapResponse,
   RetrieveEntityResponse,
+  RetrieveGeoEntityResponse,
   RetrieveEntityTypeInfoResponse,
   RetrieveEntityTypesResponse,
   RetrieveSubscriptionResponse,
@@ -219,6 +222,25 @@ export const queryEntity = (
   });
 };
 /**
+ * 5.7.2 Query Entities (GeoJSON).
+ *
+ * Queries NGSI-LD Entities as a GeoJSON FeatureCollection.
+ * Sets the Accept header to application/geo+json, so the response
+ * data is narrowed to `FeatureCollection` instead of
+ * `Entity[] | FeatureCollection`.
+ * @summary Query entities as GeoJSON
+ */
+export const queryGeoEntity = (
+  params?: QueryEntityParams,
+  options?: RequestInit,
+) => {
+  return fetcher<QueryGeoEntityResponse>(getQueryEntityUrl(params), {
+    ...options,
+    method: "GET",
+    headers: { Accept: "application/geo+json", ...options?.headers },
+  });
+};
+/**
  * 5.7.1 Retrieve Entity.
  *
  * This operation allows retrieving an NGSI-LD Entity.
@@ -242,6 +264,28 @@ export const retrieveEntity = (
     {
       ...options,
       method: "GET",
+    },
+  );
+};
+/**
+ * 5.7.1 Retrieve Entity (GeoJSON).
+ *
+ * Retrieves an NGSI-LD Entity as a GeoJSON Feature.
+ * Sets the Accept header to application/geo+json, so the response
+ * data is narrowed to `Feature` instead of `Entity | Feature`.
+ * @summary Entity retrieval by id as GeoJSON
+ */
+export const retrieveGeoEntity = (
+  entityId: string,
+  params?: Omit<RetrieveEntityParams, "options">,
+  options?: RequestInit,
+) => {
+  return fetcher<RetrieveGeoEntityResponse>(
+    getRetrieveEntityUrl(entityId, params),
+    {
+      ...options,
+      method: "GET",
+      headers: { Accept: "application/geo+json", ...options?.headers },
     },
   );
 };
@@ -1031,6 +1075,31 @@ export const queryBatch = (
     ...options,
     method: "POST",
     headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(query),
+  });
+};
+/**
+ * 5.7.2 Query Entity (batch) as GeoJSON.
+ *
+ * Queries NGSI-LD Entities as a GeoJSON FeatureCollection via POST.
+ * Sets the Accept header to application/geo+json, so the response
+ * data is narrowed to `FeatureCollection` instead of
+ * `Entity[] | FeatureCollection`.
+ * @summary Query entities (batch) as GeoJSON
+ */
+export const queryGeoBatch = (
+  query?: Query,
+  params?: QueryBatchParams,
+  options?: RequestInit,
+) => {
+  return fetcher<QueryGeoBatchResponse>(getQueryBatchUrl(params), {
+    ...options,
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/geo+json",
+      ...options?.headers,
+    },
     body: JSON.stringify(query),
   });
 };
