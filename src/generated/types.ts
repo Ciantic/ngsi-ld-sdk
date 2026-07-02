@@ -1,32 +1,29 @@
 import type {
   BadRequestResponse,
+  Attribute,
   ConflictResponse,
+  ContextSourceIdentity,
   CsourceRegistration,
   Entity,
+  EntityMap,
   EntityTemporal,
+  EntityTypeInfo,
   Feature,
   FeatureCollection,
   GatewayTimeoutResponse,
   JsonLdContext,
   LdContextMetadata,
+  MaybeContext,
   MultiStatusBatchOperationResultResponse,
   MultiStatusUpdateResultResponse,
   NotFoundResponse,
   NotImplementedResponse,
-  RetrieveAttrTypeInfo200,
   RetrieveAttrTypes200,
-  RetrieveCSIdentityInfo200,
-  RetrieveCSR200,
-  RetrieveCSRSubscription200,
   RetrieveContext200,
-  RetrieveEntity200,
-  RetrieveEntityMap200,
-  RetrieveEntityTypeInfo200,
   RetrieveEntityTypes200,
-  RetrieveSubscription200,
-  RetrieveTemporal200,
   Subscription,
   UnprocessableResponse,
+  WithContext,
 } from "./schemas";
 // https://stackoverflow.com/questions/49579094/typescript-conditional-types-filter-out-readonly-properties-pick-only-requir/49579497#49579497
 export type IfEquals<X, Y, A = X, B = never> =
@@ -136,7 +133,7 @@ export type QueryEntityResponseError = (
 export type QueryEntityResponse =
   QueryEntityResponseSuccess | QueryEntityResponseError;
 export type RetrieveEntityResponse200ApplicationLdJson = {
-  data: RetrieveEntity200;
+  data: MaybeContext<Entity>;
   status: 200;
 };
 
@@ -490,7 +487,7 @@ export type QueryCSRResponseError = QueryCSRResponse400 & {
 
 export type QueryCSRResponse = QueryCSRResponseSuccess | QueryCSRResponseError;
 export type RetrieveCSRResponse200 = {
-  data: RetrieveCSR200;
+  data: MaybeContext<CsourceRegistration>;
   status: 200;
 };
 
@@ -614,7 +611,7 @@ export type QuerySubscriptionResponseError = QuerySubscriptionResponse400 & {
 export type QuerySubscriptionResponse =
   QuerySubscriptionResponseSuccess | QuerySubscriptionResponseError;
 export type RetrieveSubscriptionResponse200 = {
-  data: RetrieveSubscription200;
+  data: MaybeContext<Subscription>;
   status: 200;
 };
 
@@ -743,7 +740,7 @@ export type QueryCSRSubscriptionResponseError =
 export type QueryCSRSubscriptionResponse =
   QueryCSRSubscriptionResponseSuccess | QueryCSRSubscriptionResponseError;
 export type RetrieveCSRSubscriptionResponse200 = {
-  data: RetrieveCSRSubscription200;
+  data: MaybeContext<Subscription>;
   status: 200;
 };
 
@@ -1038,7 +1035,7 @@ export type QueryTemporalResponseError = QueryTemporalResponse400 & {
 export type QueryTemporalResponse =
   QueryTemporalResponseSuccess | QueryTemporalResponseError;
 export type RetrieveTemporalResponse200 = {
-  data: RetrieveTemporal200;
+  data: MaybeContext<EntityTemporal>;
   status: 200;
 };
 
@@ -1240,7 +1237,7 @@ export type RetrieveEntityTypesResponseError =
 export type RetrieveEntityTypesResponse =
   RetrieveEntityTypesResponseSuccess | RetrieveEntityTypesResponseError;
 export type RetrieveEntityTypeInfoResponse200 = {
-  data: RetrieveEntityTypeInfo200;
+  data: WithContext<EntityTypeInfo>;
   status: 200;
 };
 
@@ -1286,7 +1283,7 @@ export type RetrieveAttrTypesResponseError = RetrieveAttrTypesResponse400 & {
 export type RetrieveAttrTypesResponse =
   RetrieveAttrTypesResponseSuccess | RetrieveAttrTypesResponseError;
 export type RetrieveAttrTypeInfoResponse200 = {
-  data: RetrieveAttrTypeInfo200;
+  data: WithContext<Attribute>;
   status: 200;
 };
 
@@ -1415,7 +1412,7 @@ export type DeleteContextResponseError = (
 export type DeleteContextResponse =
   DeleteContextResponseSuccess | DeleteContextResponseError;
 export type RetrieveEntityMapResponse200 = {
-  data: RetrieveEntityMap200;
+  data: MaybeContext<EntityMap>;
   status: 200;
 };
 
@@ -1493,7 +1490,7 @@ export type DeleteEntityMapResponseError = (
 export type DeleteEntityMapResponse =
   DeleteEntityMapResponseSuccess | DeleteEntityMapResponseError;
 export type RetrieveCSIdentityInfoResponse200 = {
-  data: RetrieveCSIdentityInfo200;
+  data: MaybeContext<ContextSourceIdentity>;
   status: 200;
 };
 

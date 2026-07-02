@@ -2711,10 +2711,6 @@ export type RetrieveEntityParams = {
   local?: QueryLocalParameter;
 };
 
-export type RetrieveEntity200 = Entity & {
-  "@context"?: LdContext;
-};
-
 export type DeleteEntityParams = {
   /**
    * Selection of Entity Types as per clause 4.17. "*" is also allowed as a value and local is
@@ -2990,10 +2986,6 @@ export type RetrieveCSRParams = {
   options?: QueryOptionsSysAttrsParameter;
 };
 
-export type RetrieveCSR200 = CsourceRegistration & {
-  "@context"?: LdContext;
-};
-
 export type CreateSubscriptionParams = {
   /**
    * 6.3.18 Limiting Distributed Operations. If local=true then no Context Source Registrations shall be
@@ -3041,10 +3033,6 @@ export type RetrieveSubscriptionParams = {
   local?: QueryLocalParameter;
 };
 
-export type RetrieveSubscription200 = Subscription & {
-  "@context"?: LdContext;
-};
-
 export type UpdateSubscriptionParams = {
   /**
    * 6.3.18 Limiting Distributed Operations. If local=true then no Context Source Registrations shall be
@@ -3085,10 +3073,6 @@ export type QueryCSRSubscriptionParams = {
 };
 export type RetrieveCSRSubscriptionParams = {
   options?: QueryOptionsSysAttrsParameter;
-};
-
-export type RetrieveCSRSubscription200 = Subscription & {
-  "@context"?: LdContext;
 };
 
 export type CreateBatchParams = {
@@ -3428,10 +3412,6 @@ export type RetrieveTemporalParams = {
   local?: QueryLocalParameter;
 };
 
-export type RetrieveTemporal200 = EntityTemporal & {
-  "@context"?: LdContext;
-};
-
 export type DeleteTemporalParams = {
   /**
    * 6.3.18 Limiting Distributed Operations. If local=true then no Context Source Registrations shall be
@@ -3543,10 +3523,6 @@ export type RetrieveEntityTypeInfoParams = {
   local?: QueryLocalParameter;
 };
 
-export type RetrieveEntityTypeInfo200 = EntityTypeInfo & {
-  "@context": LdContext;
-};
-
 export type RetrieveAttrTypesParams = {
   /**
    * If true, then detailed attribute information represented as an array
@@ -3582,10 +3558,6 @@ export type RetrieveAttrTypeInfoParams = {
   local?: QueryLocalParameter;
 };
 
-export type RetrieveAttrTypeInfo200 = Attribute & {
-  "@context": LdContext;
-};
-
 export type CreateContextBody = {
   "@context": LdContext;
 };
@@ -3619,14 +3591,6 @@ export type DeleteContextParams = {
    * Indicates to perform a download and replace of the @context, as specified in clause 5.13.5.4.
    */
   reload?: QueryReloadParameter;
-};
-
-export type RetrieveEntityMap200 = EntityMap & {
-  "@context"?: LdContext;
-};
-
-export type RetrieveCSIdentityInfo200 = ContextSourceIdentity & {
-  "@context"?: LdContext;
 };
 
 /**
