@@ -1020,6 +1020,11 @@ export type WithContext<T> = T & {
   "@context": LdContext;
 };
 
+/** Helper: wraps any type with an optional JSON-LD @context. */
+export type MaybeContext<T> = T & {
+  "@context"?: LdContext;
+};
+
 /**
  * Helper: wraps any type with an optional JSON-LD @context.
  */
@@ -2150,14 +2155,6 @@ export type AttributeFragmentBody = (
 
 export type QueryTemporalBody = QueryTemporal;
 
-export type SubscriptionBody = Subscription & {
-  "@context"?: LdContext;
-};
-
-export type SubscriptionFragmentBody = Subscription & {
-  "@context"?: LdContext;
-};
-
 /**
  * If present, the EntityMap supplied is used for determining the set of Entities requested during the query operation.
  * The location of the EntityMap used in the query/retrieval operation is returned in the response.
@@ -2888,10 +2885,6 @@ export type ReplaceAttrsParams = {
   type?: QueryTypeParameter;
 };
 
-export type CreateCSRBody = CsourceRegistration & {
-  "@context"?: LdContext;
-};
-
 export type QueryCSRParams = {
   /**
    * List of entity ids to be retrieved.
@@ -2998,10 +2991,6 @@ export type RetrieveCSRParams = {
 };
 
 export type RetrieveCSR200 = CsourceRegistration & {
-  "@context"?: LdContext;
-};
-
-export type UpdateCSRBody = CsourceRegistration & {
   "@context"?: LdContext;
 };
 
@@ -3649,10 +3638,6 @@ export type DeleteContextParams = {
 };
 
 export type RetrieveEntityMap200 = EntityMap & {
-  "@context"?: LdContext;
-};
-
-export type UpdateEntityMapBody = EntityMap & {
   "@context"?: LdContext;
 };
 

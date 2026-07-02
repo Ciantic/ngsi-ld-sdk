@@ -4,10 +4,10 @@ import type {
   AttributeFragmentBody,
   CreateBatchBodyItem,
   CreateBatchParams,
-  CreateCSRBody,
   CreateContextBody,
   CreateEntityParams,
   CreateSubscriptionParams,
+  CsourceRegistration,
   DeleteAttrInstanceTemporalParams,
   DeleteAttrsParams,
   DeleteAttrsTemporalParams,
@@ -17,6 +17,7 @@ import type {
   DeleteSubscriptionParams,
   DeleteTemporalParams,
   Entity,
+  EntityMap,
   EntityTemporal,
   ListContextsParams,
   MergeBatchBodyItem,
@@ -42,15 +43,12 @@ import type {
   RetrieveEntityTypesParams,
   RetrieveSubscriptionParams,
   RetrieveTemporalParams,
-  SubscriptionBody,
-  SubscriptionFragmentBody,
+  Subscription,
   TemporalQueryBatchParams,
   UpdateAttrsParams,
   UpdateAttrsTemporalParams,
   UpdateBatchBodyItem,
   UpdateBatchParams,
-  UpdateCSRBody,
-  UpdateEntityMapBody,
   UpdateEntityParams,
   UpdateSubscriptionParams,
   UpsertBatchBodyItem,
@@ -509,7 +507,7 @@ export const replaceAttrs = (
 export const createCSR = (
   createCSRBody?: WithContext<
     PickRequired<
-      NonReadonly<CreateCSRBody>,
+      NonReadonly<CsourceRegistration>,
       "type" | "information" | "endpoint"
     >
   >,
@@ -609,7 +607,7 @@ export const retrieveCSR = (
  */
 export const updateCSR = (
   registrationId: string,
-  updateCSRBody?: WithContext<NonReadonly<UpdateCSRBody>>,
+  updateCSRBody?: WithContext<NonReadonly<CsourceRegistration>>,
   options?: RequestInit,
 ) => {
   return fetcher<UpdateCSRResponse>(getUpdateCSRUrl(registrationId), {
@@ -655,7 +653,7 @@ export const deleteCSR = (registrationId: string, options?: RequestInit) => {
  */
 export const createSubscription = (
   subscriptionBody?: WithContext<
-    PickRequired<SubscriptionBody, "type" | "notification">
+    PickRequired<Subscription, "type" | "notification">
   >,
   params?: CreateSubscriptionParams,
   options?: RequestInit,
@@ -733,7 +731,7 @@ export const retrieveSubscription = (
  */
 export const updateSubscription = (
   subscriptionId: string,
-  subscriptionFragmentBody?: WithContext<SubscriptionFragmentBody>,
+  subscriptionFragmentBody?: WithContext<Subscription>,
   params?: UpdateSubscriptionParams,
   options?: RequestInit,
 ) => {
@@ -790,7 +788,7 @@ export const deleteSubscription = (
  */
 export const createCSRSubscription = (
   subscriptionBody?: WithContext<
-    PickRequired<SubscriptionBody, "type" | "notification">
+    PickRequired<Subscription, "type" | "notification">
   >,
   options?: RequestInit,
 ) => {
@@ -870,7 +868,7 @@ export const retrieveCSRSubscription = (
  */
 export const updateCSRSubscription = (
   subscriptionId: string,
-  subscriptionFragmentBody?: WithContext<SubscriptionFragmentBody>,
+  subscriptionFragmentBody?: WithContext<Subscription>,
   options?: RequestInit,
 ) => {
   return fetcher<UpdateCSRSubscriptionResponse>(
@@ -1672,7 +1670,7 @@ export const retrieveEntityMap = (
  */
 export const updateEntityMap = (
   entityMapId: string,
-  updateEntityMapBody?: WithContext<NonReadonly<UpdateEntityMapBody>>,
+  updateEntityMapBody?: WithContext<NonReadonly<EntityMap>>,
   options?: RequestInit,
 ) => {
   return fetcher<UpdateEntityMapResponse>(getUpdateEntityMapUrl(entityMapId), {

@@ -6,8 +6,9 @@ import {
   type Property,
   type GeoProperty,
   type EntityTemporal,
-  type SubscriptionBody,
+  type Subscription,
   type QueryTemporalBody,
+  type MaybeContext,
 } from "../src/generated/schemas";
 import {
   deleteEntity,
@@ -102,7 +103,7 @@ export function makeSubscription() {
         accept: "application/json" as const,
       },
     },
-  } as const satisfies SubscriptionBody;
+  } as const satisfies MaybeContext<Subscription>;
 }
 
 // --- Cleanup helpers ---
