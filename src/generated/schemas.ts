@@ -3102,10 +3102,6 @@ export type CreateBatchParams = {
   local?: QueryLocalParameter;
 };
 
-export type CreateBatchBodyItem = Entity & {
-  "@context"?: LdContext;
-};
-
 export type UpsertBatchParams = {
   options?: QueryOptionsUpsertParameter;
   /**
@@ -3118,10 +3114,6 @@ export type UpsertBatchParams = {
   local?: QueryLocalParameter;
 };
 
-export type UpsertBatchBodyItem = Entity & {
-  "@context"?: LdContext;
-};
-
 export type UpdateBatchParams = {
   options?: QueryOptionsNoOverwriteParameter;
   /**
@@ -3132,10 +3124,6 @@ export type UpdateBatchParams = {
    * or Context Broker (clause 5.5.13).
    */
   local?: QueryLocalParameter;
-};
-
-export type UpdateBatchBodyItem = Entity & {
-  "@context"?: LdContext;
 };
 
 export type DeleteBatchParams = {
@@ -3187,10 +3175,6 @@ export type MergeBatchParams = {
    * or Context Broker (clause 5.5.13).
    */
   local?: QueryLocalParameter;
-};
-
-export type MergeBatchBodyItem = Entity & {
-  "@context"?: LdContext;
 };
 
 export type UpsertTemporalParams = {

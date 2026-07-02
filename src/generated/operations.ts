@@ -2,7 +2,6 @@ import type {
   AppendAttrsParams,
   AppendAttrsTemporalParams,
   AttributeFragmentBody,
-  CreateBatchBodyItem,
   CreateBatchParams,
   CreateContextBody,
   CreateEntityParams,
@@ -20,7 +19,7 @@ import type {
   EntityMap,
   EntityTemporal,
   ListContextsParams,
-  MergeBatchBodyItem,
+  MaybeContext,
   MergeBatchParams,
   MergeEntityParams,
   Query,
@@ -47,11 +46,9 @@ import type {
   TemporalQueryBatchParams,
   UpdateAttrsParams,
   UpdateAttrsTemporalParams,
-  UpdateBatchBodyItem,
   UpdateBatchParams,
   UpdateEntityParams,
   UpdateSubscriptionParams,
-  UpsertBatchBodyItem,
   UpsertBatchParams,
   UpsertTemporalParams,
   WithContext,
@@ -922,7 +919,7 @@ export const deleteCSRSubscription = (
 
  */
 export const createBatch = (
-  createBatchBodyItem?: NonReadonly<CreateBatchBodyItem[]>,
+  createBatchBodyItem?: NonReadonly<MaybeContext<Entity>[]>,
   params?: CreateBatchParams,
   options?: RequestInit,
 ) => {
@@ -950,7 +947,7 @@ export const createBatch = (
 
  */
 export const upsertBatch = (
-  upsertBatchBodyItem?: NonReadonly<UpsertBatchBodyItem[]>,
+  upsertBatchBodyItem?: NonReadonly<MaybeContext<Entity>[]>,
   params?: UpsertBatchParams,
   options?: RequestInit,
 ) => {
@@ -976,7 +973,7 @@ export const upsertBatch = (
 
  */
 export const updateBatch = (
-  updateBatchBodyItem?: NonReadonly<UpdateBatchBodyItem[]>,
+  updateBatchBodyItem?: NonReadonly<MaybeContext<Entity>[]>,
   params?: UpdateBatchParams,
   options?: RequestInit,
 ) => {
@@ -1058,7 +1055,7 @@ export const queryBatch = (
 
  */
 export const mergeBatch = (
-  mergeBatchBodyItem?: NonReadonly<MergeBatchBodyItem[]>,
+  mergeBatchBodyItem?: NonReadonly<MaybeContext<Entity>[]>,
   params?: MergeBatchParams,
   options?: RequestInit,
 ) => {
