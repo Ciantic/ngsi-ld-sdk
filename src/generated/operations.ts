@@ -222,12 +222,14 @@ export const queryEntity = (
   });
 };
 /**
- * 5.7.2 Query Entities (GeoJSON).
+ * 5.7.2 Query Entities — with `Accept: application/geo+json`.
  *
- * Queries NGSI-LD Entities as a GeoJSON FeatureCollection.
- * Sets the Accept header to application/geo+json, so the response
- * data is narrowed to `FeatureCollection` instead of
- * `Entity[] | FeatureCollection`.
+ * Convenience wrapper around {@link queryEntity} that sets the Accept
+ * header to application/geo+json.  The response data is narrowed to
+ * `FeatureCollection` instead of `Entity[] | FeatureCollection`.
+ *
+ * This is not a separate operation in the NGSI-LD spec — it is the same
+ * `queryEntity` operation with GeoJSON content negotiation.
  * @summary Query entities as GeoJSON
  */
 export const queryGeoEntity = (
@@ -268,11 +270,14 @@ export const retrieveEntity = (
   );
 };
 /**
- * 5.7.1 Retrieve Entity (GeoJSON).
+ * 5.7.1 Retrieve Entity — with `Accept: application/geo+json`.
  *
- * Retrieves an NGSI-LD Entity as a GeoJSON Feature.
- * Sets the Accept header to application/geo+json, so the response
- * data is narrowed to `Feature` instead of `Entity | Feature`.
+ * Convenience wrapper around {@link retrieveEntity} that sets the Accept
+ * header to application/geo+json.  The response data is narrowed to
+ * `Feature` instead of `Entity | Feature`.
+ *
+ * This is not a separate operation in the NGSI-LD spec — it is the same
+ * `retrieveEntity` operation with GeoJSON content negotiation.
  * @summary Entity retrieval by id as GeoJSON
  */
 export const retrieveGeoEntity = (
@@ -1079,12 +1084,14 @@ export const queryBatch = (
   });
 };
 /**
- * 5.7.2 Query Entity (batch) as GeoJSON.
+ * 5.7.2 Query Entity (batch) — with `Accept: application/geo+json`.
  *
- * Queries NGSI-LD Entities as a GeoJSON FeatureCollection via POST.
- * Sets the Accept header to application/geo+json, so the response
- * data is narrowed to `FeatureCollection` instead of
- * `Entity[] | FeatureCollection`.
+ * Convenience wrapper around {@link queryBatch} that sets the Accept
+ * header to application/geo+json.  The response data is narrowed to
+ * `FeatureCollection` instead of `Entity[] | FeatureCollection`.
+ *
+ * This is not a separate operation in the NGSI-LD spec — it is the same
+ * `queryBatch` operation with GeoJSON content negotiation.
  * @summary Query entities (batch) as GeoJSON
  */
 export const queryGeoBatch = (
