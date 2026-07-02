@@ -1,15 +1,15 @@
-import { describe, it, expect, afterEach } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
 import {
   createBatch,
-  upsertBatch,
-  updateBatch,
-  deleteBatch,
-  queryBatch,
-  mergeBatch,
   createEntity,
+  deleteBatch,
   deleteEntity,
+  mergeBatch,
+  queryBatch,
+  updateBatch,
+  upsertBatch,
 } from "../src";
-import { makeEntity, expectOk } from "./helpers";
+import { expectOk, makeEntity } from "./helpers";
 
 // Track created entities for cleanup
 const createdIds: string[] = [];

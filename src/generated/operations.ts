@@ -3,8 +3,6 @@ import type {
   AppendAttrsParams,
   AppendAttrsTemporalParams,
   AttributeFragmentBody,
-  BadRequestResponse,
-  ConflictResponse,
   CreateBatchBodyItem,
   CreateBatchParams,
   CreateCSRBody,
@@ -22,19 +20,11 @@ import type {
   DeleteTemporalParams,
   EntityTemporalBody,
   EntityTemporalFragmentBody,
-  Feature,
-  FeatureCollection,
-  GatewayTimeoutResponse,
-  LdContextMetadata,
   ListContextsParams,
   MergeBatchBodyItem,
   MergeBatchParams,
   MergeEntityBody,
   MergeEntityParams,
-  MultiStatusBatchOperationResultResponse,
-  MultiStatusUpdateResultResponse,
-  NotFoundResponse,
-  NotImplementedResponse,
   Query,
   QueryBatchParams,
   QueryCSRParams,
@@ -46,32 +36,19 @@ import type {
   ReplaceAttrsParams,
   ReplaceEntityBody,
   ReplaceEntityParams,
-  RetrieveAttrTypeInfo200,
   RetrieveAttrTypeInfoParams,
-  RetrieveAttrTypes200,
   RetrieveAttrTypesParams,
-  RetrieveCSIdentityInfo200,
-  RetrieveCSR200,
   RetrieveCSRParams,
-  RetrieveCSRSubscription200,
   RetrieveCSRSubscriptionParams,
-  RetrieveContext200,
   RetrieveContextParams,
-  RetrieveEntity200,
-  RetrieveEntityMap200,
   RetrieveEntityParams,
-  RetrieveEntityTypeInfo200,
   RetrieveEntityTypeInfoParams,
-  RetrieveEntityTypes200,
   RetrieveEntityTypesParams,
-  RetrieveSubscription200,
   RetrieveSubscriptionParams,
-  RetrieveTemporal200,
   RetrieveTemporalParams,
   SubscriptionBody,
   SubscriptionFragmentBody,
   TemporalQueryBatchParams,
-  UnprocessableResponse,
   UpdateAttrsParams,
   UpdateAttrsTemporalParams,
   UpdateBatchBodyItem,
@@ -84,367 +61,123 @@ import type {
   UpsertBatchBodyItem,
   UpsertBatchParams,
   UpsertTemporalParams,
-  Entity,
-  CsourceRegistration,
-  Subscription,
-  EntityTemporal,
-  JsonLdContext,
 } from "./schemas";
 
 import {
   AppendAttrsResponse,
-  AppendAttrsResponse204,
-  AppendAttrsResponse207,
-  AppendAttrsResponse400,
-  AppendAttrsResponse404,
-  AppendAttrsResponseError,
-  AppendAttrsResponseSuccess,
   AppendAttrsTemporalResponse,
-  AppendAttrsTemporalResponse204,
-  AppendAttrsTemporalResponse400,
-  AppendAttrsTemporalResponse404,
-  AppendAttrsTemporalResponseError,
-  AppendAttrsTemporalResponseSuccess,
   CreateBatchResponse,
-  CreateBatchResponse201,
-  CreateBatchResponse207,
-  CreateBatchResponse400,
-  CreateBatchResponseError,
-  CreateBatchResponseSuccess,
   CreateCSRResponse,
-  CreateCSRResponse201,
-  CreateCSRResponse400,
-  CreateCSRResponse409,
-  CreateCSRResponse422,
-  CreateCSRResponseError,
-  CreateCSRResponseSuccess,
   CreateCSRSubscriptionResponse,
-  CreateCSRSubscriptionResponse201,
-  CreateCSRSubscriptionResponse400,
-  CreateCSRSubscriptionResponse409,
-  CreateCSRSubscriptionResponseError,
-  CreateCSRSubscriptionResponseSuccess,
   CreateContextResponse,
-  CreateContextResponse201,
-  CreateContextResponse400,
-  CreateContextResponseError,
-  CreateContextResponseSuccess,
   CreateEntityResponse,
-  CreateEntityResponse201,
-  CreateEntityResponse207,
-  CreateEntityResponse400,
-  CreateEntityResponse409,
-  CreateEntityResponse422,
-  CreateEntityResponseError,
-  CreateEntityResponseSuccess,
   CreateSubscriptionResponse,
-  CreateSubscriptionResponse201,
-  CreateSubscriptionResponse400,
-  CreateSubscriptionResponse409,
-  CreateSubscriptionResponseError,
-  CreateSubscriptionResponseSuccess,
   DeleteAttrInstanceTemporalResponse,
-  DeleteAttrInstanceTemporalResponse204,
-  DeleteAttrInstanceTemporalResponse400,
-  DeleteAttrInstanceTemporalResponse404,
-  DeleteAttrInstanceTemporalResponseError,
-  DeleteAttrInstanceTemporalResponseSuccess,
   DeleteAttrsResponse,
-  DeleteAttrsResponse204,
-  DeleteAttrsResponse207,
-  DeleteAttrsResponse400,
-  DeleteAttrsResponse404,
-  DeleteAttrsResponseError,
-  DeleteAttrsResponseSuccess,
   DeleteAttrsTemporalResponse,
-  DeleteAttrsTemporalResponse204,
-  DeleteAttrsTemporalResponse400,
-  DeleteAttrsTemporalResponse404,
-  DeleteAttrsTemporalResponseError,
-  DeleteAttrsTemporalResponseSuccess,
   DeleteBatchResponse,
-  DeleteBatchResponse204,
-  DeleteBatchResponse207,
-  DeleteBatchResponse400,
-  DeleteBatchResponseError,
-  DeleteBatchResponseSuccess,
   DeleteCSRResponse,
-  DeleteCSRResponse204,
-  DeleteCSRResponse400,
-  DeleteCSRResponse404,
-  DeleteCSRResponseError,
-  DeleteCSRResponseSuccess,
   DeleteCSRSubscriptionResponse,
-  DeleteCSRSubscriptionResponse204,
-  DeleteCSRSubscriptionResponse400,
-  DeleteCSRSubscriptionResponse404,
-  DeleteCSRSubscriptionResponseError,
-  DeleteCSRSubscriptionResponseSuccess,
   DeleteContextResponse,
-  DeleteContextResponse204,
-  DeleteContextResponse400,
-  DeleteContextResponse404,
-  DeleteContextResponse504,
-  DeleteContextResponseError,
-  DeleteContextResponseSuccess,
   DeleteEntityMapResponse,
-  DeleteEntityMapResponse204,
-  DeleteEntityMapResponse400,
-  DeleteEntityMapResponse404,
-  DeleteEntityMapResponseError,
-  DeleteEntityMapResponseSuccess,
   DeleteEntityResponse,
-  DeleteEntityResponse204,
-  DeleteEntityResponse207,
-  DeleteEntityResponse400,
-  DeleteEntityResponse404,
-  DeleteEntityResponseError,
-  DeleteEntityResponseSuccess,
   DeleteSubscriptionResponse,
-  DeleteSubscriptionResponse204,
-  DeleteSubscriptionResponse400,
-  DeleteSubscriptionResponse404,
-  DeleteSubscriptionResponseError,
-  DeleteSubscriptionResponseSuccess,
   DeleteTemporalResponse,
-  DeleteTemporalResponse204,
-  DeleteTemporalResponse400,
-  DeleteTemporalResponse404,
-  DeleteTemporalResponseError,
-  DeleteTemporalResponseSuccess,
-  DistributeReadOnlyOverUnions,
-  IfEquals,
   ListContextsResponse,
-  ListContextsResponse200,
-  ListContextsResponse400,
-  ListContextsResponseError,
-  ListContextsResponseSuccess,
   MergeBatchResponse,
-  MergeBatchResponse204,
-  MergeBatchResponse207,
-  MergeBatchResponse400,
-  MergeBatchResponseError,
-  MergeBatchResponseSuccess,
   MergeEntityResponse,
-  MergeEntityResponse204,
-  MergeEntityResponse207,
-  MergeEntityResponse400,
-  MergeEntityResponse404,
-  MergeEntityResponseError,
-  MergeEntityResponseSuccess,
   NonReadonly,
   PickRequired,
   QueryBatchResponse,
-  QueryBatchResponse200ApplicationGeoJson,
-  QueryBatchResponse200ApplicationLdJson,
-  QueryBatchResponse400,
-  QueryBatchResponseError,
-  QueryBatchResponseSuccess,
   QueryCSRResponse,
-  QueryCSRResponse200,
-  QueryCSRResponse400,
-  QueryCSRResponseError,
-  QueryCSRResponseSuccess,
   QueryCSRSubscriptionResponse,
-  QueryCSRSubscriptionResponse200,
-  QueryCSRSubscriptionResponse400,
-  QueryCSRSubscriptionResponseError,
-  QueryCSRSubscriptionResponseSuccess,
   QueryEntityResponse,
-  QueryEntityResponse200ApplicationGeoJson,
-  QueryEntityResponse200ApplicationLdJson,
-  QueryEntityResponse400,
-  QueryEntityResponse501,
-  QueryEntityResponseError,
-  QueryEntityResponseSuccess,
   QuerySubscriptionResponse,
-  QuerySubscriptionResponse200,
-  QuerySubscriptionResponse400,
-  QuerySubscriptionResponseError,
-  QuerySubscriptionResponseSuccess,
   QueryTemporalResponse,
-  QueryTemporalResponse200,
-  QueryTemporalResponse400,
-  QueryTemporalResponseError,
-  QueryTemporalResponseSuccess,
   ReplaceAttrsResponse,
-  ReplaceAttrsResponse204,
-  ReplaceAttrsResponse207,
-  ReplaceAttrsResponse400,
-  ReplaceAttrsResponse404,
-  ReplaceAttrsResponseError,
-  ReplaceAttrsResponseSuccess,
   ReplaceEntityResponse,
-  ReplaceEntityResponse204,
-  ReplaceEntityResponse207,
-  ReplaceEntityResponse400,
-  ReplaceEntityResponse404,
-  ReplaceEntityResponseError,
-  ReplaceEntityResponseSuccess,
   RetrieveAttrTypeInfoResponse,
-  RetrieveAttrTypeInfoResponse200,
-  RetrieveAttrTypeInfoResponse400,
-  RetrieveAttrTypeInfoResponse404,
-  RetrieveAttrTypeInfoResponseError,
-  RetrieveAttrTypeInfoResponseSuccess,
   RetrieveAttrTypesResponse,
-  RetrieveAttrTypesResponse200,
-  RetrieveAttrTypesResponse400,
-  RetrieveAttrTypesResponseError,
-  RetrieveAttrTypesResponseSuccess,
   RetrieveCSIdentityInfoResponse,
-  RetrieveCSIdentityInfoResponse200,
-  RetrieveCSIdentityInfoResponse501,
-  RetrieveCSIdentityInfoResponseError,
-  RetrieveCSIdentityInfoResponseSuccess,
   RetrieveCSRResponse,
-  RetrieveCSRResponse200,
-  RetrieveCSRResponse400,
-  RetrieveCSRResponse404,
-  RetrieveCSRResponseError,
-  RetrieveCSRResponseSuccess,
   RetrieveCSRSubscriptionResponse,
-  RetrieveCSRSubscriptionResponse200,
-  RetrieveCSRSubscriptionResponse400,
-  RetrieveCSRSubscriptionResponse404,
-  RetrieveCSRSubscriptionResponseError,
-  RetrieveCSRSubscriptionResponseSuccess,
   RetrieveContextResponse,
-  RetrieveContextResponse200,
-  RetrieveContextResponse400,
-  RetrieveContextResponse404,
-  RetrieveContextResponse422,
-  RetrieveContextResponseError,
-  RetrieveContextResponseSuccess,
   RetrieveEntityMapResponse,
-  RetrieveEntityMapResponse200,
-  RetrieveEntityMapResponse400,
-  RetrieveEntityMapResponse404,
-  RetrieveEntityMapResponseError,
-  RetrieveEntityMapResponseSuccess,
   RetrieveEntityResponse,
-  RetrieveEntityResponse200ApplicationGeoJson,
-  RetrieveEntityResponse200ApplicationLdJson,
-  RetrieveEntityResponse400,
-  RetrieveEntityResponse404,
-  RetrieveEntityResponse501,
-  RetrieveEntityResponseError,
-  RetrieveEntityResponseSuccess,
   RetrieveEntityTypeInfoResponse,
-  RetrieveEntityTypeInfoResponse200,
-  RetrieveEntityTypeInfoResponse400,
-  RetrieveEntityTypeInfoResponse404,
-  RetrieveEntityTypeInfoResponseError,
-  RetrieveEntityTypeInfoResponseSuccess,
   RetrieveEntityTypesResponse,
-  RetrieveEntityTypesResponse200,
-  RetrieveEntityTypesResponse400,
-  RetrieveEntityTypesResponseError,
-  RetrieveEntityTypesResponseSuccess,
   RetrieveSubscriptionResponse,
-  RetrieveSubscriptionResponse200,
-  RetrieveSubscriptionResponse400,
-  RetrieveSubscriptionResponse404,
-  RetrieveSubscriptionResponseError,
-  RetrieveSubscriptionResponseSuccess,
   RetrieveTemporalResponse,
-  RetrieveTemporalResponse200,
-  RetrieveTemporalResponse400,
-  RetrieveTemporalResponse404,
-  RetrieveTemporalResponseError,
-  RetrieveTemporalResponseSuccess,
   TemporalQueryBatchResponse,
-  TemporalQueryBatchResponse200,
-  TemporalQueryBatchResponse400,
-  TemporalQueryBatchResponseError,
-  TemporalQueryBatchResponseSuccess,
-  UnionToIntersection,
   UpdateAttrsResponse,
-  UpdateAttrsResponse204,
-  UpdateAttrsResponse207,
-  UpdateAttrsResponse400,
-  UpdateAttrsResponse404,
-  UpdateAttrsResponseError,
-  UpdateAttrsResponseSuccess,
   UpdateAttrsTemporalResponse,
-  UpdateAttrsTemporalResponse204,
-  UpdateAttrsTemporalResponse400,
-  UpdateAttrsTemporalResponse404,
-  UpdateAttrsTemporalResponseError,
-  UpdateAttrsTemporalResponseSuccess,
   UpdateBatchResponse,
-  UpdateBatchResponse204,
-  UpdateBatchResponse207,
-  UpdateBatchResponse400,
-  UpdateBatchResponseError,
-  UpdateBatchResponseSuccess,
   UpdateCSRResponse,
-  UpdateCSRResponse204,
-  UpdateCSRResponse400,
-  UpdateCSRResponse404,
-  UpdateCSRResponseError,
-  UpdateCSRResponseSuccess,
   UpdateCSRSubscriptionResponse,
-  UpdateCSRSubscriptionResponse204,
-  UpdateCSRSubscriptionResponse400,
-  UpdateCSRSubscriptionResponse404,
-  UpdateCSRSubscriptionResponseError,
-  UpdateCSRSubscriptionResponseSuccess,
   UpdateEntityMapResponse,
-  UpdateEntityMapResponse204,
-  UpdateEntityMapResponse400,
-  UpdateEntityMapResponse404,
-  UpdateEntityMapResponseError,
-  UpdateEntityMapResponseSuccess,
   UpdateEntityResponse,
-  UpdateEntityResponse204,
-  UpdateEntityResponse207,
-  UpdateEntityResponse400,
-  UpdateEntityResponse404,
-  UpdateEntityResponseError,
-  UpdateEntityResponseSuccess,
   UpdateSubscriptionResponse,
-  UpdateSubscriptionResponse204,
-  UpdateSubscriptionResponse400,
-  UpdateSubscriptionResponse404,
-  UpdateSubscriptionResponseError,
-  UpdateSubscriptionResponseSuccess,
   UpsertBatchResponse,
-  UpsertBatchResponse201,
-  UpsertBatchResponse204,
-  UpsertBatchResponse207,
-  UpsertBatchResponse400,
-  UpsertBatchResponseError,
-  UpsertBatchResponseSuccess,
   UpsertTemporalResponse,
-  UpsertTemporalResponse201,
-  UpsertTemporalResponse204,
-  UpsertTemporalResponse400,
-  UpsertTemporalResponse422,
-  UpsertTemporalResponseError,
-  UpsertTemporalResponseSuccess,
-  Writable,
-  WritableKeys,
 } from "./types.ts";
 
+import {
+  getAppendAttrsTemporalUrl,
+  getAppendAttrsUrl,
+  getCreateBatchUrl,
+  getCreateCSRSubscriptionUrl,
+  getCreateCSRUrl,
+  getCreateContextUrl,
+  getCreateEntityUrl,
+  getCreateSubscriptionUrl,
+  getDeleteAttrInstanceTemporalUrl,
+  getDeleteAttrsTemporalUrl,
+  getDeleteAttrsUrl,
+  getDeleteBatchUrl,
+  getDeleteCSRSubscriptionUrl,
+  getDeleteCSRUrl,
+  getDeleteContextUrl,
+  getDeleteEntityMapUrl,
+  getDeleteEntityUrl,
+  getDeleteSubscriptionUrl,
+  getDeleteTemporalUrl,
+  getListContextsUrl,
+  getMergeBatchUrl,
+  getMergeEntityUrl,
+  getQueryBatchUrl,
+  getQueryCSRSubscriptionUrl,
+  getQueryCSRUrl,
+  getQueryEntityUrl,
+  getQuerySubscriptionUrl,
+  getQueryTemporalUrl,
+  getReplaceAttrsUrl,
+  getReplaceEntityUrl,
+  getRetrieveAttrTypeInfoUrl,
+  getRetrieveAttrTypesUrl,
+  getRetrieveCSIdentityInfoUrl,
+  getRetrieveCSRSubscriptionUrl,
+  getRetrieveCSRUrl,
+  getRetrieveContextUrl,
+  getRetrieveEntityMapUrl,
+  getRetrieveEntityTypeInfoUrl,
+  getRetrieveEntityTypesUrl,
+  getRetrieveEntityUrl,
+  getRetrieveSubscriptionUrl,
+  getRetrieveTemporalUrl,
+  getTemporalQueryBatchUrl,
+  getUpdateAttrsTemporalUrl,
+  getUpdateAttrsUrl,
+  getUpdateBatchUrl,
+  getUpdateCSRSubscriptionUrl,
+  getUpdateCSRUrl,
+  getUpdateEntityMapUrl,
+  getUpdateEntityUrl,
+  getUpdateSubscriptionUrl,
+  getUpsertBatchUrl,
+  getUpsertTemporalUrl,
+} from "./urls";
+
 import { fetcher } from "../fetcher";
-
-export const getCreateEntityUrl = (params?: CreateEntityParams) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? "null" : String(value));
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0
-    ? `/entities?${stringifiedParams}`
-    : `/entities`;
-};
-
 /**
  * 5.6.1 Create Entity
  *
@@ -474,32 +207,6 @@ export const createEntity = (
     body: JSON.stringify(createEntityBody),
   });
 };
-
-export const getQueryEntityUrl = (params?: QueryEntityParams) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-    const explodeParameters = ["coordinates", "datasetId"];
-
-    if (Array.isArray(value) && explodeParameters.includes(key)) {
-      value.forEach((v) => {
-        normalizedParams.append(key, v === null ? "null" : String(v));
-      });
-      return;
-    }
-
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? "null" : String(value));
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0
-    ? `/entities?${stringifiedParams}`
-    : `/entities`;
-};
-
 /**
  * 5.7.2 Query Entities (excluding batch entity queries).
  *
@@ -523,35 +230,6 @@ export const queryEntity = (
     method: "GET",
   });
 };
-
-export const getRetrieveEntityUrl = (
-  entityId: string,
-  params?: RetrieveEntityParams,
-) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-    const explodeParameters = ["datasetId"];
-
-    if (Array.isArray(value) && explodeParameters.includes(key)) {
-      value.forEach((v) => {
-        normalizedParams.append(key, v === null ? "null" : String(v));
-      });
-      return;
-    }
-
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? "null" : String(value));
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0
-    ? `/entities/${entityId}?${stringifiedParams}`
-    : `/entities/${entityId}`;
-};
-
 /**
  * 5.7.1 Retrieve Entity.
  *
@@ -579,26 +257,6 @@ export const retrieveEntity = (
     },
   );
 };
-
-export const getDeleteEntityUrl = (
-  entityId: string,
-  params?: DeleteEntityParams,
-) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? "null" : String(value));
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0
-    ? `/entities/${entityId}?${stringifiedParams}`
-    : `/entities/${entityId}`;
-};
-
 /**
  * 5.6.6 Delete entity.
  *
@@ -623,26 +281,6 @@ export const deleteEntity = (
     method: "DELETE",
   });
 };
-
-export const getMergeEntityUrl = (
-  entityId: string,
-  params?: MergeEntityParams,
-) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? "null" : String(value));
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0
-    ? `/entities/${entityId}?${stringifiedParams}`
-    : `/entities/${entityId}`;
-};
-
 /**
  * 5.6.17 Merge Entity.
  *
@@ -674,26 +312,6 @@ export const mergeEntity = (
     body: JSON.stringify(mergeEntityBody),
   });
 };
-
-export const getReplaceEntityUrl = (
-  entityId: string,
-  params?: ReplaceEntityParams,
-) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? "null" : String(value));
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0
-    ? `/entities/${entityId}?${stringifiedParams}`
-    : `/entities/${entityId}`;
-};
-
 /**
  * 5.6.18 Replace Entity.
  *
@@ -723,26 +341,6 @@ export const replaceEntity = (
     body: JSON.stringify(replaceEntityBody),
   });
 };
-
-export const getAppendAttrsUrl = (
-  entityId: string,
-  params?: AppendAttrsParams,
-) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? "null" : String(value));
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0
-    ? `/entities/${entityId}/attrs?${stringifiedParams}`
-    : `/entities/${entityId}/attrs`;
-};
-
 /**
  * 5.6.3 Append Entity Attributes.
  *
@@ -772,26 +370,6 @@ export const appendAttrs = (
     body: JSON.stringify(appendAttrsBody),
   });
 };
-
-export const getUpdateEntityUrl = (
-  entityId: string,
-  params?: UpdateEntityParams,
-) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? "null" : String(value));
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0
-    ? `/entities/${entityId}/attrs?${stringifiedParams}`
-    : `/entities/${entityId}/attrs`;
-};
-
 /**
  * 5.6.2 Update Entity Attributes.
  *
@@ -821,27 +399,6 @@ export const updateEntity = (
     body: JSON.stringify(updateEntityBody),
   });
 };
-
-export const getUpdateAttrsUrl = (
-  entityId: string,
-  attrId: string,
-  params?: UpdateAttrsParams,
-) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? "null" : String(value));
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0
-    ? `/entities/${entityId}/attrs/${attrId}?${stringifiedParams}`
-    : `/entities/${entityId}/attrs/${attrId}`;
-};
-
 /**
  * 5.6.4 Partial Attribute Update.
  *
@@ -877,36 +434,6 @@ export const updateAttrs = (
     },
   );
 };
-
-export const getDeleteAttrsUrl = (
-  entityId: string,
-  attrId: string,
-  params?: DeleteAttrsParams,
-) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-    const explodeParameters = ["datasetId"];
-
-    if (Array.isArray(value) && explodeParameters.includes(key)) {
-      value.forEach((v) => {
-        normalizedParams.append(key, v === null ? "null" : String(v));
-      });
-      return;
-    }
-
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? "null" : String(value));
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0
-    ? `/entities/${entityId}/attrs/${attrId}?${stringifiedParams}`
-    : `/entities/${entityId}/attrs/${attrId}`;
-};
-
 /**
  * 5.6.5 Delete Entity Attribute.
  *
@@ -937,27 +464,6 @@ export const deleteAttrs = (
     },
   );
 };
-
-export const getReplaceAttrsUrl = (
-  entityId: string,
-  attrId: string,
-  params?: ReplaceAttrsParams,
-) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? "null" : String(value));
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0
-    ? `/entities/${entityId}/attrs/${attrId}?${stringifiedParams}`
-    : `/entities/${entityId}/attrs/${attrId}`;
-};
-
 /**
  * 5.6.19 Attribute Replace.
  *
@@ -991,11 +497,6 @@ export const replaceAttrs = (
     },
   );
 };
-
-export const getCreateCSRUrl = () => {
-  return `/csourceRegistrations`;
-};
-
 /**
  * 5.9.2 Register Context Source.
  *
@@ -1024,32 +525,6 @@ export const createCSR = (
     body: JSON.stringify(createCSRBody),
   });
 };
-
-export const getQueryCSRUrl = (params?: QueryCSRParams) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-    const explodeParameters = ["coordinates"];
-
-    if (Array.isArray(value) && explodeParameters.includes(key)) {
-      value.forEach((v) => {
-        normalizedParams.append(key, v === null ? "null" : String(v));
-      });
-      return;
-    }
-
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? "null" : String(value));
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0
-    ? `/csourceRegistrations?${stringifiedParams}`
-    : `/csourceRegistrations`;
-};
-
 /**
  * 5.10.2 Query Context Source Registrations.
  *
@@ -1094,26 +569,6 @@ export const queryCSR = (params?: QueryCSRParams, options?: RequestInit) => {
     method: "GET",
   });
 };
-
-export const getRetrieveCSRUrl = (
-  registrationId: string,
-  params?: RetrieveCSRParams,
-) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? "null" : String(value));
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0
-    ? `/csourceRegistrations/${registrationId}?${stringifiedParams}`
-    : `/csourceRegistrations/${registrationId}`;
-};
-
 /**
  * 5.10.1 Retrieve Context Source Registration.
  *
@@ -1141,11 +596,6 @@ export const retrieveCSR = (
     },
   );
 };
-
-export const getUpdateCSRUrl = (registrationId: string) => {
-  return `/csourceRegistrations/${registrationId}`;
-};
-
 /**
  * 5.9.3 Update Context Source Registration.
  *
@@ -1172,11 +622,6 @@ export const updateCSR = (
     body: JSON.stringify(updateCSRBody),
   });
 };
-
-export const getDeleteCSRUrl = (registrationId: string) => {
-  return `/csourceRegistrations/${registrationId}`;
-};
-
 /**
  * 5.9.4 Delete Context Source Registration.
  *
@@ -1197,23 +642,6 @@ export const deleteCSR = (registrationId: string, options?: RequestInit) => {
     method: "DELETE",
   });
 };
-
-export const getCreateSubscriptionUrl = (params?: CreateSubscriptionParams) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? "null" : String(value));
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0
-    ? `/subscriptions?${stringifiedParams}`
-    : `/subscriptions`;
-};
-
 /**
  * 5.8.1 Create subscription.
  *
@@ -1243,23 +671,6 @@ export const createSubscription = (
     body: JSON.stringify(subscriptionBody),
   });
 };
-
-export const getQuerySubscriptionUrl = (params?: QuerySubscriptionParams) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? "null" : String(value));
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0
-    ? `/subscriptions?${stringifiedParams}`
-    : `/subscriptions`;
-};
-
 /**
  * 5.8.4 Query Subscriptions.
  *
@@ -1283,26 +694,6 @@ export const querySubscription = (
     method: "GET",
   });
 };
-
-export const getRetrieveSubscriptionUrl = (
-  subscriptionId: string,
-  params?: RetrieveSubscriptionParams,
-) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? "null" : String(value));
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0
-    ? `/subscriptions/${subscriptionId}?${stringifiedParams}`
-    : `/subscriptions/${subscriptionId}`;
-};
-
 /**
  * 5.8.3 Retrieve Subscription.
  *
@@ -1330,26 +721,6 @@ export const retrieveSubscription = (
     },
   );
 };
-
-export const getUpdateSubscriptionUrl = (
-  subscriptionId: string,
-  params?: UpdateSubscriptionParams,
-) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? "null" : String(value));
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0
-    ? `/subscriptions/${subscriptionId}?${stringifiedParams}`
-    : `/subscriptions/${subscriptionId}`;
-};
-
 /**
  * 5.8.2 Update Subscription.
  *
@@ -1380,26 +751,6 @@ export const updateSubscription = (
     },
   );
 };
-
-export const getDeleteSubscriptionUrl = (
-  subscriptionId: string,
-  params?: DeleteSubscriptionParams,
-) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? "null" : String(value));
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0
-    ? `/subscriptions/${subscriptionId}?${stringifiedParams}`
-    : `/subscriptions/${subscriptionId}`;
-};
-
 /**
  * 5.8.5 Delete Subscription.
  *
@@ -1427,11 +778,6 @@ export const deleteSubscription = (
     },
   );
 };
-
-export const getCreateCSRSubscriptionUrl = () => {
-  return `/csourceSubscriptions`;
-};
-
 /**
  * 5.11.2 Create Context Source Registration Subscription.
  *
@@ -1460,25 +806,6 @@ export const createCSRSubscription = (
     body: JSON.stringify(subscriptionBody),
   });
 };
-
-export const getQueryCSRSubscriptionUrl = (
-  params?: QueryCSRSubscriptionParams,
-) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? "null" : String(value));
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0
-    ? `/csourceSubscriptions?${stringifiedParams}`
-    : `/csourceSubscriptions`;
-};
-
 /**
  * 5.11.5 Query Context Source Registration Subscriptions.
  *
@@ -1505,26 +832,6 @@ export const queryCSRSubscription = (
     },
   );
 };
-
-export const getRetrieveCSRSubscriptionUrl = (
-  subscriptionId: string,
-  params?: RetrieveCSRSubscriptionParams,
-) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? "null" : String(value));
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0
-    ? `/csourceSubscriptions/${subscriptionId}?${stringifiedParams}`
-    : `/csourceSubscriptions/${subscriptionId}`;
-};
-
 /**
  * 5.11.4 Retrieve Context Source Registration Subscription.
  *
@@ -1552,11 +859,6 @@ export const retrieveCSRSubscription = (
     },
   );
 };
-
-export const getUpdateCSRSubscriptionUrl = (subscriptionId: string) => {
-  return `/csourceSubscriptions/${subscriptionId}`;
-};
-
 /**
  * 5.11.3 Update Context Source Registration Subscription.
  *
@@ -1586,11 +888,6 @@ export const updateCSRSubscription = (
     },
   );
 };
-
-export const getDeleteCSRSubscriptionUrl = (subscriptionId: string) => {
-  return `/csourceSubscriptions/${subscriptionId}`;
-};
-
 /**
  * 5.11.6 Delete Context Source Registration Subscription.
  *
@@ -1617,23 +914,6 @@ export const deleteCSRSubscription = (
     },
   );
 };
-
-export const getCreateBatchUrl = (params?: CreateBatchParams) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? "null" : String(value));
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0
-    ? `/entityOperations/create?${stringifiedParams}`
-    : `/entityOperations/create`;
-};
-
 /**
  * 5.6.7 Batch Entity Creation.
  *
@@ -1660,23 +940,6 @@ export const createBatch = (
     body: JSON.stringify(createBatchBodyItem),
   });
 };
-
-export const getUpsertBatchUrl = (params?: UpsertBatchParams) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? "null" : String(value));
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0
-    ? `/entityOperations/upsert?${stringifiedParams}`
-    : `/entityOperations/upsert`;
-};
-
 /**
  * 5.6.8 Batch Entity Upsert.
  *
@@ -1705,23 +968,6 @@ export const upsertBatch = (
     body: JSON.stringify(upsertBatchBodyItem),
   });
 };
-
-export const getUpdateBatchUrl = (params?: UpdateBatchParams) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? "null" : String(value));
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0
-    ? `/entityOperations/update?${stringifiedParams}`
-    : `/entityOperations/update`;
-};
-
 /**
  * 5.6.9 Batch Entity Update.
  *
@@ -1748,23 +994,6 @@ export const updateBatch = (
     body: JSON.stringify(updateBatchBodyItem),
   });
 };
-
-export const getDeleteBatchUrl = (params?: DeleteBatchParams) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? "null" : String(value));
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0
-    ? `/entityOperations/delete?${stringifiedParams}`
-    : `/entityOperations/delete`;
-};
-
 /**
  * 5.6.10 Batch Entity Delete.
  *
@@ -1791,23 +1020,6 @@ export const deleteBatch = (
     body: JSON.stringify(deleteBatchBody),
   });
 };
-
-export const getQueryBatchUrl = (params?: QueryBatchParams) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? "null" : String(value));
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0
-    ? `/entityOperations/query?${stringifiedParams}`
-    : `/entityOperations/query`;
-};
-
 /**
  * 5.7.2 Query Entity (batch entity queries only).
  *
@@ -1834,23 +1046,6 @@ export const queryBatch = (
     body: JSON.stringify(query),
   });
 };
-
-export const getMergeBatchUrl = (params?: MergeBatchParams) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? "null" : String(value));
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0
-    ? `/entityOperations/merge?${stringifiedParams}`
-    : `/entityOperations/merge`;
-};
-
 /**
  * 5.6.20 Batch Entity Merge.
  *
@@ -1881,23 +1076,6 @@ export const mergeBatch = (
     body: JSON.stringify(mergeBatchBodyItem),
   });
 };
-
-export const getUpsertTemporalUrl = (params?: UpsertTemporalParams) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? "null" : String(value));
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0
-    ? `/temporal/entities?${stringifiedParams}`
-    : `/temporal/entities`;
-};
-
 /**
  * 5.6.11 Create or Update Temporal Representation of an Entity.
  *
@@ -1929,32 +1107,6 @@ export const upsertTemporal = (
     body: JSON.stringify(entityTemporalBody),
   });
 };
-
-export const getQueryTemporalUrl = (params?: QueryTemporalParams) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-    const explodeParameters = ["coordinates", "datasetId"];
-
-    if (Array.isArray(value) && explodeParameters.includes(key)) {
-      value.forEach((v) => {
-        normalizedParams.append(key, v === null ? "null" : String(v));
-      });
-      return;
-    }
-
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? "null" : String(value));
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0
-    ? `/temporal/entities?${stringifiedParams}`
-    : `/temporal/entities`;
-};
-
 /**
  * 5.7.4 Query Temporal Evolution of Entities.
  *
@@ -1984,35 +1136,6 @@ export const queryTemporal = (
     method: "GET",
   });
 };
-
-export const getRetrieveTemporalUrl = (
-  entityId: string,
-  params?: RetrieveTemporalParams,
-) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-    const explodeParameters = ["datasetId"];
-
-    if (Array.isArray(value) && explodeParameters.includes(key)) {
-      value.forEach((v) => {
-        normalizedParams.append(key, v === null ? "null" : String(v));
-      });
-      return;
-    }
-
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? "null" : String(value));
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0
-    ? `/temporal/entities/${entityId}?${stringifiedParams}`
-    : `/temporal/entities/${entityId}`;
-};
-
 /**
  * 5.7.3 Retrieve Temporal Evolution of an Entity.
  *
@@ -2040,26 +1163,6 @@ export const retrieveTemporal = (
     },
   );
 };
-
-export const getDeleteTemporalUrl = (
-  entityId: string,
-  params?: DeleteTemporalParams,
-) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? "null" : String(value));
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0
-    ? `/temporal/entities/${entityId}?${stringifiedParams}`
-    : `/temporal/entities/${entityId}`;
-};
-
 /**
  * 5.6.16 Delete Temporal Representation of an Entity.
  *
@@ -2087,26 +1190,6 @@ export const deleteTemporal = (
     },
   );
 };
-
-export const getAppendAttrsTemporalUrl = (
-  entityId: string,
-  params?: AppendAttrsTemporalParams,
-) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? "null" : String(value));
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0
-    ? `/temporal/entities/${entityId}/attrs?${stringifiedParams}`
-    : `/temporal/entities/${entityId}/attrs`;
-};
-
 /**
  * 5.6.12 Add Attributes to Temporal Representation of an Entity.
  *
@@ -2140,36 +1223,6 @@ export const appendAttrsTemporal = (
     },
   );
 };
-
-export const getDeleteAttrsTemporalUrl = (
-  entityId: string,
-  attrId: string,
-  params?: DeleteAttrsTemporalParams,
-) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-    const explodeParameters = ["datasetId"];
-
-    if (Array.isArray(value) && explodeParameters.includes(key)) {
-      value.forEach((v) => {
-        normalizedParams.append(key, v === null ? "null" : String(v));
-      });
-      return;
-    }
-
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? "null" : String(value));
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0
-    ? `/temporal/entities/${entityId}/attrs/${attrId}?${stringifiedParams}`
-    : `/temporal/entities/${entityId}/attrs/${attrId}`;
-};
-
 /**
  * 5.6.13 Delete Attributes from Temporal Representation of an Entity.
  *
@@ -2200,28 +1253,6 @@ export const deleteAttrsTemporal = (
     },
   );
 };
-
-export const getUpdateAttrsTemporalUrl = (
-  entityId: string,
-  attrId: string,
-  instanceId: string,
-  params?: UpdateAttrsTemporalParams,
-) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? "null" : String(value));
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0
-    ? `/temporal/entities/${entityId}/attrs/${attrId}/${instanceId}?${stringifiedParams}`
-    : `/temporal/entities/${entityId}/attrs/${attrId}/${instanceId}`;
-};
-
 /**
  * 5.6.14 Partial Update Attribute instance in Temporal Representation of an Entity.
  *
@@ -2265,28 +1296,6 @@ export const updateAttrsTemporal = (
     },
   );
 };
-
-export const getDeleteAttrInstanceTemporalUrl = (
-  entityId: string,
-  attrId: string,
-  instanceId: string,
-  params?: DeleteAttrInstanceTemporalParams,
-) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? "null" : String(value));
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0
-    ? `/temporal/entities/${entityId}/attrs/${attrId}/${instanceId}?${stringifiedParams}`
-    : `/temporal/entities/${entityId}/attrs/${attrId}/${instanceId}`;
-};
-
 /**
  * 5.6.15 Delete Attribute Instance from Temporal Representation of an Entity.
  *
@@ -2324,23 +1333,6 @@ export const deleteAttrInstanceTemporal = (
     },
   );
 };
-
-export const getTemporalQueryBatchUrl = (params?: TemporalQueryBatchParams) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? "null" : String(value));
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0
-    ? `/temporal/entityOperations/query?${stringifiedParams}`
-    : `/temporal/entityOperations/query`;
-};
-
 /**
  * 5.7.4 Query Temporal Evolution of Entities.
  *
@@ -2369,25 +1361,6 @@ export const temporalQueryBatch = (
     body: JSON.stringify(queryTemporalBody),
   });
 };
-
-export const getRetrieveEntityTypesUrl = (
-  params?: RetrieveEntityTypesParams,
-) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? "null" : String(value));
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0
-    ? `/types?${stringifiedParams}`
-    : `/types`;
-};
-
 /**
  * 5.7.5 Retrieve Available Entity Types.
  *
@@ -2426,26 +1399,6 @@ export const retrieveEntityTypes = (
     },
   );
 };
-
-export const getRetrieveEntityTypeInfoUrl = (
-  type: string,
-  params?: RetrieveEntityTypeInfoParams,
-) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? "null" : String(value));
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0
-    ? `/types/${type}?${stringifiedParams}`
-    : `/types/${type}`;
-};
-
 /**
  * 5.7.7 Retrieve Available Entity Type information.
  *
@@ -2483,23 +1436,6 @@ export const retrieveEntityTypeInfo = (
     },
   );
 };
-
-export const getRetrieveAttrTypesUrl = (params?: RetrieveAttrTypesParams) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? "null" : String(value));
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0
-    ? `/attributes?${stringifiedParams}`
-    : `/attributes`;
-};
-
 /**
  * 5.7.8 Retrieve Available Attributes.
  *
@@ -2535,26 +1471,6 @@ export const retrieveAttrTypes = (
     method: "GET",
   });
 };
-
-export const getRetrieveAttrTypeInfoUrl = (
-  attrId: string,
-  params?: RetrieveAttrTypeInfoParams,
-) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? "null" : String(value));
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0
-    ? `/attributes/${attrId}?${stringifiedParams}`
-    : `/attributes/${attrId}`;
-};
-
 /**
  * 5.7.10 Retrieve Available Attribute Information.
  *
@@ -2590,11 +1506,6 @@ export const retrieveAttrTypeInfo = (
     },
   );
 };
-
-export const getCreateContextUrl = () => {
-  return `/jsonldContexts`;
-};
-
 /**
  * 5.13.2 Add @context.
  *
@@ -2622,23 +1533,6 @@ export const createContext = (
     body: JSON.stringify(createContextBody),
   });
 };
-
-export const getListContextsUrl = (params?: ListContextsParams) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? "null" : String(value));
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0
-    ? `/jsonldContexts?${stringifiedParams}`
-    : `/jsonldContexts`;
-};
-
 /**
  * 5.13.3 List @contexts.
  *
@@ -2680,26 +1574,6 @@ export const listContexts = (
     method: "GET",
   });
 };
-
-export const getRetrieveContextUrl = (
-  contextId: string,
-  params?: RetrieveContextParams,
-) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? "null" : String(value));
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0
-    ? `/jsonldContexts/${contextId}?${stringifiedParams}`
-    : `/jsonldContexts/${contextId}`;
-};
-
 /**
  * 5.13.4 Serve @context.
  *
@@ -2731,26 +1605,6 @@ export const retrieveContext = (
     },
   );
 };
-
-export const getDeleteContextUrl = (
-  contextId: string,
-  params?: DeleteContextParams,
-) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? "null" : String(value));
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0
-    ? `/jsonldContexts/${contextId}?${stringifiedParams}`
-    : `/jsonldContexts/${contextId}`;
-};
-
 /**
  * 5.13.5 Delete and Reload @context
  *
@@ -2788,11 +1642,6 @@ export const deleteContext = (
     },
   );
 };
-
-export const getRetrieveEntityMapUrl = (entityMapId: string) => {
-  return `/entityMap/${entityMapId}`;
-};
-
 /**
  * 5.14.1 Retrieve EntityMap.
  *
@@ -2819,11 +1668,6 @@ export const retrieveEntityMap = (
     },
   );
 };
-
-export const getUpdateEntityMapUrl = (entityMapId: string) => {
-  return `/entityMap/${entityMapId}`;
-};
-
 /**
  * 5.14.2 Update EntityMap.
  *
@@ -2855,11 +1699,6 @@ export const updateEntityMap = (
     body: JSON.stringify(updateEntityMapBody),
   });
 };
-
-export const getDeleteEntityMapUrl = (entityMapId: string) => {
-  return `/entityMap/${entityMapId}`;
-};
-
 /**
  * 5.14.3 Delete EntityMap.
  *
@@ -2880,11 +1719,6 @@ export const deleteEntityMap = (entityMapId: string, options?: RequestInit) => {
     method: "DELETE",
   });
 };
-
-export const getRetrieveCSIdentityInfoUrl = () => {
-  return `/info/sourceIdentity`;
-};
-
 /**
  * 5.15.1 Retrieve Context Source Identity Information.
  *
