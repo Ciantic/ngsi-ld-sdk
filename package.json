@@ -12,7 +12,6 @@
     "build": "tsdown",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "generate:api": "orval",
     "orion-temporal:up": "podman compose -f tests/docker-test-orion-with-temporal/compose.yaml up -d",
     "orion-temporal:down": "podman compose -f tests/docker-test-orion-with-temporal/compose.yaml down",
     "test:docker-orion": "node test-runner.ts docker-test-orion http://orion-ld:1026/ngsi-ld/v1",
@@ -21,7 +20,6 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "orval": "^8.19.0",
     "prettier": "^3.9.1",
     "ts-morph": "^28.0.0",
     "tsdown": "^0.22.3",

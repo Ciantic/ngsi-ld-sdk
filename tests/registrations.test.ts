@@ -1,11 +1,5 @@
 import { describe, it, expect, afterEach } from "vitest";
-import {
-  createCSR,
-  queryCSR,
-  retrieveCSR,
-  updateCSR,
-  deleteCSR,
-} from "../src/generated/api";
+import { createCSR, queryCSR, retrieveCSR, updateCSR, deleteCSR } from "../src";
 import { makeCSR, expectOk, cleanUpCSR } from "./helpers";
 
 // Track created CSRs for cleanup
@@ -122,7 +116,9 @@ describe("updateCSR", () => {
     trackId(csr);
 
     const patch = {
-      "@context": ["https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"],
+      "@context": [
+        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
+      ],
       endpoint: "http://updated.example.com/ngsi-ld",
     };
 
@@ -141,7 +137,9 @@ describe("updateCSR", () => {
 
   it("should return 404 when updating a non-existent CSR", async () => {
     const patch = {
-      "@context": ["https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld"],
+      "@context": [
+        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
+      ],
       endpoint: "http://updated.example.com/ngsi-ld",
     };
 

@@ -8,13 +8,13 @@ import {
   type EntityTemporal,
   type SubscriptionBody,
   type QueryTemporalBody,
-} from "../src/generated/api.schemas";
+} from "../src/generated/schemas";
 import {
   deleteEntity,
   deleteCSR,
   deleteSubscription,
   deleteCSRSubscription,
-} from "../src/generated/api";
+} from "../src";
 
 // --- Broker URL ---
 

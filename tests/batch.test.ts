@@ -8,7 +8,7 @@ import {
   mergeBatch,
   createEntity,
   deleteEntity,
-} from "../src/generated/api";
+} from "../src";
 import { makeEntity, expectOk } from "./helpers";
 
 // Track created entities for cleanup

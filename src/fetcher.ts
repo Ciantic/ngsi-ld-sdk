@@ -2,7 +2,7 @@ import {
   GEOJSON_TYPES,
   NGSILD_ATTR_TYPES,
   STRUCTURAL_KEYS,
-} from "./generated/api.schemas";
+} from "./generated/schemas";
 
 const BASE_URL =
   process.env.NGSILD_BROKER_URL || "http://localhost:1026/ngsi-ld/v1";

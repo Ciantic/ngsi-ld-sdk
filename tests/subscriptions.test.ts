@@ -10,7 +10,7 @@ import {
   retrieveCSRSubscription,
   updateCSRSubscription,
   deleteCSRSubscription,
-} from "../src/generated/api";
+} from "../src";
 import {
   makeSubscription,
   expectOk,
@@ -144,9 +144,7 @@ describe("updateSubscription", () => {
       const data = retrieved.data as Record<string, unknown>;
       const notification = data["notification"] as Record<string, unknown>;
       const endpoint = notification["endpoint"] as Record<string, unknown>;
-      expect(endpoint["uri"]).toBe(
-        "http://updated.example.com/notification",
-      );
+      expect(endpoint["uri"]).toBe("http://updated.example.com/notification");
     }
   });
 

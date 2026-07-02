@@ -9,7 +9,7 @@ import {
   updateAttrsTemporal,
   deleteAttrInstanceTemporal,
   temporalQueryBatch,
-} from "../src/generated/api";
+} from "../src";
 import { cleanUpEntity, warnIf501 } from "./helpers";
 
 // ---------------------------------------------------------------------------

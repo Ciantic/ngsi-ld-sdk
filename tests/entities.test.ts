@@ -11,8 +11,8 @@ import {
   updateAttrs,
   deleteAttrs,
   replaceAttrs,
-} from "../src/generated/api";
-import type { Property } from "../src/generated/api.schemas";
+} from "../src";
+import type { Property } from "../src/generated/schemas";
 import { makeEntity, expectOk, expectStatus, cleanUpEntity } from "./helpers";
 
 // Track created entities for cleanup

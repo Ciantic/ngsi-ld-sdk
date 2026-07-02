@@ -13,7 +13,7 @@ import {
   deleteEntityMap,
   retrieveCSIdentityInfo,
   createEntity,
-} from "../src/generated/api";
+} from "../src";
 import { makeEntity, expectOk, cleanUpEntity, warnIf501 } from "./helpers";
 
 // --- Track entities created during discovery tests ---
