@@ -1,11 +1,6 @@
 import type {
-  ContextSourceIdentity,
-  EntityMap,
-  LdContextMetadata,
-  MaybeContext,
   MultiStatusBatchOperationResultResponse,
   MultiStatusUpdateResultResponse,
-  RetrieveContext200,
 } from "./schemas";
 // https://stackoverflow.com/questions/49579094/typescript-conditional-types-filter-out-readonly-properties-pick-only-requir/49579497#49579497
 export type IfEquals<X, Y, A = X, B = never> =
@@ -262,71 +257,3 @@ export type UpsertTemporalResponseSuccess =
   UpsertTemporalResponse201 | UpsertTemporalResponse204;
 
 export type UpsertTemporalResponse = UpsertTemporalResponseSuccess;
-export type CreateContextResponse201 = {
-  data: void;
-  status: 201;
-  /** URI of the created @context from the Location header. */
-  location: string;
-};
-
-export type CreateContextResponseSuccess = CreateContextResponse201;
-
-export type CreateContextResponse = CreateContextResponseSuccess;
-export type ListContextsResponse200 = {
-  data: string[] | LdContextMetadata[];
-  status: 200;
-};
-
-export type ListContextsResponseSuccess = ListContextsResponse200;
-
-export type ListContextsResponse = ListContextsResponseSuccess;
-export type RetrieveContextResponse200 = {
-  data: RetrieveContext200;
-  status: 200;
-};
-
-export type RetrieveContextResponseSuccess = RetrieveContextResponse200;
-
-export type RetrieveContextResponse = RetrieveContextResponseSuccess;
-export type DeleteContextResponse204 = {
-  data: void;
-  status: 204;
-};
-
-export type DeleteContextResponseSuccess = DeleteContextResponse204;
-
-export type DeleteContextResponse = DeleteContextResponseSuccess;
-export type RetrieveEntityMapResponse200 = {
-  data: MaybeContext<EntityMap>;
-  status: 200;
-};
-
-export type RetrieveEntityMapResponseSuccess = RetrieveEntityMapResponse200;
-
-export type RetrieveEntityMapResponse = RetrieveEntityMapResponseSuccess;
-export type UpdateEntityMapResponse204 = {
-  data: void;
-  status: 204;
-};
-
-export type UpdateEntityMapResponseSuccess = UpdateEntityMapResponse204;
-
-export type UpdateEntityMapResponse = UpdateEntityMapResponseSuccess;
-export type DeleteEntityMapResponse204 = {
-  data: void;
-  status: 204;
-};
-
-export type DeleteEntityMapResponseSuccess = DeleteEntityMapResponse204;
-
-export type DeleteEntityMapResponse = DeleteEntityMapResponseSuccess;
-export type RetrieveCSIdentityInfoResponse200 = {
-  data: MaybeContext<ContextSourceIdentity>;
-  status: 200;
-};
-
-export type RetrieveCSIdentityInfoResponseSuccess =
-  RetrieveCSIdentityInfoResponse200;
-
-export type RetrieveCSIdentityInfoResponse =
-  RetrieveCSIdentityInfoResponseSuccess;

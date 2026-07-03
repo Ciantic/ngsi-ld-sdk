@@ -146,9 +146,9 @@ describe("createContext", () => {
       return;
     }
 
-    const response = await createContext(contextBody);
-    expect(response.status).toBe(201);
-    expect(response.location).toBeDefined();
+    const location = await createContext(contextBody);
+    expect(typeof location).toBe("string");
+    expect(location).toBeTruthy();
   });
 });
 
@@ -165,9 +165,8 @@ describe("listContexts", () => {
       return;
     }
 
-    const response = await listContexts();
-    expect(response.status).toBe(200);
-    expect(response.data).toBeDefined();
+    const data = await listContexts();
+    expect(data).toBeDefined();
   });
 
   it("should support details=true query parameter", async () => {
@@ -179,8 +178,8 @@ describe("listContexts", () => {
       return;
     }
 
-    const response = await listContexts({ details: true });
-    expect(response.status).toBe(200);
+    const data = await listContexts({ details: true });
+    expect(data).toBeDefined();
   });
 });
 
@@ -208,16 +207,12 @@ describe("retrieveContext", () => {
       return;
     }
 
-    const createResponse = await createContext(contextBody);
-    expect(createResponse.status).toBe(201);
+    const createLocation = await createContext(contextBody);
 
-    const contextId = decodeURIComponent(
-      createResponse.location.split("/").pop()!,
-    );
+    const contextId = decodeURIComponent(createLocation.split("/").pop()!);
 
-    const response = await retrieveContext(contextId);
-    expect(response.status).toBe(200);
-    expect(response.data).toBeDefined();
+    const data = await retrieveContext(contextId);
+    expect(data).toBeDefined();
   });
 
   it("should retrieve context with details=true parameter", async () => {
@@ -235,15 +230,12 @@ describe("retrieveContext", () => {
       return;
     }
 
-    const createResponse = await createContext(contextBody);
-    expect(createResponse.status).toBe(201);
+    const createLocation = await createContext(contextBody);
 
-    const contextId = decodeURIComponent(
-      createResponse.location.split("/").pop()!,
-    );
+    const contextId = decodeURIComponent(createLocation.split("/").pop()!);
 
-    const response = await retrieveContext(contextId, { details: true });
-    expect(response.status).toBe(200);
+    const data = await retrieveContext(contextId, { details: true });
+    expect(data).toBeDefined();
   });
 
   it("should return 404 for a non-existent context", async () => {
@@ -280,15 +272,12 @@ describe("deleteContext", () => {
       return;
     }
 
-    const createResponse = await createContext(contextBody);
-    expect(createResponse.status).toBe(201);
+    const createLocation = await createContext(contextBody);
 
-    const contextId = decodeURIComponent(
-      createResponse.location.split("/").pop()!,
-    );
+    const contextId = decodeURIComponent(createLocation.split("/").pop()!);
 
-    const response = await deleteContext(contextId);
-    expect(response.status).toBe(204);
+    const result = await deleteContext(contextId);
+    expect(result).toBeUndefined();
   });
 
   it("should return 404 when deleting a non-existent context", async () => {
@@ -352,8 +341,7 @@ describe("retrieveCSIdentityInfo", () => {
       return;
     }
 
-    const response = await retrieveCSIdentityInfo();
-    expect(response.status).toBe(200);
-    expect(response.data).toBeDefined();
+    const data = await retrieveCSIdentityInfo();
+    expect(data).toBeDefined();
   });
 });

@@ -60,30 +60,25 @@ import type {
   UpsertTemporalParams,
   WithContext,
   AttributeList,
+  ContextSourceIdentity,
+  LdContext,
+  LdContextMetadata,
 } from "./schemas";
 
 import {
   AppendAttrsResponse,
   CreateBatchResponse,
-  CreateContextResponse,
   CreateEntityResponse,
   DeleteAttrsResponse,
   DeleteBatchResponse,
-  DeleteContextResponse,
-  DeleteEntityMapResponse,
   DeleteEntityResponse,
-  ListContextsResponse,
   MergeBatchResponse,
   MergeEntityResponse,
   NonReadonly,
   ReplaceAttrsResponse,
   ReplaceEntityResponse,
-  RetrieveCSIdentityInfoResponse,
-  RetrieveContextResponse,
-  RetrieveEntityMapResponse,
   UpdateAttrsResponse,
   UpdateBatchResponse,
-  UpdateEntityMapResponse,
   UpdateEntityResponse,
   UpsertBatchResponse,
   UpsertTemporalResponse,
@@ -1551,11 +1546,12 @@ export const createContext = (
   createContextBody?: CreateContextBody,
   options?: RequestInit,
 ) => {
-  return fetcher<CreateContextResponse>(getCreateContextUrl(), {
+  return fetcher<string>(getCreateContextUrl(), {
     ...options,
     method: "POST",
     headers: { "Content-Type": "application/ld+json", ...options?.headers },
     body: JSON.stringify(createContextBody),
+    returnFormat: "body",
   });
 };
 /**
@@ -1594,9 +1590,10 @@ export const listContexts = (
   params?: ListContextsParams,
   options?: RequestInit,
 ) => {
-  return fetcher<ListContextsResponse>(getListContextsUrl(params), {
+  return fetcher<string[] | LdContextMetadata[]>(getListContextsUrl(params), {
     ...options,
     method: "GET",
+    returnFormat: "body",
   });
 };
 /**
@@ -1622,11 +1619,12 @@ export const retrieveContext = (
   params?: RetrieveContextParams,
   options?: RequestInit,
 ) => {
-  return fetcher<RetrieveContextResponse>(
+  return fetcher<{ "@context"?: LdContext } | LdContextMetadata>(
     getRetrieveContextUrl(contextId, params),
     {
       ...options,
       method: "GET",
+      returnFormat: "body",
     },
   );
 };
@@ -1659,13 +1657,11 @@ export const deleteContext = (
   params?: DeleteContextParams,
   options?: RequestInit,
 ) => {
-  return fetcher<DeleteContextResponse>(
-    getDeleteContextUrl(contextId, params),
-    {
-      ...options,
-      method: "DELETE",
-    },
-  );
+  return fetcher<void>(getDeleteContextUrl(contextId, params), {
+    ...options,
+    method: "DELETE",
+    returnFormat: "body",
+  });
 };
 /**
  * 5.14.1 Retrieve EntityMap.
@@ -1685,11 +1681,12 @@ export const retrieveEntityMap = (
   entityMapId: string,
   options?: RequestInit,
 ) => {
-  return fetcher<RetrieveEntityMapResponse>(
+  return fetcher<MaybeContext<EntityMap>>(
     getRetrieveEntityMapUrl(entityMapId),
     {
       ...options,
       method: "GET",
+      returnFormat: "body",
     },
   );
 };
@@ -1714,11 +1711,12 @@ export const updateEntityMap = (
   updateEntityMapBody?: WithContext<NonReadonly<EntityMap>>,
   options?: RequestInit,
 ) => {
-  return fetcher<UpdateEntityMapResponse>(getUpdateEntityMapUrl(entityMapId), {
+  return fetcher<void>(getUpdateEntityMapUrl(entityMapId), {
     ...options,
     method: "PATCH",
     headers: { "Content-Type": "application/ld+json", ...options?.headers },
     body: JSON.stringify(updateEntityMapBody),
+    returnFormat: "body",
   });
 };
 /**
@@ -1736,9 +1734,10 @@ export const updateEntityMap = (
 
  */
 export const deleteEntityMap = (entityMapId: string, options?: RequestInit) => {
-  return fetcher<DeleteEntityMapResponse>(getDeleteEntityMapUrl(entityMapId), {
+  return fetcher<void>(getDeleteEntityMapUrl(entityMapId), {
     ...options,
     method: "DELETE",
+    returnFormat: "body",
   });
 };
 /**
@@ -1758,11 +1757,12 @@ export const deleteEntityMap = (entityMapId: string, options?: RequestInit) => {
 
  */
 export const retrieveCSIdentityInfo = (options?: RequestInit) => {
-  return fetcher<RetrieveCSIdentityInfoResponse>(
+  return fetcher<MaybeContext<ContextSourceIdentity>>(
     getRetrieveCSIdentityInfoUrl(),
     {
       ...options,
       method: "GET",
+      returnFormat: "body",
     },
   );
 };
