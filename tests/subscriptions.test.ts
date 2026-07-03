@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import {
   createSubscription,
   querySubscription,
@@ -15,34 +15,12 @@ import {
   makeSubscription,
   expectOk,
   expectHttpError,
-  cleanUpSubscription,
-  cleanUpCSRSubscription,
+  cleanUpAll,
 } from "./helpers";
 import { NgsiLdNotFound, NgsiLdConflict } from "../src";
 
-// Track created subscriptions for cleanup
-const createdSubIds: string[] = [];
-const createdCSRSubIds: string[] = [];
-
-afterEach(async () => {
-  while (createdSubIds.length > 0) {
-    const id = createdSubIds.pop()!;
-    await cleanUpSubscription(id);
-  }
-  while (createdCSRSubIds.length > 0) {
-    const id = createdCSRSubIds.pop()!;
-    await cleanUpCSRSubscription(id);
-  }
-});
-
-function trackSubId(sub: { id: string }): string {
-  createdSubIds.push(sub.id);
-  return sub.id;
-}
-
-function trackCSRSubId(_sub: { id: string }): void {
-  // CSR subscriptions use broker-assigned IDs from Location header
-}
+// Wipe all stale resources from previous crashed runs before each test.
+beforeEach(cleanUpAll);
 
 // ===========================================================================
 // Standard Subscriptions (/subscriptions)
@@ -58,13 +36,11 @@ describe("createSubscription", () => {
 
     expectOk(response);
     expect(response.status).toBe(201);
-    trackSubId(sub);
   });
 
   it("should return 409 when creating a duplicate subscription", async () => {
     const sub = makeSubscription();
     await createSubscription(sub);
-    trackSubId(sub);
 
     await expectHttpError(409, NgsiLdConflict, () => createSubscription(sub));
   });
@@ -77,7 +53,6 @@ describe("querySubscription", () => {
   it("should query subscriptions and return 200", async () => {
     const sub = makeSubscription();
     await createSubscription(sub);
-    trackSubId(sub);
 
     const response = await querySubscription();
 
@@ -95,7 +70,6 @@ describe("retrieveSubscription", () => {
   it("should retrieve a subscription by id and return 200", async () => {
     const sub = makeSubscription();
     await createSubscription(sub);
-    trackSubId(sub);
 
     const response = await retrieveSubscription(sub.id);
 
@@ -118,7 +92,6 @@ describe("updateSubscription", () => {
   it("should update (PATCH) a subscription and return 204", async () => {
     const sub = makeSubscription();
     await createSubscription(sub);
-    trackSubId(sub);
 
     const patch = {
       "@context": [
@@ -220,13 +193,6 @@ describe("createCSRSubscription", () => {
     expectOk(response);
     expect(response.status).toBe(201);
     if (response.status !== 201) throw new Error("Expected 201");
-
-    // Extract the ID from the Location header for cleanup
-    const location = response.location;
-    // Location looks like /csourceSubscriptions/<id>
-    const parts = location.split("/");
-    const csrSubId = parts[parts.length - 1];
-    createdCSRSubIds.push(csrSubId);
   });
 
   it("should reject duplicate CSR subscription", async () => {
@@ -237,12 +203,6 @@ describe("createCSRSubscription", () => {
     if (!response1) return;
     expect(response1.status).toBe(201);
     if (response1.status !== 201) throw new Error("Expected 201");
-
-    // Extract ID from first creation
-    const location = response1.location;
-    const parts = location.split("/");
-    const csrSubId = parts[parts.length - 1];
-    createdCSRSubIds.push(csrSubId);
 
     await expectHttpError(409, NgsiLdConflict, () =>
       tryCreateCSRSubscription(sub),
@@ -268,10 +228,6 @@ describe("queryCSRSubscription", () => {
     if (!createResp) return;
 
     const location = createResp.status === 201 && createResp.location;
-    if (location) {
-      const parts = location.split("/");
-      createdCSRSubIds.push(parts[parts.length - 1]);
-    }
 
     const response = await queryCSRSubscription();
 
@@ -305,7 +261,6 @@ describe("retrieveCSRSubscription", () => {
     }
     const parts = location.split("/");
     const csrSubId = parts[parts.length - 1];
-    createdCSRSubIds.push(csrSubId);
 
     const response = await retrieveCSRSubscription(csrSubId);
 
@@ -341,7 +296,6 @@ describe("updateCSRSubscription", () => {
     if (!location) return;
     const parts = location.split("/");
     const csrSubId = parts[parts.length - 1];
-    createdCSRSubIds.push(csrSubId);
 
     const patch = {
       "@context": [

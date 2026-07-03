@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../../../dep-projects/stellio"
+		},
+		{
+			"path": "../../../dep-projects/orion-ld/context.Orion-LD"
+		}
+	],
+	"settings": {}
+}

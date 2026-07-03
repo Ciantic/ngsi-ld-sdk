@@ -1,24 +1,10 @@
-import { describe, it, expect, afterEach } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import { createCSR, queryCSR, retrieveCSR, updateCSR, deleteCSR } from "../src";
-import { makeCSR, expectOk, expectHttpError, cleanUpCSR } from "./helpers";
+import { makeCSR, expectOk, expectHttpError, cleanUpAll } from "./helpers";
 import { NgsiLdNotFound, NgsiLdConflict } from "../src";
 
-// Track created CSRs for cleanup
-const createdIds: string[] = [];
-
-afterEach(async () => {
-  // Clean up all CSRs created during the test
-  while (createdIds.length > 0) {
-    const id = createdIds.pop()!;
-    await cleanUpCSR(id);
-  }
-});
-
-function trackId(csr: { id?: string }): string {
-  const id = csr.id!;
-  createdIds.push(id);
-  return id;
-}
+// Wipe all stale resources from previous crashed runs before each test.
+beforeEach(cleanUpAll);
 
 // ---------------------------------------------------------------------------
 // 1. createCSR
@@ -30,13 +16,11 @@ describe("createCSR", () => {
 
     expectOk(response);
     expect(response.status).toBe(201);
-    trackId(csr);
   });
 
   it("should return 409 when creating a duplicate CSR", async () => {
     const csr = makeCSR();
     await createCSR(csr);
-    trackId(csr);
 
     await expectHttpError(409, NgsiLdConflict, () => createCSR(csr));
   });
@@ -50,7 +34,6 @@ describe("queryCSR", () => {
     // Create a CSR first so there's something to query
     const csr = makeCSR();
     await createCSR(csr);
-    trackId(csr);
 
     const response = await queryCSR();
 
@@ -73,7 +56,6 @@ describe("queryCSR", () => {
       ],
     };
     await createCSR(csr);
-    trackId(csr);
 
     const response = await queryCSR({ type: "ContextSourceRegistration" });
 
@@ -90,7 +72,6 @@ describe("retrieveCSR", () => {
   it("should retrieve a CSR by id and return 200", async () => {
     const csr = makeCSR();
     await createCSR(csr);
-    trackId(csr);
 
     const response = await retrieveCSR(csr.id!);
 
@@ -113,7 +94,6 @@ describe("updateCSR", () => {
   it("should update (PATCH) a CSR and return 204", async () => {
     const csr = makeCSR();
     await createCSR(csr);
-    trackId(csr);
 
     const patch = {
       "@context": [

@@ -13,10 +13,13 @@ import {
 } from "../src/generated/schemas";
 import { NgsiLdHttpError, NgsiLdNotFound } from "../src";
 import {
-  deleteEntity,
+  deleteBatch,
   deleteCSR,
   deleteSubscription,
   deleteCSRSubscription,
+  queryEntity,
+  queryCSR,
+  querySubscription,
 } from "../src";
 
 // --- Broker URL ---
@@ -28,6 +31,16 @@ export const brokerUrl: string =
 const NGSILD_CORE_CONTEXT = [
   "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
 ];
+
+export function detectBroker(): "orion" | "stellio" | "unknown" {
+  const explicit = process.env["NGSILD_BROKER_NAME"];
+  if (explicit === "orion" || explicit === "stellio") return explicit;
+
+  const url = process.env["NGSILD_BROKER_URL"] ?? "";
+  if (url.includes("orion-ld") || url.includes(":1026")) return "orion";
+  if (url.includes("stellio") || url.includes(":8080")) return "stellio";
+  return "unknown";
+}
 
 // --- Factory functions ---
 
@@ -111,20 +124,70 @@ export function makeSubscription() {
 // --- Cleanup helpers ---
 
 /**
+ * Query and batch-delete all entities, subscriptions, and CSRs.
+ * Does not need any type — blasts through everything.  Use in `beforeAll` to
+ * wipe stale resources from previous crashed runs.
+ */
+export async function cleanUpAll(): Promise<void> {
+  /**
+   * Extract entity IDs from a query response that may be:
+   *  - `Entity[]` (standard application/ld+json)
+   *  - `FeatureCollection` (application/geo+json — Orion-LD may return this
+   *    even without an explicit Accept header when entities have GeoProperties)
+   */
+  const extractIds = (data: unknown): string[] => {
+    if (Array.isArray(data)) {
+      return data.map((i: any) => i.id).filter((id): id is string => !!id);
+    }
+    if (
+      data &&
+      typeof data === "object" &&
+      (data as any).type === "FeatureCollection" &&
+      Array.isArray((data as any).features)
+    ) {
+      return (data as any).features
+        .map((f: any) => f.id)
+        .filter((id: any): id is string => !!id);
+    }
+    return [];
+  };
+
+  const deleteAll = async (
+    queryFn: (
+      params?: Record<string, unknown>,
+    ) => Promise<{ status: number; data: unknown }>,
+  ) => {
+    try {
+      const res = await queryFn({ limit: 1000 });
+      if (res.status !== 200) return;
+      const ids = extractIds(res.data);
+      if (ids.length > 0) await deleteBatch(ids);
+    } catch {
+      // Ignore cleanup failures
+    }
+  };
+
+  await deleteAll((p) => queryEntity(p as any));
+  await deleteAll((p) => querySubscription(p as any));
+  await deleteAll((p) => queryCSR(p as any));
+}
+
+/**
  * DELETE an entity if it exists. Swallows 404 so teardown always succeeds.
- * Also strips the broker URL prefix if present in the ID.
+ * @deprecated Use {@link cleanUpAll} in `beforeAll` instead.
  */
 export async function cleanUpEntity(entityId: string): Promise<void> {
   try {
-    // Orion may return the full URI as entity id; extract the path part
-    const cleanId = entityId.startsWith("urn:") ? entityId : entityId;
-    await deleteEntity(cleanId);
+    await deleteBatch([entityId]);
   } catch {
     // Ignore cleanup failures (e.g. already deleted)
   }
 }
 
-/** DELETE a CSR if it exists. */
+/**
+ * DELETE a CSR if it exists.
+ * @deprecated Use {@link cleanUpAll} in `beforeAll` instead.
+ */
 export async function cleanUpCSR(registrationId: string): Promise<void> {
   try {
     await deleteCSR(registrationId);
@@ -133,7 +196,10 @@ export async function cleanUpCSR(registrationId: string): Promise<void> {
   }
 }
 
-/** DELETE a subscription if it exists. */
+/**
+ * DELETE a subscription if it exists.
+ * @deprecated Use {@link cleanUpAll} in `beforeAll` instead.
+ */
 export async function cleanUpSubscription(
   subscriptionId: string,
 ): Promise<void> {
@@ -144,7 +210,10 @@ export async function cleanUpSubscription(
   }
 }
 
-/** DELETE a CSR subscription if it exists. */
+/**
+ * DELETE a CSR subscription if it exists.
+ * @deprecated Use {@link cleanUpAll} in `beforeAll` instead.
+ */
 export async function cleanUpCSRSubscription(
   subscriptionId: string,
 ): Promise<void> {
@@ -197,4 +266,16 @@ export async function expectHttpError<T extends NgsiLdHttpError>(
   throw new Error(
     `Expected ${errorClass.name} with status ${expectedStatus}, but no error was thrown`,
   );
+}
+
+export async function catchHttpError<T>(
+  fn: () => Promise<T>,
+  handler: (err: NgsiLdHttpError) => void,
+): Promise<T> {
+  try {
+    return await fn();
+  } catch (err) {
+    handler(err as NgsiLdHttpError);
+    throw err;
+  }
 }

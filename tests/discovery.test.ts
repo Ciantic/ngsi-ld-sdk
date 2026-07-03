@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import {
   retrieveEntityTypes,
   retrieveEntityTypeInfo,
@@ -14,29 +14,11 @@ import {
   retrieveCSIdentityInfo,
   createEntity,
 } from "../src";
-import {
-  makeEntity,
-  expectOk,
-  expectHttpError,
-  cleanUpEntity,
-} from "./helpers";
+import { makeEntity, expectOk, expectHttpError, cleanUpAll } from "./helpers";
 import { NgsiLdNotFound } from "../src";
 
-// --- Track entities created during discovery tests ---
-const createdEntityIds: string[] = [];
-
-afterEach(async () => {
-  while (createdEntityIds.length > 0) {
-    const id = createdEntityIds.pop()!;
-    await cleanUpEntity(id);
-  }
-});
-
-function trackEntity(entity: { id?: string }): string {
-  const id = entity.id!;
-  createdEntityIds.push(id);
-  return id;
-}
+// Wipe all stale resources from previous crashed runs before each test.
+beforeEach(cleanUpAll);
 
 // ---------------------------------------------------------------------------
 // 1. retrieveEntityTypes
@@ -46,7 +28,6 @@ describe("retrieveEntityTypes", () => {
     // Create an entity so there's at least one type to query
     const entity = { ...makeEntity(), type: "DiscoveryTestEntity" };
     await createEntity(entity);
-    trackEntity(entity);
 
     const response = await retrieveEntityTypes();
     expectOk(response);
@@ -57,7 +38,6 @@ describe("retrieveEntityTypes", () => {
   it("should support details=true query parameter", async () => {
     const entity = { ...makeEntity(), type: "DiscoveryDetailsEntity" };
     await createEntity(entity);
-    trackEntity(entity);
 
     const response = await retrieveEntityTypes({ details: true });
     expectOk(response);
@@ -68,7 +48,6 @@ describe("retrieveEntityTypes", () => {
   it("should support local=true query parameter", async () => {
     const entity = { ...makeEntity(), type: "DiscoveryLocalEntity" };
     await createEntity(entity);
-    trackEntity(entity);
 
     const response = await retrieveEntityTypes({ local: true });
     expect(response.status).toBe(200);
@@ -82,7 +61,6 @@ describe("retrieveEntityTypeInfo", () => {
   it("should retrieve type info for an existing entity type", async () => {
     const entity = { ...makeEntity(), type: "EntityTypeInfoTest" };
     await createEntity(entity);
-    trackEntity(entity);
 
     const response = await retrieveEntityTypeInfo("EntityTypeInfoTest");
     expectOk(response);
@@ -104,7 +82,6 @@ describe("retrieveAttrTypes", () => {
   it("should retrieve attribute types list and return 200", async () => {
     const entity = makeEntity();
     await createEntity(entity);
-    trackEntity(entity);
 
     const response = await retrieveAttrTypes();
     expectOk(response);
@@ -115,7 +92,6 @@ describe("retrieveAttrTypes", () => {
   it("should support details=true query parameter", async () => {
     const entity = makeEntity();
     await createEntity(entity);
-    trackEntity(entity);
 
     const response = await retrieveAttrTypes({ details: true });
     expectOk(response);
@@ -131,7 +107,6 @@ describe("retrieveAttrTypeInfo", () => {
   it("should retrieve attribute type info for an existing attribute", async () => {
     const entity = makeEntity();
     await createEntity(entity);
-    trackEntity(entity);
 
     // "temperature" attr exists on the entity created via makeEntity()
     const response = await retrieveAttrTypeInfo("temperature");
@@ -151,19 +126,6 @@ describe("retrieveAttrTypeInfo", () => {
 // 5. createContext
 // ---------------------------------------------------------------------------
 describe("createContext", () => {
-  const contextIds: string[] = [];
-
-  afterEach(async () => {
-    while (contextIds.length > 0) {
-      const id = contextIds.pop()!;
-      try {
-        await deleteContext(id);
-      } catch {
-        // Ignore cleanup failures
-      }
-    }
-  });
-
   it("should create a JSON-LD context and return 201", async () => {
     const contextBody = {
       "@context": {
@@ -177,10 +139,6 @@ describe("createContext", () => {
     const response = await createContext(contextBody);
     expect(response.status).toBe(201);
     expect(response.location).toBeDefined();
-
-    // Extract context ID from Location header for cleanup
-    const contextId = decodeURIComponent(response.location.split("/").pop()!);
-    contextIds.push(contextId);
   });
 });
 
@@ -204,19 +162,6 @@ describe("listContexts", () => {
 // 7. retrieveContext
 // ---------------------------------------------------------------------------
 describe("retrieveContext", () => {
-  const contextIds: string[] = [];
-
-  afterEach(async () => {
-    while (contextIds.length > 0) {
-      const id = contextIds.pop()!;
-      try {
-        await deleteContext(id);
-      } catch {
-        // Ignore
-      }
-    }
-  });
-
   it("should retrieve a previously created context", async () => {
     // First, create a context to have a valid ID
     const contextBody = {
@@ -234,7 +179,6 @@ describe("retrieveContext", () => {
     const contextId = decodeURIComponent(
       createResponse.location.split("/").pop()!,
     );
-    contextIds.push(contextId);
 
     const response = await retrieveContext(contextId);
     expectOk(response);
@@ -255,7 +199,6 @@ describe("retrieveContext", () => {
     const contextId = decodeURIComponent(
       createResponse.location.split("/").pop()!,
     );
-    contextIds.push(contextId);
 
     const response = await retrieveContext(contextId, { details: true });
     expectOk(response);
