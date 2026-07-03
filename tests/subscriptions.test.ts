@@ -11,12 +11,13 @@ import {
   updateCSRSubscription,
   deleteCSRSubscription,
 } from "../src";
-import {
-  makeSubscription,
-  expectHttpError,
-  cleanUpAll,
-} from "./helpers";
+import { expectHttpError, cleanUpAll, NGSILD_CORE_CONTEXT } from "./helpers";
 import { NgsiLdNotFound, NgsiLdConflict } from "../src";
+import {
+  EntitySelector,
+  MaybeContext,
+  Subscription,
+} from "../src/generated/schemas";
 
 // Wipe all stale resources from previous crashed runs before each test.
 beforeEach(cleanUpAll);
@@ -24,6 +25,24 @@ beforeEach(cleanUpAll);
 // ===========================================================================
 // Standard Subscriptions (/subscriptions)
 // ===========================================================================
+
+let subCounter = 0;
+function makeSubscription() {
+  subCounter += 1;
+  const suffix = `${Date.now()}-${subCounter}`;
+  return {
+    "@context": NGSILD_CORE_CONTEXT,
+    id: `urn:ngsi-ld:Subscription:test-${suffix}`,
+    type: "Subscription",
+    entities: [{ type: "TestEntity" }] as EntitySelector[],
+    notification: {
+      endpoint: {
+        uri: "http://example.com/notification",
+        accept: "application/json" as const,
+      },
+    },
+  } as const satisfies MaybeContext<Subscription>;
+}
 
 // ---------------------------------------------------------------------------
 // 1. createSubscription

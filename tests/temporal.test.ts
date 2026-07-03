@@ -11,12 +11,7 @@ import {
   temporalQueryBatch,
   NgsiLdNotImplemented,
 } from "../src";
-import {
-  catchHttpError,
-  cleanUpAll,
-  detectBroker,
-  expectHttpError,
-} from "./helpers";
+import { cleanUpAll, detectBroker, expectHttpError } from "./helpers";
 import { NgsiLdBadRequest, NgsiLdNotFound } from "../src";
 
 // Wipe all stale resources from previous crashed runs before each test.

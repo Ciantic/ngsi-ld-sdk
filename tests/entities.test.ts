@@ -15,7 +15,6 @@ import {
   deleteAttrs,
   replaceAttrs,
 } from "../src";
-import type { Property } from "../src/generated/schemas";
 import {
   makeEntity,
   makeEntityWithGeo,
