@@ -161,31 +161,29 @@ describe("deleteBatch", () => {
 // 5. queryBatch
 // ---------------------------------------------------------------------------
 describe("queryBatch", () => {
-  it("should query entities by type and return 200", async () => {
+  it("should query entities by type", async () => {
     const entity1 = makeEntity();
     const entity2 = makeEntity();
 
     await createBatch([entity1, entity2]);
 
-    const response = await queryBatch({
+    const data = await queryBatch({
       type: "Query",
       entities: [{ type: "TestEntity" }],
     });
 
-    expect(response.status).toBe(200);
-    expect(Array.isArray(response.data)).toBe(true);
-    expect(response.data.length).toBeGreaterThanOrEqual(2);
+    expect(Array.isArray(data)).toBe(true);
+    expect(data.length).toBeGreaterThanOrEqual(2);
   });
 
   it("should return empty array for query matching no entities", async () => {
-    const response = await queryBatch({
+    const data = await queryBatch({
       type: "Query",
       entities: [{ type: "NonExistentType" }],
     });
 
-    expect(response.status).toBe(200);
-    expect(Array.isArray(response.data)).toBe(true);
-    expect(response.data.length).toBe(0);
+    expect(Array.isArray(data)).toBe(true);
+    expect(data.length).toBe(0);
   });
 });
 
@@ -197,15 +195,11 @@ describe("queryGeoBatch", () => {
     const entity = makeEntityWithGeo();
     await createEntity(entity);
 
-    const response = await queryGeoBatch({
+    const fc = await queryGeoBatch({
       type: "Query",
       entities: [{ type: "TestEntity" }],
     });
 
-    expect(response.status).toBe(200);
-
-    // Should be a GeoJSON FeatureCollection containing our entity
-    const fc = response.data;
     expect(fc.type).toBe("FeatureCollection");
     expect(fc.features).toBeDefined();
     expect(fc.features!.length).toBeGreaterThanOrEqual(1);
@@ -217,14 +211,13 @@ describe("queryGeoBatch", () => {
   });
 
   it("should return empty FeatureCollection for batch query with no matches", async () => {
-    const response = await queryGeoBatch({
+    const fc = await queryGeoBatch({
       type: "Query",
       entities: [{ type: "NonExistentType" }],
     });
 
-    expect(response.status).toBe(200);
-    expect(response.data.type).toBe("FeatureCollection");
-    expect(response.data.features).toEqual([]);
+    expect(fc.type).toBe("FeatureCollection");
+    expect(fc.features).toEqual([]);
   });
 });
 

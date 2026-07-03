@@ -115,11 +115,7 @@ describe("queryGeoEntity", () => {
     const entity = makeEntityWithGeo();
     await createEntity(entity);
 
-    const response = await queryGeoEntity({ type: "TestEntity" });
-    expect(response.status).toBe(200);
-
-    // Should be a GeoJSON FeatureCollection containing our entity
-    const fc = response.data;
+    const fc = await queryGeoEntity({ type: "TestEntity" });
     expect(fc.type).toBe("FeatureCollection");
     expect(fc.features).toBeDefined();
     expect(fc.features!.length).toBe(1);
@@ -132,10 +128,9 @@ describe("queryGeoEntity", () => {
   });
 
   it("should return empty FeatureCollection for no matches", async () => {
-    const response = await queryGeoEntity({ type: "NonExistentType" });
-    expect(response.status).toBe(200);
-    expect(response.data.type).toBe("FeatureCollection");
-    expect(response.data.features).toEqual([]);
+    const fc = await queryGeoEntity({ type: "NonExistentType" });
+    expect(fc.type).toBe("FeatureCollection");
+    expect(fc.features).toEqual([]);
   });
 });
 
@@ -143,13 +138,13 @@ describe("queryGeoEntity", () => {
 // 3. retrieveEntity
 // ---------------------------------------------------------------------------
 describe("retrieveEntity", () => {
-  it("should retrieve an entity by id and return 200", async () => {
+  it("should retrieve an entity by id", async () => {
     const entity = makeEntity();
     await createEntity(entity);
 
-    const response = await retrieveEntity(entity.id!);
-    expect(response.status).toBe(200);
-    expect(response.data).toBeDefined();
+    const data = await retrieveEntity(entity.id!);
+    expect(data).toBeDefined();
+    expect(data.id).toBe(entity.id);
   });
 
   it("should return 404 for a non-existent entity", async () => {
@@ -167,11 +162,7 @@ describe("retrieveGeoEntity", () => {
     const entity = makeEntityWithGeo();
     await createEntity(entity);
 
-    const response = await retrieveGeoEntity(entity.id!);
-    expect(response.status).toBe(200);
-
-    // Should be a GeoJSON Feature
-    const feature = response.data;
+    const feature = await retrieveGeoEntity(entity.id!);
     expect(feature.type).toBe("Feature");
     expect(feature.id).toBe(entity.id);
     expect(feature.geometry).toBeDefined();
@@ -185,16 +176,13 @@ describe("retrieveGeoEntity", () => {
     );
   });
 
-  it("should return 200 but null geometry for entity without GeoProperty", async () => {
+  it("should return Feature with null geometry for entity without GeoProperty", async () => {
     const entity = makeEntity();
     await createEntity(entity);
 
-    const response = await retrieveGeoEntity(entity.id!);
-    expect(response.status).toBe(200);
-
-    // Feature with null geometry when no GeoProperty exists
-    expect(response.data.type).toBe("Feature");
-    expect(response.data.geometry).toBeNull();
+    const feature = await retrieveGeoEntity(entity.id!);
+    expect(feature.type).toBe("Feature");
+    expect(feature.geometry).toBeNull();
   });
 });
 
@@ -241,13 +229,7 @@ describe("mergeEntity", () => {
     expect(response.status).toBe(204);
 
     // Verify the merge worked: retrieve and check the new attribute exists
-    const retrieved = await retrieveEntity(entity.id!);
-    if (retrieved.status !== 200) {
-      throw new Error(
-        `Failed to retrieve entity after merge: ${retrieved.status}`,
-      );
-    }
-    const data = retrieved.data;
+    const data = await retrieveEntity(entity.id!);
     const props = data["$props"];
     expect(props?.["humidity"]).toBeDefined();
   });

@@ -19,6 +19,8 @@ import type {
   Entity,
   EntityMap,
   EntityTemporal,
+  Feature,
+  FeatureCollection,
   ListContextsParams,
   MaybeContext,
   MergeBatchParams,
@@ -79,13 +81,8 @@ import {
   MergeBatchResponse,
   MergeEntityResponse,
   NonReadonly,
-  PickRequired,
-  QueryBatchResponse,
-  QueryGeoBatchResponse,
   QueryCSRResponse,
   QueryCSRSubscriptionResponse,
-  QueryEntityResponse,
-  QueryGeoEntityResponse,
   QuerySubscriptionResponse,
   QueryTemporalResponse,
   ReplaceAttrsResponse,
@@ -97,13 +94,10 @@ import {
   RetrieveCSRSubscriptionResponse,
   RetrieveContextResponse,
   RetrieveEntityMapResponse,
-  RetrieveEntityResponse,
-  RetrieveGeoEntityResponse,
   RetrieveEntityTypeInfoResponse,
   RetrieveEntityTypesResponse,
   RetrieveSubscriptionResponse,
   RetrieveTemporalResponse,
-  TemporalQueryBatchResponse,
   UpdateAttrsResponse,
   UpdateAttrsTemporalResponse,
   UpdateBatchResponse,
@@ -238,10 +232,11 @@ export const queryGeoEntity = (
   params?: QueryEntityParams,
   options?: RequestInit,
 ) => {
-  return fetcher<QueryGeoEntityResponse>(getQueryEntityUrl(params), {
+  return fetcher<FeatureCollection>(getQueryEntityUrl(params), {
     ...options,
     method: "GET",
     headers: { Accept: "application/geo+json", ...options?.headers },
+    returnFormat: "body",
   });
 };
 /**
@@ -263,13 +258,11 @@ export const retrieveEntity = (
   params?: RetrieveEntityParams,
   options?: RequestInit,
 ) => {
-  return fetcher<RetrieveEntityResponse>(
-    getRetrieveEntityUrl(entityId, params),
-    {
-      ...options,
-      method: "GET",
-    },
-  );
+  return fetcher<MaybeContext<Entity>>(getRetrieveEntityUrl(entityId, params), {
+    ...options,
+    method: "GET",
+    returnFormat: "body",
+  });
 };
 /**
  * 5.7.1 Retrieve Entity — with `Accept: application/geo+json`.
@@ -287,14 +280,12 @@ export const retrieveGeoEntity = (
   params?: Omit<RetrieveEntityParams, "options">,
   options?: RequestInit,
 ) => {
-  return fetcher<RetrieveGeoEntityResponse>(
-    getRetrieveEntityUrl(entityId, params),
-    {
-      ...options,
-      method: "GET",
-      headers: { Accept: "application/geo+json", ...options?.headers },
-    },
-  );
+  return fetcher<Feature>(getRetrieveEntityUrl(entityId, params), {
+    ...options,
+    method: "GET",
+    headers: { Accept: "application/geo+json", ...options?.headers },
+    returnFormat: "body",
+  });
 };
 /**
  * 5.6.6 Delete entity.
@@ -1069,11 +1060,12 @@ export const queryBatch = (
   params?: QueryBatchParams,
   options?: RequestInit,
 ) => {
-  return fetcher<QueryBatchResponse>(getQueryBatchUrl(params), {
+  return fetcher<MaybeContext<Entity>[]>(getQueryBatchUrl(params), {
     ...options,
     method: "POST",
     headers: { "Content-Type": "application/json", ...options?.headers },
     body: JSON.stringify(query),
+    returnFormat: "body",
   });
 };
 /**
@@ -1092,7 +1084,7 @@ export const queryGeoBatch = (
   params?: QueryBatchParams,
   options?: RequestInit,
 ) => {
-  return fetcher<QueryGeoBatchResponse>(getQueryBatchUrl(params), {
+  return fetcher<FeatureCollection>(getQueryBatchUrl(params), {
     ...options,
     method: "POST",
     headers: {
@@ -1101,6 +1093,7 @@ export const queryGeoBatch = (
       ...options?.headers,
     },
     body: JSON.stringify(query),
+    returnFormat: "body",
   });
 };
 /**
@@ -1404,12 +1397,16 @@ export const temporalQueryBatch = (
   params?: TemporalQueryBatchParams,
   options?: RequestInit,
 ) => {
-  return fetcher<TemporalQueryBatchResponse>(getTemporalQueryBatchUrl(params), {
-    ...options,
-    method: "POST",
-    headers: { "Content-Type": "application/json", ...options?.headers },
-    body: JSON.stringify(queryTemporalBody),
-  });
+  return fetcher<MaybeContext<EntityTemporal>[]>(
+    getTemporalQueryBatchUrl(params),
+    {
+      ...options,
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(queryTemporalBody),
+      returnFormat: "body",
+    },
+  );
 };
 /**
  * 5.7.5 Retrieve Available Entity Types.

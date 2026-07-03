@@ -6,8 +6,6 @@ import type {
   EntityMap,
   EntityTemporal,
   EntityTypeInfo,
-  Feature,
-  FeatureCollection,
   LdContextMetadata,
   MaybeContext,
   MultiStatusBatchOperationResultResponse,
@@ -69,46 +67,6 @@ export type CreateEntityResponseSuccess =
   CreateEntityResponse201 | CreateEntityResponse207;
 
 export type CreateEntityResponse = CreateEntityResponseSuccess;
-export type QueryEntityResponse200 = {
-  data: MaybeContext<Entity>[];
-  status: 200;
-};
-
-export type QueryEntityResponseSuccess = QueryEntityResponse200;
-
-export type QueryEntityResponse = QueryEntityResponseSuccess;
-export type RetrieveEntityResponse200 = {
-  data: MaybeContext<Entity>;
-  status: 200;
-};
-
-export type RetrieveEntityResponseSuccess = RetrieveEntityResponse200;
-
-export type RetrieveEntityResponse = RetrieveEntityResponseSuccess;
-
-// Narrowed types for GeoJSON content negotiation.
-// When a consumer explicitly requests application/geo+json, the response
-// data is a GeoJSON Feature (single) or FeatureCollection (query).
-export type RetrieveGeoEntityResponse200 = {
-  data: Feature;
-  status: 200;
-};
-
-export type RetrieveGeoEntityResponse = RetrieveGeoEntityResponse200;
-
-export type QueryGeoEntityResponse200 = {
-  data: FeatureCollection;
-  status: 200;
-};
-
-export type QueryGeoEntityResponse = QueryGeoEntityResponse200;
-
-export type QueryGeoBatchResponse200 = {
-  data: FeatureCollection;
-  status: 200;
-};
-
-export type QueryGeoBatchResponse = QueryGeoBatchResponse200;
 
 export type DeleteEntityResponse204 = {
   data: void;
@@ -419,14 +377,6 @@ export type DeleteBatchResponseSuccess =
   DeleteBatchResponse204 | DeleteBatchResponse207;
 
 export type DeleteBatchResponse = DeleteBatchResponseSuccess;
-export type QueryBatchResponse200 = {
-  data: MaybeContext<Entity>[];
-  status: 200;
-};
-
-export type QueryBatchResponseSuccess = QueryBatchResponse200;
-
-export type QueryBatchResponse = QueryBatchResponseSuccess;
 export type MergeBatchResponse204 = {
   data: void;
   status: 204;
@@ -515,14 +465,6 @@ export type DeleteAttrInstanceTemporalResponseSuccess =
 
 export type DeleteAttrInstanceTemporalResponse =
   DeleteAttrInstanceTemporalResponseSuccess;
-export type TemporalQueryBatchResponse200 = {
-  data: MaybeContext<EntityTemporal>[];
-  status: 200;
-};
-
-export type TemporalQueryBatchResponseSuccess = TemporalQueryBatchResponse200;
-
-export type TemporalQueryBatchResponse = TemporalQueryBatchResponseSuccess;
 export type RetrieveEntityTypesResponse200 = {
   data: RetrieveEntityTypes200;
   status: 200;

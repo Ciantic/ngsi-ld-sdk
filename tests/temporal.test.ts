@@ -408,9 +408,8 @@ describe("temporalQueryBatch", () => {
       },
     };
 
-    const response = await temporalQueryBatch(batchBody);
-    expect(response.status).toBe(200);
-    expect(Array.isArray(response.data)).toBe(true);
+    const data = await temporalQueryBatch(batchBody);
+    expect(Array.isArray(data)).toBe(true);
   });
 
   it("should support temporal query batch with entity type filter", async () => {
@@ -427,8 +426,7 @@ describe("temporalQueryBatch", () => {
       },
     };
 
-    const response = await temporalQueryBatch(batchBody);
-    expect(response.status).toBe(200);
-    expect(Array.isArray(response.data)).toBe(true);
+    const data = await temporalQueryBatch(batchBody);
+    expect(Array.isArray(data)).toBe(true);
   });
 });
