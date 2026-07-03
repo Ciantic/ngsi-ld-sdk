@@ -97,18 +97,28 @@ export interface GeometryMultiPoint {
 
 export type GeometryLinearRing = GeometryPositionArray;
 
-export type GeometryPolygon = GeometryLinearRing[];
+export type GeometryPolygonCoordinates = GeometryLinearRing[];
 
-export type GeometryLineString = GeometryPositionArray;
+export type GeometryLineStringCoordinates = GeometryPositionArray;
+
+export interface GeometryPolygon {
+  type: "Polygon";
+  coordinates: GeometryPolygonCoordinates;
+}
+
+export interface GeometryLineString {
+  type: "LineString";
+  coordinates: GeometryLineStringCoordinates;
+}
 
 export interface GeometryMultiLineString {
   type: "MultiLineString";
-  coordinates: GeometryLineString[];
+  coordinates: GeometryLineStringCoordinates[];
 }
 
 export interface GeometryMultiPolygon {
   type: "MultiPolygon";
-  coordinates: GeometryLineString[];
+  coordinates: GeometryLineStringCoordinates[];
 }
 
 export type Geometry =
@@ -290,10 +300,6 @@ export interface FeatureCollection {
   features?: Feature[];
   "@context"?: LdContext;
 }
-
-export type GeometryPolygonType = "Polygon";
-
-export type GeometryLineStringType = "LineString";
 
 export type GeoQueryCoordinates = string | { [key: string]: unknown }[];
 
@@ -651,9 +657,9 @@ export type QueryContainedByParameter = string[];
 export type QueryCoordinatesParameter =
   | GeometryPosition
   | GeometryPositionArray
-  | GeometryLineString
+  | GeometryLineStringCoordinates
   | GeometryLinearRing
-  | GeometryPolygon;
+  | GeometryPolygonCoordinates;
 
 export type QueryCountParameter = boolean;
 
