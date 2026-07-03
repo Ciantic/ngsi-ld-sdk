@@ -8,38 +8,14 @@ export type OptionsRepresentation =
 
 export type OptionsSysAttrs = "sysAttrs";
 
-export type OptionsTemporal =
-  (typeof OptionsTemporal)[keyof typeof OptionsTemporal];
+export type OptionsTemporal = "temporalValues" | "aggregatedValues";
 
-export const OptionsTemporal = {
-  temporalValues: "temporalValues",
-  aggregatedValues: "aggregatedValues",
-} as const;
-
-export type OptionsUpsert = (typeof OptionsUpsert)[keyof typeof OptionsUpsert];
-
-export const OptionsUpsert = {
-  replace: "replace",
-  update: "update",
-} as const;
+export type OptionsUpsert = "replace" | "update";
 
 export type FormatRepresentation =
-  (typeof FormatRepresentation)[keyof typeof FormatRepresentation];
+  "normalized" | "concise" | "keyValues" | "simplified";
 
-export const FormatRepresentation = {
-  normalized: "normalized",
-  concise: "concise",
-  keyValues: "keyValues",
-  simplified: "simplified",
-} as const;
-
-export type FormatTemporal =
-  (typeof FormatTemporal)[keyof typeof FormatTemporal];
-
-export const FormatTemporal = {
-  temporalValues: "temporalValues",
-  aggregatedValues: "aggregatedValues",
-} as const;
+export type FormatTemporal = "temporalValues" | "aggregatedValues";
 
 export type CreatedAt = string;
 
@@ -49,11 +25,7 @@ export type DeletedAt = string;
 
 export type ObservedAt = string;
 
-export type AttributeType = (typeof AttributeType)[keyof typeof AttributeType];
-
-export const AttributeType = {
-  Attribute: "Attribute",
-} as const;
+export type AttributeType = "Attribute";
 
 export interface Attribute {
   id: string;
@@ -64,12 +36,7 @@ export interface Attribute {
   typeNames?: string[];
 }
 
-export type AttributeListType =
-  (typeof AttributeListType)[keyof typeof AttributeListType];
-
-export const AttributeListType = {
-  AttributeList: "AttributeList",
-} as const;
+export type AttributeListType = "AttributeList";
 
 export interface AttributeList {
   id: string;
@@ -96,28 +63,12 @@ export interface BatchOperationResult {
   errors: BatchEntityError[];
 }
 
-export type CsourceNotificationType =
-  (typeof CsourceNotificationType)[keyof typeof CsourceNotificationType];
-
-export const CsourceNotificationType = {
-  CsourceNotification: "CsourceNotification",
-} as const;
+export type CsourceNotificationType = "CsourceNotification";
 
 export type CsourceNotificationTriggerReason =
-  (typeof CsourceNotificationTriggerReason)[keyof typeof CsourceNotificationTriggerReason];
+  "newlyMatching" | "updated" | "noLongerMatching";
 
-export const CsourceNotificationTriggerReason = {
-  newlyMatching: "newlyMatching",
-  updated: "updated",
-  noLongerMatching: "noLongerMatching",
-} as const;
-
-export type CsourceRegistrationType =
-  (typeof CsourceRegistrationType)[keyof typeof CsourceRegistrationType];
-
-export const CsourceRegistrationType = {
-  ContextSourceRegistration: "ContextSourceRegistration",
-} as const;
+export type CsourceRegistrationType = "ContextSourceRegistration";
 
 export interface EntityInfo {
   id?: string;
@@ -180,14 +131,7 @@ export interface KeyValuePair {
 }
 
 export type CsourceRegistrationMode =
-  (typeof CsourceRegistrationMode)[keyof typeof CsourceRegistrationMode];
-
-export const CsourceRegistrationMode = {
-  inclusive: "inclusive",
-  exclusive: "exclusive",
-  redirect: "redirect",
-  auxiliary: "auxiliary",
-} as const;
+  "auxiliary" | "exclusive" | "inclusive" | "redirect";
 
 export interface RegistrationManagementInfo {
   localOnly?: boolean;
@@ -240,12 +184,7 @@ export interface CsourceNotification {
   triggerReason: CsourceNotificationTriggerReason;
 }
 
-export type DateTimeValueType =
-  (typeof DateTimeValueType)[keyof typeof DateTimeValueType];
-
-export const DateTimeValueType = {
-  DateTime: "DateTime",
-} as const;
+export type DateTimeValueType = "DateTime";
 
 export interface DateTimeValue {
   "@type": DateTimeValueType;
@@ -253,13 +192,7 @@ export interface DateTimeValue {
 }
 
 export type EndpointAccept =
-  (typeof EndpointAccept)[keyof typeof EndpointAccept];
-
-export const EndpointAccept = {
-  "application/json": "application/json",
-  "application/ld+json": "application/ld+json",
-  "application/geo+json": "application/geo+json",
-} as const;
+  "application/json" | "application/ld+json" | "application/geo+json";
 
 export interface Endpoint {
   uri: string;
@@ -270,12 +203,7 @@ export interface Endpoint {
   notifierInfo?: KeyValuePair[];
 }
 
-export type GeoPropertyType =
-  (typeof GeoPropertyType)[keyof typeof GeoPropertyType];
-
-export const GeoPropertyType = {
-  GeoProperty: "GeoProperty",
-} as const;
+export type GeoPropertyType = "GeoProperty";
 
 export interface GeoProperty {
   type: GeoPropertyType;
@@ -322,12 +250,7 @@ export interface EntityTemporal {
   $props?: { [key: string]: NgsildAttributeTemporal };
 }
 
-export type EntityTypeType =
-  (typeof EntityTypeType)[keyof typeof EntityTypeType];
-
-export const EntityTypeType = {
-  EntityType: "EntityType",
-} as const;
+export type EntityTypeType = "EntityType";
 
 export interface EntityType {
   id: string;
@@ -336,12 +259,7 @@ export interface EntityType {
   attributeNames: string[];
 }
 
-export type EntityTypeInfoType =
-  (typeof EntityTypeInfoType)[keyof typeof EntityTypeInfoType];
-
-export const EntityTypeInfoType = {
-  EntityTypeInfo: "EntityTypeInfo",
-} as const;
+export type EntityTypeInfoType = "EntityTypeInfo";
 
 export interface EntityTypeInfo {
   id: string;
@@ -359,11 +277,7 @@ export interface EntityTypeList {
   typeList: string[];
 }
 
-export type FeatureType = (typeof FeatureType)[keyof typeof FeatureType];
-
-export const FeatureType = {
-  Feature: "Feature",
-} as const;
+export type FeatureType = "Feature";
 
 export interface FeatureProperties {
   type: string | string[];
@@ -389,12 +303,7 @@ export interface Feature {
   "@context"?: LdContext;
 }
 
-export type FeatureCollectionType =
-  (typeof FeatureCollectionType)[keyof typeof FeatureCollectionType];
-
-export const FeatureCollectionType = {
-  FeatureCollection: "FeatureCollection",
-} as const;
+export type FeatureCollectionType = "FeatureCollection";
 
 export interface FeatureCollection {
   type: FeatureCollectionType;
@@ -402,19 +311,9 @@ export interface FeatureCollection {
   "@context"?: LdContext;
 }
 
-export type GeometryPolygonType =
-  (typeof GeometryPolygonType)[keyof typeof GeometryPolygonType];
+export type GeometryPolygonType = "Polygon";
 
-export const GeometryPolygonType = {
-  Polygon: "Polygon",
-} as const;
-
-export type GeometryLineStringType =
-  (typeof GeometryLineStringType)[keyof typeof GeometryLineStringType];
-
-export const GeometryLineStringType = {
-  LineString: "LineString",
-} as const;
+export type GeometryLineStringType = "LineString";
 
 export type GeoQueryCoordinates = string | { [key: string]: unknown }[];
 
@@ -425,12 +324,7 @@ export interface GeoQuery {
   geoproperty?: string;
 }
 
-export type LanguagePropertyType =
-  (typeof LanguagePropertyType)[keyof typeof LanguagePropertyType];
-
-export const LanguagePropertyType = {
-  LanguageProperty: "LanguageProperty",
-} as const;
+export type LanguagePropertyType = "LanguageProperty";
 
 export type LanguagePropertyLanguageMap = { [key: string]: unknown };
 
@@ -450,13 +344,7 @@ export interface LanguageProperty {
 }
 
 export type LdContextMetadataItemKind =
-  (typeof LdContextMetadataItemKind)[keyof typeof LdContextMetadataItemKind];
-
-export const LdContextMetadataItemKind = {
-  Cached: "Cached",
-  Hosted: "Hosted",
-  ImplicitlyCreated: "ImplicitlyCreated",
-} as const;
+  "Cached" | "Hosted" | "ImplicitlyCreated";
 
 export type LdContextMetadataItemExtraInfo = { [key: string]: unknown };
 
@@ -478,12 +366,7 @@ export interface NotUpdatedDetails {
   registrationId?: string;
 }
 
-export type NotificationType =
-  (typeof NotificationType)[keyof typeof NotificationType];
-
-export const NotificationType = {
-  Notification: "Notification",
-} as const;
+export type NotificationType = "Notification";
 
 export interface Notification {
   id: string;
@@ -493,31 +376,11 @@ export interface Notification {
   data: Entity[] | FeatureCollection;
 }
 
-export type NotificationParamsFormat =
-  (typeof NotificationParamsFormat)[keyof typeof NotificationParamsFormat];
+export type NotificationParamsFormat = "normalized" | "concise" | "keyValues";
 
-export const NotificationParamsFormat = {
-  normalized: "normalized",
-  concise: "concise",
-  keyValues: "keyValues",
-} as const;
+export type NotificationParamsJoin = "flat" | "inline" | "@none";
 
-export type NotificationParamsJoin =
-  (typeof NotificationParamsJoin)[keyof typeof NotificationParamsJoin];
-
-export const NotificationParamsJoin = {
-  flat: "flat",
-  inline: "inline",
-  "@none": "@none",
-} as const;
-
-export type NotificationParamsStatus =
-  (typeof NotificationParamsStatus)[keyof typeof NotificationParamsStatus];
-
-export const NotificationParamsStatus = {
-  ok: "ok",
-  failed: "failed",
-} as const;
+export type NotificationParamsStatus = "ok" | "failed";
 
 export interface NotificationParams {
   attributes?: string[];
@@ -539,11 +402,7 @@ export interface NotificationParams {
 
 export type Path = string;
 
-export type PropertyType = (typeof PropertyType)[keyof typeof PropertyType];
-
-export const PropertyType = {
-  Property: "Property",
-} as const;
+export type PropertyType = "Property";
 
 export interface Property {
   type: PropertyType;
@@ -559,11 +418,7 @@ export interface Property {
   $props?: { [key: string]: NgsildAttribute };
 }
 
-export type QueryType = (typeof QueryType)[keyof typeof QueryType];
-
-export const QueryType = {
-  Query: "Query",
-} as const;
+export type QueryType = "Query";
 
 export interface Query {
   type: QueryType;
@@ -581,24 +436,10 @@ export interface Query {
   entityMap?: boolean;
 }
 
-export type TemporalQueryTimerel =
-  (typeof TemporalQueryTimerel)[keyof typeof TemporalQueryTimerel];
-
-export const TemporalQueryTimerel = {
-  before: "before",
-  after: "after",
-  between: "between",
-} as const;
+export type TemporalQueryTimerel = "before" | "after" | "between";
 
 export type TemporalQueryTimeproperty =
-  (typeof TemporalQueryTimeproperty)[keyof typeof TemporalQueryTimeproperty];
-
-export const TemporalQueryTimeproperty = {
-  observedAt: "observedAt",
-  createdAt: "createdAt",
-  modifiedAt: "modifiedAt",
-  deletedAt: "deletedAt",
-} as const;
+  "observedAt" | "createdAt" | "modifiedAt" | "deletedAt";
 
 export interface TemporalQuery {
   timerel: TemporalQueryTimerel;
@@ -611,12 +452,7 @@ export type QueryTemporal = Query & {
   temporalQ: TemporalQuery;
 };
 
-export type RelationshipType =
-  (typeof RelationshipType)[keyof typeof RelationshipType];
-
-export const RelationshipType = {
-  Relationship: "Relationship",
-} as const;
+export type RelationshipType = "Relationship";
 
 export interface Relationship {
   type: RelationshipType;
@@ -633,33 +469,17 @@ export interface Relationship {
   $props?: { [key: string]: NgsildAttribute };
 }
 
-export type SubscriptionCommonType =
-  (typeof SubscriptionCommonType)[keyof typeof SubscriptionCommonType];
-
-export const SubscriptionCommonType = {
-  Subscription: "Subscription",
-} as const;
+export type SubscriptionCommonType = "Subscription";
 
 export type SubscriptionCommonNotificationTriggerItem =
-  (typeof SubscriptionCommonNotificationTriggerItem)[keyof typeof SubscriptionCommonNotificationTriggerItem];
+  | "entityCreated"
+  | "entityUpdated"
+  | "entityDeleted"
+  | "attributeCreated"
+  | "attributeUpdated"
+  | "attributeDeleted";
 
-export const SubscriptionCommonNotificationTriggerItem = {
-  entityCreated: "entityCreated",
-  entityUpdated: "entityUpdated",
-  entityDeleted: "entityDeleted",
-  attributeCreated: "attributeCreated",
-  attributeUpdated: "attributeUpdated",
-  attributeDeleted: "attributeDeleted",
-} as const;
-
-export type SubscriptionCommonStatus =
-  (typeof SubscriptionCommonStatus)[keyof typeof SubscriptionCommonStatus];
-
-export const SubscriptionCommonStatus = {
-  active: "active",
-  paused: "paused",
-  expired: "expired",
-} as const;
+export type SubscriptionCommonStatus = "active" | "paused" | "expired";
 
 export interface SubscriptionCommon {
   id?: string;
@@ -702,12 +522,7 @@ export interface UpdateResult {
   notUpdated: NotUpdatedDetails[];
 }
 
-export type VocabPropertyType =
-  (typeof VocabPropertyType)[keyof typeof VocabPropertyType];
-
-export const VocabPropertyType = {
-  VocabProperty: "VocabProperty",
-} as const;
+export type VocabPropertyType = "VocabProperty";
 
 export interface VocabProperty {
   type: VocabPropertyType;
@@ -722,12 +537,7 @@ export interface VocabProperty {
   $props?: { [key: string]: NgsildAttribute };
 }
 
-export type ListPropertyType =
-  (typeof ListPropertyType)[keyof typeof ListPropertyType];
-
-export const ListPropertyType = {
-  ListProperty: "ListProperty",
-} as const;
+export type ListPropertyType = "ListProperty";
 
 export interface ListProperty {
   type: ListPropertyType;
@@ -743,12 +553,7 @@ export interface ListProperty {
   $props?: { [key: string]: NgsildAttribute };
 }
 
-export type ListRelationshipType =
-  (typeof ListRelationshipType)[keyof typeof ListRelationshipType];
-
-export const ListRelationshipType = {
-  ListRelationship: "ListRelationship",
-} as const;
+export type ListRelationshipType = "ListRelationship";
 
 export type ListRelationshipObjectList =
   { [key: string]: unknown }[] | string[];
@@ -771,12 +576,7 @@ export interface ListRelationship {
   $props?: { [key: string]: NgsildAttribute };
 }
 
-export type JsonPropertyType =
-  (typeof JsonPropertyType)[keyof typeof JsonPropertyType];
-
-export const JsonPropertyType = {
-  JsonProperty: "JsonProperty",
-} as const;
+export type JsonPropertyType = "JsonProperty";
 
 export type JsonPropertyJson = { [key: string]: unknown };
 
@@ -795,11 +595,7 @@ export interface JsonProperty {
   $props?: { [key: string]: NgsildAttribute };
 }
 
-export type EntityMapType = (typeof EntityMapType)[keyof typeof EntityMapType];
-
-export const EntityMapType = {
-  EntityMap: "EntityMap",
-} as const;
+export type EntityMapType = "EntityMap";
 
 export type EntityMapEntityMap = { [key: string]: unknown };
 
@@ -813,12 +609,7 @@ export interface EntityMap {
   readonly linkedMaps?: EntityMapLinkedMaps;
 }
 
-export type ContextSourceIdentityType =
-  (typeof ContextSourceIdentityType)[keyof typeof ContextSourceIdentityType];
-
-export const ContextSourceIdentityType = {
-  ContextSourceIdentity: "ContextSourceIdentity",
-} as const;
+export type ContextSourceIdentityType = "ContextSourceIdentity";
 
 export type ContextSourceIdentityContextSourceExtras = {
   [key: string]: unknown;
@@ -886,18 +677,14 @@ export type HeadersNgsildTenantParameter = string;
 export type HeadersViaParameter = string;
 
 export type QueryAggrMethodsParameter =
-  (typeof QueryAggrMethodsParameter)[keyof typeof QueryAggrMethodsParameter];
-
-export const QueryAggrMethodsParameter = {
-  totalCount: "totalCount",
-  distinctCount: "distinctCount",
-  sum: "sum",
-  avg: "avg",
-  min: "min",
-  max: "max",
-  stddev: "stddev",
-  sumsq: "sumsq",
-} as const;
+  | "totalCount"
+  | "distinctCount"
+  | "sum"
+  | "avg"
+  | "min"
+  | "max"
+  | "stddev"
+  | "sumsq";
 
 export type QueryAggrPeriodDurationParameter = string;
 
