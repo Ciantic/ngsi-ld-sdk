@@ -62,8 +62,6 @@ export interface BatchOperationResult {
 export type CsourceNotificationTriggerReason =
   "newlyMatching" | "updated" | "noLongerMatching";
 
-
-
 export interface EntityInfo {
   id?: string;
   idPattern?: string;
