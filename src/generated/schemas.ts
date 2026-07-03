@@ -25,22 +25,18 @@ export type DeletedAt = string;
 
 export type ObservedAt = string;
 
-export type AttributeType = "Attribute";
-
 export interface Attribute {
   id: string;
-  type: AttributeType;
+  type: "Attribute";
   attributeName: string;
   attributeCount?: number;
   attributeTypes?: string[];
   typeNames?: string[];
 }
 
-export type AttributeListType = "AttributeList";
-
 export interface AttributeList {
   id: string;
-  type: AttributeListType;
+  type: "AttributeList";
   attributeList: string[];
 }
 
@@ -63,12 +59,10 @@ export interface BatchOperationResult {
   errors: BatchEntityError[];
 }
 
-export type CsourceNotificationType = "CsourceNotification";
-
 export type CsourceNotificationTriggerReason =
   "newlyMatching" | "updated" | "noLongerMatching";
 
-export type CsourceRegistrationType = "ContextSourceRegistration";
+
 
 export interface EntityInfo {
   id?: string;
@@ -144,7 +138,7 @@ export type CsourceRegistrationStatus = "failed" | "ok";
 
 export interface CsourceRegistration {
   id?: string;
-  type: CsourceRegistrationType;
+  type: "ContextSourceRegistration";
   registrationName?: string;
   contextSourceAlias?: string;
   description?: string;
@@ -177,17 +171,15 @@ export interface CsourceRegistration {
 
 export interface CsourceNotification {
   id: string;
-  type: CsourceNotificationType;
+  type: "CsourceNotification";
   subscriptionId: string;
   notifiedAt: string;
   readonly data: readonly CsourceRegistration[];
   triggerReason: CsourceNotificationTriggerReason;
 }
 
-export type DateTimeValueType = "DateTime";
-
 export interface DateTimeValue {
-  "@type": DateTimeValueType;
+  "@type": "DateTime";
   "@value": string;
 }
 
@@ -203,10 +195,8 @@ export interface Endpoint {
   notifierInfo?: KeyValuePair[];
 }
 
-export type GeoPropertyType = "GeoProperty";
-
 export interface GeoProperty {
-  type: GeoPropertyType;
+  type: "GeoProperty";
   value: Geometry;
   observedAt?: ObservedAt;
   datasetId?: string;
@@ -250,34 +240,26 @@ export interface EntityTemporal {
   $props?: { [key: string]: NgsildAttributeTemporal };
 }
 
-export type EntityTypeType = "EntityType";
-
 export interface EntityType {
   id: string;
-  type: EntityTypeType;
+  type: "EntityType";
   typeName: string;
   attributeNames: string[];
 }
 
-export type EntityTypeInfoType = "EntityTypeInfo";
-
 export interface EntityTypeInfo {
   id: string;
-  type: EntityTypeInfoType;
+  type: "EntityTypeInfo";
   typeName: string;
   entityCount: number;
   attributeDetails: Attribute[];
 }
 
-export type EntityTypeListType = "EntityTypeList";
-
 export interface EntityTypeList {
   id: string;
-  type: EntityTypeListType;
+  type: "EntityTypeList";
   typeList: string[];
 }
-
-export type FeatureType = "Feature";
 
 export interface FeatureProperties {
   type: string | string[];
@@ -297,16 +279,14 @@ export type MaybeContext<T> = T & {
 
 export interface Feature {
   id: string;
-  type: FeatureType;
+  type: "Feature";
   geometry: Geometry;
   properties: FeatureProperties;
   "@context"?: LdContext;
 }
 
-export type FeatureCollectionType = "FeatureCollection";
-
 export interface FeatureCollection {
-  type: FeatureCollectionType;
+  type: "FeatureCollection";
   features?: Feature[];
   "@context"?: LdContext;
 }
@@ -324,14 +304,12 @@ export interface GeoQuery {
   geoproperty?: string;
 }
 
-export type LanguagePropertyType = "LanguageProperty";
-
 export type LanguagePropertyLanguageMap = { [key: string]: unknown };
 
 export type LanguagePropertyPreviousLanguageMap = { [key: string]: unknown };
 
 export interface LanguageProperty {
-  type: LanguagePropertyType;
+  type: "LanguageProperty";
   languageMap?: LanguagePropertyLanguageMap;
   observedAt?: ObservedAt;
   datasetId?: string;
@@ -366,11 +344,9 @@ export interface NotUpdatedDetails {
   registrationId?: string;
 }
 
-export type NotificationType = "Notification";
-
 export interface Notification {
   id: string;
-  type: NotificationType;
+  type: "Notification";
   subscriptionId: string;
   notifiedAt: string;
   data: Entity[] | FeatureCollection;
@@ -402,10 +378,8 @@ export interface NotificationParams {
 
 export type Path = string;
 
-export type PropertyType = "Property";
-
 export interface Property {
-  type: PropertyType;
+  type: "Property";
   value: DateTimeValue | JsonValue;
   observedAt?: ObservedAt;
   unitCode?: string;
@@ -418,10 +392,8 @@ export interface Property {
   $props?: { [key: string]: NgsildAttribute };
 }
 
-export type QueryType = "Query";
-
 export interface Query {
-  type: QueryType;
+  type: "Query";
   entities?: EntitySelector[];
   attrs?: string[];
   pick?: string[];
@@ -452,10 +424,8 @@ export type QueryTemporal = Query & {
   temporalQ: TemporalQuery;
 };
 
-export type RelationshipType = "Relationship";
-
 export interface Relationship {
-  type: RelationshipType;
+  type: "Relationship";
   object?: string | string[];
   objectType?: string | string[];
   observedAt?: ObservedAt;
@@ -469,8 +439,6 @@ export interface Relationship {
   $props?: { [key: string]: NgsildAttribute };
 }
 
-export type SubscriptionCommonType = "Subscription";
-
 export type SubscriptionCommonNotificationTriggerItem =
   | "entityCreated"
   | "entityUpdated"
@@ -483,7 +451,7 @@ export type SubscriptionCommonStatus = "active" | "paused" | "expired";
 
 export interface SubscriptionCommon {
   id?: string;
-  type: SubscriptionCommonType;
+  type: "Subscription";
   subscriptionName?: string;
   description?: string;
   entities?: EntitySelector[];
@@ -522,10 +490,8 @@ export interface UpdateResult {
   notUpdated: NotUpdatedDetails[];
 }
 
-export type VocabPropertyType = "VocabProperty";
-
 export interface VocabProperty {
-  type: VocabPropertyType;
+  type: "VocabProperty";
   vocab?: string | string[];
   readonly previousVocab?: string | string[];
   observedAt?: ObservedAt;
@@ -537,10 +503,8 @@ export interface VocabProperty {
   $props?: { [key: string]: NgsildAttribute };
 }
 
-export type ListPropertyType = "ListProperty";
-
 export interface ListProperty {
-  type: ListPropertyType;
+  type: "ListProperty";
   valueList?: (DateTimeValue | JsonValue)[];
   observedAt?: ObservedAt;
   unitCode?: string;
@@ -553,8 +517,6 @@ export interface ListProperty {
   $props?: { [key: string]: NgsildAttribute };
 }
 
-export type ListRelationshipType = "ListRelationship";
-
 export type ListRelationshipObjectList =
   { [key: string]: unknown }[] | string[];
 
@@ -562,7 +524,7 @@ export type ListRelationshipPreviousObjectList =
   { [key: string]: unknown }[] | string[];
 
 export interface ListRelationship {
-  type: ListRelationshipType;
+  type: "ListRelationship";
   objectList?: ListRelationshipObjectList;
   objectType?: string | string[];
   observedAt?: ObservedAt;
@@ -576,14 +538,12 @@ export interface ListRelationship {
   $props?: { [key: string]: NgsildAttribute };
 }
 
-export type JsonPropertyType = "JsonProperty";
-
 export type JsonPropertyJson = { [key: string]: unknown };
 
 export type JsonPropertyPreviousJson = { [key: string]: unknown };
 
 export interface JsonProperty {
-  type: JsonPropertyType;
+  type: "JsonProperty";
   json?: JsonPropertyJson;
   readonly previousJson?: JsonPropertyPreviousJson;
   observedAt?: ObservedAt;
@@ -595,21 +555,17 @@ export interface JsonProperty {
   $props?: { [key: string]: NgsildAttribute };
 }
 
-export type EntityMapType = "EntityMap";
-
 export type EntityMapEntityMap = { [key: string]: unknown };
 
 export type EntityMapLinkedMaps = { [key: string]: unknown };
 
 export interface EntityMap {
   id?: string;
-  type: EntityMapType;
+  type: "EntityMap";
   expiresAt: string;
   readonly entityMap?: EntityMapEntityMap;
   readonly linkedMaps?: EntityMapLinkedMaps;
 }
-
-export type ContextSourceIdentityType = "ContextSourceIdentity";
 
 export type ContextSourceIdentityContextSourceExtras = {
   [key: string]: unknown;
@@ -617,7 +573,7 @@ export type ContextSourceIdentityContextSourceExtras = {
 
 export interface ContextSourceIdentity {
   id: string;
-  type: ContextSourceIdentityType;
+  type: "ContextSourceIdentity";
   contextSourceExtras?: ContextSourceIdentityContextSourceExtras;
   contextSourceUpTime: string;
   contextSourceTimeAt: string;
