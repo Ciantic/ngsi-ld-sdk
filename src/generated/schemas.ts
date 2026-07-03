@@ -8,58 +8,12 @@ export type JsonValue =
  * 6.16.3 For POST method associated to the operations "Batch Entity Update" and "Append Entity Attributes", the "noOvevwrite"
  * options query parameter indicates that no attribute overwrite shall be performed.
  */
-export type OptionsNoOverwrite =
-  (typeof OptionsNoOverwrite)[keyof typeof OptionsNoOverwrite];
+export type OptionsNoOverwrite = "noOverwrite";
 
-export const OptionsNoOverwrite = {
-  noOverwrite: "noOverwrite",
-} as const;
-
-/**
- * 6.3.7 Representation of Entities.
- *
- * An alternative mechanism to include the format parameter. DEPRECATED.
- *
- * When its value includes the keyword "normalized", a normalized
- * representation of Entities shall be provided as defined by clause 4.5.1, with Attributes returned
- * in the normalized representation as defined in clauses 4.5.2.2, 4.5.3.2 and 4.5.18.2.
- *
- * When its value includes the keyword "concise", a concise lossless representation of Entities shall
- * be provided as defined by clause 4.5.1. with Attributes returned in the concise representation as
- * defined in clauses 4.5.2.3, 4.5.3.3 and 4.5.18.3. In this case the broker will return data in the
- * most concise lossless representation possible, for example removing all Attribute "type" members.
- *
- * When its value includes the keyword "keyValues" (or "simplified" as a synonym), a simplified
- * representation of Entities shall be provided as defined by clause 4.5.4.
- *
- * If the Accept Header is set to "application/geo+json" the response will be in simplified GeoJSON
- * format as defined by clause 4.5.17.
- * @deprecated
- */
 export type OptionsRepresentation =
-  (typeof OptionsRepresentation)[keyof typeof OptionsRepresentation];
+  "concise" | "keyValues" | "normalized" | "simplified";
 
-export const OptionsRepresentation = {
-  normalized: "normalized",
-  concise: "concise",
-  keyValues: "keyValues",
-  simplified: "simplified",
-} as const;
-
-/**
- * 6.3.11 Including system generated attributes.
- *
- * When its value includes the keyword "sysAttrs", a representation of NGSI-LD Elements shall be
- * provided so that the system generated attributes createdAt, modifiedAt are included in the response
- * payload body. In the case of temporal representations, also the system generated attribute deletedAt
- * is included, if the NGSI-LD Element has been deleted.
- */
-export type OptionsSysAttrs =
-  (typeof OptionsSysAttrs)[keyof typeof OptionsSysAttrs];
-
-export const OptionsSysAttrs = {
-  sysAttrs: "sysAttrs",
-} as const;
+export type OptionsSysAttrs = "sysAttrs";
 
 /**
  * 6.3.12 Simplified or aggregated temporal representation of entities.
@@ -2169,15 +2123,6 @@ export const QueryAggrMethodsParameter = {
  */
 export type QueryAggrPeriodDurationParameter = string;
 
-/**
- * List of Attributes to be matched by the Entity and included in the response. If the Entity does not
- * have any of the Attributes in attrs, then a 404 Not Found shall be retrieved. If attrs is not
- * specified, no matching is performed and all Attributes related to the Entity shall be retrieved.
- *
- * A synonym for a combination of the pick and q parameters. DEPRECATED.
- * Each String is an Attribute (Property or Relationship) name.
- * @deprecated
- */
 export type QueryAttrsParameter = string[];
 
 /**
@@ -2263,30 +2208,16 @@ export type QueryIdPatternParameter = string;
 export type QueryGeometryPropertyParameter = string;
 
 export type QueryGeometryParameter =
-  (typeof QueryGeometryParameter)[keyof typeof QueryGeometryParameter];
-
-export const QueryGeometryParameter = {
-  Point: "Point",
-  MultiPoint: "MultiPoint",
-  LineString: "LineString",
-  MultiLineString: "MultiLineString",
-  Polygon: "Polygon",
-  MultiPolygon: "MultiPolygon",
-} as const;
+  | "LineString"
+  | "MultiLineString"
+  | "MultiPoint"
+  | "MultiPolygon"
+  | "Point"
+  | "Polygon";
 
 export type QueryGeopropertyParameter =
-  (typeof QueryGeopropertyParameter)[keyof typeof QueryGeopropertyParameter];
+  "location" | "observationSpace" | "operationSpace";
 
-export const QueryGeopropertyParameter = {
-  location: "location",
-  observationSpace: "observationSpace",
-  operationSpace: "operationSpace",
-} as const;
-
-/**
- * Geo relationship as per clause 4.10. It is part of geoquery. It shall be one if
- * geometry or georel are present.
- */
 export type QueryGeorelParameter =
   | "equals"
   | "disjoint"
@@ -2295,131 +2226,28 @@ export type QueryGeorelParameter =
   | "contains"
   | "overlaps"
   | string;
-
-/**
- * The type of Linked Entity retrieval to apply (see clause 4.5.23). Allowed values: "flat", "inline", "@none".
- */
 export type QueryJoinParameter = string;
-
-/**
- * Depth of Linked Entity retrieval to apply. Only applicable if join parameter is present.
- */
 export type QueryJoinLevelParameter = number;
-
-export type QueryKindParameter =
-  (typeof QueryKindParameter)[keyof typeof QueryKindParameter];
-
-export const QueryKindParameter = {
-  Cached: "Cached",
-  Hosted: "Hosted",
-  ImplicitlyCreated: "ImplicitlyCreated",
-} as const;
-
-/**
- * It is used to reduce languageMaps to a string or string array property in a single preferred language.
- */
+export type QueryKindParameter = "Cached" | "Hosted" | "ImplicitlyCreated";
 export type QueryLangParameter = string;
-
-/**
- * Only the last n instances, per Attribute, per Entity (under the specified time interval) shall be retrieved.
- */
 export type QueryLastNParameter = number;
-
-/**
- * 6.3.10 Pagination behaviour. It defines the limit to the number of NGSI-LD Elements that shall be retrieved
- * at a maximum as mandated by clause 5.5.9. The value 0 is only allowed in combination with
- * the count URI parameter.
- */
 export type QueryLimitParameter = number;
-
-/**
- * 6.3.18 Limiting Distributed Operations. If local=true then no Context Source Registrations shall be
- * considered as matching to avoid cascading distributed operations (see clause 4.3.6.4).
- *
- * The parameter described in this clause limits the execution of an operation to a local Context Source
- * or Context Broker (clause 5.5.13).
- */
 export type QueryLocalParameter = boolean;
-
-/**
- * When a merge operation applies to a pre-existing Attribute which previously contained an "observedAt"
- * sub-attribute, the value held in this query parameter shall be used if no specific "observedAt"
- * sub-Attribute is found in the payload body.
- */
 export type QueryObservedAtParameter = string;
-
-/**
- * Each String is an Entity member ("id", "type", "scope" or a projected Attribute name).
- * When defined, the listed Entity members are removed from each Entity within the payload.
- */
 export type QueryOmitParameter = string[];
-
-export const QueryOptionsEntitiesParameterItem = {
-  ...OptionsRepresentation,
-  ...OptionsSysAttrs,
-} as const;
-export type QueryOptionsEntitiesParameter =
-  (typeof QueryOptionsEntitiesParameterItem)[keyof typeof QueryOptionsEntitiesParameterItem][];
-
+export type QueryOptionsParameter = (OptionsRepresentation | OptionsSysAttrs)[];
 export type QueryOptionsNoOverwriteParameter = OptionsNoOverwrite[];
-
 export type QueryOptionsSysAttrsParameter = OptionsSysAttrs[];
-
 export type QueryOptionsTemporalParameter = OptionsTemporal[];
-
 export type QueryOptionsUpsertParameter = OptionsUpsert[];
-
-/**
- * Each String is an Entity member ("id", "type", "scope" or a projected Attribute name).
- * When defined, every Entity within the payload body is reduced down to only contain
- * the listed Entity members.
- */
 export type QueryPickParameter = string[];
-
-/**
- * Query as per clause 4.9.
- */
 export type QueryQParameter = string;
-
-/**
- * Indicates to perform a download and replace of the @context, as specified in clause 5.13.5.4.
- */
 export type QueryReloadParameter = boolean;
-
-/**
- * Scope query (see clause 4.19).
- */
 export type QueryScopeQParameter = string;
-
-/**
- * It shall be a DateTime. Cardinality shall be 1 if timerel is present.
- * String representing the timeAt parameter as defined by clause 4.11.
- */
 export type QueryTimeAtParameter = string;
-
 export type QueryTimepropertyParameter =
-  (typeof QueryTimepropertyParameter)[keyof typeof QueryTimepropertyParameter];
-
-export const QueryTimepropertyParameter = {
-  observedAt: "observedAt",
-  createdAt: "createdAt",
-  modifiedAt: "modifiedAt",
-  deletedAt: "deletedAt",
-} as const;
-
-export type QueryTimerelParameter =
-  (typeof QueryTimerelParameter)[keyof typeof QueryTimerelParameter];
-
-export const QueryTimerelParameter = {
-  before: "before",
-  after: "after",
-  between: "between",
-} as const;
-
-/**
- * Selection of Entity Types as per clause 4.17. "*" is also allowed as a value and local is
- * implicitly set to true and shall not be explicitly set to false.
- */
+  "createdAt" | "deletedAt" | "modifiedAt" | "observedAt";
+export type QueryTimerelParameter = "after" | "before" | "between";
 export type QueryTypeParameter = string;
 
 export type CreateEntityParams = {
@@ -2454,6 +2282,8 @@ export type QueryEntityParams = {
    *
    * A synonym for a combination of the pick and q parameters. DEPRECATED.
    * Each String is an Attribute (Property or Relationship) name.
+   *
+   * @deprecated
    */
   attrs?: QueryAttrsParameter;
   /**
@@ -2546,7 +2376,7 @@ export type QueryEntityParams = {
    * the total number of matching results (e.g. number of Entities) is returned.
    */
   count?: QueryCountParameter;
-  options?: QueryOptionsEntitiesParameter;
+  options?: QueryOptionsParameter;
   /**
    * 6.3.7 Representation of Entities.
    *
@@ -2636,7 +2466,7 @@ export type RetrieveEntityParams = {
    * If true, the location of the EntityMap used in the operation is returned in the response.
    */
   details?: QueryEntityMapParameter;
-  options?: QueryOptionsEntitiesParameter;
+  options?: QueryOptionsParameter;
   /**
    * 6.3.7 Representation of Entities.
    *
@@ -3098,13 +2928,9 @@ export type QueryBatchParams = {
    * or Context Broker (clause 5.5.13).
    */
   local?: QueryLocalParameter;
-  options?: (typeof QueryBatchOptionsItem)[keyof typeof QueryBatchOptionsItem][];
+  options?: QueryOptionsParameter;
 };
 
-export const QueryBatchOptionsItem = {
-  ...OptionsRepresentation,
-  ...OptionsSysAttrs,
-} as const;
 export type MergeBatchParams = {
   /**
    * 6.3.18 Limiting Distributed Operations. If local=true then no Context Source Registrations shall be
