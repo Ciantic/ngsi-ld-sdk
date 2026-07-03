@@ -2,3 +2,4 @@ node_modules/
 dist/
 ngsi-ld-api.yaml
 todo/
+*.code-workspace
