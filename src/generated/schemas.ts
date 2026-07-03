@@ -401,46 +401,22 @@ export interface RegistrationInfo {
  * 5.2.11 NGSI-LD TimeInterval.
  */
 export interface TimeInterval {
-  /** Describes the start of the time interval. */
   startAt: string;
-  /** Describes the end of the time interval. If not present the interval is open. */
   endAt?: string;
 }
 
-export type GeometryPointType =
-  (typeof GeometryPointType)[keyof typeof GeometryPointType];
-
-export const GeometryPointType = {
-  Point: "Point",
-} as const;
-
-/**
- * A single position.
- * @minItems 2
- * @maxItems 3
- */
-export type GeometryPosition = number[];
+export type GeometryPosition = [number, number] | [number, number, number];
 
 export interface GeometryPoint {
-  type?: GeometryPointType;
-  coordinates?: GeometryPosition;
+  type: "Point";
+  coordinates: GeometryPosition;
 }
 
-export type GeometryMultiPointType =
-  (typeof GeometryMultiPointType)[keyof typeof GeometryMultiPointType];
-
-export const GeometryMultiPointType = {
-  MultiPoint: "MultiPoint",
-} as const;
-
-/**
- * An array of positions.
- */
 export type GeometryPositionArray = GeometryPosition[];
 
 export interface GeometryMultiPoint {
-  type?: GeometryMultiPointType;
-  coordinates?: GeometryPositionArray;
+  type: "MultiPoint";
+  coordinates: GeometryPositionArray;
 }
 
 /**
@@ -458,28 +434,14 @@ export type GeometryPolygon = GeometryLinearRing[];
  */
 export type GeometryLineString = GeometryPositionArray;
 
-export type GeometryMultiLineStringType =
-  (typeof GeometryMultiLineStringType)[keyof typeof GeometryMultiLineStringType];
-
-export const GeometryMultiLineStringType = {
-  MultiLineString: "MultiLineString",
-} as const;
-
 export interface GeometryMultiLineString {
-  type?: GeometryMultiLineStringType;
-  coordinates?: GeometryLineString[];
+  type: "MultiLineString";
+  coordinates: GeometryLineString[];
 }
 
-export type GeometryMultiPolygonType =
-  (typeof GeometryMultiPolygonType)[keyof typeof GeometryMultiPolygonType];
-
-export const GeometryMultiPolygonType = {
-  MultiPolygon: "MultiPolygon",
-} as const;
-
 export interface GeometryMultiPolygon {
-  type?: GeometryMultiPolygonType;
-  coordinates?: GeometryLineString[];
+  type: "MultiPolygon";
+  coordinates: GeometryLineString[];
 }
 
 /**
@@ -493,13 +455,8 @@ export type Geometry =
   | GeometryMultiLineString
   | GeometryMultiPolygon;
 
-/**
- * 5.2.22 This datatype represents the optional information that is required when contacting an endpoint for notifications.
- */
 export interface KeyValuePair {
-  /** The key of the key/value pair. */
   key: string;
-  /** The value of the key/value pair. */
   value: string;
 }
 
@@ -550,29 +507,15 @@ export interface RegistrationManagementInfo {
   cooldown?: number;
 }
 
-/**
- * Read-only. Status of the Registration. It shall be "ok" if the last attempt to perform a distributed
- * operation succeeded. It shall be "failed" if the last attempt to perform a distributed operation failed.
- */
-export type CsourceRegistrationStatus =
-  (typeof CsourceRegistrationStatus)[keyof typeof CsourceRegistrationStatus];
-
-export const CsourceRegistrationStatus = {
-  ok: "ok",
-  failed: "failed",
-} as const;
+export type CsourceRegistrationStatus = "failed" | "ok";
 
 /**
  * 5.2.9 This type represents the data needed to register a new Context Source.
  */
 export interface CsourceRegistration {
-  /**
-   * Unique registration identifier. (JSON-LD @id). There may be multiple registrations per
-   * Context Source, i.e. the id is unique per registration.
-   */
   id?: string;
   /** JSON-LD @type Use reserved type for identifying Context Source Registration. */
-  type?: CsourceRegistrationType;
+  type: CsourceRegistrationType;
   /**
    * A name given to this Context Source Registration.
    * @minLength 1
@@ -595,7 +538,7 @@ export interface CsourceRegistration {
    * Context Source may be able to provide information.
    * @minItems 1
    */
-  information?: RegistrationInfo[];
+  information: RegistrationInfo[];
   /**
    * Specifies the datasetIds of Attributes that the Context Source can provide,
    * defined as per clause 4.5.5. Valid URIs, "@none" for including the default
@@ -646,7 +589,7 @@ export interface CsourceRegistration {
    */
   expiresAt?: string;
   /** Endpoint expressed as dereferenceable URI through which the Context Source exposes its NGSI-LD interface. */
-  endpoint?: string;
+  endpoint: string;
   /**
    * Generic {key, value} array to convey optional information to provide
    * when contacting the registered Context Source.
@@ -815,9 +758,9 @@ export const GeoPropertyType = {
  */
 export interface GeoProperty {
   /** Node type. */
-  type?: GeoPropertyType;
+  type: GeoPropertyType;
   /** Geolocation encoded as GeoJSON. As mandated by clause 4.7. */
-  value?: Geometry;
+  value: Geometry;
   /** Timestamp. See clause 4.8. */
   observedAt?: ObservedAt;
   /** It allows identifying a set or group of property values. */
@@ -890,9 +833,9 @@ export interface EntitySelector {
  */
 export interface EntityTemporal {
   /** Entity id. */
-  id?: string;
+  id: string;
   /** Entity Type(s). Both short hand string(s) (type name) or URI(s) are allowed. */
-  type?: string | string[];
+  type: string | string[];
   /** Scope. */
   scope?: string | string[];
   /** Default geospatial Property of an entity. See clause 4.7. */
@@ -1143,7 +1086,7 @@ export type LanguagePropertyPreviousLanguageMap = { [key: string]: unknown };
  */
 export interface LanguageProperty {
   /** Node type. */
-  type?: LanguagePropertyType;
+  type: LanguagePropertyType;
   /** String Property Values defined in multiple natural languages. */
   languageMap?: LanguagePropertyLanguageMap;
   /** Timestamp. See clause 4.8. */
@@ -1391,9 +1334,9 @@ export const PropertyType = {
  */
 export interface Property {
   /** Node type. */
-  type?: PropertyType;
+  type: PropertyType;
   /** Property value. */
-  value?: DateTimeValue | JsonValue;
+  value: DateTimeValue | JsonValue;
   /** Timestamp. See clause 4.8. */
   observedAt?: ObservedAt;
   /** Property Value's unit code. */
@@ -1562,7 +1505,7 @@ export const RelationshipType = {
  */
 export interface Relationship {
   /** Node type. */
-  type?: RelationshipType;
+  type: RelationshipType;
   /** Relationship's target object. */
   object?: string | string[];
   /**
@@ -1639,7 +1582,7 @@ export interface SubscriptionCommon {
   /** Subscription identifier (JSON-LD @id). */
   id?: string;
   /** JSON-LD @type. */
-  type?: SubscriptionCommonType;
+  type: SubscriptionCommonType;
   /** A (short) name given to this Subscription. */
   subscriptionName?: string;
   /** Subscription description. */
@@ -1678,7 +1621,7 @@ export interface SubscriptionCommon {
    */
   isActive?: boolean;
   /** Notification details. */
-  notification?: NotificationParams;
+  notification: NotificationParams;
   /** Expiration date for the subscription. */
   expiresAt?: string;
   /**
@@ -1762,7 +1705,7 @@ export const VocabPropertyType = {
  */
 export interface VocabProperty {
   /** Node type. */
-  type?: VocabPropertyType;
+  type: VocabPropertyType;
   /** String Values which shall be type coerced to URIs based on the supplied @context. */
   vocab?: string | string[];
   /**
@@ -1802,7 +1745,7 @@ export const ListPropertyType = {
  */
 export interface ListProperty {
   /** Node type. */
-  type?: ListPropertyType;
+  type: ListPropertyType;
   /** Ordered array of Property Values. */
   valueList?: (DateTimeValue | JsonValue)[];
   /** Timestamp. See clause 4.8. */
@@ -1864,7 +1807,7 @@ export type ListRelationshipPreviousObjectList =
  */
 export interface ListRelationship {
   /** Node type. */
-  type?: ListRelationshipType;
+  type: ListRelationshipType;
   /**
    * Ordered array of Relationship target objects.
    * In the normalized form, each array element holds a JSON object
@@ -1935,7 +1878,7 @@ export type JsonPropertyPreviousJson = { [key: string]: unknown };
  */
 export interface JsonProperty {
   /** Node type. */
-  type?: JsonPropertyType;
+  type: JsonPropertyType;
   /** Raw unexpandable JSON which shall not be interpreted as JSON-LD using the supplied @context. */
   json?: JsonPropertyJson;
   /**
@@ -2152,6 +2095,25 @@ export type AttributeFragmentBody = (
 ) & {
   "@context"?: LdContext;
 };
+
+/**
+ * Body for temporal attribute instance operations (e.g. updateAttrsTemporal).
+ * A bare attribute instance with observedAt required — NOT wrapped in an entity shape.
+ * The @context is resolved via the Link header by the broker; it may optionally be
+ * included in the body.
+ */
+export type TemporalAttributeFragmentBody = WithContext<
+  RequiredObservedAt<
+    | Property
+    | Relationship
+    | GeoProperty
+    | LanguageProperty
+    | VocabProperty
+    | JsonProperty
+    | ListProperty
+    | ListRelationship
+  >
+>;
 
 export type QueryTemporalBody = QueryTemporal;
 
@@ -3610,12 +3572,12 @@ export type NgsildAttribute =
   | Relationship
   | ListRelationship;
 
-/**
- * NGSI-LD attribute types valid in normalized temporal representations
- * (EntityTemporal).  Temporal entities have arrays of attribute instances
- * keyed by observedAt.
- */
-export type NgsildAttributeTemporal = NgsildAttribute | NgsildAttribute[];
+type RequiredObservedAt<T> = T & {
+  observedAt: string;
+};
+
+export type NgsildAttributeTemporal =
+  RequiredObservedAt<NgsildAttribute> | RequiredObservedAt<NgsildAttribute>[];
 // ─── Generated runtime constants for fetcher.ts ──────────────────────────────
 // Derived from the preprocessed NGSI-LD OpenAPI spec.
 // Do not edit manually — regenerate with `pnpm run generate:api`.

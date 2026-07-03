@@ -231,7 +231,9 @@ describe("retrieveContext", () => {
     const createResponse = await createContext(contextBody);
     expect(createResponse.status).toBe(201);
 
-    const contextId = decodeURIComponent(createResponse.location.split("/").pop()!);
+    const contextId = decodeURIComponent(
+      createResponse.location.split("/").pop()!,
+    );
     contextIds.push(contextId);
 
     const response = await retrieveContext(contextId);
@@ -250,7 +252,9 @@ describe("retrieveContext", () => {
     const createResponse = await createContext(contextBody);
     expect(createResponse.status).toBe(201);
 
-    const contextId = decodeURIComponent(createResponse.location.split("/").pop()!);
+    const contextId = decodeURIComponent(
+      createResponse.location.split("/").pop()!,
+    );
     contextIds.push(contextId);
 
     const response = await retrieveContext(contextId, { details: true });
@@ -279,7 +283,9 @@ describe("deleteContext", () => {
     const createResponse = await createContext(contextBody);
     expect(createResponse.status).toBe(201);
 
-    const contextId = decodeURIComponent(createResponse.location.split("/").pop()!);
+    const contextId = decodeURIComponent(
+      createResponse.location.split("/").pop()!,
+    );
 
     const response = await deleteContext(contextId);
     expect(response.status).toBe(204);

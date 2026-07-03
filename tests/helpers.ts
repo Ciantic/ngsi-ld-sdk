@@ -11,10 +11,7 @@ import {
   type QueryTemporalBody,
   type MaybeContext,
 } from "../src/generated/schemas";
-import {
-  NgsiLdHttpError,
-  NgsiLdNotFound,
-} from "../src";
+import { NgsiLdHttpError, NgsiLdNotFound } from "../src";
 import {
   deleteEntity,
   deleteCSR,
@@ -171,7 +168,6 @@ export function expectOk<T extends { status: number }>(
     const body = "data" in response ? JSON.stringify(response.data) : "";
     throw new Error(`Expected 2xx status but got ${response.status}: ${body}`);
   }
-
 }
 
 // --- Error assertion helper (since errors now throw) ---

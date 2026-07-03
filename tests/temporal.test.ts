@@ -260,13 +260,9 @@ describe("updateAttrsTemporal", () => {
 
     const patch = {
       "@context": NGSILD_CORE_CONTEXT,
-      temperature: [
-        {
-          type: "Property" as const,
-          value: 999,
-          observedAt: tempInstances[0]?.observedAt ?? new Date().toISOString(),
-        },
-      ],
+      type: "Property" as const,
+      value: 999,
+      observedAt: tempInstances[0]?.observedAt ?? new Date().toISOString(),
     };
 
     const response = await updateAttrsTemporal(
@@ -281,13 +277,9 @@ describe("updateAttrsTemporal", () => {
   it("should return 404 for non-existent entity", async () => {
     const patch = {
       "@context": NGSILD_CORE_CONTEXT,
-      temperature: [
-        {
-          type: "Property" as const,
-          value: 999,
-          observedAt: new Date().toISOString(),
-        },
-      ],
+      type: "Property" as const,
+      value: 999,
+      observedAt: new Date().toISOString(),
     };
 
     await expectHttpError(404, NgsiLdNotFound, () =>
@@ -317,7 +309,9 @@ describe("deleteAttrInstanceTemporal", () => {
     });
     expect(retrieved.status).toBe(200);
     const props = retrieved.data.$props ?? {};
-    const tempInstances = (props["temperature"] ?? []) as { instanceId?: string }[];
+    const tempInstances = (props["temperature"] ?? []) as {
+      instanceId?: string;
+    }[];
     const instanceId = tempInstances[0]?.instanceId;
     if (!instanceId) return;
 

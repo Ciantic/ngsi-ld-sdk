@@ -140,9 +140,9 @@ describe("updateSubscription", () => {
     // Verify the update
     const retrieved = await retrieveSubscription(sub.id);
     if (retrieved.status === 200) {
-      const data = retrieved.data as Record<string, unknown>;
-      const notification = data["notification"] as Record<string, unknown>;
-      const endpoint = notification["endpoint"] as Record<string, unknown>;
+      const data = retrieved.data;
+      const notification = data["notification"];
+      const endpoint = notification["endpoint"];
       expect(endpoint["uri"]).toBe("http://updated.example.com/notification");
     }
   });

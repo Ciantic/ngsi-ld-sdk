@@ -2,6 +2,7 @@ import type {
   AppendAttrsParams,
   AppendAttrsTemporalParams,
   AttributeFragmentBody,
+  TemporalAttributeFragmentBody,
   CreateBatchParams,
   CreateContextBody,
   CreateEntityParams,
@@ -549,12 +550,7 @@ export const replaceAttrs = (
 
  */
 export const createCSR = (
-  createCSRBody?: WithContext<
-    PickRequired<
-      NonReadonly<CsourceRegistration>,
-      "type" | "information" | "endpoint"
-    >
-  >,
+  createCSRBody?: WithContext<NonReadonly<CsourceRegistration>>,
   options?: RequestInit,
 ) => {
   return fetcher<CreateCSRResponse>(getCreateCSRUrl(), {
@@ -651,7 +647,7 @@ export const retrieveCSR = (
  */
 export const updateCSR = (
   registrationId: string,
-  updateCSRBody?: WithContext<NonReadonly<CsourceRegistration>>,
+  updateCSRBody?: WithContext<NonReadonly<Partial<CsourceRegistration>>>,
   options?: RequestInit,
 ) => {
   return fetcher<UpdateCSRResponse>(getUpdateCSRUrl(registrationId), {
@@ -696,9 +692,7 @@ export const deleteCSR = (registrationId: string, options?: RequestInit) => {
 
  */
 export const createSubscription = (
-  subscriptionBody?: WithContext<
-    PickRequired<Subscription, "type" | "notification">
-  >,
+  subscriptionBody?: WithContext<Subscription>,
   params?: CreateSubscriptionParams,
   options?: RequestInit,
 ) => {
@@ -775,7 +769,7 @@ export const retrieveSubscription = (
  */
 export const updateSubscription = (
   subscriptionId: string,
-  subscriptionFragmentBody?: WithContext<Subscription>,
+  subscriptionFragmentBody?: WithContext<Partial<Subscription>>,
   params?: UpdateSubscriptionParams,
   options?: RequestInit,
 ) => {
@@ -831,9 +825,7 @@ export const deleteSubscription = (
 
  */
 export const createCSRSubscription = (
-  subscriptionBody?: WithContext<
-    PickRequired<Subscription, "type" | "notification">
-  >,
+  subscriptionBody?: WithContext<Subscription>,
   options?: RequestInit,
 ) => {
   return fetcher<CreateCSRSubscriptionResponse>(getCreateCSRSubscriptionUrl(), {
@@ -912,7 +904,7 @@ export const retrieveCSRSubscription = (
  */
 export const updateCSRSubscription = (
   subscriptionId: string,
-  subscriptionFragmentBody?: WithContext<Subscription>,
+  subscriptionFragmentBody?: WithContext<Partial<Subscription>>,
   options?: RequestInit,
 ) => {
   return fetcher<UpdateCSRSubscriptionResponse>(
@@ -1157,7 +1149,7 @@ export const mergeBatch = (
 
  */
 export const upsertTemporal = (
-  entityTemporalBody?: WithContext<PickRequired<EntityTemporal, "id" | "type">>,
+  entityTemporalBody?: WithContext<EntityTemporal>,
   params?: UpsertTemporalParams,
   options?: RequestInit,
 ) => {
@@ -1267,7 +1259,7 @@ export const deleteTemporal = (
  */
 export const appendAttrsTemporal = (
   entityId: string,
-  entityTemporalFragmentBody?: WithContext<EntityTemporal>,
+  entityTemporalFragmentBody?: WithContext<Partial<EntityTemporal>>,
   params?: AppendAttrsTemporalParams,
   options?: RequestInit,
 ) => {
@@ -1337,7 +1329,7 @@ export const updateAttrsTemporal = (
   entityId: string,
   attrId: string,
   instanceId: string,
-  entityTemporalFragmentBody?: WithContext<EntityTemporal>,
+  temporalAttrFragmentBody?: TemporalAttributeFragmentBody,
   params?: UpdateAttrsTemporalParams,
   options?: RequestInit,
 ) => {
@@ -1347,7 +1339,9 @@ export const updateAttrsTemporal = (
       ...options,
       method: "PATCH",
       headers: { "Content-Type": "application/ld+json", ...options?.headers },
-      body: JSON.stringify(entityTemporalFragmentBody),
+      body: temporalAttrFragmentBody
+        ? JSON.stringify(temporalAttrFragmentBody)
+        : undefined,
     },
   );
 };
