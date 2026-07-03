@@ -127,19 +127,21 @@ function isObject(val: unknown): val is Record<string, unknown> {
   return val !== null && typeof val === "object" && !Array.isArray(val);
 }
 
-export const fetcher = async <T extends { status: number; data: any }>(
+export const fetcher = async <T>(
   url: string,
   {
     method,
     params,
     headers,
     body,
+    returnFormat,
   }: {
     method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
     params?: any;
     headers?: [string, string][] | Record<string, string> | Headers;
     body?: any;
     responseType?: string;
+    returnFormat?: "body" | "status-data";
   },
 ): Promise<T> => {
   let targetUrl = `${BASE_URL}${url}`;
@@ -176,7 +178,12 @@ export const fetcher = async <T extends { status: number; data: any }>(
     response.status === 201
       ? (response.headers.get("location") ?? undefined)
       : undefined;
-  return { status: response.status, data: fromApi(data), location } as T & {
-    location?: string;
-  };
+
+  const transformed = fromApi(data);
+
+  if (!returnFormat || returnFormat === "status-data") {
+    return { status: response.status, data: transformed, location } as T;
+  }
+
+  return transformed as T;
 };

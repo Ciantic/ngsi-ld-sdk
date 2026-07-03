@@ -122,12 +122,18 @@ export async function cleanUpAll(): Promise<void> {
   const deleteAll = async (
     queryFn: (
       params?: Record<string, unknown>,
-    ) => Promise<{ status: number; data: unknown }>,
+    ) => Promise<{ status: number; data: unknown } | unknown[]>,
   ) => {
     try {
       const res = await queryFn({ limit: 1000 });
-      if (res.status !== 200) return;
-      const ids = extractIds(res.data);
+      // queryEntity now returns data directly (an array)
+      if (Array.isArray(res)) {
+        const ids = extractIds(res);
+        if (ids.length > 0) await deleteBatch(ids);
+        return;
+      }
+      if ((res as any).status !== 200) return;
+      const ids = extractIds((res as any).data);
       if (ids.length > 0) await deleteBatch(ids);
     } catch {
       // Ignore cleanup failures

@@ -8,7 +8,6 @@ import type {
   EntityTypeInfo,
   Feature,
   FeatureCollection,
-  JsonLdContext,
   LdContextMetadata,
   MaybeContext,
   MultiStatusBatchOperationResultResponse,
@@ -71,7 +70,7 @@ export type CreateEntityResponseSuccess =
 
 export type CreateEntityResponse = CreateEntityResponseSuccess;
 export type QueryEntityResponse200 = {
-  data: (Entity & JsonLdContext)[];
+  data: MaybeContext<Entity>[];
   status: 200;
 };
 
@@ -234,7 +233,7 @@ export type CreateCSRResponseSuccess = CreateCSRResponse201;
 
 export type CreateCSRResponse = CreateCSRResponseSuccess;
 export type QueryCSRResponse200 = {
-  data: (CsourceRegistration & JsonLdContext)[];
+  data: MaybeContext<CsourceRegistration>[];
   status: 200;
 };
 
@@ -276,7 +275,7 @@ export type CreateSubscriptionResponseSuccess = CreateSubscriptionResponse201;
 
 export type CreateSubscriptionResponse = CreateSubscriptionResponseSuccess;
 export type QuerySubscriptionResponse200 = {
-  data: (Subscription & JsonLdContext)[];
+  data: MaybeContext<Subscription>[];
   status: 200;
 };
 
@@ -321,7 +320,7 @@ export type CreateCSRSubscriptionResponseSuccess =
 export type CreateCSRSubscriptionResponse =
   CreateCSRSubscriptionResponseSuccess;
 export type QueryCSRSubscriptionResponse200 = {
-  data: (Subscription & JsonLdContext)[];
+  data: MaybeContext<Subscription>[];
   status: 200;
 };
 
@@ -421,7 +420,7 @@ export type DeleteBatchResponseSuccess =
 
 export type DeleteBatchResponse = DeleteBatchResponseSuccess;
 export type QueryBatchResponse200 = {
-  data: (Entity & JsonLdContext)[];
+  data: MaybeContext<Entity>[];
   status: 200;
 };
 
@@ -459,7 +458,7 @@ export type UpsertTemporalResponseSuccess =
 
 export type UpsertTemporalResponse = UpsertTemporalResponseSuccess;
 export type QueryTemporalResponse200 = {
-  data: (EntityTemporal & JsonLdContext)[];
+  data: MaybeContext<EntityTemporal>[];
   status: 200;
 };
 
@@ -517,7 +516,7 @@ export type DeleteAttrInstanceTemporalResponseSuccess =
 export type DeleteAttrInstanceTemporalResponse =
   DeleteAttrInstanceTemporalResponseSuccess;
 export type TemporalQueryBatchResponse200 = {
-  data: (EntityTemporal & JsonLdContext)[];
+  data: MaybeContext<EntityTemporal>[];
   status: 200;
 };
 

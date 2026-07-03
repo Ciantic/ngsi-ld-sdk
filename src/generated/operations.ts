@@ -217,9 +217,10 @@ export const queryEntity = (
   params?: QueryEntityParams,
   options?: RequestInit,
 ) => {
-  return fetcher<QueryEntityResponse>(getQueryEntityUrl(params), {
+  return fetcher<MaybeContext<Entity>[]>(getQueryEntityUrl(params), {
     ...options,
     method: "GET",
+    returnFormat: "body",
   });
 };
 /**

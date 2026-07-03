@@ -969,13 +969,6 @@ export type MaybeContext<T> = T & {
 };
 
 /**
- * Helper: wraps any type with an optional JSON-LD @context.
- */
-export type JsonLdContext = {
-  "@context"?: LdContext;
-};
-
-/**
  * 5.2.29 This data type represents a spatially bounded Entity in GeoJSON format, as mandated by IETF RFC 7946.
  */
 export interface Feature {

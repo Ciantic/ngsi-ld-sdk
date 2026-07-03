@@ -97,14 +97,13 @@ describe("createEntity", () => {
 // 2. queryEntity
 // ---------------------------------------------------------------------------
 describe("queryEntity", () => {
-  it("should query entities by type and return 200", async () => {
+  it("should query entities by type", async () => {
     // Create an entity first so there's something to query
     const entity = makeEntity();
     await createEntity(entity);
 
-    const response = await queryEntity({ type: "TestEntity" });
-    expect(response.status).toBe(200);
-    expect(response.data.length).toBeGreaterThan(0);
+    const data = await queryEntity({ type: "TestEntity" });
+    expect(data.length).toBeGreaterThan(0);
   });
 });
 
