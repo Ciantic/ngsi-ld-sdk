@@ -59,16 +59,13 @@ import type {
 
 import {
   AppendAttrsResponse,
-  AppendAttrsTemporalResponse,
   CreateBatchResponse,
   CreateCSRResponse,
   CreateCSRSubscriptionResponse,
   CreateContextResponse,
   CreateEntityResponse,
   CreateSubscriptionResponse,
-  DeleteAttrInstanceTemporalResponse,
   DeleteAttrsResponse,
-  DeleteAttrsTemporalResponse,
   DeleteBatchResponse,
   DeleteCSRResponse,
   DeleteCSRSubscriptionResponse,
@@ -76,7 +73,6 @@ import {
   DeleteEntityMapResponse,
   DeleteEntityResponse,
   DeleteSubscriptionResponse,
-  DeleteTemporalResponse,
   ListContextsResponse,
   MergeBatchResponse,
   MergeEntityResponse,
@@ -84,7 +80,6 @@ import {
   QueryCSRResponse,
   QueryCSRSubscriptionResponse,
   QuerySubscriptionResponse,
-  QueryTemporalResponse,
   ReplaceAttrsResponse,
   ReplaceEntityResponse,
   RetrieveAttrTypeInfoResponse,
@@ -97,9 +92,7 @@ import {
   RetrieveEntityTypeInfoResponse,
   RetrieveEntityTypesResponse,
   RetrieveSubscriptionResponse,
-  RetrieveTemporalResponse,
   UpdateAttrsResponse,
-  UpdateAttrsTemporalResponse,
   UpdateBatchResponse,
   UpdateCSRResponse,
   UpdateCSRSubscriptionResponse,
@@ -1178,9 +1171,10 @@ export const queryTemporal = (
   params?: QueryTemporalParams,
   options?: RequestInit,
 ) => {
-  return fetcher<QueryTemporalResponse>(getQueryTemporalUrl(params), {
+  return fetcher<MaybeContext<EntityTemporal>[]>(getQueryTemporalUrl(params), {
     ...options,
     method: "GET",
+    returnFormat: "body",
   });
 };
 /**
@@ -1202,11 +1196,12 @@ export const retrieveTemporal = (
   params?: RetrieveTemporalParams,
   options?: RequestInit,
 ) => {
-  return fetcher<RetrieveTemporalResponse>(
+  return fetcher<MaybeContext<EntityTemporal>>(
     getRetrieveTemporalUrl(entityId, params),
     {
       ...options,
       method: "GET",
+      returnFormat: "body",
     },
   );
 };
@@ -1229,11 +1224,12 @@ export const deleteTemporal = (
   params?: DeleteTemporalParams,
   options?: RequestInit,
 ) => {
-  return fetcher<DeleteTemporalResponse>(
+  return fetcher<void>(
     getDeleteTemporalUrl(entityId, params),
     {
       ...options,
       method: "DELETE",
+      returnFormat: "body",
     },
   );
 };
@@ -1257,13 +1253,14 @@ export const appendAttrsTemporal = (
   params?: AppendAttrsTemporalParams,
   options?: RequestInit,
 ) => {
-  return fetcher<AppendAttrsTemporalResponse>(
+  return fetcher<void>(
     getAppendAttrsTemporalUrl(entityId, params),
     {
       ...options,
       method: "POST",
       headers: { "Content-Type": "application/ld+json", ...options?.headers },
       body: JSON.stringify(entityTemporalFragmentBody),
+      returnFormat: "body",
     },
   );
 };
@@ -1289,11 +1286,12 @@ export const deleteAttrsTemporal = (
   params?: DeleteAttrsTemporalParams,
   options?: RequestInit,
 ) => {
-  return fetcher<DeleteAttrsTemporalResponse>(
+  return fetcher<void>(
     getDeleteAttrsTemporalUrl(entityId, attrId, params),
     {
       ...options,
       method: "DELETE",
+      returnFormat: "body",
     },
   );
 };
@@ -1327,7 +1325,7 @@ export const updateAttrsTemporal = (
   params?: UpdateAttrsTemporalParams,
   options?: RequestInit,
 ) => {
-  return fetcher<UpdateAttrsTemporalResponse>(
+  return fetcher<void>(
     getUpdateAttrsTemporalUrl(entityId, attrId, instanceId, params),
     {
       ...options,
@@ -1336,6 +1334,7 @@ export const updateAttrsTemporal = (
       body: temporalAttrFragmentBody
         ? JSON.stringify(temporalAttrFragmentBody)
         : undefined,
+      returnFormat: "body",
     },
   );
 };
@@ -1368,11 +1367,12 @@ export const deleteAttrInstanceTemporal = (
   params?: DeleteAttrInstanceTemporalParams,
   options?: RequestInit,
 ) => {
-  return fetcher<DeleteAttrInstanceTemporalResponse>(
+  return fetcher<void>(
     getDeleteAttrInstanceTemporalUrl(entityId, attrId, instanceId, params),
     {
       ...options,
       method: "DELETE",
+      returnFormat: "body",
     },
   );
 };

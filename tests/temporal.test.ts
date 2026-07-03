@@ -83,17 +83,16 @@ describe("upsertTemporal", () => {
 describe("queryTemporal", () => {
   const timeAt = new Date().toISOString();
 
-  it("should query temporal entities and return 200", async () => {
+  it("should query temporal entities", async () => {
     const entity = makeTemporalEntity();
     await upsertTemporal(entity);
 
-    const response = await queryTemporal({
+    const data = await queryTemporal({
       type: entity.type as string,
       timerel: "before",
       timeAt,
     });
-    expect(response.status).toBe(200);
-    expect(Array.isArray(response.data)).toBe(true);
+    expect(Array.isArray(data)).toBe(true);
   });
 
   it("should return 400 when required temporal query params are missing", async () => {
@@ -109,16 +108,15 @@ describe("queryTemporal", () => {
 describe("retrieveTemporal", () => {
   const timeAt = new Date().toISOString();
 
-  it("should retrieve temporal evolution of an entity and return 200", async () => {
+  it("should retrieve temporal evolution of an entity", async () => {
     const entity = makeTemporalEntity();
     await upsertTemporal(entity);
 
-    const response = await retrieveTemporal(entity.id!, {
+    const data = await retrieveTemporal(entity.id!, {
       timerel: "before",
       timeAt,
     });
-    expect(response.status).toBe(200);
-    expect(response.data).toBeDefined();
+    expect(data).toBeDefined();
   });
 
   it("should return 404 for a non-existent entity", async () => {
@@ -135,7 +133,7 @@ describe("retrieveTemporal", () => {
 // 4. deleteTemporal
 // ---------------------------------------------------------------------------
 describe("deleteTemporal", () => {
-  it("should delete temporal representation of an entity and return 204", async () => {
+  it("should delete temporal representation of an entity", async () => {
     const entity = makeTemporalEntity();
     await upsertTemporal(entity);
 
@@ -146,8 +144,8 @@ describe("deleteTemporal", () => {
       return;
     }
 
-    const response = await deleteTemporal(entity.id!);
-    expect(response.status).toBe(204);
+    const result = await deleteTemporal(entity.id!);
+    expect(result).toBeUndefined();
   });
 
   it("should return 404 when deleting temporal for non-existent entity", async () => {
@@ -192,7 +190,7 @@ describe("appendAttrsTemporal", () => {
     }
 
     const response = await appendAttrsTemporal(entity.id!, newAttrs);
-    expect([204, 201]).toContain(response.status);
+    expect(response).toBeUndefined();
   });
 
   it("should return 404 for non-existent entity", async () => {
@@ -247,7 +245,7 @@ describe("deleteAttrsTemporal", () => {
     }
 
     const response = await deleteAttrsTemporal(entity.id!, "humidity");
-    expect(response.status).toBe(204);
+    expect(response).toBeUndefined();
   });
 
   it("should return 404 for non-existent entity", async () => {
@@ -279,8 +277,7 @@ describe("updateAttrsTemporal", () => {
       timerel: "before",
       timeAt: new Date(Date.now() + 60000).toISOString(),
     });
-    expect(retrieved.status).toBe(200);
-    const props = retrieved.data.$props ?? {};
+    const props = retrieved.$props ?? {};
     const tempInstances = (props["temperature"] ?? []) as {
       instanceId?: string;
       observedAt?: string;
@@ -308,7 +305,7 @@ describe("updateAttrsTemporal", () => {
       instanceId,
       patch,
     );
-    expect(response.status).toBe(204);
+    expect(response).toBeUndefined();
   });
 
   it("should return 404 for non-existent entity", async () => {
@@ -349,8 +346,7 @@ describe("deleteAttrInstanceTemporal", () => {
       timerel: "before",
       timeAt: new Date(Date.now() + 60000).toISOString(),
     });
-    expect(retrieved.status).toBe(200);
-    const props = retrieved.data.$props ?? {};
+    const props = retrieved.$props ?? {};
     const tempInstances = (props["temperature"] ?? []) as {
       instanceId?: string;
     }[];
@@ -369,7 +365,7 @@ describe("deleteAttrInstanceTemporal", () => {
       "temperature",
       instanceId,
     );
-    expect(response.status).toBe(204);
+    expect(response).toBeUndefined();
   });
 
   it("should return 404 for non-existent entity", async () => {

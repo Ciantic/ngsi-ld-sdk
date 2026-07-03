@@ -4,7 +4,6 @@ import type {
   CsourceRegistration,
   Entity,
   EntityMap,
-  EntityTemporal,
   EntityTypeInfo,
   LdContextMetadata,
   MaybeContext,
@@ -407,64 +406,6 @@ export type UpsertTemporalResponseSuccess =
   UpsertTemporalResponse201 | UpsertTemporalResponse204;
 
 export type UpsertTemporalResponse = UpsertTemporalResponseSuccess;
-export type QueryTemporalResponse200 = {
-  data: MaybeContext<EntityTemporal>[];
-  status: 200;
-};
-
-export type QueryTemporalResponseSuccess = QueryTemporalResponse200;
-
-export type QueryTemporalResponse = QueryTemporalResponseSuccess;
-export type RetrieveTemporalResponse200 = {
-  data: MaybeContext<EntityTemporal>;
-  status: 200;
-};
-
-export type RetrieveTemporalResponseSuccess = RetrieveTemporalResponse200;
-
-export type RetrieveTemporalResponse = RetrieveTemporalResponseSuccess;
-export type DeleteTemporalResponse204 = {
-  data: void;
-  status: 204;
-};
-
-export type DeleteTemporalResponseSuccess = DeleteTemporalResponse204;
-
-export type DeleteTemporalResponse = DeleteTemporalResponseSuccess;
-export type AppendAttrsTemporalResponse204 = {
-  data: void;
-  status: 204;
-};
-
-export type AppendAttrsTemporalResponseSuccess = AppendAttrsTemporalResponse204;
-
-export type AppendAttrsTemporalResponse = AppendAttrsTemporalResponseSuccess;
-export type DeleteAttrsTemporalResponse204 = {
-  data: void;
-  status: 204;
-};
-
-export type DeleteAttrsTemporalResponseSuccess = DeleteAttrsTemporalResponse204;
-
-export type DeleteAttrsTemporalResponse = DeleteAttrsTemporalResponseSuccess;
-export type UpdateAttrsTemporalResponse204 = {
-  data: void;
-  status: 204;
-};
-
-export type UpdateAttrsTemporalResponseSuccess = UpdateAttrsTemporalResponse204;
-
-export type UpdateAttrsTemporalResponse = UpdateAttrsTemporalResponseSuccess;
-export type DeleteAttrInstanceTemporalResponse204 = {
-  data: void;
-  status: 204;
-};
-
-export type DeleteAttrInstanceTemporalResponseSuccess =
-  DeleteAttrInstanceTemporalResponse204;
-
-export type DeleteAttrInstanceTemporalResponse =
-  DeleteAttrInstanceTemporalResponseSuccess;
 export type RetrieveEntityTypesResponse200 = {
   data: RetrieveEntityTypes200;
   status: 200;

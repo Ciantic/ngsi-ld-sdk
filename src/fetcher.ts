@@ -181,6 +181,10 @@ export const fetcher = async <T>(
 
   const transformed = fromApi(data);
 
+  if (returnFormat === "body" && response.status === 204) {
+    return undefined as T;
+  }
+
   if (!returnFormat || returnFormat === "status-data") {
     return { status: response.status, data: transformed, location } as T;
   }
