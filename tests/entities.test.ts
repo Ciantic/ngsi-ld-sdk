@@ -19,7 +19,6 @@ import type { Property } from "../src/generated/schemas";
 import {
   makeEntity,
   makeEntityWithGeo,
-  expectOk,
   expectHttpError,
   cleanUpAll,
   detectBroker,
@@ -37,7 +36,6 @@ describe("createEntity", () => {
     const entity = makeEntity();
     const response = await createEntity(entity);
 
-    expectOk(response);
     expect(response.status).toBe(201);
   });
 
@@ -106,7 +104,6 @@ describe("queryEntity", () => {
     await createEntity(entity);
 
     const response = await queryEntity({ type: "TestEntity" });
-    expectOk(response);
     expect(response.status).toBe(200);
     expect(response.data.length).toBeGreaterThan(0);
   });
@@ -121,7 +118,6 @@ describe("queryGeoEntity", () => {
     await createEntity(entity);
 
     const response = await queryGeoEntity({ type: "TestEntity" });
-    expectOk(response);
     expect(response.status).toBe(200);
 
     // Should be a GeoJSON FeatureCollection containing our entity
@@ -139,7 +135,6 @@ describe("queryGeoEntity", () => {
 
   it("should return empty FeatureCollection for no matches", async () => {
     const response = await queryGeoEntity({ type: "NonExistentType" });
-    expectOk(response);
     expect(response.status).toBe(200);
     expect(response.data.type).toBe("FeatureCollection");
     expect(response.data.features).toEqual([]);
@@ -155,7 +150,6 @@ describe("retrieveEntity", () => {
     await createEntity(entity);
 
     const response = await retrieveEntity(entity.id!);
-    expectOk(response);
     expect(response.status).toBe(200);
     expect(response.data).toBeDefined();
   });
@@ -176,7 +170,6 @@ describe("retrieveGeoEntity", () => {
     await createEntity(entity);
 
     const response = await retrieveGeoEntity(entity.id!);
-    expectOk(response);
     expect(response.status).toBe(200);
 
     // Should be a GeoJSON Feature
@@ -199,7 +192,6 @@ describe("retrieveGeoEntity", () => {
     await createEntity(entity);
 
     const response = await retrieveGeoEntity(entity.id!);
-    expectOk(response);
     expect(response.status).toBe(200);
 
     // Feature with null geometry when no GeoProperty exists

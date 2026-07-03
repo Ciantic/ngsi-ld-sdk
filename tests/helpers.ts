@@ -224,21 +224,6 @@ export async function cleanUpCSRSubscription(
   }
 }
 
-// --- Assertion helpers ---
-
-/**
- * Assert the response has a 2xx status code.
- * Returns the response for chaining.
- */
-export function expectOk<T extends { status: number }>(
-  response: T,
-): asserts response is T & { status: 200 | 201 | 204 } {
-  if (response.status < 200 || response.status >= 300) {
-    const body = "data" in response ? JSON.stringify(response.data) : "";
-    throw new Error(`Expected 2xx status but got ${response.status}: ${body}`);
-  }
-}
-
 // --- Error assertion helper (since errors now throw) ---
 
 /**

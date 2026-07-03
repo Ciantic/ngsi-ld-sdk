@@ -13,7 +13,6 @@ import {
 } from "../src";
 import {
   makeSubscription,
-  expectOk,
   expectHttpError,
   cleanUpAll,
 } from "./helpers";
@@ -34,7 +33,6 @@ describe("createSubscription", () => {
     const sub = makeSubscription();
     const response = await createSubscription(sub);
 
-    expectOk(response);
     expect(response.status).toBe(201);
   });
 
@@ -56,7 +54,6 @@ describe("querySubscription", () => {
 
     const response = await querySubscription();
 
-    expectOk(response);
     expect(response.status).toBe(200);
     expect(Array.isArray(response.data)).toBe(true);
     expect(response.data.length).toBeGreaterThan(0);
@@ -73,7 +70,6 @@ describe("retrieveSubscription", () => {
 
     const response = await retrieveSubscription(sub.id);
 
-    expectOk(response);
     expect(response.status).toBe(200);
     expect(response.data).toBeDefined();
   });
@@ -107,7 +103,6 @@ describe("updateSubscription", () => {
 
     const response = await updateSubscription(sub.id, patch);
 
-    expectOk(response);
     expect(response.status).toBe(204);
 
     // Verify the update
@@ -190,7 +185,6 @@ describe("createCSRSubscription", () => {
     // Some brokers (e.g. Orion-LD) may not implement /csourceSubscriptions
     if (!response) return;
 
-    expectOk(response);
     expect(response.status).toBe(201);
     if (response.status !== 201) throw new Error("Expected 201");
   });
@@ -231,7 +225,6 @@ describe("queryCSRSubscription", () => {
 
     const response = await queryCSRSubscription();
 
-    expectOk(response);
     expect(response.status).toBe(200);
     expect(Array.isArray(response.data)).toBe(true);
     expect(response.data.length).toBeGreaterThan(0);
@@ -264,7 +257,6 @@ describe("retrieveCSRSubscription", () => {
 
     const response = await retrieveCSRSubscription(csrSubId);
 
-    expectOk(response);
     expect(response.status).toBe(200);
     expect(response.data).toBeDefined();
   });
@@ -311,7 +303,6 @@ describe("updateCSRSubscription", () => {
 
     const response = await updateCSRSubscription(csrSubId, patch);
 
-    expectOk(response);
     expect(response.status).toBe(204);
   });
 

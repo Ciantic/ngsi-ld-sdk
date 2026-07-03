@@ -18,7 +18,6 @@ import {
 } from "../src";
 import {
   makeEntity,
-  expectOk,
   expectHttpError,
   cleanUpAll,
   detectBroker,
@@ -38,7 +37,6 @@ describe("retrieveEntityTypes", () => {
     await createEntity(entity);
 
     const response = await retrieveEntityTypes();
-    expectOk(response);
     expect(response.status).toBe(200);
     expect(response.data).toBeDefined();
   });
@@ -48,7 +46,6 @@ describe("retrieveEntityTypes", () => {
     await createEntity(entity);
 
     const response = await retrieveEntityTypes({ details: true });
-    expectOk(response);
     expect(response.status).toBe(200);
     expect(response.data).toBeDefined();
   });
@@ -79,7 +76,6 @@ describe("retrieveEntityTypeInfo", () => {
     await createEntity(entity);
 
     const response = await retrieveEntityTypeInfo("EntityTypeInfoTest");
-    expectOk(response);
     expect(response.status).toBe(200);
     expect(response.data).toBeDefined();
   });
@@ -100,7 +96,6 @@ describe("retrieveAttrTypes", () => {
     await createEntity(entity);
 
     const response = await retrieveAttrTypes();
-    expectOk(response);
     expect(response.status).toBe(200);
     expect(response.data).toBeDefined();
   });
@@ -110,7 +105,6 @@ describe("retrieveAttrTypes", () => {
     await createEntity(entity);
 
     const response = await retrieveAttrTypes({ details: true });
-    expectOk(response);
     expect(response.status).toBe(200);
     expect(response.data).toBeDefined();
   });
@@ -126,7 +120,6 @@ describe("retrieveAttrTypeInfo", () => {
 
     // "temperature" attr exists on the entity created via makeEntity()
     const response = await retrieveAttrTypeInfo("temperature");
-    expectOk(response);
     expect(response.status).toBe(200);
     expect(response.data).toBeDefined();
   });
@@ -232,7 +225,6 @@ describe("retrieveContext", () => {
     );
 
     const response = await retrieveContext(contextId);
-    expectOk(response);
     expect(response.status).toBe(200);
     expect(response.data).toBeDefined();
   });
@@ -260,7 +252,6 @@ describe("retrieveContext", () => {
     );
 
     const response = await retrieveContext(contextId, { details: true });
-    expectOk(response);
     expect(response.status).toBe(200);
   });
 

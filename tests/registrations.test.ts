@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { createCSR, queryCSR, retrieveCSR, updateCSR, deleteCSR } from "../src";
-import { makeCSR, expectOk, expectHttpError, cleanUpAll } from "./helpers";
+import { makeCSR, expectHttpError, cleanUpAll } from "./helpers";
 import { NgsiLdNotFound, NgsiLdConflict } from "../src";
 
 // Wipe all stale resources from previous crashed runs before each test.
@@ -14,7 +14,6 @@ describe("createCSR", () => {
     const csr = makeCSR();
     const response = await createCSR(csr);
 
-    expectOk(response);
     expect(response.status).toBe(201);
   });
 
@@ -37,7 +36,6 @@ describe("queryCSR", () => {
 
     const response = await queryCSR();
 
-    expectOk(response);
     expect(response.status).toBe(200);
     expect(Array.isArray(response.data)).toBe(true);
     if (Array.isArray(response.data)) {
@@ -59,7 +57,6 @@ describe("queryCSR", () => {
 
     const response = await queryCSR({ type: "ContextSourceRegistration" });
 
-    expectOk(response);
     expect(response.status).toBe(200);
     expect(Array.isArray(response.data)).toBe(true);
   });
@@ -75,7 +72,6 @@ describe("retrieveCSR", () => {
 
     const response = await retrieveCSR(csr.id!);
 
-    expectOk(response);
     expect(response.status).toBe(200);
     expect(response.data).toBeDefined();
   });
@@ -104,7 +100,6 @@ describe("updateCSR", () => {
 
     const response = await updateCSR(csr.id!, patch);
 
-    expectOk(response);
     expect(response.status).toBe(204);
 
     // Verify the update worked

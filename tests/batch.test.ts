@@ -11,7 +11,6 @@ import {
 } from "../src";
 import {
   cleanUpAll,
-  expectOk,
   makeEntity,
   makeEntityWithGeo,
   expectHttpError,
@@ -31,7 +30,6 @@ describe("createBatch", () => {
 
     const response = await createBatch([entity1, entity2]);
 
-    expectOk(response);
     expect(response.status).toBe(201);
 
     // Response data should be an array of created entity IDs (or location paths)
@@ -45,7 +43,6 @@ describe("createBatch", () => {
 
     // Create first batch
     const first = await createBatch([entity1, entity2]);
-    expectOk(first);
 
     // Try to create again with same IDs
     const second = await createBatch([entity1, entity2]);
@@ -66,7 +63,6 @@ describe("upsertBatch", () => {
 
     // Upsert can return 201 (created), 204 (updated), or 207 (multi-status)
     expect([201, 204, 207]).toContain(response.status);
-    expectOk(response);
   });
 
   it("should update entities on second upsert (204)", async () => {
@@ -121,7 +117,6 @@ describe("updateBatch", () => {
 
     // Update can return 204 or 207 (multi-status)
     expect([204, 207]).toContain(response.status);
-    expectOk(response);
   });
 
   it("should return 207/400 for non-existent entity in update batch", async () => {
@@ -148,7 +143,6 @@ describe("deleteBatch", () => {
 
     // Delete can return 204 or 207
     expect([204, 207]).toContain(response.status);
-    expectOk(response);
 
     // Entities are already deleted, no need to clean up
   });
@@ -178,7 +172,6 @@ describe("queryBatch", () => {
       entities: [{ type: "TestEntity" }],
     });
 
-    expectOk(response);
     expect(response.status).toBe(200);
     expect(Array.isArray(response.data)).toBe(true);
     expect(response.data.length).toBeGreaterThanOrEqual(2);
@@ -190,7 +183,6 @@ describe("queryBatch", () => {
       entities: [{ type: "NonExistentType" }],
     });
 
-    expectOk(response);
     expect(response.status).toBe(200);
     expect(Array.isArray(response.data)).toBe(true);
     expect(response.data.length).toBe(0);
@@ -210,7 +202,6 @@ describe("queryGeoBatch", () => {
       entities: [{ type: "TestEntity" }],
     });
 
-    expectOk(response);
     expect(response.status).toBe(200);
 
     // Should be a GeoJSON FeatureCollection containing our entity
@@ -231,7 +222,6 @@ describe("queryGeoBatch", () => {
       entities: [{ type: "NonExistentType" }],
     });
 
-    expectOk(response);
     expect(response.status).toBe(200);
     expect(response.data.type).toBe("FeatureCollection");
     expect(response.data.features).toEqual([]);
@@ -280,7 +270,6 @@ describe("mergeBatch", () => {
       const response = await mergeBatch([patch1, patch2]);
 
       // Merge can return 204, 207 (multi-status)
-      expectOk(response);
       expect([204, 207]).toContain(response.status);
     } catch (err) {
       // Some brokers don't implement merge and return 404
