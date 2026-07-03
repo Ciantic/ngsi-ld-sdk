@@ -67,6 +67,15 @@ describe("upsertTemporal", () => {
 
   it("should support local=true query parameter", async () => {
     const entity = makeTemporalEntity();
+
+    if (detectBroker() === "stellio") {
+      // Stellio does not support local=true for temporal operations
+      await expect(() =>
+        upsertTemporal(entity, { local: true }),
+      ).rejects.toThrow(NgsiLdNotImplemented);
+      return;
+    }
+
     const response = await upsertTemporal(entity, { local: true });
 
     expect([201, 204]).toContain(response.status);
