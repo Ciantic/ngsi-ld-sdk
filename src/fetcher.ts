@@ -3,6 +3,7 @@ import {
   NGSILD_ATTR_TYPES,
   STRUCTURAL_KEYS,
 } from "./generated/schemas";
+import { throwHttpError } from "./errors";
 
 const BASE_URL =
   process.env.NGSILD_BROKER_URL || "http://localhost:1026/ngsi-ld/v1";
@@ -164,6 +165,11 @@ export const fetcher = async <T extends { status: number; data: any }>(
     ? undefined
     : await response.text();
   const data = responseBody ? JSON.parse(responseBody) : {};
+
+  // Throw on non-2XX responses
+  if (response.status < 200 || response.status >= 300) {
+    throwHttpError(response, data);
+  }
 
   // Transform Orion wire format → SDK shape on the way back
   const location =

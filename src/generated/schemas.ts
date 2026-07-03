@@ -1544,7 +1544,7 @@ export interface TemporalQuery {
  */
 export type QueryTemporal = Query & {
   /** Temporal Query to be present only for "Query Temporal Evolution of Entities" operation (clause 5.7.4). */
-  temporalQ?: TemporalQuery;
+  temporalQ: TemporalQuery;
 };
 
 /**

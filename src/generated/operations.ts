@@ -1405,7 +1405,7 @@ export const deleteAttrInstanceTemporal = (
 
  */
 export const temporalQueryBatch = (
-  queryTemporalBody?: QueryTemporalBody,
+  queryTemporalBody: QueryTemporalBody,
   params?: TemporalQueryBatchParams,
   options?: RequestInit,
 ) => {

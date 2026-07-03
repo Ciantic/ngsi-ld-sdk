@@ -17,10 +17,10 @@ import {
 import {
   makeEntity,
   expectOk,
+  expectHttpError,
   cleanUpEntity,
-  warnIf501,
-  warnIf500,
 } from "./helpers";
+import { NgsiLdNotFound } from "../src";
 
 // --- Track entities created during discovery tests ---
 const createdEntityIds: string[] = [];
@@ -71,9 +71,7 @@ describe("retrieveEntityTypes", () => {
     trackEntity(entity);
 
     const response = await retrieveEntityTypes({ local: true });
-    // Orion-LD returns 200; Stellio returns 501 (not yet implemented)
-    warnIf501(response.status, "retrieveEntityTypes?local=true");
-    expect([200, 501]).toContain(response.status);
+    expect(response.status).toBe(200);
   });
 });
 
@@ -93,8 +91,9 @@ describe("retrieveEntityTypeInfo", () => {
   });
 
   it("should return 404 for a non-existent entity type", async () => {
-    const response = await retrieveEntityTypeInfo("NonExistentType12345");
-    expect(response.status).toBe(404);
+    await expectHttpError(404, NgsiLdNotFound, () =>
+      retrieveEntityTypeInfo("NonExistentType12345"),
+    );
   });
 });
 
@@ -142,8 +141,9 @@ describe("retrieveAttrTypeInfo", () => {
   });
 
   it("should return 404 for a non-existent attribute", async () => {
-    const response = await retrieveAttrTypeInfo("nonExistentAttr999");
-    expect(response.status).toBe(404);
+    await expectHttpError(404, NgsiLdNotFound, () =>
+      retrieveAttrTypeInfo("nonExistentAttr999"),
+    );
   });
 });
 
@@ -175,28 +175,12 @@ describe("createContext", () => {
     };
 
     const response = await createContext(contextBody);
-    // Stellio latest-dev returns 500 (endpoint not yet wired); Orion-LD returns 201/204
-    if ((response.status as number) === 500) {
-      warnIf500(response.status as number, "createContext");
-      return;
-    }
-    if (response.status !== 201) {
-      throw new Error(
-        `Expected 201 Created but got ${response.status}: ${JSON.stringify(
-          response.data,
-        )}`,
-      );
-    }
     expect(response.status).toBe(201);
     expect(response.location).toBeDefined();
 
     // Extract context ID from Location header for cleanup
-    const location = response.location;
-    if (location) {
-      // Location may be a full path like /ngsi-ld/v1/jsonldContexts/<id>
-      const contextId = decodeURIComponent(location.split("/").pop()!);
-      contextIds.push(contextId);
-    }
+    const contextId = decodeURIComponent(response.location.split("/").pop()!);
+    contextIds.push(contextId);
   });
 });
 
@@ -206,22 +190,12 @@ describe("createContext", () => {
 describe("listContexts", () => {
   it("should list all contexts and return 200", async () => {
     const response = await listContexts();
-    // Stellio latest-dev returns 500 (endpoint not yet wired); Orion-LD returns 200
-    if ((response.status as number) === 500) {
-      warnIf500(response.status as number, "listContexts");
-      return;
-    }
     expect(response.status).toBe(200);
     expect(response.data).toBeDefined();
   });
 
   it("should support details=true query parameter", async () => {
     const response = await listContexts({ details: true });
-    // Stellio latest-dev returns 500 (endpoint not yet wired); Orion-LD returns 200
-    if ((response.status as number) === 500) {
-      warnIf500(response.status as number, "listContexts?details=true");
-      return;
-    }
     expect(response.status).toBe(200);
   });
 });
@@ -254,21 +228,10 @@ describe("retrieveContext", () => {
       },
     };
 
-    const createResp = await createContext(contextBody);
-    // Stellio latest-dev returns 500 (endpoint not yet wired); Orion-LD returns 201/204
-    if ((createResp.status as number) === 500) {
-      warnIf500(createResp.status as number, "createContext (retrieve test)");
-      return;
-    }
-    expect([201, 204]).toContain(createResp.status);
+    const createResponse = await createContext(contextBody);
+    expect(createResponse.status).toBe(201);
 
-    const location = createResp.status === 201 && createResp.location;
-    if (!location) {
-      // If no Location header, skip the retrieve test gracefully
-      return;
-    }
-
-    const contextId = decodeURIComponent(location.split("/").pop()!);
+    const contextId = decodeURIComponent(createResponse.location.split("/").pop()!);
     contextIds.push(contextId);
 
     const response = await retrieveContext(contextId);
@@ -284,21 +247,10 @@ describe("retrieveContext", () => {
       },
     };
 
-    const createResp = await createContext(contextBody);
-    // Stellio latest-dev returns 500 (endpoint not yet wired); Orion-LD returns 201/204
-    if ((createResp.status as number) === 500) {
-      warnIf500(
-        createResp.status as number,
-        "createContext (retrieve details test)",
-      );
-      return;
-    }
-    if (createResp.status >= 400) return;
+    const createResponse = await createContext(contextBody);
+    expect(createResponse.status).toBe(201);
 
-    const location = createResp.status === 201 && createResp.location;
-    if (!location) return;
-
-    const contextId = decodeURIComponent(location.split("/").pop()!);
+    const contextId = decodeURIComponent(createResponse.location.split("/").pop()!);
     contextIds.push(contextId);
 
     const response = await retrieveContext(contextId, { details: true });
@@ -307,11 +259,9 @@ describe("retrieveContext", () => {
   });
 
   it("should return 404 for a non-existent context", async () => {
-    const response = await retrieveContext(
-      "urn:ngsi-ld:context:nonexistent-12345",
+    await expectHttpError(404, NgsiLdNotFound, () =>
+      retrieveContext("urn:ngsi-ld:context:nonexistent-12345"),
     );
-    // Orion-LD returns 404/422; Stellio returns 405 (endpoint not wired returns Method Not Allowed)
-    expect([404, 422, 405]).toContain(response.status);
   });
 });
 
@@ -320,36 +270,25 @@ describe("retrieveContext", () => {
 // ---------------------------------------------------------------------------
 describe("deleteContext", () => {
   it("should delete a previously created context and return 204", async () => {
-    // Create a context first
     const contextBody = {
       "@context": {
         deleteTestCtx: "http://example.org/delete-test/",
       },
     };
 
-    const createResp = await createContext(contextBody);
-    // Stellio latest-dev returns 500 (endpoint not yet wired); Orion-LD returns 201/204
-    if ((createResp.status as number) === 500) {
-      warnIf500(createResp.status as number, "createContext (delete test)");
-      return;
-    }
-    expect([201, 204]).toContain(createResp.status);
+    const createResponse = await createContext(contextBody);
+    expect(createResponse.status).toBe(201);
 
-    const location = createResp.status === 201 && createResp.location;
-    if (!location) return;
-
-    const contextId = decodeURIComponent(location.split("/").pop()!);
+    const contextId = decodeURIComponent(createResponse.location.split("/").pop()!);
 
     const response = await deleteContext(contextId);
-    expect([204, 404]).toContain(response.status);
+    expect(response.status).toBe(204);
   });
 
   it("should return 404 when deleting a non-existent context", async () => {
-    const response = await deleteContext(
-      "urn:ngsi-ld:context:nonexistent-delete-12345",
+    await expectHttpError(404, NgsiLdNotFound, () =>
+      deleteContext("urn:ngsi-ld:context:nonexistent-delete-12345"),
     );
-    // Stellio returns 405 (Method Not Allowed) for unwired endpoint
-    expect([404, 504, 405]).toContain(response.status);
   });
 });
 
@@ -358,9 +297,9 @@ describe("deleteContext", () => {
 // ---------------------------------------------------------------------------
 describe("retrieveEntityMap", () => {
   it("should return 404 for a non-existent entity map", async () => {
-    const response = await retrieveEntityMap("nonExistentMap12345");
-    // Orion-LD may return 404, or 501 if Entity Maps are not implemented
-    expect([404, 501]).toContain(response.status);
+    await expectHttpError(404, NgsiLdNotFound, () =>
+      retrieveEntityMap("nonExistentMap12345"),
+    );
   });
 });
 
@@ -368,7 +307,7 @@ describe("retrieveEntityMap", () => {
 // 10. updateEntityMap
 // ---------------------------------------------------------------------------
 describe("updateEntityMap", () => {
-  it("should return 404 or 501 when updating a non-existent entity map", async () => {
+  it("should return 404 when updating a non-existent entity map", async () => {
     const patch = {
       "@context": [
         "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
@@ -377,8 +316,9 @@ describe("updateEntityMap", () => {
       expiresAt: new Date(Date.now() + 3600000).toISOString(),
     };
 
-    const response = await updateEntityMap("nonExistentMap12345", patch);
-    expect([404, 501]).toContain(response.status);
+    await expectHttpError(404, NgsiLdNotFound, () =>
+      updateEntityMap("nonExistentMap12345", patch),
+    );
   });
 });
 
@@ -386,9 +326,10 @@ describe("updateEntityMap", () => {
 // 11. deleteEntityMap
 // ---------------------------------------------------------------------------
 describe("deleteEntityMap", () => {
-  it("should return 404 or 501 when deleting a non-existent entity map", async () => {
-    const response = await deleteEntityMap("nonExistentMap12345");
-    expect([404, 501]).toContain(response.status);
+  it("should return 404 when deleting a non-existent entity map", async () => {
+    await expectHttpError(404, NgsiLdNotFound, () =>
+      deleteEntityMap("nonExistentMap12345"),
+    );
   });
 });
 
@@ -396,13 +337,9 @@ describe("deleteEntityMap", () => {
 // 12. retrieveCSIdentityInfo
 // ---------------------------------------------------------------------------
 describe("retrieveCSIdentityInfo", () => {
-  it("should retrieve context source identity info (or return 501 if unsupported)", async () => {
+  it("should retrieve context source identity info", async () => {
     const response = await retrieveCSIdentityInfo();
-    // 200 if multi-tenancy is enabled, 501 if not implemented, 404 if endpoint not found
-    expect([200, 501, 404]).toContain(response.status);
-
-    if (response.status === 200) {
-      expect(response.data).toBeDefined();
-    }
+    expect(response.status).toBe(200);
+    expect(response.data).toBeDefined();
   });
 });

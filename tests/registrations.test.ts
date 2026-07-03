@@ -1,6 +1,7 @@
 import { describe, it, expect, afterEach } from "vitest";
 import { createCSR, queryCSR, retrieveCSR, updateCSR, deleteCSR } from "../src";
-import { makeCSR, expectOk, cleanUpCSR } from "./helpers";
+import { makeCSR, expectOk, expectHttpError, cleanUpCSR } from "./helpers";
+import { NgsiLdNotFound, NgsiLdConflict } from "../src";
 
 // Track created CSRs for cleanup
 const createdIds: string[] = [];
@@ -37,8 +38,7 @@ describe("createCSR", () => {
     await createCSR(csr);
     trackId(csr);
 
-    const response = await createCSR(csr);
-    expect(response.status).toBe(409);
+    await expectHttpError(409, NgsiLdConflict, () => createCSR(csr));
   });
 });
 
@@ -100,9 +100,9 @@ describe("retrieveCSR", () => {
   });
 
   it("should return 404 for a non-existent CSR", async () => {
-    const response = await retrieveCSR("urn:ngsi-ld:CSR:nonexistent");
-
-    expect(response.status).toBe(404);
+    await expectHttpError(404, NgsiLdNotFound, () =>
+      retrieveCSR("urn:ngsi-ld:CSR:nonexistent"),
+    );
   });
 });
 
@@ -143,9 +143,9 @@ describe("updateCSR", () => {
       endpoint: "http://updated.example.com/ngsi-ld",
     };
 
-    const response = await updateCSR("urn:ngsi-ld:CSR:nonexistent", patch);
-
-    expect(response.status).toBe(404);
+    await expectHttpError(404, NgsiLdNotFound, () =>
+      updateCSR("urn:ngsi-ld:CSR:nonexistent", patch),
+    );
   });
 });
 
@@ -164,8 +164,8 @@ describe("deleteCSR", () => {
   });
 
   it("should return 404 when deleting a non-existent CSR", async () => {
-    const response = await deleteCSR("urn:ngsi-ld:CSR:nonexistent");
-
-    expect(response.status).toBe(404);
+    await expectHttpError(404, NgsiLdNotFound, () =>
+      deleteCSR("urn:ngsi-ld:CSR:nonexistent"),
+    );
   });
 });

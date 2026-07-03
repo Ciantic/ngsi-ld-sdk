@@ -1,3 +1,4 @@
+import { expect } from "vitest";
 import {
   type Entity,
   type CsourceRegistration,
@@ -10,6 +11,10 @@ import {
   type QueryTemporalBody,
   type MaybeContext,
 } from "../src/generated/schemas";
+import {
+  NgsiLdHttpError,
+  NgsiLdNotFound,
+} from "../src";
 import {
   deleteEntity,
   deleteCSR,
@@ -166,40 +171,34 @@ export function expectOk<T extends { status: number }>(
     const body = "data" in response ? JSON.stringify(response.data) : "";
     throw new Error(`Expected 2xx status but got ${response.status}: ${body}`);
   }
+
 }
 
-/** Assert the response has a specific status code and body shape. */
-export function expectStatus<T extends { status: number }>(
-  response: T,
+// --- Error assertion helper (since errors now throw) ---
+
+/**
+ * Execute an async NGSI-LD call, catch the {@link NgsiLdHttpError},
+ * and assert its status code equals `expectedStatus`.
+ *
+ * If the call resolves instead of throwing, the test fails.
+ */
+export async function expectHttpError<T extends NgsiLdHttpError>(
   expectedStatus: number,
-): void {
-  if (response.status !== expectedStatus) {
-    const body = "data" in response ? JSON.stringify(response.data) : "";
-    throw new Error(
-      `Expected status ${expectedStatus} but got ${response.status}: ${body}`,
-    );
+  errorClass: new (...args: any[]) => T,
+  fn: () => Promise<unknown>,
+): Promise<T> {
+  try {
+    await fn();
+  } catch (err) {
+    if (!(err instanceof errorClass)) {
+      throw new Error(
+        `Expected ${errorClass.name} but got ${(err as Error).constructor.name}: ${(err as Error).message}`,
+      );
+    }
+    expect(err.status).toBe(expectedStatus);
+    return err as T;
   }
-}
-
-/**
- * Warn if the broker returned 501 (Not Implemented), indicating that
- * the feature is not enabled. Use this in temporal tests.
- * Pass a human-readable operation name to describe what's missing.
- */
-export function warnIf501(status: number, operation?: string): void {
-  if (status === 501) {
-    const what = operation ? `: ${operation}` : "";
-    console.warn(`Not implemented (501)${what}. `);
-  }
-}
-
-/**
- * Warn if the broker returned 500 (Internal Server Error), typically because
- * the endpoint is not yet wired (Stellio latest-dev).
- */
-export function warnIf500(status: number, operation?: string): void {
-  if (status === 500) {
-    const what = operation ? `: ${operation}` : "";
-    console.warn(`Endpoint not wired (500)${what}. `);
-  }
+  throw new Error(
+    `Expected ${errorClass.name} with status ${expectedStatus}, but no error was thrown`,
+  );
 }

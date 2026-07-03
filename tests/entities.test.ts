@@ -19,9 +19,10 @@ import {
   makeEntity,
   makeEntityWithGeo,
   expectOk,
-  expectStatus,
+  expectHttpError,
   cleanUpEntity,
 } from "./helpers";
+import { NgsiLdNotFound, NgsiLdConflict } from "../src";
 
 // Track created entities for cleanup
 const createdIds: string[] = [];
@@ -58,8 +59,7 @@ describe("createEntity", () => {
     await createEntity(entity);
     trackId(entity);
 
-    const response = await createEntity(entity);
-    expect(response.status).toBe(409);
+    await expectHttpError(409, NgsiLdConflict, () => createEntity(entity));
   });
 });
 
@@ -131,8 +131,9 @@ describe("retrieveEntity", () => {
   });
 
   it("should return 404 for a non-existent entity", async () => {
-    const response = await retrieveEntity("urn:ngsi-ld:TestEntity:nonexistent");
-    expect(response.status).toBe(404);
+    await expectHttpError(404, NgsiLdNotFound, () =>
+      retrieveEntity("urn:ngsi-ld:TestEntity:nonexistent"),
+    );
   });
 });
 
@@ -159,10 +160,9 @@ describe("retrieveGeoEntity", () => {
   });
 
   it("should return 404 for a non-existent entity", async () => {
-    const response = await retrieveGeoEntity(
-      "urn:ngsi-ld:TestEntity:nonexistent",
+    await expectHttpError(404, NgsiLdNotFound, () =>
+      retrieveGeoEntity("urn:ngsi-ld:TestEntity:nonexistent"),
     );
-    expect(response.status).toBe(404);
   });
 
   it("should return 200 but null geometry for entity without GeoProperty", async () => {
@@ -193,8 +193,9 @@ describe("deleteEntity", () => {
   });
 
   it("should return 404 when deleting a non-existent entity", async () => {
-    const response = await deleteEntity("urn:ngsi-ld:TestEntity:nonexistent");
-    expect(response.status).toBe(404);
+    await expectHttpError(404, NgsiLdNotFound, () =>
+      deleteEntity("urn:ngsi-ld:TestEntity:nonexistent"),
+    );
   });
 });
 
@@ -345,12 +346,13 @@ describe("updateAttrs", () => {
       value: 100,
     };
 
-    const response = await updateAttrs(
-      "urn:ngsi-ld:TestEntity:nonexistent",
-      "temperature",
-      attrPatch,
+    await expectHttpError(404, NgsiLdNotFound, () =>
+      updateAttrs(
+        "urn:ngsi-ld:TestEntity:nonexistent",
+        "temperature",
+        attrPatch,
+      ),
     );
-    expect(response.status).toBe(404);
   });
 });
 
@@ -374,11 +376,9 @@ describe("deleteAttrs", () => {
   });
 
   it("should return 404 when deleting attribute on non-existent entity", async () => {
-    const response = await deleteAttrs(
-      "urn:ngsi-ld:TestEntity:nonexistent",
-      "temperature",
+    await expectHttpError(404, NgsiLdNotFound, () =>
+      deleteAttrs("urn:ngsi-ld:TestEntity:nonexistent", "temperature"),
     );
-    expect(response.status).toBe(404);
   });
 });
 

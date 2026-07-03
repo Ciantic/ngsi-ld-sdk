@@ -14,9 +14,11 @@ import {
 import {
   makeSubscription,
   expectOk,
+  expectHttpError,
   cleanUpSubscription,
   cleanUpCSRSubscription,
 } from "./helpers";
+import { NgsiLdNotFound, NgsiLdConflict } from "../src";
 
 // Track created subscriptions for cleanup
 const createdSubIds: string[] = [];
@@ -64,8 +66,7 @@ describe("createSubscription", () => {
     await createSubscription(sub);
     trackSubId(sub);
 
-    const response = await createSubscription(sub);
-    expect(response.status).toBe(409);
+    await expectHttpError(409, NgsiLdConflict, () => createSubscription(sub));
   });
 });
 
@@ -104,11 +105,9 @@ describe("retrieveSubscription", () => {
   });
 
   it("should return 404 for a non-existent subscription", async () => {
-    const response = await retrieveSubscription(
-      "urn:ngsi-ld:Subscription:nonexistent",
+    await expectHttpError(404, NgsiLdNotFound, () =>
+      retrieveSubscription("urn:ngsi-ld:Subscription:nonexistent"),
     );
-
-    expect(response.status).toBe(404);
   });
 });
 
@@ -161,12 +160,9 @@ describe("updateSubscription", () => {
       },
     };
 
-    const response = await updateSubscription(
-      "urn:ngsi-ld:Subscription:nonexistent",
-      patch,
+    await expectHttpError(404, NgsiLdNotFound, () =>
+      updateSubscription("urn:ngsi-ld:Subscription:nonexistent", patch),
     );
-
-    expect(response.status).toBe(404);
   });
 });
 
@@ -185,11 +181,9 @@ describe("deleteSubscription", () => {
   });
 
   it("should return 404 when deleting a non-existent subscription", async () => {
-    const response = await deleteSubscription(
-      "urn:ngsi-ld:Subscription:nonexistent",
+    await expectHttpError(404, NgsiLdNotFound, () =>
+      deleteSubscription("urn:ngsi-ld:Subscription:nonexistent"),
     );
-
-    expect(response.status).toBe(404);
   });
 });
 
@@ -201,14 +195,27 @@ describe("deleteSubscription", () => {
 // 6. createCSRSubscription
 // ---------------------------------------------------------------------------
 describe("createCSRSubscription", () => {
+  // Helper: call createCSRSubscription and return the response,
+  // or return undefined if the endpoint is not implemented (404).
+  async function tryCreateCSRSubscription(sub: unknown) {
+    try {
+      return await createCSRSubscription(
+        sub as Parameters<typeof createCSRSubscription>[0],
+      );
+    } catch (err) {
+      if (err instanceof NgsiLdNotFound) return undefined;
+      throw err;
+    }
+  }
+
   it("should create a CSR subscription", async () => {
     // CSR subscriptions get an auto-generated id from the broker;
     // spread makeSubscription then omit the explicit id
     const { id: _omit, ...sub } = makeSubscription();
-    const response = await createCSRSubscription(sub);
+    const response = await tryCreateCSRSubscription(sub);
 
     // Some brokers (e.g. Orion-LD) may not implement /csourceSubscriptions
-    if ((response as { status: number }).status === 404) return;
+    if (!response) return;
 
     expectOk(response);
     expect(response.status).toBe(201);
@@ -224,10 +231,10 @@ describe("createCSRSubscription", () => {
 
   it("should reject duplicate CSR subscription", async () => {
     const sub = makeSubscription();
-    const response1 = await createCSRSubscription(sub);
+    const response1 = await tryCreateCSRSubscription(sub);
 
     // Skip if endpoint not implemented
-    if ((response1 as { status: number }).status === 404) return;
+    if (!response1) return;
     expect(response1.status).toBe(201);
     if (response1.status !== 201) throw new Error("Expected 201");
 
@@ -237,8 +244,9 @@ describe("createCSRSubscription", () => {
     const csrSubId = parts[parts.length - 1];
     createdCSRSubIds.push(csrSubId);
 
-    const response2 = await createCSRSubscription(sub);
-    expect(response2.status).toBe(409);
+    await expectHttpError(409, NgsiLdConflict, () =>
+      tryCreateCSRSubscription(sub),
+    );
   });
 });
 
@@ -248,10 +256,16 @@ describe("createCSRSubscription", () => {
 describe("queryCSRSubscription", () => {
   it("should query CSR subscriptions", async () => {
     const sub = makeSubscription();
-    const createResp = await createCSRSubscription(sub);
+    let createResp;
+    try {
+      createResp = await createCSRSubscription(sub);
+    } catch (err) {
+      if (err instanceof NgsiLdNotFound) return;
+      throw err;
+    }
 
     // Skip if endpoint not implemented
-    if ((createResp as { status: number }).status === 404) return;
+    if (!createResp) return;
 
     const location = createResp.status === 201 && createResp.location;
     if (location) {
@@ -274,9 +288,15 @@ describe("queryCSRSubscription", () => {
 describe("retrieveCSRSubscription", () => {
   it("should retrieve a CSR subscription by id", async () => {
     const sub = makeSubscription();
-    const createResp = await createCSRSubscription(sub);
+    let createResp;
+    try {
+      createResp = await createCSRSubscription(sub);
+    } catch (err) {
+      if (err instanceof NgsiLdNotFound) return;
+      throw err;
+    }
 
-    if ((createResp as { status: number }).status === 404) return;
+    if (!createResp) return;
 
     const location = createResp.status === 201 && createResp.location;
     if (!location) {
@@ -295,11 +315,9 @@ describe("retrieveCSRSubscription", () => {
   });
 
   it("should return 404 for a non-existent CSR subscription", async () => {
-    const response = await retrieveCSRSubscription(
-      "urn:ngsi-ld:Subscription:nonexistent",
+    await expectHttpError(404, NgsiLdNotFound, () =>
+      retrieveCSRSubscription("urn:ngsi-ld:Subscription:nonexistent"),
     );
-
-    expect(response.status).toBe(404);
   });
 });
 
@@ -309,9 +327,15 @@ describe("retrieveCSRSubscription", () => {
 describe("updateCSRSubscription", () => {
   it("should update (PATCH) a CSR subscription", async () => {
     const sub = makeSubscription();
-    const createResp = await createCSRSubscription(sub);
+    let createResp;
+    try {
+      createResp = await createCSRSubscription(sub);
+    } catch (err) {
+      if (err instanceof NgsiLdNotFound) return;
+      throw err;
+    }
 
-    if ((createResp as { status: number }).status === 404) return;
+    if (!createResp) return;
 
     const location = createResp.status === 201 && createResp.location;
     if (!location) return;
@@ -350,12 +374,9 @@ describe("updateCSRSubscription", () => {
       },
     };
 
-    const response = await updateCSRSubscription(
-      "urn:ngsi-ld:Subscription:nonexistent",
-      patch,
+    await expectHttpError(404, NgsiLdNotFound, () =>
+      updateCSRSubscription("urn:ngsi-ld:Subscription:nonexistent", patch),
     );
-
-    expect(response.status).toBe(404);
   });
 });
 
@@ -365,9 +386,15 @@ describe("updateCSRSubscription", () => {
 describe("deleteCSRSubscription", () => {
   it("should delete a CSR subscription", async () => {
     const sub = makeSubscription();
-    const createResp = await createCSRSubscription(sub);
+    let createResp;
+    try {
+      createResp = await createCSRSubscription(sub);
+    } catch (err) {
+      if (err instanceof NgsiLdNotFound) return;
+      throw err;
+    }
 
-    if ((createResp as { status: number }).status === 404) return;
+    if (!createResp) return;
 
     const location = createResp.status === 201 && createResp.location;
     if (!location) return;
@@ -381,10 +408,8 @@ describe("deleteCSRSubscription", () => {
   });
 
   it("should return 404 when deleting a non-existent CSR subscription", async () => {
-    const response = await deleteCSRSubscription(
-      "urn:ngsi-ld:Subscription:nonexistent",
+    await expectHttpError(404, NgsiLdNotFound, () =>
+      deleteCSRSubscription("urn:ngsi-ld:Subscription:nonexistent"),
     );
-
-    expect(response.status).toBe(404);
   });
 });

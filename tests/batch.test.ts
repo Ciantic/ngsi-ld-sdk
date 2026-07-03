@@ -10,7 +10,13 @@ import {
   updateBatch,
   upsertBatch,
 } from "../src";
-import { expectOk, makeEntity, makeEntityWithGeo } from "./helpers";
+import {
+  expectOk,
+  makeEntity,
+  makeEntityWithGeo,
+  expectHttpError,
+} from "./helpers";
+import { NgsiLdNotFound } from "../src";
 
 // Track created entities for cleanup
 const createdIds: string[] = [];
@@ -300,12 +306,19 @@ describe("mergeBatch", () => {
       },
     };
 
-    const response = await mergeBatch([patch1, patch2]);
+    try {
+      const response = await mergeBatch([patch1, patch2]);
 
-    // Merge can return 204, 207 (multi-status), or 404 (endpoint not implemented by some brokers)
-    if ((response.status as number) !== 404) {
+      // Merge can return 204, 207 (multi-status)
       expectOk(response);
+      expect([204, 207]).toContain(response.status);
+    } catch (err) {
+      // Some brokers don't implement merge and return 404
+      if (err instanceof NgsiLdNotFound) {
+        expect(err.status).toBe(404);
+      } else {
+        throw err;
+      }
     }
-    expect([204, 207, 404]).toContain(response.status);
   });
 });
