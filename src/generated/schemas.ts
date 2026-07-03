@@ -3494,14 +3494,6 @@ export type RetrieveAttrTypesParams = {
   local?: QueryLocalParameter;
 };
 
-export type RetrieveAttrTypes200 =
-  | (AttributeList & {
-      "@context": LdContext;
-    })
-  | (Attribute & {
-      "@context": LdContext;
-    })[];
-
 export type RetrieveAttrTypeInfoParams = {
   /**
    * 6.3.18 Limiting Distributed Operations. If local=true then no Context Source Registrations shall be

@@ -1,18 +1,11 @@
 import type {
-  Attribute,
   ContextSourceIdentity,
-  Entity,
   EntityMap,
-  EntityTypeInfo,
   LdContextMetadata,
   MaybeContext,
   MultiStatusBatchOperationResultResponse,
   MultiStatusUpdateResultResponse,
-  RetrieveAttrTypes200,
   RetrieveContext200,
-  RetrieveEntityTypes200,
-  Subscription,
-  WithContext,
 } from "./schemas";
 // https://stackoverflow.com/questions/49579094/typescript-conditional-types-filter-out-readonly-properties-pick-only-requir/49579497#49579497
 export type IfEquals<X, Y, A = X, B = never> =
@@ -178,57 +171,6 @@ export type ReplaceAttrsResponseSuccess =
   ReplaceAttrsResponse204 | ReplaceAttrsResponse207;
 
 export type ReplaceAttrsResponse = ReplaceAttrsResponseSuccess;
-export type CreateCSRSubscriptionResponse201 = {
-  data: void;
-  status: 201;
-  /** URI of the created CSR subscription from the Location header. */
-  location: string;
-};
-
-export type CreateCSRSubscriptionResponseSuccess =
-  CreateCSRSubscriptionResponse201;
-
-export type CreateCSRSubscriptionResponse =
-  CreateCSRSubscriptionResponseSuccess;
-export type QueryCSRSubscriptionResponse200 = {
-  data: MaybeContext<Subscription>[];
-  status: 200;
-};
-
-export type QueryCSRSubscriptionResponseSuccess =
-  QueryCSRSubscriptionResponse200;
-
-export type QueryCSRSubscriptionResponse = QueryCSRSubscriptionResponseSuccess;
-export type RetrieveCSRSubscriptionResponse200 = {
-  data: MaybeContext<Subscription>;
-  status: 200;
-};
-
-export type RetrieveCSRSubscriptionResponseSuccess =
-  RetrieveCSRSubscriptionResponse200;
-
-export type RetrieveCSRSubscriptionResponse =
-  RetrieveCSRSubscriptionResponseSuccess;
-export type UpdateCSRSubscriptionResponse204 = {
-  data: void;
-  status: 204;
-};
-
-export type UpdateCSRSubscriptionResponseSuccess =
-  UpdateCSRSubscriptionResponse204;
-
-export type UpdateCSRSubscriptionResponse =
-  UpdateCSRSubscriptionResponseSuccess;
-export type DeleteCSRSubscriptionResponse204 = {
-  data: void;
-  status: 204;
-};
-
-export type DeleteCSRSubscriptionResponseSuccess =
-  DeleteCSRSubscriptionResponse204;
-
-export type DeleteCSRSubscriptionResponse =
-  DeleteCSRSubscriptionResponseSuccess;
 export type CreateBatchResponse201 = {
   data: string[];
   status: 201;
@@ -320,41 +262,6 @@ export type UpsertTemporalResponseSuccess =
   UpsertTemporalResponse201 | UpsertTemporalResponse204;
 
 export type UpsertTemporalResponse = UpsertTemporalResponseSuccess;
-export type RetrieveEntityTypesResponse200 = {
-  data: RetrieveEntityTypes200;
-  status: 200;
-};
-
-export type RetrieveEntityTypesResponseSuccess = RetrieveEntityTypesResponse200;
-
-export type RetrieveEntityTypesResponse = RetrieveEntityTypesResponseSuccess;
-export type RetrieveEntityTypeInfoResponse200 = {
-  data: WithContext<EntityTypeInfo>;
-  status: 200;
-};
-
-export type RetrieveEntityTypeInfoResponseSuccess =
-  RetrieveEntityTypeInfoResponse200;
-
-export type RetrieveEntityTypeInfoResponse =
-  RetrieveEntityTypeInfoResponseSuccess;
-export type RetrieveAttrTypesResponse200 = {
-  data: RetrieveAttrTypes200;
-  status: 200;
-};
-
-export type RetrieveAttrTypesResponseSuccess = RetrieveAttrTypesResponse200;
-
-export type RetrieveAttrTypesResponse = RetrieveAttrTypesResponseSuccess;
-export type RetrieveAttrTypeInfoResponse200 = {
-  data: WithContext<Attribute>;
-  status: 200;
-};
-
-export type RetrieveAttrTypeInfoResponseSuccess =
-  RetrieveAttrTypeInfoResponse200;
-
-export type RetrieveAttrTypeInfoResponse = RetrieveAttrTypeInfoResponseSuccess;
 export type CreateContextResponse201 = {
   data: void;
   status: 201;

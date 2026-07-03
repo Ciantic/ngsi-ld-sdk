@@ -179,9 +179,11 @@ describe("deleteSubscription", () => {
 // 6. createCSRSubscription
 // ---------------------------------------------------------------------------
 describe("createCSRSubscription", () => {
-  // Helper: call createCSRSubscription and return the response,
+  // Helper: call createCSRSubscription and return the location,
   // or return undefined if the endpoint is not implemented (404).
-  async function tryCreateCSRSubscription(sub: unknown) {
+  async function tryCreateCSRSubscription(
+    sub: unknown,
+  ): Promise<string | undefined> {
     try {
       return await createCSRSubscription(
         sub as Parameters<typeof createCSRSubscription>[0],
@@ -196,23 +198,22 @@ describe("createCSRSubscription", () => {
     // CSR subscriptions get an auto-generated id from the broker;
     // spread makeSubscription then omit the explicit id
     const { id: _omit, ...sub } = makeSubscription();
-    const response = await tryCreateCSRSubscription(sub);
+    const location = await tryCreateCSRSubscription(sub);
 
     // Some brokers (e.g. Orion-LD) may not implement /csourceSubscriptions
-    if (!response) return;
+    if (!location) return;
 
-    expect(response.status).toBe(201);
-    if (response.status !== 201) throw new Error("Expected 201");
+    expect(typeof location).toBe("string");
+    expect(location).toBeTruthy();
   });
 
   it("should reject duplicate CSR subscription", async () => {
     const sub = makeSubscription();
-    const response1 = await tryCreateCSRSubscription(sub);
+    const location1 = await tryCreateCSRSubscription(sub);
 
     // Skip if endpoint not implemented
-    if (!response1) return;
-    expect(response1.status).toBe(201);
-    if (response1.status !== 201) throw new Error("Expected 201");
+    if (!location1) return;
+    expect(typeof location1).toBe("string");
 
     await expectHttpError(409, NgsiLdConflict, () =>
       tryCreateCSRSubscription(sub),
@@ -226,24 +227,21 @@ describe("createCSRSubscription", () => {
 describe("queryCSRSubscription", () => {
   it("should query CSR subscriptions", async () => {
     const sub = makeSubscription();
-    let createResp;
+    let location;
     try {
-      createResp = await createCSRSubscription(sub);
+      location = await createCSRSubscription(sub);
     } catch (err) {
       if (err instanceof NgsiLdNotFound) return;
       throw err;
     }
 
     // Skip if endpoint not implemented
-    if (!createResp) return;
+    if (!location) return;
 
-    const location = createResp.status === 201 && createResp.location;
+    const data = await queryCSRSubscription();
 
-    const response = await queryCSRSubscription();
-
-    expect(response.status).toBe(200);
-    expect(Array.isArray(response.data)).toBe(true);
-    expect(response.data.length).toBeGreaterThan(0);
+    expect(Array.isArray(data)).toBe(true);
+    expect(data.length).toBeGreaterThan(0);
   });
 });
 
@@ -253,28 +251,22 @@ describe("queryCSRSubscription", () => {
 describe("retrieveCSRSubscription", () => {
   it("should retrieve a CSR subscription by id", async () => {
     const sub = makeSubscription();
-    let createResp;
+    let location;
     try {
-      createResp = await createCSRSubscription(sub);
+      location = await createCSRSubscription(sub);
     } catch (err) {
       if (err instanceof NgsiLdNotFound) return;
       throw err;
     }
 
-    if (!createResp) return;
+    if (!location) return;
 
-    const location = createResp.status === 201 && createResp.location;
-    if (!location) {
-      // Cannot test retrieve without an ID
-      return;
-    }
     const parts = location.split("/");
     const csrSubId = parts[parts.length - 1];
 
-    const response = await retrieveCSRSubscription(csrSubId);
+    const data = await retrieveCSRSubscription(csrSubId);
 
-    expect(response.status).toBe(200);
-    expect(response.data).toBeDefined();
+    expect(data).toBeDefined();
   });
 
   it("should return 404 for a non-existent CSR subscription", async () => {
@@ -290,17 +282,14 @@ describe("retrieveCSRSubscription", () => {
 describe("updateCSRSubscription", () => {
   it("should update (PATCH) a CSR subscription", async () => {
     const sub = makeSubscription();
-    let createResp;
+    let location;
     try {
-      createResp = await createCSRSubscription(sub);
+      location = await createCSRSubscription(sub);
     } catch (err) {
       if (err instanceof NgsiLdNotFound) return;
       throw err;
     }
 
-    if (!createResp) return;
-
-    const location = createResp.status === 201 && createResp.location;
     if (!location) return;
     const parts = location.split("/");
     const csrSubId = parts[parts.length - 1];
@@ -317,9 +306,9 @@ describe("updateCSRSubscription", () => {
       },
     };
 
-    const response = await updateCSRSubscription(csrSubId, patch);
+    const result = await updateCSRSubscription(csrSubId, patch);
 
-    expect(response.status).toBe(204);
+    expect(result).toBeUndefined();
   });
 
   it("should return 404 when updating a non-existent CSR subscription", async () => {
@@ -347,24 +336,21 @@ describe("updateCSRSubscription", () => {
 describe("deleteCSRSubscription", () => {
   it("should delete a CSR subscription", async () => {
     const sub = makeSubscription();
-    let createResp;
+    let location;
     try {
-      createResp = await createCSRSubscription(sub);
+      location = await createCSRSubscription(sub);
     } catch (err) {
       if (err instanceof NgsiLdNotFound) return;
       throw err;
     }
 
-    if (!createResp) return;
-
-    const location = createResp.status === 201 && createResp.location;
     if (!location) return;
     const parts = location.split("/");
     const csrSubId = parts[parts.length - 1];
 
-    const response = await deleteCSRSubscription(csrSubId);
+    const result = await deleteCSRSubscription(csrSubId);
 
-    expect(response.status).toBe(204);
+    expect(result).toBeUndefined();
     // don't track — already deleted
   });
 

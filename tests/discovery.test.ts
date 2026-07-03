@@ -31,23 +31,20 @@ beforeEach(cleanUpAll);
 // 1. retrieveEntityTypes
 // ---------------------------------------------------------------------------
 describe("retrieveEntityTypes", () => {
-  it("should retrieve entity types list and return 200", async () => {
-    // Create an entity so there's at least one type to query
+  it("should retrieve entity types list", async () => {
     const entity = { ...makeEntity(), type: "DiscoveryTestEntity" };
     await createEntity(entity);
 
-    const response = await retrieveEntityTypes();
-    expect(response.status).toBe(200);
-    expect(response.data).toBeDefined();
+    const data = await retrieveEntityTypes();
+    expect(data).toBeDefined();
   });
 
   it("should support details=true query parameter", async () => {
     const entity = { ...makeEntity(), type: "DiscoveryDetailsEntity" };
     await createEntity(entity);
 
-    const response = await retrieveEntityTypes({ details: true });
-    expect(response.status).toBe(200);
-    expect(response.data).toBeDefined();
+    const data = await retrieveEntityTypes({ details: true });
+    expect(data).toBeDefined();
   });
 
   it("should support local=true query parameter", async () => {
@@ -55,15 +52,14 @@ describe("retrieveEntityTypes", () => {
     await createEntity(entity);
 
     if (detectBroker() === "stellio") {
-      // Stellio does not support local=true for entity types discovery
       await expect(() => retrieveEntityTypes({ local: true })).rejects.toThrow(
         NgsiLdNotImplemented,
       );
       return;
     }
 
-    const response = await retrieveEntityTypes({ local: true });
-    expect(response.status).toBe(200);
+    const data = await retrieveEntityTypes({ local: true });
+    expect(data).toBeDefined();
   });
 });
 
@@ -75,9 +71,8 @@ describe("retrieveEntityTypeInfo", () => {
     const entity = { ...makeEntity(), type: "EntityTypeInfoTest" };
     await createEntity(entity);
 
-    const response = await retrieveEntityTypeInfo("EntityTypeInfoTest");
-    expect(response.status).toBe(200);
-    expect(response.data).toBeDefined();
+    const data = await retrieveEntityTypeInfo("EntityTypeInfoTest");
+    expect(data).toBeDefined();
   });
 
   it("should return 404 for a non-existent entity type", async () => {
@@ -91,22 +86,20 @@ describe("retrieveEntityTypeInfo", () => {
 // 3. retrieveAttrTypes
 // ---------------------------------------------------------------------------
 describe("retrieveAttrTypes", () => {
-  it("should retrieve attribute types list and return 200", async () => {
+  it("should retrieve attribute types list", async () => {
     const entity = makeEntity();
     await createEntity(entity);
 
-    const response = await retrieveAttrTypes();
-    expect(response.status).toBe(200);
-    expect(response.data).toBeDefined();
+    const data = await retrieveAttrTypes();
+    expect(data).toBeDefined();
   });
 
   it("should support details=true query parameter", async () => {
     const entity = makeEntity();
     await createEntity(entity);
 
-    const response = await retrieveAttrTypes({ details: true });
-    expect(response.status).toBe(200);
-    expect(response.data).toBeDefined();
+    const data = await retrieveAttrTypes({ details: true });
+    expect(data).toBeDefined();
   });
 });
 
@@ -118,10 +111,8 @@ describe("retrieveAttrTypeInfo", () => {
     const entity = makeEntity();
     await createEntity(entity);
 
-    // "temperature" attr exists on the entity created via makeEntity()
-    const response = await retrieveAttrTypeInfo("temperature");
-    expect(response.status).toBe(200);
-    expect(response.data).toBeDefined();
+    const data = await retrieveAttrTypeInfo("temperature");
+    expect(data).toBeDefined();
   });
 
   it("should return 404 for a non-existent attribute", async () => {

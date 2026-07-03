@@ -1,6 +1,7 @@
 import type {
   AppendAttrsParams,
   AppendAttrsTemporalParams,
+  Attribute,
   AttributeFragmentBody,
   TemporalAttributeFragmentBody,
   CreateBatchParams,
@@ -19,6 +20,9 @@ import type {
   Entity,
   EntityMap,
   EntityTemporal,
+  EntityTypeInfo,
+  EntityType,
+  EntityTypeList,
   Feature,
   FeatureCollection,
   ListContextsParams,
@@ -55,17 +59,16 @@ import type {
   UpsertBatchParams,
   UpsertTemporalParams,
   WithContext,
+  AttributeList,
 } from "./schemas";
 
 import {
   AppendAttrsResponse,
   CreateBatchResponse,
-  CreateCSRSubscriptionResponse,
   CreateContextResponse,
   CreateEntityResponse,
   DeleteAttrsResponse,
   DeleteBatchResponse,
-  DeleteCSRSubscriptionResponse,
   DeleteContextResponse,
   DeleteEntityMapResponse,
   DeleteEntityResponse,
@@ -73,20 +76,13 @@ import {
   MergeBatchResponse,
   MergeEntityResponse,
   NonReadonly,
-  QueryCSRSubscriptionResponse,
   ReplaceAttrsResponse,
   ReplaceEntityResponse,
-  RetrieveAttrTypeInfoResponse,
-  RetrieveAttrTypesResponse,
   RetrieveCSIdentityInfoResponse,
-  RetrieveCSRSubscriptionResponse,
   RetrieveContextResponse,
   RetrieveEntityMapResponse,
-  RetrieveEntityTypeInfoResponse,
-  RetrieveEntityTypesResponse,
   UpdateAttrsResponse,
   UpdateBatchResponse,
-  UpdateCSRSubscriptionResponse,
   UpdateEntityMapResponse,
   UpdateEntityResponse,
   UpsertBatchResponse,
@@ -810,11 +806,12 @@ export const createCSRSubscription = (
   subscriptionBody?: WithContext<Subscription>,
   options?: RequestInit,
 ) => {
-  return fetcher<CreateCSRSubscriptionResponse>(getCreateCSRSubscriptionUrl(), {
+  return fetcher<string>(getCreateCSRSubscriptionUrl(), {
     ...options,
     method: "POST",
     headers: { "Content-Type": "application/ld+json", ...options?.headers },
     body: JSON.stringify(subscriptionBody),
+    returnFormat: "body",
   });
 };
 /**
@@ -835,11 +832,12 @@ export const queryCSRSubscription = (
   params?: QueryCSRSubscriptionParams,
   options?: RequestInit,
 ) => {
-  return fetcher<QueryCSRSubscriptionResponse>(
+  return fetcher<MaybeContext<Subscription>[]>(
     getQueryCSRSubscriptionUrl(params),
     {
       ...options,
       method: "GET",
+      returnFormat: "body",
     },
   );
 };
@@ -862,11 +860,12 @@ export const retrieveCSRSubscription = (
   params?: RetrieveCSRSubscriptionParams,
   options?: RequestInit,
 ) => {
-  return fetcher<RetrieveCSRSubscriptionResponse>(
+  return fetcher<MaybeContext<Subscription>>(
     getRetrieveCSRSubscriptionUrl(subscriptionId, params),
     {
       ...options,
       method: "GET",
+      returnFormat: "body",
     },
   );
 };
@@ -889,15 +888,13 @@ export const updateCSRSubscription = (
   subscriptionFragmentBody?: WithContext<Partial<Subscription>>,
   options?: RequestInit,
 ) => {
-  return fetcher<UpdateCSRSubscriptionResponse>(
-    getUpdateCSRSubscriptionUrl(subscriptionId),
-    {
-      ...options,
-      method: "PATCH",
-      headers: { "Content-Type": "application/ld+json", ...options?.headers },
-      body: JSON.stringify(subscriptionFragmentBody),
-    },
-  );
+  return fetcher<void>(getUpdateCSRSubscriptionUrl(subscriptionId), {
+    ...options,
+    method: "PATCH",
+    headers: { "Content-Type": "application/ld+json", ...options?.headers },
+    body: JSON.stringify(subscriptionFragmentBody),
+    returnFormat: "body",
+  });
 };
 /**
  * 5.11.6 Delete Context Source Registration Subscription.
@@ -917,13 +914,11 @@ export const deleteCSRSubscription = (
   subscriptionId: string,
   options?: RequestInit,
 ) => {
-  return fetcher<DeleteCSRSubscriptionResponse>(
-    getDeleteCSRSubscriptionUrl(subscriptionId),
-    {
-      ...options,
-      method: "DELETE",
-    },
-  );
+  return fetcher<void>(getDeleteCSRSubscriptionUrl(subscriptionId), {
+    ...options,
+    method: "DELETE",
+    returnFormat: "body",
+  });
 };
 /**
  * 5.6.7 Batch Entity Creation.
@@ -1426,26 +1421,15 @@ export const retrieveEntityTypes = (
   params?: RetrieveEntityTypesParams,
   options?: RequestInit,
 ) => {
-  return fetcher<RetrieveEntityTypesResponse>(
+  return fetcher<WithContext<EntityTypeList> | WithContext<EntityType>[]>(
     getRetrieveEntityTypesUrl(params),
     {
       ...options,
       method: "GET",
+      returnFormat: "body",
     },
   );
 };
-/**
- * 5.7.7 Retrieve Available Entity Type information.
- *
- * This operation allows retrieving detailed entity type information about a specified NGSI-LD entity
- * type for which entity instances exist within the NGSI-LD system. The detailed representation includes
- * the type name (as short name if available in the provided @context), the count of available entity
- * instances and details about attributes that existing instances of this entity type have, including
- * their name (as short name if available in the provided @context) and a list of types the attribute
- * can have (e.g. Property, Relationship or GeoProperty).
- * @summary Details about available entity type
-
- */
 /**
  * 5.7.7 Retrieve Available Entity Type information.
  *
@@ -1463,11 +1447,12 @@ export const retrieveEntityTypeInfo = (
   params?: RetrieveEntityTypeInfoParams,
   options?: RequestInit,
 ) => {
-  return fetcher<RetrieveEntityTypeInfoResponse>(
+  return fetcher<WithContext<EntityTypeInfo>>(
     getRetrieveEntityTypeInfoUrl(type, params),
     {
       ...options,
       method: "GET",
+      returnFormat: "body",
     },
   );
 };
@@ -1501,10 +1486,14 @@ export const retrieveAttrTypes = (
   params?: RetrieveAttrTypesParams,
   options?: RequestInit,
 ) => {
-  return fetcher<RetrieveAttrTypesResponse>(getRetrieveAttrTypesUrl(params), {
-    ...options,
-    method: "GET",
-  });
+  return fetcher<WithContext<AttributeList> | WithContext<Attribute>[]>(
+    getRetrieveAttrTypesUrl(params),
+    {
+      ...options,
+      method: "GET",
+      returnFormat: "body",
+    },
+  );
 };
 /**
  * 5.7.10 Retrieve Available Attribute Information.
@@ -1533,11 +1522,12 @@ export const retrieveAttrTypeInfo = (
   params?: RetrieveAttrTypeInfoParams,
   options?: RequestInit,
 ) => {
-  return fetcher<RetrieveAttrTypeInfoResponse>(
+  return fetcher<WithContext<Attribute>>(
     getRetrieveAttrTypeInfoUrl(attrId, params),
     {
       ...options,
       method: "GET",
+      returnFormat: "body",
     },
   );
 };
