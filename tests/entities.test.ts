@@ -1,6 +1,8 @@
 import { describe, it, expect, afterEach } from "vitest";
 import {
   createEntity,
+  createCSR,
+  deleteCSR,
   queryEntity,
   queryGeoEntity,
   retrieveEntity,
@@ -21,11 +23,14 @@ import {
   expectOk,
   expectHttpError,
   cleanUpEntity,
+  cleanUpCSR,
 } from "./helpers";
 import { NgsiLdNotFound, NgsiLdConflict } from "../src";
 
 // Track created entities for cleanup
 const createdIds: string[] = [];
+// Track created CSRs for cleanup
+const createdCsrIds: string[] = [];
 
 afterEach(async () => {
   // Clean up all entities created during the test
@@ -33,11 +38,22 @@ afterEach(async () => {
     const id = createdIds.pop()!;
     await cleanUpEntity(id);
   }
+  // Clean up all CSRs created during the test
+  while (createdCsrIds.length > 0) {
+    const id = createdCsrIds.pop()!;
+    await cleanUpCSR(id);
+  }
 });
 
 function trackId(entity: { id?: string }): string {
   const id = entity.id!;
   createdIds.push(id);
+  return id;
+}
+
+function trackCsrId(csr: { id?: string }): string {
+  const id = csr.id!;
+  createdCsrIds.push(id);
   return id;
 }
 
@@ -60,6 +76,49 @@ describe("createEntity", () => {
     trackId(entity);
 
     await expectHttpError(409, NgsiLdConflict, () => createEntity(entity));
+  });
+
+  it("should return 207 when a matching CSR fails but local creation succeeds", async () => {
+    // Register a CSR that claims only the "temperature" attribute, supports
+    // createEntity, and points to an unreachable endpoint.
+    const csr = {
+      "@context": [
+        "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
+      ],
+      id: `urn:ngsi-ld:CSR:test-${Date.now()}`,
+      type: "ContextSourceRegistration" as const,
+      endpoint: "http://localhost:9999/ngsi-ld",
+      operations: ["createEntity", "federationOps"],
+      information: [
+        {
+          entities: [{ type: "TestEntity" }],
+          propertyNames: ["temperature"],
+        },
+      ],
+    };
+
+    const csrResponse = await createCSR(csr);
+    expect(csrResponse.status).toBe(201);
+    trackCsrId(csr);
+
+    // Create an entity where "temperature" is forwarded to the failing CSR
+    // and "humidity" is created locally.
+    const entity = {
+      ...makeEntity(),
+      $props: {
+        temperature: { type: "Property" as const, value: 25 },
+        humidity: { type: "Property" as const, value: 60 },
+      },
+    };
+
+    const response = await createEntity(entity);
+
+    expect(response.status).toBe(207);
+    if (response.status === 207) {
+      expect(response.data.errors.length).toBeGreaterThan(0);
+      expect(response.data.success.length).toBeGreaterThan(0);
+    }
+    trackId(entity);
   });
 });
 
