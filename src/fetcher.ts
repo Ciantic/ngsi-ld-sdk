@@ -185,6 +185,10 @@ export const fetcher = async <T>(
     return undefined as T;
   }
 
+  if (returnFormat === "body" && response.status === 201) {
+    return (location ?? "") as T;
+  }
+
   if (!returnFormat || returnFormat === "status-data") {
     return { status: response.status, data: transformed, location } as T;
   }

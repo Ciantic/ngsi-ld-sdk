@@ -60,45 +60,35 @@ import type {
 import {
   AppendAttrsResponse,
   CreateBatchResponse,
-  CreateCSRResponse,
   CreateCSRSubscriptionResponse,
   CreateContextResponse,
   CreateEntityResponse,
-  CreateSubscriptionResponse,
   DeleteAttrsResponse,
   DeleteBatchResponse,
-  DeleteCSRResponse,
   DeleteCSRSubscriptionResponse,
   DeleteContextResponse,
   DeleteEntityMapResponse,
   DeleteEntityResponse,
-  DeleteSubscriptionResponse,
   ListContextsResponse,
   MergeBatchResponse,
   MergeEntityResponse,
   NonReadonly,
-  QueryCSRResponse,
   QueryCSRSubscriptionResponse,
-  QuerySubscriptionResponse,
   ReplaceAttrsResponse,
   ReplaceEntityResponse,
   RetrieveAttrTypeInfoResponse,
   RetrieveAttrTypesResponse,
   RetrieveCSIdentityInfoResponse,
-  RetrieveCSRResponse,
   RetrieveCSRSubscriptionResponse,
   RetrieveContextResponse,
   RetrieveEntityMapResponse,
   RetrieveEntityTypeInfoResponse,
   RetrieveEntityTypesResponse,
-  RetrieveSubscriptionResponse,
   UpdateAttrsResponse,
   UpdateBatchResponse,
-  UpdateCSRResponse,
   UpdateCSRSubscriptionResponse,
   UpdateEntityMapResponse,
   UpdateEntityResponse,
-  UpdateSubscriptionResponse,
   UpsertBatchResponse,
   UpsertTemporalResponse,
 } from "./types.ts";
@@ -538,11 +528,12 @@ export const createCSR = (
   createCSRBody?: WithContext<NonReadonly<CsourceRegistration>>,
   options?: RequestInit,
 ) => {
-  return fetcher<CreateCSRResponse>(getCreateCSRUrl(), {
+  return fetcher<string>(getCreateCSRUrl(), {
     ...options,
     method: "POST",
     headers: { "Content-Type": "application/ld+json", ...options?.headers },
     body: JSON.stringify(createCSRBody),
+    returnFormat: "body",
   });
 };
 /**
@@ -584,9 +575,10 @@ export const createCSR = (
 
  */
 export const queryCSR = (params?: QueryCSRParams, options?: RequestInit) => {
-  return fetcher<QueryCSRResponse>(getQueryCSRUrl(params), {
+  return fetcher<MaybeContext<CsourceRegistration>[]>(getQueryCSRUrl(params), {
     ...options,
     method: "GET",
+    returnFormat: "body",
   });
 };
 /**
@@ -608,11 +600,12 @@ export const retrieveCSR = (
   params?: RetrieveCSRParams,
   options?: RequestInit,
 ) => {
-  return fetcher<RetrieveCSRResponse>(
+  return fetcher<MaybeContext<CsourceRegistration>>(
     getRetrieveCSRUrl(registrationId, params),
     {
       ...options,
       method: "GET",
+      returnFormat: "body",
     },
   );
 };
@@ -635,11 +628,12 @@ export const updateCSR = (
   updateCSRBody?: WithContext<NonReadonly<Partial<CsourceRegistration>>>,
   options?: RequestInit,
 ) => {
-  return fetcher<UpdateCSRResponse>(getUpdateCSRUrl(registrationId), {
+  return fetcher<void>(getUpdateCSRUrl(registrationId), {
     ...options,
     method: "PATCH",
     headers: { "Content-Type": "application/ld+json", ...options?.headers },
     body: JSON.stringify(updateCSRBody),
+    returnFormat: "body",
   });
 };
 /**
@@ -657,9 +651,10 @@ export const updateCSR = (
 
  */
 export const deleteCSR = (registrationId: string, options?: RequestInit) => {
-  return fetcher<DeleteCSRResponse>(getDeleteCSRUrl(registrationId), {
+  return fetcher<void>(getDeleteCSRUrl(registrationId), {
     ...options,
     method: "DELETE",
+    returnFormat: "body",
   });
 };
 /**
@@ -681,11 +676,12 @@ export const createSubscription = (
   params?: CreateSubscriptionParams,
   options?: RequestInit,
 ) => {
-  return fetcher<CreateSubscriptionResponse>(getCreateSubscriptionUrl(params), {
+  return fetcher<string>(getCreateSubscriptionUrl(params), {
     ...options,
     method: "POST",
     headers: { "Content-Type": "application/ld+json", ...options?.headers },
     body: JSON.stringify(subscriptionBody),
+    returnFormat: "body",
   });
 };
 /**
@@ -706,10 +702,14 @@ export const querySubscription = (
   params?: QuerySubscriptionParams,
   options?: RequestInit,
 ) => {
-  return fetcher<QuerySubscriptionResponse>(getQuerySubscriptionUrl(params), {
-    ...options,
-    method: "GET",
-  });
+  return fetcher<MaybeContext<Subscription>[]>(
+    getQuerySubscriptionUrl(params),
+    {
+      ...options,
+      method: "GET",
+      returnFormat: "body",
+    },
+  );
 };
 /**
  * 5.8.3 Retrieve Subscription.
@@ -730,11 +730,12 @@ export const retrieveSubscription = (
   params?: RetrieveSubscriptionParams,
   options?: RequestInit,
 ) => {
-  return fetcher<RetrieveSubscriptionResponse>(
+  return fetcher<MaybeContext<Subscription>>(
     getRetrieveSubscriptionUrl(subscriptionId, params),
     {
       ...options,
       method: "GET",
+      returnFormat: "body",
     },
   );
 };
@@ -758,15 +759,13 @@ export const updateSubscription = (
   params?: UpdateSubscriptionParams,
   options?: RequestInit,
 ) => {
-  return fetcher<UpdateSubscriptionResponse>(
-    getUpdateSubscriptionUrl(subscriptionId, params),
-    {
-      ...options,
-      method: "PATCH",
-      headers: { "Content-Type": "application/ld+json", ...options?.headers },
-      body: JSON.stringify(subscriptionFragmentBody),
-    },
-  );
+  return fetcher<void>(getUpdateSubscriptionUrl(subscriptionId, params), {
+    ...options,
+    method: "PATCH",
+    headers: { "Content-Type": "application/ld+json", ...options?.headers },
+    body: JSON.stringify(subscriptionFragmentBody),
+    returnFormat: "body",
+  });
 };
 /**
  * 5.8.5 Delete Subscription.
@@ -787,13 +786,11 @@ export const deleteSubscription = (
   params?: DeleteSubscriptionParams,
   options?: RequestInit,
 ) => {
-  return fetcher<DeleteSubscriptionResponse>(
-    getDeleteSubscriptionUrl(subscriptionId, params),
-    {
-      ...options,
-      method: "DELETE",
-    },
-  );
+  return fetcher<void>(getDeleteSubscriptionUrl(subscriptionId, params), {
+    ...options,
+    method: "DELETE",
+    returnFormat: "body",
+  });
 };
 /**
  * 5.11.2 Create Context Source Registration Subscription.
@@ -1224,14 +1221,11 @@ export const deleteTemporal = (
   params?: DeleteTemporalParams,
   options?: RequestInit,
 ) => {
-  return fetcher<void>(
-    getDeleteTemporalUrl(entityId, params),
-    {
-      ...options,
-      method: "DELETE",
-      returnFormat: "body",
-    },
-  );
+  return fetcher<void>(getDeleteTemporalUrl(entityId, params), {
+    ...options,
+    method: "DELETE",
+    returnFormat: "body",
+  });
 };
 /**
  * 5.6.12 Add Attributes to Temporal Representation of an Entity.
@@ -1253,16 +1247,13 @@ export const appendAttrsTemporal = (
   params?: AppendAttrsTemporalParams,
   options?: RequestInit,
 ) => {
-  return fetcher<void>(
-    getAppendAttrsTemporalUrl(entityId, params),
-    {
-      ...options,
-      method: "POST",
-      headers: { "Content-Type": "application/ld+json", ...options?.headers },
-      body: JSON.stringify(entityTemporalFragmentBody),
-      returnFormat: "body",
-    },
-  );
+  return fetcher<void>(getAppendAttrsTemporalUrl(entityId, params), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/ld+json", ...options?.headers },
+    body: JSON.stringify(entityTemporalFragmentBody),
+    returnFormat: "body",
+  });
 };
 /**
  * 5.6.13 Delete Attributes from Temporal Representation of an Entity.
@@ -1286,14 +1277,11 @@ export const deleteAttrsTemporal = (
   params?: DeleteAttrsTemporalParams,
   options?: RequestInit,
 ) => {
-  return fetcher<void>(
-    getDeleteAttrsTemporalUrl(entityId, attrId, params),
-    {
-      ...options,
-      method: "DELETE",
-      returnFormat: "body",
-    },
-  );
+  return fetcher<void>(getDeleteAttrsTemporalUrl(entityId, attrId, params), {
+    ...options,
+    method: "DELETE",
+    returnFormat: "body",
+  });
 };
 /**
  * 5.6.14 Partial Update Attribute instance in Temporal Representation of an Entity.

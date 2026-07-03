@@ -10,11 +10,12 @@ beforeEach(cleanUpAll);
 // 1. createCSR
 // ---------------------------------------------------------------------------
 describe("createCSR", () => {
-  it("should create a CSR and return 201", async () => {
+  it("should create a CSR and return the location", async () => {
     const csr = makeCSR();
-    const response = await createCSR(csr);
+    const location = await createCSR(csr);
 
-    expect(response.status).toBe(201);
+    expect(typeof location).toBe("string");
+    expect(location).toBeTruthy();
   });
 
   it("should return 409 when creating a duplicate CSR", async () => {
@@ -29,18 +30,15 @@ describe("createCSR", () => {
 // 2. queryCSR
 // ---------------------------------------------------------------------------
 describe("queryCSR", () => {
-  it("should query CSRs and return 200", async () => {
+  it("should query CSRs", async () => {
     // Create a CSR first so there's something to query
     const csr = makeCSR();
     await createCSR(csr);
 
-    const response = await queryCSR();
+    const data = await queryCSR();
 
-    expect(response.status).toBe(200);
-    expect(Array.isArray(response.data)).toBe(true);
-    if (Array.isArray(response.data)) {
-      expect(response.data.length).toBeGreaterThan(0);
-    }
+    expect(Array.isArray(data)).toBe(true);
+    expect(data.length).toBeGreaterThan(0);
   });
 
   it("should support query parameters to filter CSRs", async () => {
@@ -55,10 +53,9 @@ describe("queryCSR", () => {
     };
     await createCSR(csr);
 
-    const response = await queryCSR({ type: "ContextSourceRegistration" });
+    const data = await queryCSR({ type: "ContextSourceRegistration" });
 
-    expect(response.status).toBe(200);
-    expect(Array.isArray(response.data)).toBe(true);
+    expect(Array.isArray(data)).toBe(true);
   });
 });
 
@@ -66,14 +63,13 @@ describe("queryCSR", () => {
 // 3. retrieveCSR
 // ---------------------------------------------------------------------------
 describe("retrieveCSR", () => {
-  it("should retrieve a CSR by id and return 200", async () => {
+  it("should retrieve a CSR by id", async () => {
     const csr = makeCSR();
     await createCSR(csr);
 
-    const response = await retrieveCSR(csr.id!);
+    const data = await retrieveCSR(csr.id!);
 
-    expect(response.status).toBe(200);
-    expect(response.data).toBeDefined();
+    expect(data).toBeDefined();
   });
 
   it("should return 404 for a non-existent CSR", async () => {
@@ -87,7 +83,7 @@ describe("retrieveCSR", () => {
 // 4. updateCSR
 // ---------------------------------------------------------------------------
 describe("updateCSR", () => {
-  it("should update (PATCH) a CSR and return 204", async () => {
+  it("should update (PATCH) a CSR", async () => {
     const csr = makeCSR();
     await createCSR(csr);
 
@@ -98,16 +94,14 @@ describe("updateCSR", () => {
       endpoint: "http://updated.example.com/ngsi-ld",
     };
 
-    const response = await updateCSR(csr.id!, patch);
+    const result = await updateCSR(csr.id!, patch);
 
-    expect(response.status).toBe(204);
+    expect(result).toBeUndefined();
 
     // Verify the update worked
     const retrieved = await retrieveCSR(csr.id!);
-    if (retrieved.status === 200) {
-      const data = retrieved.data as Record<string, unknown>;
-      expect(data["endpoint"]).toBe("http://updated.example.com/ngsi-ld");
-    }
+    const data = retrieved as Record<string, unknown>;
+    expect(data["endpoint"]).toBe("http://updated.example.com/ngsi-ld");
   });
 
   it("should return 404 when updating a non-existent CSR", async () => {
@@ -128,13 +122,13 @@ describe("updateCSR", () => {
 // 5. deleteCSR
 // ---------------------------------------------------------------------------
 describe("deleteCSR", () => {
-  it("should delete a CSR and return 204", async () => {
+  it("should delete a CSR", async () => {
     const csr = makeCSR();
     await createCSR(csr);
 
-    const response = await deleteCSR(csr.id!);
+    const result = await deleteCSR(csr.id!);
 
-    expect(response.status).toBe(204);
+    expect(result).toBeUndefined();
     // don't track — already deleted
   });
 

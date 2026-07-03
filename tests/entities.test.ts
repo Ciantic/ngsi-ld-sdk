@@ -64,8 +64,8 @@ describe("createEntity", () => {
       ],
     };
 
-    const csrResponse = await createCSR(csr);
-    expect(csrResponse.status).toBe(201);
+    const csrLocation = await createCSR(csr);
+    expect(typeof csrLocation).toBe("string");
 
     // Create an entity where "temperature" is forwarded to the failing CSR
     // and "humidity" is created locally.

@@ -1,7 +1,6 @@
 import type {
   Attribute,
   ContextSourceIdentity,
-  CsourceRegistration,
   Entity,
   EntityMap,
   EntityTypeInfo,
@@ -179,91 +178,6 @@ export type ReplaceAttrsResponseSuccess =
   ReplaceAttrsResponse204 | ReplaceAttrsResponse207;
 
 export type ReplaceAttrsResponse = ReplaceAttrsResponseSuccess;
-export type CreateCSRResponse201 = {
-  data: void;
-  status: 201;
-  /** URI of the created CSR from the Location header. */
-  location: string;
-};
-
-export type CreateCSRResponseSuccess = CreateCSRResponse201;
-
-export type CreateCSRResponse = CreateCSRResponseSuccess;
-export type QueryCSRResponse200 = {
-  data: MaybeContext<CsourceRegistration>[];
-  status: 200;
-};
-
-export type QueryCSRResponseSuccess = QueryCSRResponse200;
-
-export type QueryCSRResponse = QueryCSRResponseSuccess;
-export type RetrieveCSRResponse200 = {
-  data: MaybeContext<CsourceRegistration>;
-  status: 200;
-};
-
-export type RetrieveCSRResponseSuccess = RetrieveCSRResponse200;
-
-export type RetrieveCSRResponse = RetrieveCSRResponseSuccess;
-export type UpdateCSRResponse204 = {
-  data: void;
-  status: 204;
-};
-
-export type UpdateCSRResponseSuccess = UpdateCSRResponse204;
-
-export type UpdateCSRResponse = UpdateCSRResponseSuccess;
-export type DeleteCSRResponse204 = {
-  data: void;
-  status: 204;
-};
-
-export type DeleteCSRResponseSuccess = DeleteCSRResponse204;
-
-export type DeleteCSRResponse = DeleteCSRResponseSuccess;
-export type CreateSubscriptionResponse201 = {
-  data: void;
-  status: 201;
-  /** URI of the created subscription from the Location header. */
-  location: string;
-};
-
-export type CreateSubscriptionResponseSuccess = CreateSubscriptionResponse201;
-
-export type CreateSubscriptionResponse = CreateSubscriptionResponseSuccess;
-export type QuerySubscriptionResponse200 = {
-  data: MaybeContext<Subscription>[];
-  status: 200;
-};
-
-export type QuerySubscriptionResponseSuccess = QuerySubscriptionResponse200;
-
-export type QuerySubscriptionResponse = QuerySubscriptionResponseSuccess;
-export type RetrieveSubscriptionResponse200 = {
-  data: MaybeContext<Subscription>;
-  status: 200;
-};
-
-export type RetrieveSubscriptionResponseSuccess =
-  RetrieveSubscriptionResponse200;
-
-export type RetrieveSubscriptionResponse = RetrieveSubscriptionResponseSuccess;
-export type UpdateSubscriptionResponse204 = {
-  data: void;
-  status: 204;
-};
-
-export type UpdateSubscriptionResponseSuccess = UpdateSubscriptionResponse204;
-
-export type UpdateSubscriptionResponse = UpdateSubscriptionResponseSuccess;
-export type DeleteSubscriptionResponse204 = {
-  data: void;
-  status: 204;
-};
-
-export type DeleteSubscriptionResponseSuccess = DeleteSubscriptionResponse204;
-
-export type DeleteSubscriptionResponse = DeleteSubscriptionResponseSuccess;
 export type CreateCSRSubscriptionResponse201 = {
   data: void;
   status: 201;

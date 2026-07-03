@@ -48,11 +48,12 @@ function makeSubscription() {
 // 1. createSubscription
 // ---------------------------------------------------------------------------
 describe("createSubscription", () => {
-  it("should create a subscription and return 201", async () => {
+  it("should create a subscription and return the location", async () => {
     const sub = makeSubscription();
-    const response = await createSubscription(sub);
+    const location = await createSubscription(sub);
 
-    expect(response.status).toBe(201);
+    expect(typeof location).toBe("string");
+    expect(location).toBeTruthy();
   });
 
   it("should return 409 when creating a duplicate subscription", async () => {
@@ -67,15 +68,14 @@ describe("createSubscription", () => {
 // 2. querySubscription
 // ---------------------------------------------------------------------------
 describe("querySubscription", () => {
-  it("should query subscriptions and return 200", async () => {
+  it("should query subscriptions", async () => {
     const sub = makeSubscription();
     await createSubscription(sub);
 
-    const response = await querySubscription();
+    const data = await querySubscription();
 
-    expect(response.status).toBe(200);
-    expect(Array.isArray(response.data)).toBe(true);
-    expect(response.data.length).toBeGreaterThan(0);
+    expect(Array.isArray(data)).toBe(true);
+    expect(data.length).toBeGreaterThan(0);
   });
 });
 
@@ -83,14 +83,13 @@ describe("querySubscription", () => {
 // 3. retrieveSubscription
 // ---------------------------------------------------------------------------
 describe("retrieveSubscription", () => {
-  it("should retrieve a subscription by id and return 200", async () => {
+  it("should retrieve a subscription by id", async () => {
     const sub = makeSubscription();
     await createSubscription(sub);
 
-    const response = await retrieveSubscription(sub.id);
+    const data = await retrieveSubscription(sub.id);
 
-    expect(response.status).toBe(200);
-    expect(response.data).toBeDefined();
+    expect(data).toBeDefined();
   });
 
   it("should return 404 for a non-existent subscription", async () => {
@@ -104,7 +103,7 @@ describe("retrieveSubscription", () => {
 // 4. updateSubscription
 // ---------------------------------------------------------------------------
 describe("updateSubscription", () => {
-  it("should update (PATCH) a subscription and return 204", async () => {
+  it("should update (PATCH) a subscription", async () => {
     const sub = makeSubscription();
     await createSubscription(sub);
 
@@ -120,18 +119,16 @@ describe("updateSubscription", () => {
       },
     };
 
-    const response = await updateSubscription(sub.id, patch);
+    const result = await updateSubscription(sub.id, patch);
 
-    expect(response.status).toBe(204);
+    expect(result).toBeUndefined();
 
     // Verify the update
     const retrieved = await retrieveSubscription(sub.id);
-    if (retrieved.status === 200) {
-      const data = retrieved.data;
-      const notification = data["notification"];
-      const endpoint = notification["endpoint"];
-      expect(endpoint["uri"]).toBe("http://updated.example.com/notification");
-    }
+    const data = retrieved;
+    const notification = data["notification"];
+    const endpoint = notification["endpoint"];
+    expect(endpoint["uri"]).toBe("http://updated.example.com/notification");
   });
 
   it("should return 404 when updating a non-existent subscription", async () => {
@@ -157,13 +154,13 @@ describe("updateSubscription", () => {
 // 5. deleteSubscription
 // ---------------------------------------------------------------------------
 describe("deleteSubscription", () => {
-  it("should delete a subscription and return 204", async () => {
+  it("should delete a subscription", async () => {
     const sub = makeSubscription();
     await createSubscription(sub);
 
-    const response = await deleteSubscription(sub.id);
+    const result = await deleteSubscription(sub.id);
 
-    expect(response.status).toBe(204);
+    expect(result).toBeUndefined();
     // don't track — already deleted
   });
 
