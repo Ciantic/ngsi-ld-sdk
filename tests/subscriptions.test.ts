@@ -13,11 +13,7 @@ import {
 } from "../src";
 import { expectHttpError, cleanUpAll, NGSILD_CORE_CONTEXT } from "./helpers";
 import { NgsiLdNotFound, NgsiLdConflict } from "../src";
-import {
-  EntitySelector,
-  MaybeContext,
-  Subscription,
-} from "../src/api/schemas";
+import { EntitySelector, MaybeContext, Subscription } from "../src/api/schemas";
 
 // Wipe all stale resources from previous crashed runs before each test.
 beforeEach(cleanUpAll);
