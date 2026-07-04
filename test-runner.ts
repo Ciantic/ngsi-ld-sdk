@@ -31,7 +31,9 @@ function cleanup() {
       stdio: "ignore",
     },
   );
-  proc.unref();
+  // Running proc.unref(); here would allow the parent to exit immediately as
+  // well, but I want to optionally wait for the cleanup to finish, so I don't
+  // call unref() here.
 }
 
 const podmanArgs = [
@@ -44,9 +46,9 @@ const podmanArgs = [
   "--build",
   "--force-recreate",
   "--abort-on-container-exit",
-  "--abort-on-container-failure",
-  "--timeout",
-  "60",
+  "--exit-code-from=test-runner",
+  "--remove-orphans",
+  "--timeout=60",
 ];
 
 // `script` allocates a PTY so the child (and grandchildren like vitest) see a
