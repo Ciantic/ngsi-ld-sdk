@@ -519,7 +519,7 @@ export const createCSR = (
   createCSRBody?: WithContext<NonReadonly<CsourceRegistration>>,
   options?: RequestInit,
 ) => {
-  return fetcher<string>(getCreateCSRUrl(), {
+  return fetcher<{ location: string }>(getCreateCSRUrl(), {
     ...options,
     method: "POST",
     headers: { "Content-Type": "application/ld+json", ...options?.headers },
@@ -667,7 +667,7 @@ export const createSubscription = (
   params?: CreateSubscriptionParams,
   options?: RequestInit,
 ) => {
-  return fetcher<string>(getCreateSubscriptionUrl(params), {
+  return fetcher<{ location: string }>(getCreateSubscriptionUrl(params), {
     ...options,
     method: "POST",
     headers: { "Content-Type": "application/ld+json", ...options?.headers },
@@ -801,7 +801,7 @@ export const createCSRSubscription = (
   subscriptionBody?: WithContext<Subscription>,
   options?: RequestInit,
 ) => {
-  return fetcher<string>(getCreateCSRSubscriptionUrl(), {
+  return fetcher<{ location: string }>(getCreateCSRSubscriptionUrl(), {
     ...options,
     method: "POST",
     headers: { "Content-Type": "application/ld+json", ...options?.headers },
@@ -1546,7 +1546,7 @@ export const createContext = (
   createContextBody?: CreateContextBody,
   options?: RequestInit,
 ) => {
-  return fetcher<string>(getCreateContextUrl(), {
+  return fetcher<{ location: string }>(getCreateContextUrl(), {
     ...options,
     method: "POST",
     headers: { "Content-Type": "application/ld+json", ...options?.headers },

@@ -33,7 +33,7 @@ export function makeCSR() {
 describe("createCSR", () => {
   it("should create a CSR and return the location", async () => {
     const csr = makeCSR();
-    const location = await createCSR(csr);
+    const { location } = await createCSR(csr);
 
     expect(typeof location).toBe("string");
     expect(location).toBeTruthy();

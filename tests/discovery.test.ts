@@ -146,9 +146,9 @@ describe("createContext", () => {
       return;
     }
 
-    const location = await createContext(contextBody);
-    expect(typeof location).toBe("string");
-    expect(location).toBeTruthy();
+    const result = await createContext(contextBody);
+    expect(typeof result.location).toBe("string");
+    expect(result.location).toBeTruthy();
   });
 });
 
@@ -207,7 +207,7 @@ describe("retrieveContext", () => {
       return;
     }
 
-    const createLocation = await createContext(contextBody);
+    const { location: createLocation } = await createContext(contextBody);
 
     const contextId = decodeURIComponent(createLocation.split("/").pop()!);
 
@@ -230,7 +230,7 @@ describe("retrieveContext", () => {
       return;
     }
 
-    const createLocation = await createContext(contextBody);
+    const { location: createLocation } = await createContext(contextBody);
 
     const contextId = decodeURIComponent(createLocation.split("/").pop()!);
 
@@ -272,7 +272,7 @@ describe("deleteContext", () => {
       return;
     }
 
-    const createLocation = await createContext(contextBody);
+    const { location: createLocation } = await createContext(contextBody);
 
     const contextId = decodeURIComponent(createLocation.split("/").pop()!);
 
