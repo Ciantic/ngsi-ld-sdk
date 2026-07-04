@@ -42,8 +42,6 @@ export function detectBroker(): "orion" | "stellio" | "unknown" {
   return "unknown";
 }
 
-// --- Factory functions ---
-
 let entityCounter = 0;
 
 /** Create a minimal test entity with a simple Property. */
@@ -82,67 +80,49 @@ export function makeEntityWithGeo() {
   } as const satisfies Entity & { id: string; type: string };
 }
 
-let csrCounter = 0;
-
-/** Create a minimal Context Source Registration. */
-export function makeCSR() {
-  csrCounter += 1;
-  const suffix = `${Date.now()}-${csrCounter}`;
-  return {
-    "@context": NGSILD_CORE_CONTEXT,
-    id: `urn:ngsi-ld:CSR:test-${suffix}`,
-    type: "ContextSourceRegistration" as const,
-    information: [
-      {
-        entities: [{ type: "TestEntity" }] as EntitySelector[],
-      },
-    ],
-    endpoint: "http://example.com/ngsi-ld",
-  } as const satisfies CsourceRegistration & { id: string; type: string };
+function extractIds(data: unknown): string[] {
+  if (Array.isArray(data)) {
+    return data.map((i: any) => i.id).filter((id): id is string => !!id);
+  }
+  if (
+    data &&
+    typeof data === "object" &&
+    (data as any).type === "FeatureCollection" &&
+    Array.isArray((data as any).features)
+  ) {
+    return (data as any).features
+      .map((f: any) => f.id)
+      .filter((id: any): id is string => !!id);
+  }
+  return [];
 }
 
 export async function cleanUpAll(): Promise<void> {
-  const extractIds = (data: unknown): string[] => {
-    if (Array.isArray(data)) {
-      return data.map((i: any) => i.id).filter((id): id is string => !!id);
-    }
-    if (
-      data &&
-      typeof data === "object" &&
-      (data as any).type === "FeatureCollection" &&
-      Array.isArray((data as any).features)
-    ) {
-      return (data as any).features
-        .map((f: any) => f.id)
-        .filter((id: any): id is string => !!id);
-    }
-    return [];
-  };
+  // Max limit in stellio is 100 by default
+  const results = await Promise.allSettled([
+    queryEntity({ type: "TestEntity", limit: 100 }),
+    queryEntity({
+      type: "DiscoveryTestEntity,DiscoveryDetailsEntity,DiscoveryLocalEntity,EntityTypeInfoTest",
+      limit: 100,
+    }),
+    queryEntity({
+      type: "TemporalTestEntity,BatchQueryTemporalTest",
+      limit: 100,
+    }),
+    querySubscription({ limit: 100 }),
+    queryCSR({ limit: 100 }),
+  ]);
 
-  const deleteAll = async (
-    queryFn: (
-      params?: Record<string, unknown>,
-    ) => Promise<{ status: number; data: unknown } | unknown[]>,
-  ) => {
-    try {
-      const res = await queryFn({ limit: 1000 });
-      // queryEntity now returns data directly (an array)
-      if (Array.isArray(res)) {
-        const ids = extractIds(res);
-        if (ids.length > 0) await deleteBatch(ids);
-        return;
-      }
-      if ((res as any).status !== 200) return;
-      const ids = extractIds((res as any).data);
-      if (ids.length > 0) await deleteBatch(ids);
-    } catch {
-      // Ignore cleanup failures
+  const deleteIds: string[] = [];
+  for (const result of results) {
+    if (result.status === "fulfilled") {
+      deleteIds.push(...extractIds(result.value));
+    } else {
+      console.warn("[cleanUpAll] cleanup query failed:", result.reason);
     }
-  };
+  }
 
-  await deleteAll((p) => queryEntity(p as any));
-  await deleteAll((p) => querySubscription(p as any));
-  await deleteAll((p) => queryCSR(p as any));
+  if (deleteIds.length > 0) await deleteBatch(deleteIds);
 }
 
 export async function expectHttpError<T extends NgsiLdHttpError>(

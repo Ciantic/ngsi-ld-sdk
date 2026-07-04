@@ -15,6 +15,7 @@ services:
     working_dir: /app
     environment:
       NGSILD_BROKER_URL: ${NGSILD_BROKER_URL}
+      NGSILD_TEST_FILTER: ${NGSILD_TEST_FILTER:-}
       CI: "true"
     volumes:
       - ../../:/app:O
@@ -26,4 +27,9 @@ services:
         BROKER_BASE="$$(echo "$$NGSILD_BROKER_URL" | sed 's|\(http://[^/]*\).*|\1|')"
         echo "Waiting for broker at $$BROKER_BASE/version ..."
         curl -sS --retry 60 --retry-delay 2 --retry-all-errors "$$BROKER_BASE/version" -o /dev/null
-        pnpm test
+        if [ -n "$$NGSILD_TEST_FILTER" ]; then
+          echo "[test-runner] Running filtered tests matching: $$NGSILD_TEST_FILTER"
+          pnpm test -t "$$NGSILD_TEST_FILTER"
+        else
+          pnpm test
+        fi

@@ -1,10 +1,31 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { createCSR, queryCSR, retrieveCSR, updateCSR, deleteCSR } from "../src";
-import { makeCSR, expectHttpError, cleanUpAll } from "./helpers";
+import { expectHttpError, cleanUpAll, NGSILD_CORE_CONTEXT } from "./helpers";
 import { NgsiLdNotFound, NgsiLdConflict } from "../src";
+import { CsourceRegistration, EntitySelector } from "../src/generated/schemas";
 
 // Wipe all stale resources from previous crashed runs before each test.
 beforeEach(cleanUpAll);
+
+/** Create a minimal Context Source Registration. */
+
+let csrCounter = 0;
+
+export function makeCSR() {
+  csrCounter += 1;
+  const suffix = `${Date.now()}-${csrCounter}`;
+  return {
+    "@context": NGSILD_CORE_CONTEXT,
+    id: `urn:ngsi-ld:CSR:test-${suffix}`,
+    type: "ContextSourceRegistration" as const,
+    information: [
+      {
+        entities: [{ type: "TestEntity" }] as EntitySelector[],
+      },
+    ],
+    endpoint: "http://example.com/ngsi-ld",
+  } as const satisfies CsourceRegistration & { id: string; type: string };
+}
 
 // ---------------------------------------------------------------------------
 // 1. createCSR

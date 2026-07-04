@@ -1,11 +1,14 @@
-// Usage: node test-runner.ts <compose-dir> <broker-url>
+// Usage: node test-runner.ts <compose-dir> <broker-url> [test-filter]
 import { spawn, spawnSync } from "node:child_process";
 
 const composeDir = process.argv[2];
 const brokerUrl = process.argv[3];
+const testFilter = process.argv[4] ?? "";
 
 if (!composeDir || !brokerUrl) {
-  console.error("Usage: node test-runner.ts <compose-dir> <broker-url>");
+  console.error(
+    "Usage: node test-runner.ts <compose-dir> <broker-url> [test-filter]",
+  );
   process.exit(1);
 }
 
@@ -56,7 +59,11 @@ const child = spawn(
   ],
   {
     stdio: ["pipe", "pipe", "pipe"],
-    env: { ...process.env, NGSILD_BROKER_URL: brokerUrl },
+    env: {
+      ...process.env,
+      NGSILD_BROKER_URL: brokerUrl,
+      NGSILD_TEST_FILTER: testFilter,
+    },
   },
 );
 
