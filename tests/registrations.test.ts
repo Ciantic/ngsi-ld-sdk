@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach } from "vitest";
 import { createCSR, queryCSR, retrieveCSR, updateCSR, deleteCSR } from "../src";
 import { expectHttpError, cleanUpAll, NGSILD_CORE_CONTEXT } from "./helpers";
 import { NgsiLdNotFound, NgsiLdConflict } from "../src";
-import { CsourceRegistration, EntitySelector } from "../src/generated/schemas";
+import { CsourceRegistration, EntitySelector } from "../src/api/schemas";
 
 // Wipe all stale resources from previous crashed runs before each test.
 beforeEach(cleanUpAll);

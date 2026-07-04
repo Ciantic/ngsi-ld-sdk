@@ -17,7 +17,7 @@ import {
   EntitySelector,
   MaybeContext,
   Subscription,
-} from "../src/generated/schemas";
+} from "../src/api/schemas";
 
 // Wipe all stale resources from previous crashed runs before each test.
 beforeEach(cleanUpAll);

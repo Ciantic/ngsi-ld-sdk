@@ -10,7 +10,7 @@ import {
   type Subscription,
   type QueryTemporalBody,
   type MaybeContext,
-} from "../src/generated/schemas";
+} from "../src/api/schemas";
 import { NgsiLdHttpError, NgsiLdNotFound } from "../src";
 import {
   deleteBatch,

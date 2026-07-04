@@ -1,4 +1,4 @@
-import type { ProblemDetails } from "./generated/schemas";
+import type { ProblemDetails } from "./api/schemas";
 
 /**
  * Base error for all NGSI-LD HTTP errors (non-2xx responses).
