@@ -1070,70 +1070,10 @@ export type NgsildAttribute =
   | ListProperty
   | Relationship
   | ListRelationship;
+
 type RequiredObservedAt<T> = T & {
   observedAt: string;
 };
 
 export type NgsildAttributeTemporal =
   RequiredObservedAt<NgsildAttribute> | RequiredObservedAt<NgsildAttribute>[];
-
-export const STRUCTURAL_KEYS = new Set([
-  "@context",
-  "bbox",
-  "coordinates",
-  "createdAt",
-  "datasetId",
-  "deletedAt",
-  "entity",
-  "entityList",
-  "features",
-  "geometry",
-  "id",
-  "instanceId",
-  "json",
-  "languageMap",
-  "location",
-  "modifiedAt",
-  "object",
-  "objectList",
-  "objectType",
-  "observationSpace",
-  "observedAt",
-  "operationSpace",
-  "previousJson",
-  "previousLanguageMap",
-  "previousObject",
-  "previousObjectList",
-  "previousValue",
-  "previousValueList",
-  "previousVocab",
-  "scope",
-  "type",
-  "unitCode",
-  "value",
-  "valueList",
-  "vocab",
-]);
-
-export const NGSILD_ATTR_TYPES = new Set([
-  "GeoProperty",
-  "JsonProperty",
-  "LanguageProperty",
-  "ListProperty",
-  "ListRelationship",
-  "Property",
-  "Relationship",
-  "VocabProperty",
-]);
-
-export const GEOJSON_TYPES = new Set([
-  "Feature",
-  "FeatureCollection",
-  "GeometryCollection",
-  "LineString",
-  "MultiLineString",
-  "MultiPoint",
-  "MultiPolygon",
-  "Point",
-  "Polygon",
-]);

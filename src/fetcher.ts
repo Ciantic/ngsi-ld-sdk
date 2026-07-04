@@ -1,8 +1,3 @@
-import {
-  GEOJSON_TYPES,
-  NGSILD_ATTR_TYPES,
-  STRUCTURAL_KEYS,
-} from "./generated/schemas";
 import { throwHttpError } from "./errors";
 
 const BASE_URL =
@@ -195,3 +190,64 @@ export const fetcher = async <T>(
 
   return transformed as T;
 };
+
+const STRUCTURAL_KEYS = new Set([
+  "@context",
+  "bbox",
+  "coordinates",
+  "createdAt",
+  "datasetId",
+  "deletedAt",
+  "entity",
+  "entityList",
+  "features",
+  "geometry",
+  "id",
+  "instanceId",
+  "json",
+  "languageMap",
+  "location",
+  "modifiedAt",
+  "object",
+  "objectList",
+  "objectType",
+  "observationSpace",
+  "observedAt",
+  "operationSpace",
+  "previousJson",
+  "previousLanguageMap",
+  "previousObject",
+  "previousObjectList",
+  "previousValue",
+  "previousValueList",
+  "previousVocab",
+  "scope",
+  "type",
+  "unitCode",
+  "value",
+  "valueList",
+  "vocab",
+]);
+
+const NGSILD_ATTR_TYPES = new Set([
+  "GeoProperty",
+  "JsonProperty",
+  "LanguageProperty",
+  "ListProperty",
+  "ListRelationship",
+  "Property",
+  "Relationship",
+  "VocabProperty",
+]);
+
+const GEOJSON_TYPES = new Set([
+  "Feature",
+  "FeatureCollection",
+  "GeometryCollection",
+  "LineString",
+  "MultiLineString",
+  "MultiPoint",
+  "MultiPolygon",
+  "Point",
+  "Polygon",
+]);
