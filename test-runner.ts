@@ -1,5 +1,5 @@
 // Usage: node test-runner.ts <compose-dir> <broker-url> [test-filter]
-import { spawn, spawnSync } from "node:child_process";
+import { spawn } from "node:child_process";
 
 const composeDir = process.argv[2];
 const brokerUrl = process.argv[3];
@@ -16,14 +16,22 @@ const stripAnsi = (s: string) => s.replace(/\x1b\[[0-9;]*m/g, "");
 
 function cleanup() {
   console.log("Cleaning up test containers...");
-  spawnSync("podman", [
-    "compose",
-    "-f",
-    `tests/${composeDir}/compose.yaml`,
-    "-f",
-    "tests/docker-test-sdk/test-runner.yaml",
-    "down",
-  ]);
+  const proc = spawn(
+    "podman",
+    [
+      "compose",
+      "-f",
+      `tests/${composeDir}/compose.yaml`,
+      "-f",
+      "tests/docker-test-sdk/test-runner.yaml",
+      "down",
+    ],
+    {
+      detached: true, // Run in background so we can exit immediately
+      stdio: "ignore",
+    },
+  );
+  proc.unref();
 }
 
 const podmanArgs = [
@@ -36,6 +44,7 @@ const podmanArgs = [
   "--build",
   "--force-recreate",
   "--abort-on-container-exit",
+  "--abort-on-container-failure",
   "--timeout",
   "60",
 ];
@@ -97,12 +106,8 @@ child.on("close", (code) => {
 process.on("SIGINT", () => {
   console.log("Received SIGINT, killing child process...");
   child.kill("SIGINT");
-  cleanup();
-  process.exit();
 });
 process.on("SIGTERM", () => {
   console.log("Received SIGTERM, killing child process...");
   child.kill("SIGTERM");
-  cleanup();
-  process.exit();
 });
