@@ -9,7 +9,6 @@ export type NonReadonly<T> = {
 
 export type CreateEntityResponse =
   | {
-      data: void;
       status: 201;
       /** URI of the created entity from the Location header. */
       location: string;
@@ -21,7 +20,6 @@ export type CreateEntityResponse =
 
 export type DeleteEntityResponse =
   | {
-      data: void;
       status: 204;
     }
   | {
@@ -31,7 +29,6 @@ export type DeleteEntityResponse =
 
 export type MergeEntityResponse =
   | {
-      data: void;
       status: 204;
     }
   | {
@@ -41,7 +38,6 @@ export type MergeEntityResponse =
 
 export type ReplaceEntityResponse =
   | {
-      data: void;
       status: 204;
     }
   | {
@@ -51,7 +47,6 @@ export type ReplaceEntityResponse =
 
 export type AppendAttrsResponse =
   | {
-      data: void;
       status: 204;
     }
   | {
@@ -61,7 +56,6 @@ export type AppendAttrsResponse =
 
 export type UpdateEntityResponse =
   | {
-      data: void;
       status: 204;
     }
   | {
@@ -71,7 +65,6 @@ export type UpdateEntityResponse =
 
 export type UpdateAttrsResponse =
   | {
-      data: void;
       status: 204;
     }
   | {
@@ -81,7 +74,6 @@ export type UpdateAttrsResponse =
 
 export type DeleteAttrsResponse =
   | {
-      data: void;
       status: 204;
     }
   | {
@@ -91,7 +83,6 @@ export type DeleteAttrsResponse =
 
 export type ReplaceAttrsResponse =
   | {
-      data: void;
       status: 204;
     }
   | {
@@ -124,7 +115,6 @@ export type UpsertBatchResponse =
 
 export type UpdateBatchResponse =
   | {
-      data: void;
       status: 204;
     }
   | {
@@ -134,7 +124,6 @@ export type UpdateBatchResponse =
 
 export type DeleteBatchResponse =
   | {
-      data: void;
       status: 204;
     }
   | {
@@ -144,7 +133,6 @@ export type DeleteBatchResponse =
 
 export type MergeBatchResponse =
   | {
-      data: void;
       status: 204;
     }
   | {
@@ -154,12 +142,10 @@ export type MergeBatchResponse =
 
 export type UpsertTemporalResponse =
   | {
-      data: void;
       status: 201;
       /** URI of the created temporal entity from the Location header. */
       location: string;
     }
   | {
-      data: void;
       status: 204;
     };
