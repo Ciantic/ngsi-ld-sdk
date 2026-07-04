@@ -95,10 +95,14 @@ child.on("close", (code) => {
 });
 
 process.on("SIGINT", () => {
+  console.log("Received SIGINT, killing child process...");
+  child.kill("SIGINT");
   cleanup();
   process.exit();
 });
 process.on("SIGTERM", () => {
+  console.log("Received SIGTERM, killing child process...");
+  child.kill("SIGTERM");
   cleanup();
   process.exit();
 });
