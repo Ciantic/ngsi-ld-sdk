@@ -6,14 +6,6 @@ export type FormatRepresentation =
 
 export type FormatTemporal = "temporalValues" | "aggregatedValues";
 
-export type CreatedAt = string;
-
-export type ModifiedAt = string;
-
-export type DeletedAt = string;
-
-export type ObservedAt = string;
-
 export type EntityTypeName = string | string[];
 
 export type Scope = string | string[];
@@ -159,9 +151,9 @@ export interface CsourceRegistration {
   operations?: string[];
   refreshRate?: string;
   management?: RegistrationManagementInfo;
-  readonly createdAt?: CreatedAt;
-  readonly modifiedAt?: ModifiedAt;
-  readonly deletedAt?: DeletedAt;
+  readonly createdAt?: string;
+  readonly modifiedAt?: string;
+  readonly deletedAt?: string;
   readonly status?: CsourceRegistrationStatus;
   readonly timesSent?: number;
   readonly timesFailed?: number;
@@ -199,11 +191,11 @@ export interface Endpoint {
 export interface GeoProperty {
   type: "GeoProperty";
   value: Geometry;
-  observedAt?: ObservedAt;
+  observedAt?: string;
   datasetId?: string;
-  readonly createdAt?: CreatedAt;
-  readonly modifiedAt?: ModifiedAt;
-  readonly deletedAt?: DeletedAt;
+  readonly createdAt?: string;
+  readonly modifiedAt?: string;
+  readonly deletedAt?: string;
   readonly instanceId?: string;
   readonly previousValue?: Geometry;
 }
@@ -215,9 +207,9 @@ export interface Entity<TType extends EntityTypeName = EntityTypeName> {
   location?: GeoProperty;
   observationSpace?: GeoProperty;
   operationSpace?: GeoProperty;
-  readonly createdAt?: CreatedAt;
-  readonly modifiedAt?: ModifiedAt;
-  readonly deletedAt?: DeletedAt;
+  readonly createdAt?: string;
+  readonly modifiedAt?: string;
+  readonly deletedAt?: string;
 }
 
 export interface EntitySelector {
@@ -233,9 +225,9 @@ export interface EntityTemporal<TType extends EntityTypeName = EntityTypeName> {
   location?: GeoProperty;
   observationSpace?: GeoProperty;
   operationSpace?: GeoProperty;
-  readonly createdAt?: CreatedAt;
-  readonly modifiedAt?: ModifiedAt;
-  readonly deletedAt?: DeletedAt;
+  readonly createdAt?: string;
+  readonly modifiedAt?: string;
+  readonly deletedAt?: string;
 }
 
 export interface EntityType {
@@ -300,11 +292,11 @@ export interface GeoQuery {
 export interface LanguageProperty {
   type: "LanguageProperty";
   languageMap?: { [key: string]: unknown };
-  observedAt?: ObservedAt;
+  observedAt?: string;
   datasetId?: string;
-  readonly createdAt?: CreatedAt;
-  readonly modifiedAt?: ModifiedAt;
-  readonly deletedAt?: DeletedAt;
+  readonly createdAt?: string;
+  readonly modifiedAt?: string;
+  readonly deletedAt?: string;
   readonly instanceId?: string;
   readonly previousLanguageMap?: { [key: string]: unknown };
 }
@@ -351,12 +343,12 @@ export type Path = string;
 export interface Property {
   type: "Property";
   value: DateTimeValue | JsonValue;
-  observedAt?: ObservedAt;
+  observedAt?: string;
   unitCode?: string;
   datasetId?: string;
-  readonly createdAt?: CreatedAt;
-  readonly modifiedAt?: ModifiedAt;
-  readonly deletedAt?: DeletedAt;
+  readonly createdAt?: string;
+  readonly modifiedAt?: string;
+  readonly deletedAt?: string;
   readonly instanceId?: string;
   readonly previousValue?: DateTimeValue | JsonValue;
 }
@@ -397,11 +389,11 @@ export interface Relationship {
   type: "Relationship";
   object?: string | string[];
   objectType?: string | string[];
-  observedAt?: ObservedAt;
+  observedAt?: string;
   datasetId?: string;
-  readonly createdAt?: CreatedAt;
-  readonly modifiedAt?: ModifiedAt;
-  readonly deletedAt?: DeletedAt;
+  readonly createdAt?: string;
+  readonly modifiedAt?: string;
+  readonly deletedAt?: string;
   readonly instanceId?: string;
   readonly previousObject?: string | string[];
   readonly entity?: Entity | Entity[];
@@ -452,9 +444,9 @@ export interface SubscriptionCommon {
   temporalQ?: TemporalQuery;
   scopeQ?: string;
   lang?: string;
-  readonly createdAt?: CreatedAt;
-  readonly modifiedAt?: ModifiedAt;
-  readonly deletedAt?: DeletedAt;
+  readonly createdAt?: string;
+  readonly modifiedAt?: string;
+  readonly deletedAt?: string;
   readonly status?: SubscriptionCommonStatus;
   jsonldContext?: string;
   datasetId?: string[];
@@ -480,23 +472,23 @@ export interface VocabProperty {
   type: "VocabProperty";
   vocab?: string | string[];
   readonly previousVocab?: string | string[];
-  observedAt?: ObservedAt;
+  observedAt?: string;
   datasetId?: string;
-  readonly createdAt?: CreatedAt;
-  readonly modifiedAt?: ModifiedAt;
-  readonly deletedAt?: DeletedAt;
+  readonly createdAt?: string;
+  readonly modifiedAt?: string;
+  readonly deletedAt?: string;
   readonly instanceId?: string;
 }
 
 export interface ListProperty {
   type: "ListProperty";
   valueList?: (DateTimeValue | JsonValue)[];
-  observedAt?: ObservedAt;
+  observedAt?: string;
   unitCode?: string;
   datasetId?: string;
-  readonly createdAt?: CreatedAt;
-  readonly modifiedAt?: ModifiedAt;
-  readonly deletedAt?: DeletedAt;
+  readonly createdAt?: string;
+  readonly modifiedAt?: string;
+  readonly deletedAt?: string;
   readonly instanceId?: string;
   readonly previousValueList?: readonly (DateTimeValue | JsonValue)[];
 }
@@ -505,11 +497,11 @@ export interface ListRelationship {
   type: "ListRelationship";
   objectList?: { [key: string]: unknown }[] | string[];
   objectType?: string | string[];
-  observedAt?: ObservedAt;
+  observedAt?: string;
   datasetId?: string;
-  readonly createdAt?: CreatedAt;
-  readonly modifiedAt?: ModifiedAt;
-  readonly deletedAt?: DeletedAt;
+  readonly createdAt?: string;
+  readonly modifiedAt?: string;
+  readonly deletedAt?: string;
   readonly instanceId?: string;
   readonly previousObjectList?: { [key: string]: unknown }[] | string[];
   readonly entityList?: readonly Entity[];
@@ -519,11 +511,11 @@ export interface JsonProperty {
   type: "JsonProperty";
   json?: { [key: string]: unknown };
   readonly previousJson?: { [key: string]: unknown };
-  observedAt?: ObservedAt;
+  observedAt?: string;
   datasetId?: string;
-  readonly createdAt?: CreatedAt;
-  readonly modifiedAt?: ModifiedAt;
-  readonly deletedAt?: DeletedAt;
+  readonly createdAt?: string;
+  readonly modifiedAt?: string;
+  readonly deletedAt?: string;
   readonly instanceId?: string;
 }
 
@@ -557,7 +549,7 @@ export type AttributeFragmentBody =
   | ListRelationship;
 
 export type TemporalAttributeFragmentBody = WithContext<
-  RequiredObservedAt<
+  Requiredstring<
     | Property
     | Relationship
     | GeoProperty
@@ -579,9 +571,9 @@ export type NgsildAttribute =
   | Relationship
   | ListRelationship;
 
-type RequiredObservedAt<T> = T & {
+type Requiredstring<T> = T & {
   observedAt: string;
 };
 
 export type NgsildAttributeTemporal =
-  RequiredObservedAt<NgsildAttribute> | RequiredObservedAt<NgsildAttribute>[];
+  Requiredstring<NgsildAttribute> | Requiredstring<NgsildAttribute>[];
