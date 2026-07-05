@@ -11,6 +11,7 @@ import {
   type Block,
 } from "ts-morph";
 import { md } from "./md.ts";
+import { getOperations, getOrDownloadSpec } from "../dump-spec-info.ts";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const TEST_FILE = resolve(__dirname, "../../tests/docs.test.ts");
@@ -110,11 +111,50 @@ async function getDocTestExamples(): Promise<string> {
   return examples.join("\n\n");
 }
 
+async function generateOperationsTable(): Promise<string> {
+  const spec = await getOrDownloadSpec();
+  const specOperations = getOperations(spec);
+
+  // Build a lookup from spec operationId -> { method, path }
+  const specByOperationId = new Map<string, { method: string; path: string }>();
+  for (const op of specOperations) {
+    specByOperationId.set(op.operationId, { method: op.method, path: op.path });
+  }
+
+  // Use ts-morph to extract all exported const names from operations.ts
+  const project = new Project();
+  const operationsFile = project.addSourceFileAtPath(
+    resolve(__dirname, "../../src/api/operations.ts"),
+  );
+
+  const sdkExports = operationsFile
+    .getVariableDeclarations()
+    .filter((v) => v.isExported())
+    .map((v) => v.getName());
+
+  // Build table rows: SDK name | METHOD | spec path (or "—" if not in spec)
+  const rows: string[] = [
+    "| SDK function | Method | Spec path |",
+    "| --- | --- | --- |",
+  ];
+
+  for (const name of sdkExports) {
+    const spec = specByOperationId.get(name);
+    rows.push(
+      `| \`${name}\` | \`${spec?.method ?? "—"}\` | \`${spec?.path ?? "—"}\` |`,
+    );
+  }
+
+  return rows.join("\n");
+}
+
 export async function generateReadme() {
   // Generate README.md content
   let readme = README_START;
   readme += "\n## Usage\n\n";
   readme += await getDocTestExamples();
+  readme += "\n\n## Operations\n\n";
+  readme += await generateOperationsTable();
   readme += "\n\n";
   readme += README_END;
   return readme;

@@ -27,6 +27,67 @@ await createEntity<TemperatureSensor>({
 });
 ```
 
+## Operations
+
+| SDK function | Method | Spec path |
+| --- | --- | --- |
+| `createEntity` | `POST` | `/entities` |
+| `queryEntity` | `GET` | `/entities` |
+| `queryGeoEntity` | `—` | `—` |
+| `retrieveEntity` | `GET` | `/entities/{entityId}` |
+| `retrieveGeoEntity` | `—` | `—` |
+| `deleteEntity` | `DELETE` | `/entities/{entityId}` |
+| `mergeEntity` | `PATCH` | `/entities/{entityId}` |
+| `replaceEntity` | `PUT` | `/entities/{entityId}` |
+| `appendAttrs` | `POST` | `/entities/{entityId}/attrs` |
+| `updateEntity` | `PATCH` | `/entities/{entityId}/attrs` |
+| `updateAttrs` | `PATCH` | `/entities/{entityId}/attrs/{attrId}` |
+| `deleteAttrs` | `DELETE` | `/entities/{entityId}/attrs/{attrId}` |
+| `replaceAttrs` | `PUT` | `/entities/{entityId}/attrs/{attrId}` |
+| `createCSR` | `POST` | `/csourceRegistrations` |
+| `queryCSR` | `GET` | `/csourceRegistrations` |
+| `retrieveCSR` | `GET` | `/csourceRegistrations/{registrationId}` |
+| `updateCSR` | `PATCH` | `/csourceRegistrations/{registrationId}` |
+| `deleteCSR` | `DELETE` | `/csourceRegistrations/{registrationId}` |
+| `createSubscription` | `POST` | `/subscriptions` |
+| `querySubscription` | `GET` | `/subscriptions` |
+| `retrieveSubscription` | `GET` | `/subscriptions/{subscriptionId}` |
+| `updateSubscription` | `PATCH` | `/subscriptions/{subscriptionId}` |
+| `deleteSubscription` | `DELETE` | `/subscriptions/{subscriptionId}` |
+| `createCSRSubscription` | `POST` | `/csourceSubscriptions` |
+| `queryCSRSubscription` | `GET` | `/csourceSubscriptions` |
+| `retrieveCSRSubscription` | `GET` | `/csourceSubscriptions/{subscriptionId}` |
+| `updateCSRSubscription` | `PATCH` | `/csourceSubscriptions/{subscriptionId}` |
+| `deleteCSRSubscription` | `DELETE` | `/csourceSubscriptions/{subscriptionId}` |
+| `createBatch` | `POST` | `/entityOperations/create` |
+| `upsertBatch` | `POST` | `/entityOperations/upsert` |
+| `updateBatch` | `POST` | `/entityOperations/update` |
+| `deleteBatch` | `POST` | `/entityOperations/delete` |
+| `queryBatch` | `POST` | `/entityOperations/query` |
+| `queryGeoBatch` | `—` | `—` |
+| `mergeBatch` | `POST` | `/entityOperations/merge` |
+| `upsertTemporal` | `POST` | `/temporal/entities` |
+| `queryTemporal` | `GET` | `/temporal/entities` |
+| `retrieveTemporal` | `GET` | `/temporal/entities/{entityId}` |
+| `deleteTemporal` | `DELETE` | `/temporal/entities/{entityId}` |
+| `appendAttrsTemporal` | `POST` | `/temporal/entities/{entityId}/attrs` |
+| `deleteAttrsTemporal` | `DELETE` | `/temporal/entities/{entityId}/attrs/{attrId}` |
+| `updateAttrsTemporal` | `PATCH` | `/temporal/entities/{entityId}/attrs/{attrId}/{instanceId}` |
+| `deleteAttrInstanceTemporal` | `DELETE` | `/temporal/entities/{entityId}/attrs/{attrId}/{instanceId}` |
+| `temporalQueryBatch` | `POST` | `/temporal/entityOperations/query` |
+| `retrieveEntityTypes` | `GET` | `/types` |
+| `retrieveEntityTypeInfo` | `GET` | `/types/{type}` |
+| `retrieveAttrTypes` | `GET` | `/attributes` |
+| `retrieveAttrTypeInfo` | `GET` | `/attributes/{attrId}` |
+| `createContext` | `POST` | `/jsonldContexts` |
+| `listContexts` | `GET` | `/jsonldContexts` |
+| `retrieveContext` | `GET` | `/jsonldContexts/{contextId}` |
+| `deleteContext` | `DELETE` | `/jsonldContexts/{contextId}` |
+| `retrieveEntityMap` | `GET` | `/entityMap/{entityMapId}` |
+| `updateEntityMap` | `PATCH` | `/entityMap/{entityMapId}` |
+| `deleteEntityMap` | `DELETE` | `/entityMap/{entityMapId}` |
+| `retrieveCSIdentityInfo` | `GET` | `/info/sourceIdentity` |
+
 ## Notes
 
 This wrapper intentionally sets the Content-Type and Accept headers to `application/ld+json` for all requests. One exception: `queryBatch` and `temporalQueryBatch` are still using `application/json`, reason being that Stellio didn't support `@context` proeprty in query batch and temporal query batch, but Orion-LD did. Thus the SDK wrapper sets the Content-Type and Accept headers to `application/json` for those two requests.
