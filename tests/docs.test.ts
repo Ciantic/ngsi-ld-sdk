@@ -135,17 +135,13 @@ describe("README.md examples", () => {
       timerel: "between",
       timeAt: now,
       endTimeAt: new Date(Date.now() + 7200000).toISOString(),
-      limit: 1,
+      lastN: 1, // Number of temporal values to retrieve
+      limit: 1, // Number of entities
     });
 
-    // Find our entity and verify both newly added instances are present
-    const ourEntity = temporalData.find(
-      (e) => e.id === "urn:ngsi-ld:TemperatureSensor:001",
-    );
-
-    const ourValue = ourEntity?.temperature?.find(
-      (t) => t.observedAt === later,
-    );
-    expect(ourValue?.value).toBe(25.0);
+    expect(temporalData.length).toBe(1);
+    expect(temporalData[0].id).toBe("urn:ngsi-ld:TemperatureSensor:001");
+    expect(temporalData[0].temperature!.length).toBe(1);
+    expect(temporalData[0].temperature![0].value).toBe(25.0);
   });
 });
