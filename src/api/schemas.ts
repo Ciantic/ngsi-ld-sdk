@@ -217,12 +217,11 @@ export interface GeoProperty {
   readonly deletedAt?: DeletedAt;
   readonly instanceId?: string;
   readonly previousValue?: Geometry;
-  $props?: { [key: string]: NgsildAttribute };
 }
 
-export interface Entity {
+export interface Entity<TType extends EntityTypeName = EntityTypeName> {
   id: string;
-  type: EntityTypeName;
+  type: TType;
   scope?: Scope;
   location?: GeoProperty;
   observationSpace?: GeoProperty;
@@ -230,7 +229,6 @@ export interface Entity {
   readonly createdAt?: CreatedAt;
   readonly modifiedAt?: ModifiedAt;
   readonly deletedAt?: DeletedAt;
-  $props?: { [key: string]: NgsildAttribute };
 }
 
 export interface EntitySelector {
@@ -239,9 +237,9 @@ export interface EntitySelector {
   type: string;
 }
 
-export interface EntityTemporal {
+export interface EntityTemporal<TType extends EntityTypeName = EntityTypeName> {
   id: string;
-  type: EntityTypeName;
+  type: TType;
   scope?: Scope;
   location?: GeoProperty;
   observationSpace?: GeoProperty;
@@ -249,7 +247,6 @@ export interface EntityTemporal {
   readonly createdAt?: CreatedAt;
   readonly modifiedAt?: ModifiedAt;
   readonly deletedAt?: DeletedAt;
-  $props?: { [key: string]: NgsildAttributeTemporal };
 }
 
 export interface EntityType {
@@ -273,10 +270,9 @@ export interface EntityTypeList {
   typeList: string[];
 }
 
-export interface FeatureProperties {
-  type: EntityTypeName;
-  $props?: { [key: string]: NgsildAttribute };
-}
+export type FeatureProperties<T extends Entity = Entity> = {
+  type: T["type"];
+} & Omit<T, keyof Entity>;
 
 export type LdContext =
   string | { [key: string]: unknown } | (string | { [key: string]: unknown })[];
@@ -289,17 +285,17 @@ export type MaybeContext<T> = T & {
   "@context"?: LdContext;
 };
 
-export interface Feature {
+export interface Feature<T extends Entity = Entity> {
   id: string;
   type: "Feature";
   geometry: Geometry;
-  properties: FeatureProperties;
+  properties: FeatureProperties<T>;
   "@context"?: LdContext;
 }
 
-export interface FeatureCollection {
+export interface FeatureCollection<T extends Entity = Entity> {
   type: "FeatureCollection";
-  features?: Feature[];
+  features?: Feature<T>[];
   "@context"?: LdContext;
 }
 
@@ -326,7 +322,6 @@ export interface LanguageProperty {
   readonly deletedAt?: DeletedAt;
   readonly instanceId?: string;
   readonly previousLanguageMap?: LanguagePropertyPreviousLanguageMap;
-  $props?: { [key: string]: NgsildAttribute };
 }
 
 export type LdContextMetadataItemKind =
@@ -397,7 +392,6 @@ export interface Property {
   readonly deletedAt?: DeletedAt;
   readonly instanceId?: string;
   readonly previousValue?: DateTimeValue | JsonValue;
-  $props?: { [key: string]: NgsildAttribute };
 }
 
 export interface Query {
@@ -444,7 +438,6 @@ export interface Relationship {
   readonly instanceId?: string;
   readonly previousObject?: string | string[];
   readonly entity?: Entity | Entity[];
-  $props?: { [key: string]: NgsildAttribute };
 }
 
 export type SubscriptionCommonNotificationTriggerItem =
@@ -508,7 +501,6 @@ export interface VocabProperty {
   readonly modifiedAt?: ModifiedAt;
   readonly deletedAt?: DeletedAt;
   readonly instanceId?: string;
-  $props?: { [key: string]: NgsildAttribute };
 }
 
 export interface ListProperty {
@@ -522,7 +514,6 @@ export interface ListProperty {
   readonly deletedAt?: DeletedAt;
   readonly instanceId?: string;
   readonly previousValueList?: readonly (DateTimeValue | JsonValue)[];
-  $props?: { [key: string]: NgsildAttribute };
 }
 
 export type ListRelationshipObjectList =
@@ -543,7 +534,6 @@ export interface ListRelationship {
   readonly instanceId?: string;
   readonly previousObjectList?: ListRelationshipPreviousObjectList;
   readonly entityList?: readonly Entity[];
-  $props?: { [key: string]: NgsildAttribute };
 }
 
 export type JsonPropertyJson = { [key: string]: unknown };
@@ -560,7 +550,6 @@ export interface JsonProperty {
   readonly modifiedAt?: ModifiedAt;
   readonly deletedAt?: DeletedAt;
   readonly instanceId?: string;
-  $props?: { [key: string]: NgsildAttribute };
 }
 
 export type EntityMapEntityMap = { [key: string]: unknown };

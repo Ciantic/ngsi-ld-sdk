@@ -155,8 +155,8 @@ import { fetcher } from "../fetcher";
  * @summary Entity creation
 
  */
-export const createEntity = (
-  createEntityBody?: WithContext<NonReadonly<Entity>>,
+export const createEntity = <T extends Entity = Entity>(
+  createEntityBody?: WithContext<NonReadonly<T>>,
   params?: CreateEntityParams,
   options?: RequestInit,
 ) => {
@@ -181,11 +181,11 @@ export const createEntity = (
  * @summary Query entities
 
  */
-export const queryEntity = (
+export const queryEntity = <T extends Entity = Entity>(
   params?: QueryEntityParams,
   options?: RequestInit,
 ) => {
-  return fetcher<MaybeContext<Entity>[]>(getQueryEntityUrl(params), {
+  return fetcher<MaybeContext<T>[]>(getQueryEntityUrl(params), {
     ...options,
     method: "GET",
     returnFormat: "body",
@@ -202,11 +202,11 @@ export const queryEntity = (
  * `queryEntity` operation with GeoJSON content negotiation.
  * @summary Query entities as GeoJSON
  */
-export const queryGeoEntity = (
+export const queryGeoEntity = <T extends Entity = Entity>(
   params?: QueryEntityParams,
   options?: RequestInit,
 ) => {
-  return fetcher<FeatureCollection>(getQueryEntityUrl(params), {
+  return fetcher<FeatureCollection<T>>(getQueryEntityUrl(params), {
     ...options,
     method: "GET",
     headers: { Accept: "application/geo+json", ...options?.headers },
@@ -227,12 +227,12 @@ export const queryGeoEntity = (
  * @summary Entity retrieval by id
 
  */
-export const retrieveEntity = (
+export const retrieveEntity = <T extends Entity = Entity>(
   entityId: string,
   params?: RetrieveEntityParams,
   options?: RequestInit,
 ) => {
-  return fetcher<MaybeContext<Entity>>(getRetrieveEntityUrl(entityId, params), {
+  return fetcher<MaybeContext<T>>(getRetrieveEntityUrl(entityId, params), {
     ...options,
     method: "GET",
     returnFormat: "body",
@@ -249,12 +249,12 @@ export const retrieveEntity = (
  * `retrieveEntity` operation with GeoJSON content negotiation.
  * @summary Entity retrieval by id as GeoJSON
  */
-export const retrieveGeoEntity = (
+export const retrieveGeoEntity = <T extends Entity = Entity>(
   entityId: string,
   params?: Omit<RetrieveEntityParams, "options">,
   options?: RequestInit,
 ) => {
-  return fetcher<Feature>(getRetrieveEntityUrl(entityId, params), {
+  return fetcher<Feature<T>>(getRetrieveEntityUrl(entityId, params), {
     ...options,
     method: "GET",
     headers: { Accept: "application/geo+json", ...options?.headers },
@@ -303,9 +303,9 @@ export const deleteEntity = (
  * @summary Entity merge by id
 
  */
-export const mergeEntity = (
+export const mergeEntity = <T extends Entity = Entity>(
   entityId: string,
-  mergeEntityBody?: WithContext<NonReadonly<Partial<Entity>>>,
+  mergeEntityBody?: WithContext<NonReadonly<Partial<T>>>,
   params?: MergeEntityParams,
   options?: RequestInit,
 ) => {
@@ -332,9 +332,9 @@ export const mergeEntity = (
  * @summary Entity replacement by id
 
  */
-export const replaceEntity = (
+export const replaceEntity = <T extends Entity = Entity>(
   entityId: string,
-  replaceEntityBody?: WithContext<NonReadonly<Partial<Entity>>>,
+  replaceEntityBody?: WithContext<NonReadonly<Partial<T>>>,
   params?: ReplaceEntityParams,
   options?: RequestInit,
 ) => {
@@ -361,9 +361,9 @@ export const replaceEntity = (
  * @summary Append Attributes to Entity
 
  */
-export const appendAttrs = (
+export const appendAttrs = <T extends Entity = Entity>(
   entityId: string,
-  appendAttrsBody?: WithContext<NonReadonly<Partial<Entity>>>,
+  appendAttrsBody?: WithContext<NonReadonly<Partial<T>>>,
   params?: AppendAttrsParams,
   options?: RequestInit,
 ) => {
@@ -390,9 +390,9 @@ export const appendAttrs = (
  * @summary Update Attributes of an Entity
 
  */
-export const updateEntity = (
+export const updateEntity = <T extends Entity = Entity>(
   entityId: string,
-  updateEntityBody?: WithContext<NonReadonly<Partial<Entity>>>,
+  updateEntityBody?: WithContext<NonReadonly<Partial<T>>>,
   params?: UpdateEntityParams,
   options?: RequestInit,
 ) => {
@@ -929,8 +929,8 @@ export const deleteCSRSubscription = (
  * @summary Batch Entity Creation
 
  */
-export const createBatch = (
-  createBatchBodyItem?: NonReadonly<MaybeContext<Entity>>[],
+export const createBatch = <T extends Entity = Entity>(
+  createBatchBodyItem?: NonReadonly<MaybeContext<T>>[],
   params?: CreateBatchParams,
   options?: RequestInit,
 ) => {
@@ -957,8 +957,8 @@ export const createBatch = (
  * @summary Batch Entity Creation or Update (Upsert)
 
  */
-export const upsertBatch = (
-  upsertBatchBodyItem?: NonReadonly<MaybeContext<Entity>>[],
+export const upsertBatch = <T extends Entity = Entity>(
+  upsertBatchBodyItem?: NonReadonly<MaybeContext<T>>[],
   params?: UpsertBatchParams,
   options?: RequestInit,
 ) => {
@@ -983,8 +983,8 @@ export const upsertBatch = (
  * @summary Batch Entity Update
 
  */
-export const updateBatch = (
-  updateBatchBodyItem?: NonReadonly<MaybeContext<Entity>>[],
+export const updateBatch = <T extends Entity = Entity>(
+  updateBatchBodyItem?: NonReadonly<MaybeContext<T>>[],
   params?: UpdateBatchParams,
   options?: RequestInit,
 ) => {
@@ -1035,12 +1035,12 @@ export const deleteBatch = (
  * @summary Query entities based on POST
 
  */
-export const queryBatch = (
+export const queryBatch = <T extends Entity = Entity>(
   query?: Query,
   params?: QueryBatchParams,
   options?: RequestInit,
 ) => {
-  return fetcher<MaybeContext<Entity>[]>(getQueryBatchUrl(params), {
+  return fetcher<MaybeContext<T>[]>(getQueryBatchUrl(params), {
     ...options,
     method: "POST",
     headers: { "Content-Type": "application/json", ...options?.headers },
@@ -1059,12 +1059,12 @@ export const queryBatch = (
  * `queryBatch` operation with GeoJSON content negotiation.
  * @summary Query entities (batch) as GeoJSON
  */
-export const queryGeoBatch = (
+export const queryGeoBatch = <T extends Entity = Entity>(
   query?: Query,
   params?: QueryBatchParams,
   options?: RequestInit,
 ) => {
-  return fetcher<FeatureCollection>(getQueryBatchUrl(params), {
+  return fetcher<FeatureCollection<T>>(getQueryBatchUrl(params), {
     ...options,
     method: "POST",
     headers: {
@@ -1094,8 +1094,8 @@ export const queryGeoBatch = (
  * @summary Batch Entity Merge
 
  */
-export const mergeBatch = (
-  mergeBatchBodyItem?: NonReadonly<MaybeContext<Entity>>[],
+export const mergeBatch = <T extends Entity = Entity>(
+  mergeBatchBodyItem?: NonReadonly<MaybeContext<T>>[],
   params?: MergeBatchParams,
   options?: RequestInit,
 ) => {
@@ -1122,8 +1122,8 @@ export const mergeBatch = (
  * @summary Temporal Representation of Entity creation
 
  */
-export const upsertTemporal = (
-  entityTemporalBody?: WithContext<EntityTemporal>,
+export const upsertTemporal = <T extends EntityTemporal = EntityTemporal>(
+  entityTemporalBody?: WithContext<T>,
   params?: UpsertTemporalParams,
   options?: RequestInit,
 ) => {
@@ -1154,11 +1154,11 @@ export const upsertTemporal = (
  * @summary Query temporal evolution of Entities
 
  */
-export const queryTemporal = (
+export const queryTemporal = <T extends EntityTemporal = EntityTemporal>(
   params?: QueryTemporalParams,
   options?: RequestInit,
 ) => {
-  return fetcher<MaybeContext<EntityTemporal>[]>(getQueryTemporalUrl(params), {
+  return fetcher<MaybeContext<T>[]>(getQueryTemporalUrl(params), {
     ...options,
     method: "GET",
     returnFormat: "body",
@@ -1178,19 +1178,16 @@ export const queryTemporal = (
  * @summary Temporal Representation of Entity retrieval by id
 
  */
-export const retrieveTemporal = (
+export const retrieveTemporal = <T extends EntityTemporal = EntityTemporal>(
   entityId: string,
   params?: RetrieveTemporalParams,
   options?: RequestInit,
 ) => {
-  return fetcher<MaybeContext<EntityTemporal>>(
-    getRetrieveTemporalUrl(entityId, params),
-    {
-      ...options,
-      method: "GET",
-      returnFormat: "body",
-    },
-  );
+  return fetcher<MaybeContext<T>>(getRetrieveTemporalUrl(entityId, params), {
+    ...options,
+    method: "GET",
+    returnFormat: "body",
+  });
 };
 /**
  * 5.6.16 Delete Temporal Representation of an Entity.
@@ -1231,9 +1228,9 @@ export const deleteTemporal = (
  * @summary Temporal Representation of Entity Attribute instance addition
 
  */
-export const appendAttrsTemporal = (
+export const appendAttrsTemporal = <T extends EntityTemporal = EntityTemporal>(
   entityId: string,
-  entityTemporalFragmentBody?: WithContext<Partial<EntityTemporal>>,
+  entityTemporalFragmentBody?: WithContext<Partial<T>>,
   params?: AppendAttrsTemporalParams,
   options?: RequestInit,
 ) => {
@@ -1370,21 +1367,18 @@ export const deleteAttrInstanceTemporal = (
  * @summary Temporal Representation of Entity Query based on POST
 
  */
-export const temporalQueryBatch = (
+export const temporalQueryBatch = <T extends EntityTemporal = EntityTemporal>(
   queryTemporalBody: QueryTemporalBody,
   params?: TemporalQueryBatchParams,
   options?: RequestInit,
 ) => {
-  return fetcher<MaybeContext<EntityTemporal>[]>(
-    getTemporalQueryBatchUrl(params),
-    {
-      ...options,
-      method: "POST",
-      headers: { "Content-Type": "application/json", ...options?.headers },
-      body: JSON.stringify(queryTemporalBody),
-      returnFormat: "body",
-    },
-  );
+  return fetcher<MaybeContext<T>[]>(getTemporalQueryBatchUrl(params), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(queryTemporalBody),
+    returnFormat: "body",
+  });
 };
 /**
  * 5.7.5 Retrieve Available Entity Types.
