@@ -25,6 +25,10 @@ export type DeletedAt = string;
 
 export type ObservedAt = string;
 
+export type EntityTypeName = string | string[];
+
+export type Scope = string | string[];
+
 export interface Attribute {
   id: string;
   type: "Attribute";
@@ -65,7 +69,7 @@ export type CsourceNotificationTriggerReason =
 export interface EntityInfo {
   id?: string;
   idPattern?: string;
-  type: string | string[];
+  type: EntityTypeName;
 }
 
 export interface RegistrationInfo {
@@ -161,7 +165,7 @@ export interface CsourceRegistration {
   expiresAt?: string;
   endpoint: string;
   contextSourceInfo?: KeyValuePair[];
-  scope?: string | string[];
+  scope?: Scope;
   mode?: CsourceRegistrationMode;
   operations?: string[];
   refreshRate?: string;
@@ -218,8 +222,8 @@ export interface GeoProperty {
 
 export interface Entity {
   id: string;
-  type: string | string[];
-  scope?: string | string[];
+  type: EntityTypeName;
+  scope?: Scope;
   location?: GeoProperty;
   observationSpace?: GeoProperty;
   operationSpace?: GeoProperty;
@@ -237,8 +241,8 @@ export interface EntitySelector {
 
 export interface EntityTemporal {
   id: string;
-  type: string | string[];
-  scope?: string | string[];
+  type: EntityTypeName;
+  scope?: Scope;
   location?: GeoProperty;
   observationSpace?: GeoProperty;
   operationSpace?: GeoProperty;
@@ -270,7 +274,7 @@ export interface EntityTypeList {
 }
 
 export interface FeatureProperties {
-  type: string | string[];
+  type: EntityTypeName;
   $props?: { [key: string]: NgsildAttribute };
 }
 
