@@ -2,7 +2,9 @@ import { expect } from "vitest";
 import type { NgsiLdHttpError } from "../src";
 import {
   deleteBatch,
+  deleteTemporal,
   queryEntity,
+  queryTemporal,
   queryCSR,
   querySubscription,
   NGSILD_CORE_CONTEXT,
@@ -99,6 +101,30 @@ export async function cleanUpAll(): Promise<void> {
   }
 
   if (deleteIds.length > 0) await deleteBatch(deleteIds);
+
+  // Clean up temporal data — some brokers (Orion-LD) keep it after entity deletion
+  const now = new Date(Date.now() + 86400000).toISOString();
+  const temporalResults = await Promise.allSettled([
+    queryTemporal({
+      type: "TemperatureSensor,HumiditySensor",
+      timerel: "before",
+      timeAt: now,
+      limit: 100,
+    }),
+  ]);
+  for (const result of temporalResults) {
+    if (result.status === "fulfilled" && Array.isArray(result.value)) {
+      for (const entity of result.value) {
+        if (entity && typeof entity === "object" && "id" in entity) {
+          try {
+            await deleteTemporal(entity.id as string);
+          } catch {
+            // Ignore — Orion-LD doesn't support temporal delete (returns 501)
+          }
+        }
+      }
+    }
+  }
 }
 
 export async function expectHttpError<T extends NgsiLdHttpError>(
