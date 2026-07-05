@@ -538,29 +538,6 @@ export interface ContextSourceIdentity {
   contextSourceAlias: string;
 }
 
-export type AttributeFragmentBody =
-  | Property
-  | Relationship
-  | GeoProperty
-  | LanguageProperty
-  | VocabProperty
-  | JsonProperty
-  | ListProperty
-  | ListRelationship;
-
-export type TemporalAttributeFragmentBody = WithContext<
-  RequiredObservedAt<
-    | Property
-    | Relationship
-    | GeoProperty
-    | LanguageProperty
-    | VocabProperty
-    | JsonProperty
-    | ListProperty
-    | ListRelationship
-  >
->;
-
 export type NgsildAttribute =
   | Property
   | GeoProperty
@@ -571,7 +548,7 @@ export type NgsildAttribute =
   | Relationship
   | ListRelationship;
 
-type RequiredObservedAt<T> = T & {
+export type RequiredObservedAt<T> = T & {
   observedAt: string;
 };
 

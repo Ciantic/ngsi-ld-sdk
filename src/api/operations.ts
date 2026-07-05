@@ -1,7 +1,5 @@
 import type {
   Attribute,
-  AttributeFragmentBody,
-  TemporalAttributeFragmentBody,
   CsourceRegistration,
   Entity,
   EntityMap,
@@ -22,6 +20,8 @@ import type {
   LdContextMetadata,
   BatchOperationResult,
   UpdateResult,
+  NgsildAttribute,
+  RequiredObservedAt,
 } from "./schemas";
 
 import {
@@ -215,7 +215,7 @@ export const updateEntity = <T extends Entity = Entity>(
 export const updateAttrs = (
   entityId: string,
   attrId: string,
-  attributeFragmentBody?: WithContext<AttributeFragmentBody>,
+  attributeFragmentBody?: WithContext<NgsildAttribute>,
   params?: Parameters<typeof getUpdateAttrsUrl>[2],
   options?: RequestInit,
 ) => {
@@ -248,7 +248,7 @@ export const deleteAttrs = (
 export const replaceAttrs = (
   entityId: string,
   attrId: string,
-  attributeFragmentBody?: WithContext<AttributeFragmentBody>,
+  attributeFragmentBody?: WithContext<NgsildAttribute>,
   params?: Parameters<typeof getReplaceAttrsUrl>[2],
   options?: RequestInit,
 ) => {
@@ -638,7 +638,7 @@ export const updateAttrsTemporal = (
   entityId: string,
   attrId: string,
   instanceId: string,
-  temporalAttrFragmentBody?: TemporalAttributeFragmentBody,
+  temporalAttrFragmentBody?: WithContext<RequiredObservedAt<NgsildAttribute>>,
   params?: Parameters<typeof getUpdateAttrsTemporalUrl>[3],
   options?: RequestInit,
 ) => {
