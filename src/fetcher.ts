@@ -51,7 +51,11 @@ export const fetcher = async <T>(
   const response = await fetch(targetUrl, {
     method,
     body: wireBody,
-    headers,
+    headers: {
+      "Content-Type": "application/ld+json",
+      Accept: "application/ld+json",
+      ...headers,
+    },
   });
   const responseBody = [204, 205, 304].includes(response.status)
     ? undefined

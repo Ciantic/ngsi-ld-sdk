@@ -90,7 +90,7 @@ export const createEntity = <T extends Entity = Entity>(
   return fetcher<CreateEntityResponse>(getCreateEntityUrl(params), {
     ...options,
     method: "POST",
-    headers: { "Content-Type": "application/ld+json", ...options?.headers },
+    headers: { ...options?.headers },
     body: JSON.stringify(createEntityBody),
   });
 };
@@ -165,7 +165,7 @@ export const mergeEntity = <T extends Entity = Entity>(
   return fetcher<MergeEntityResponse>(getMergeEntityUrl(entityId, params), {
     ...options,
     method: "PATCH",
-    headers: { "Content-Type": "application/ld+json", ...options?.headers },
+    headers: { ...options?.headers },
     body: JSON.stringify(mergeEntityBody),
   });
 };
@@ -179,7 +179,7 @@ export const replaceEntity = <T extends Entity = Entity>(
   return fetcher<ReplaceEntityResponse>(getReplaceEntityUrl(entityId, params), {
     ...options,
     method: "PUT",
-    headers: { "Content-Type": "application/ld+json", ...options?.headers },
+    headers: { ...options?.headers },
     body: JSON.stringify(replaceEntityBody),
   });
 };
@@ -193,7 +193,7 @@ export const appendAttrs = <T extends Entity = Entity>(
   return fetcher<AppendAttrsResponse>(getAppendAttrsUrl(entityId, params), {
     ...options,
     method: "POST",
-    headers: { "Content-Type": "application/ld+json", ...options?.headers },
+    headers: { ...options?.headers },
     body: JSON.stringify(appendAttrsBody),
   });
 };
@@ -207,7 +207,7 @@ export const updateEntity = <T extends Entity = Entity>(
   return fetcher<UpdateEntityResponse>(getUpdateEntityUrl(entityId, params), {
     ...options,
     method: "PATCH",
-    headers: { "Content-Type": "application/ld+json", ...options?.headers },
+    headers: { ...options?.headers },
     body: JSON.stringify(updateEntityBody),
   });
 };
@@ -224,7 +224,7 @@ export const updateAttrs = (
     {
       ...options,
       method: "PATCH",
-      headers: { "Content-Type": "application/ld+json", ...options?.headers },
+      headers: { ...options?.headers },
       body: JSON.stringify(attributeFragmentBody),
     },
   );
@@ -257,7 +257,7 @@ export const replaceAttrs = (
     {
       ...options,
       method: "PUT",
-      headers: { "Content-Type": "application/ld+json", ...options?.headers },
+      headers: { ...options?.headers },
       body: JSON.stringify(attributeFragmentBody),
     },
   );
@@ -270,7 +270,7 @@ export const createCSR = (
   return fetcher<{ location: string }>(getCreateCSRUrl(), {
     ...options,
     method: "POST",
-    headers: { "Content-Type": "application/ld+json", ...options?.headers },
+    headers: { ...options?.headers },
     body: JSON.stringify(createCSRBody),
     returnFormat: "body",
   });
@@ -310,7 +310,7 @@ export const updateCSR = (
   return fetcher<void>(getUpdateCSRUrl(registrationId), {
     ...options,
     method: "PATCH",
-    headers: { "Content-Type": "application/ld+json", ...options?.headers },
+    headers: { ...options?.headers },
     body: JSON.stringify(updateCSRBody),
     returnFormat: "body",
   });
@@ -332,7 +332,7 @@ export const createSubscription = (
   return fetcher<{ location: string }>(getCreateSubscriptionUrl(params), {
     ...options,
     method: "POST",
-    headers: { "Content-Type": "application/ld+json", ...options?.headers },
+    headers: { ...options?.headers },
     body: JSON.stringify(subscriptionBody),
     returnFormat: "body",
   });
@@ -376,7 +376,7 @@ export const updateSubscription = (
   return fetcher<void>(getUpdateSubscriptionUrl(subscriptionId, params), {
     ...options,
     method: "PATCH",
-    headers: { "Content-Type": "application/ld+json", ...options?.headers },
+    headers: { ...options?.headers },
     body: JSON.stringify(subscriptionFragmentBody),
     returnFormat: "body",
   });
@@ -401,7 +401,7 @@ export const createCSRSubscription = (
   return fetcher<{ location: string }>(getCreateCSRSubscriptionUrl(), {
     ...options,
     method: "POST",
-    headers: { "Content-Type": "application/ld+json", ...options?.headers },
+    headers: { ...options?.headers },
     body: JSON.stringify(subscriptionBody),
     returnFormat: "body",
   });
@@ -444,7 +444,7 @@ export const updateCSRSubscription = (
   return fetcher<void>(getUpdateCSRSubscriptionUrl(subscriptionId), {
     ...options,
     method: "PATCH",
-    headers: { "Content-Type": "application/ld+json", ...options?.headers },
+    headers: { ...options?.headers },
     body: JSON.stringify(subscriptionFragmentBody),
     returnFormat: "body",
   });
@@ -469,7 +469,7 @@ export const createBatch = <T extends Entity = Entity>(
   return fetcher<CreateBatchResponse>(getCreateBatchUrl(params), {
     ...options,
     method: "POST",
-    headers: { "Content-Type": "application/ld+json", ...options?.headers },
+    headers: { ...options?.headers },
     body: JSON.stringify(createBatchBodyItem),
   });
 };
@@ -482,7 +482,7 @@ export const upsertBatch = <T extends Entity = Entity>(
   return fetcher<UpsertBatchResponse>(getUpsertBatchUrl(params), {
     ...options,
     method: "POST",
-    headers: { "Content-Type": "application/ld+json", ...options?.headers },
+    headers: { ...options?.headers },
     body: JSON.stringify(upsertBatchBodyItem),
   });
 };
@@ -495,7 +495,7 @@ export const updateBatch = <T extends Entity = Entity>(
   return fetcher<UpdateBatchResponse>(getUpdateBatchUrl(params), {
     ...options,
     method: "POST",
-    headers: { "Content-Type": "application/ld+json", ...options?.headers },
+    headers: { ...options?.headers },
     body: JSON.stringify(updateBatchBodyItem),
   });
 };
@@ -553,7 +553,7 @@ export const mergeBatch = <T extends Entity = Entity>(
   return fetcher<MergeBatchResponse>(getMergeBatchUrl(params), {
     ...options,
     method: "POST",
-    headers: { "Content-Type": "application/ld+json", ...options?.headers },
+    headers: { ...options?.headers },
     body: JSON.stringify(mergeBatchBodyItem),
   });
 };
@@ -566,7 +566,7 @@ export const upsertTemporal = <T extends EntityTemporal = EntityTemporal>(
   return fetcher<UpsertTemporalResponse>(getUpsertTemporalUrl(params), {
     ...options,
     method: "POST",
-    headers: { "Content-Type": "application/ld+json", ...options?.headers },
+    headers: { ...options?.headers },
     body: JSON.stringify(entityTemporalBody),
   });
 };
@@ -615,7 +615,7 @@ export const appendAttrsTemporal = <T extends EntityTemporal = EntityTemporal>(
   return fetcher<void>(getAppendAttrsTemporalUrl(entityId, params), {
     ...options,
     method: "POST",
-    headers: { "Content-Type": "application/ld+json", ...options?.headers },
+    headers: { ...options?.headers },
     body: JSON.stringify(entityTemporalFragmentBody),
     returnFormat: "body",
   });
@@ -647,7 +647,7 @@ export const updateAttrsTemporal = (
     {
       ...options,
       method: "PATCH",
-      headers: { "Content-Type": "application/ld+json", ...options?.headers },
+      headers: { ...options?.headers },
       body: temporalAttrFragmentBody
         ? JSON.stringify(temporalAttrFragmentBody)
         : undefined,
@@ -752,7 +752,7 @@ export const createContext = (
   return fetcher<{ location: string }>(getCreateContextUrl(), {
     ...options,
     method: "POST",
-    headers: { "Content-Type": "application/ld+json", ...options?.headers },
+    headers: { ...options?.headers },
     body: JSON.stringify(createContextBody),
     returnFormat: "body",
   });
@@ -818,7 +818,7 @@ export const updateEntityMap = (
   return fetcher<void>(getUpdateEntityMapUrl(entityMapId), {
     ...options,
     method: "PATCH",
-    headers: { "Content-Type": "application/ld+json", ...options?.headers },
+    headers: { ...options?.headers },
     body: JSON.stringify(updateEntityMapBody),
     returnFormat: "body",
   });

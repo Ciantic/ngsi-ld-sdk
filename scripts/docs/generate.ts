@@ -33,7 +33,9 @@ however generation result was too verbose so I've continued to maintain it witho
 const README_END = md`
 ## Notes
 
-This wrapper intentionally sets the Content-Type and Accept headers to \`application/ld+json\` for all requests. One exception: \`queryBatch\` and \`temporalQueryBatch\` are still using \`application/json\`, reason being that Stellio didn't support \`@context\` proeprty in query batch and temporal query batch, but Orion-LD did. Thus the SDK wrapper sets the Content-Type and Accept headers to \`application/json\` for those two requests.
+This wrapper intentionally sets the Content-Type and Accept headers to \`application/ld+json\` for all requests. Exceptions: \`queryBatch\` and \`temporalQueryBatch\` are still using \`application/json\`, reason being that Stellio didn't support \`@context\` proeprty in query batch and temporal query batch, but Orion-LD did. Thus the SDK wrapper sets the Content-Type and Accept headers to \`application/json\` for those two requests.
+
+Geo functions use \`application/geo+json\` for Accept headers, as required by the NGSI-LD specification.
 `;
 
 /** Strip 4 spaces of indentation from each non-empty line. */
@@ -154,6 +156,8 @@ export async function generateReadme() {
   readme += "\n## Usage\n\n";
   readme += await getDocTestExamples();
   readme += "\n\n## Operations\n\n";
+  readme +=
+    "Operations are named after operationId defined in the OpenAPI specification.\n\n";
   readme += await generateOperationsTable();
   readme += "\n\n";
   readme += README_END;
