@@ -1,42 +1,336 @@
 import type {
-  AppendAttrsParams,
-  AppendAttrsTemporalParams,
-  CreateBatchParams,
-  CreateSubscriptionParams,
-  DeleteAttrInstanceTemporalParams,
-  DeleteAttrsParams,
-  DeleteAttrsTemporalParams,
-  DeleteBatchParams,
-  DeleteContextParams,
-  DeleteEntityParams,
-  DeleteSubscriptionParams,
-  DeleteTemporalParams,
-  MergeBatchParams,
-  MergeEntityParams,
-  QueryBatchParams,
-  QueryCSRParams,
-  QueryCSRSubscriptionParams,
-  QueryEntityParams,
-  QuerySubscriptionParams,
-  QueryTemporalParams,
-  ReplaceAttrsParams,
-  ReplaceEntityParams,
-  RetrieveCSRParams,
-  RetrieveCSRSubscriptionParams,
-  RetrieveEntityParams,
-  RetrieveEntityTypesParams,
-  RetrieveSubscriptionParams,
-  RetrieveTemporalParams,
-  TemporalQueryBatchParams,
-  UpdateAttrsParams,
-  UpdateAttrsTemporalParams,
-  UpdateBatchParams,
-  UpdateEntityParams,
-  UpdateSubscriptionParams,
-  UpsertBatchParams,
-  UpsertTemporalParams,
-  QueryKindParameter,
+  FormatRepresentation,
+  FormatTemporal,
+  GeometryLinearRing,
+  GeometryLineStringCoordinates,
+  GeometryPolygonCoordinates,
+  GeometryPosition,
+  GeometryPositionArray,
 } from "./schemas";
+
+type OptionsNoOverwrite = "noOverwrite";
+
+type OptionsRepresentation =
+  "concise" | "keyValues" | "normalized" | "simplified";
+
+type OptionsSysAttrs = "sysAttrs";
+
+type OptionsTemporal = "temporalValues" | "aggregatedValues";
+
+type OptionsUpsert = "replace" | "update";
+
+type QueryAggrMethodsParameter =
+  | "totalCount"
+  | "distinctCount"
+  | "sum"
+  | "avg"
+  | "min"
+  | "max"
+  | "stddev"
+  | "sumsq";
+
+type QueryCoordinatesParameter =
+  | GeometryPosition
+  | GeometryPositionArray
+  | GeometryLineStringCoordinates
+  | GeometryLinearRing
+  | GeometryPolygonCoordinates;
+
+type QueryGeometryParameter =
+  | "LineString"
+  | "MultiLineString"
+  | "MultiPoint"
+  | "MultiPolygon"
+  | "Point"
+  | "Polygon";
+
+type QueryGeopropertyParameter =
+  "location" | "observationSpace" | "operationSpace";
+
+type QueryGeorelParameter =
+  | "equals"
+  | "disjoint"
+  | "intersects"
+  | "within"
+  | "contains"
+  | "overlaps"
+  | string;
+
+type QueryKindParameter = "Cached" | "Hosted" | "ImplicitlyCreated";
+
+type QueryTimepropertyParameter =
+  "createdAt" | "deletedAt" | "modifiedAt" | "observedAt";
+
+type QueryTimerelParameter = "after" | "before" | "between";
+
+type QueryEntityParams = {
+  id?: string[];
+  type?: string;
+  idPattern?: string;
+  attrs?: string[];
+  pick?: string[];
+  omit?: string[];
+  q?: string;
+  csf?: string;
+  geometry?: QueryGeometryParameter;
+  georel?: QueryGeorelParameter;
+  coordinates?: QueryCoordinatesParameter;
+  geoproperty?: QueryGeopropertyParameter;
+  geometryProperty?: string;
+  lang?: string;
+  scopeQ?: string;
+  containedBy?: string[];
+  join?: string;
+  joinLevel?: number;
+  datasetId?: string | string[];
+  details?: boolean;
+  limit?: number;
+  count?: boolean;
+  options?: (OptionsRepresentation | OptionsSysAttrs)[];
+  format?: FormatRepresentation;
+  local?: boolean;
+};
+
+type RetrieveEntityParams = {
+  type?: string;
+  attrs?: string[];
+  pick?: string[];
+  omit?: string[];
+  geometryProperty?: string;
+  lang?: string;
+  containedBy?: string[];
+  join?: string;
+  joinLevel?: number;
+  datasetId?: string | string[];
+  details?: boolean;
+  options?: (OptionsRepresentation | OptionsSysAttrs)[];
+  format?: FormatRepresentation;
+  local?: boolean;
+};
+
+type DeleteEntityParams = {
+  type?: string;
+  local?: boolean;
+};
+
+type MergeEntityParams = {
+  options?: OptionsRepresentation[];
+  format?: FormatRepresentation;
+  type?: string;
+  observedAt?: string;
+  lang?: string;
+  local?: boolean;
+};
+
+type ReplaceEntityParams = {
+  type?: string;
+  local?: boolean;
+};
+
+type AppendAttrsParams = {
+  type?: string;
+  options?: OptionsNoOverwrite[];
+  local?: boolean;
+};
+
+type UpdateEntityParams = {
+  local?: boolean;
+  type?: string;
+};
+
+type UpdateAttrsParams = {
+  local?: boolean;
+  type?: string;
+};
+
+type DeleteAttrsParams = {
+  deleteAll?: boolean;
+  datasetId?: string | string[];
+  type?: string;
+  local?: boolean;
+};
+
+type ReplaceAttrsParams = {
+  local?: boolean;
+  type?: string;
+};
+
+type QueryCSRParams = {
+  id?: string[];
+  type?: string;
+  idPattern?: string;
+  attrs?: string[];
+  q?: string;
+  csf?: string;
+  geometry?: QueryGeometryParameter;
+  georel?: QueryGeorelParameter;
+  coordinates?: QueryCoordinatesParameter;
+  geoproperty?: QueryGeopropertyParameter;
+  timeproperty?: QueryTimepropertyParameter;
+  timerel?: QueryTimerelParameter;
+  timeAt?: string;
+  endTimeAt?: string;
+  geometryProperty?: string;
+  lang?: string;
+  scopeQ?: string;
+  options?: OptionsSysAttrs[];
+  limit?: number;
+  count?: boolean;
+};
+
+type RetrieveCSRParams = {
+  options?: OptionsSysAttrs[];
+};
+
+type CreateSubscriptionParams = {
+  local?: boolean;
+};
+
+type QuerySubscriptionParams = {
+  options?: OptionsSysAttrs[];
+  limit?: number;
+  count?: boolean;
+  local?: boolean;
+};
+
+type RetrieveSubscriptionParams = {
+  options?: OptionsSysAttrs[];
+  local?: boolean;
+};
+
+type UpdateSubscriptionParams = {
+  local?: boolean;
+};
+
+type DeleteSubscriptionParams = {
+  local?: boolean;
+};
+
+type QueryCSRSubscriptionParams = {
+  options?: OptionsSysAttrs[];
+  limit?: number;
+  count?: boolean;
+};
+
+type RetrieveCSRSubscriptionParams = {
+  options?: OptionsSysAttrs[];
+};
+
+type CreateBatchParams = {
+  local?: boolean;
+};
+
+type UpsertBatchParams = {
+  options?: OptionsUpsert[];
+  local?: boolean;
+};
+
+type UpdateBatchParams = {
+  options?: OptionsNoOverwrite[];
+  local?: boolean;
+};
+
+type DeleteBatchParams = {
+  local?: boolean;
+};
+
+type QueryBatchParams = {
+  count?: boolean;
+  limit?: number;
+  local?: boolean;
+  options?: (OptionsRepresentation | OptionsSysAttrs)[];
+};
+
+type MergeBatchParams = {
+  local?: boolean;
+};
+
+type UpsertTemporalParams = {
+  local?: boolean;
+};
+
+type QueryTemporalParams = {
+  id?: string[];
+  type?: string;
+  idPattern?: string;
+  attrs?: string[];
+  pick?: string[];
+  omit?: string[];
+  q?: string;
+  csf?: string;
+  geometry?: QueryGeometryParameter;
+  georel?: QueryGeorelParameter;
+  coordinates?: QueryCoordinatesParameter;
+  geoproperty?: QueryGeopropertyParameter;
+  timeproperty?: QueryTimepropertyParameter;
+  timerel?: QueryTimerelParameter;
+  timeAt?: string;
+  endTimeAt?: string;
+  lastN?: number;
+  lang?: string;
+  aggrMethods?: QueryAggrMethodsParameter;
+  aggrPeriodDuration?: string;
+  scopeQ?: string;
+  datasetId?: string | string[];
+  limit?: number;
+  count?: boolean;
+  options?: OptionsTemporal[] | OptionsSysAttrs[];
+  format?: FormatTemporal;
+  local?: boolean;
+};
+
+type RetrieveTemporalParams = {
+  attrs?: string[];
+  pick?: string[];
+  omit?: string[];
+  timeproperty?: QueryTimepropertyParameter;
+  timerel?: QueryTimerelParameter;
+  timeAt?: string;
+  endTimeAt?: string;
+  lastN?: number;
+  lang?: string;
+  aggrMethods?: QueryAggrMethodsParameter;
+  aggrPeriodDuration?: string;
+  datasetId?: string | string[];
+  options?: OptionsTemporal[] | OptionsSysAttrs[];
+  format?: FormatTemporal;
+  local?: boolean;
+};
+
+type DeleteTemporalParams = {
+  local?: boolean;
+};
+
+type AppendAttrsTemporalParams = {
+  local?: boolean;
+};
+
+type DeleteAttrsTemporalParams = {
+  deleteAll?: boolean;
+  datasetId?: string | string[];
+  local?: boolean;
+};
+
+type UpdateAttrsTemporalParams = {
+  local?: boolean;
+};
+
+type DeleteAttrInstanceTemporalParams = {
+  local?: boolean;
+};
+
+type TemporalQueryBatchParams = {
+  local?: boolean;
+};
+
+type RetrieveEntityTypesParams = {
+  details?: boolean;
+  local?: boolean;
+};
+
+type DeleteContextParams = {
+  reload?: boolean;
+};
 
 export const getCreateEntityUrl = (params?: { local?: boolean }) => {
   const normalizedParams = new URLSearchParams();

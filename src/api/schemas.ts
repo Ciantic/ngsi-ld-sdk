@@ -1,17 +1,6 @@
 export type JsonValue =
   string | number | boolean | null | JsonValue[] | { [key: string]: JsonValue };
 
-export type OptionsNoOverwrite = "noOverwrite";
-
-export type OptionsRepresentation =
-  "concise" | "keyValues" | "normalized" | "simplified";
-
-export type OptionsSysAttrs = "sysAttrs";
-
-export type OptionsTemporal = "temporalValues" | "aggregatedValues";
-
-export type OptionsUpsert = "replace" | "update";
-
 export type FormatRepresentation =
   "normalized" | "concise" | "keyValues" | "simplified";
 
@@ -361,24 +350,6 @@ export type NotificationParamsJoin = "flat" | "inline" | "@none";
 
 export type NotificationParamsStatus = "ok" | "failed";
 
-export interface NotificationParams {
-  attributes?: string[];
-  sysAttrs?: boolean;
-  format?: NotificationParamsFormat;
-  pick?: string[];
-  omit?: string[];
-  showChanges?: boolean;
-  join?: NotificationParamsJoin;
-  joinLevel?: number;
-  endpoint: Endpoint;
-  readonly status?: NotificationParamsStatus;
-  readonly timesSent?: number;
-  readonly timesFailed?: number;
-  readonly lastNotification?: string;
-  readonly lastFailure?: string;
-  readonly lastSuccess?: string;
-}
-
 export type Path = string;
 
 export interface Property {
@@ -449,6 +420,24 @@ export type SubscriptionCommonNotificationTriggerItem =
   | "attributeDeleted";
 
 export type SubscriptionCommonStatus = "active" | "paused" | "expired";
+
+export interface NotificationParams {
+  attributes?: string[];
+  sysAttrs?: boolean;
+  format?: NotificationParamsFormat;
+  pick?: string[];
+  omit?: string[];
+  showChanges?: boolean;
+  join?: NotificationParamsJoin;
+  joinLevel?: number;
+  endpoint: Endpoint;
+  readonly status?: NotificationParamsStatus;
+  readonly timesSent?: number;
+  readonly timesFailed?: number;
+  readonly lastNotification?: string;
+  readonly lastFailure?: string;
+  readonly lastSuccess?: string;
+}
 
 export interface SubscriptionCommon {
   id?: string;
@@ -603,315 +592,6 @@ export type TemporalAttributeFragmentBody = WithContext<
   >
 >;
 
-export type QueryAggrMethodsParameter =
-  | "totalCount"
-  | "distinctCount"
-  | "sum"
-  | "avg"
-  | "min"
-  | "max"
-  | "stddev"
-  | "sumsq";
-
-export type QueryCoordinatesParameter =
-  | GeometryPosition
-  | GeometryPositionArray
-  | GeometryLineStringCoordinates
-  | GeometryLinearRing
-  | GeometryPolygonCoordinates;
-
-export type QueryGeometryParameter =
-  | "LineString"
-  | "MultiLineString"
-  | "MultiPoint"
-  | "MultiPolygon"
-  | "Point"
-  | "Polygon";
-
-export type QueryGeopropertyParameter =
-  "location" | "observationSpace" | "operationSpace";
-
-export type QueryGeorelParameter =
-  | "equals"
-  | "disjoint"
-  | "intersects"
-  | "within"
-  | "contains"
-  | "overlaps"
-  | string;
-
-export type QueryKindParameter = "Cached" | "Hosted" | "ImplicitlyCreated";
-
-export type QueryTimepropertyParameter =
-  "createdAt" | "deletedAt" | "modifiedAt" | "observedAt";
-
-export type QueryTimerelParameter = "after" | "before" | "between";
-
-export type QueryEntityParams = {
-  id?: string[];
-  type?: string;
-  idPattern?: string;
-  attrs?: string[];
-  pick?: string[];
-  omit?: string[];
-  q?: string;
-  csf?: string;
-  geometry?: QueryGeometryParameter;
-  georel?: QueryGeorelParameter;
-  coordinates?: QueryCoordinatesParameter;
-  geoproperty?: QueryGeopropertyParameter;
-  geometryProperty?: string;
-  lang?: string;
-  scopeQ?: string;
-  containedBy?: string[];
-  join?: string;
-  joinLevel?: number;
-  datasetId?: string | string[];
-  details?: boolean;
-  limit?: number;
-  count?: boolean;
-  options?: (OptionsRepresentation | OptionsSysAttrs)[];
-  format?: FormatRepresentation;
-  local?: boolean;
-};
-
-export type RetrieveEntityParams = {
-  type?: string;
-  attrs?: string[];
-  pick?: string[];
-  omit?: string[];
-  geometryProperty?: string;
-  lang?: string;
-  containedBy?: string[];
-  join?: string;
-  joinLevel?: number;
-  datasetId?: string | string[];
-  details?: boolean;
-  options?: (OptionsRepresentation | OptionsSysAttrs)[];
-  format?: FormatRepresentation;
-  local?: boolean;
-};
-
-export type DeleteEntityParams = {
-  type?: string;
-  local?: boolean;
-};
-
-export type MergeEntityParams = {
-  options?: OptionsRepresentation[];
-  format?: FormatRepresentation;
-  type?: string;
-  observedAt?: string;
-  lang?: string;
-  local?: boolean;
-};
-
-export type ReplaceEntityParams = {
-  type?: string;
-  local?: boolean;
-};
-
-export type AppendAttrsParams = {
-  type?: string;
-  options?: OptionsNoOverwrite[];
-  local?: boolean;
-};
-
-export type UpdateEntityParams = {
-  local?: boolean;
-  type?: string;
-};
-
-export type UpdateAttrsParams = {
-  local?: boolean;
-  type?: string;
-};
-
-export type DeleteAttrsParams = {
-  deleteAll?: boolean;
-  datasetId?: string | string[];
-  type?: string;
-  local?: boolean;
-};
-
-export type ReplaceAttrsParams = {
-  local?: boolean;
-  type?: string;
-};
-
-export type QueryCSRParams = {
-  id?: string[];
-  type?: string;
-  idPattern?: string;
-  attrs?: string[];
-  q?: string;
-  csf?: string;
-  geometry?: QueryGeometryParameter;
-  georel?: QueryGeorelParameter;
-  coordinates?: QueryCoordinatesParameter;
-  geoproperty?: QueryGeopropertyParameter;
-  timeproperty?: QueryTimepropertyParameter;
-  timerel?: QueryTimerelParameter;
-  timeAt?: string;
-  endTimeAt?: string;
-  geometryProperty?: string;
-  lang?: string;
-  scopeQ?: string;
-  options?: OptionsSysAttrs[];
-  limit?: number;
-  count?: boolean;
-};
-
-export type RetrieveCSRParams = {
-  options?: OptionsSysAttrs[];
-};
-
-export type CreateSubscriptionParams = {
-  local?: boolean;
-};
-
-export type QuerySubscriptionParams = {
-  options?: OptionsSysAttrs[];
-  limit?: number;
-  count?: boolean;
-  local?: boolean;
-};
-
-export type RetrieveSubscriptionParams = {
-  options?: OptionsSysAttrs[];
-  local?: boolean;
-};
-
-export type UpdateSubscriptionParams = {
-  local?: boolean;
-};
-
-export type DeleteSubscriptionParams = {
-  local?: boolean;
-};
-
-export type QueryCSRSubscriptionParams = {
-  options?: OptionsSysAttrs[];
-  limit?: number;
-  count?: boolean;
-};
-
-export type RetrieveCSRSubscriptionParams = {
-  options?: OptionsSysAttrs[];
-};
-
-export type CreateBatchParams = {
-  local?: boolean;
-};
-
-export type UpsertBatchParams = {
-  options?: OptionsUpsert[];
-  local?: boolean;
-};
-
-export type UpdateBatchParams = {
-  options?: OptionsNoOverwrite[];
-  local?: boolean;
-};
-
-export type DeleteBatchParams = {
-  local?: boolean;
-};
-
-export type QueryBatchParams = {
-  count?: boolean;
-  limit?: number;
-  local?: boolean;
-  options?: (OptionsRepresentation | OptionsSysAttrs)[];
-};
-
-export type MergeBatchParams = {
-  local?: boolean;
-};
-
-export type UpsertTemporalParams = {
-  local?: boolean;
-};
-
-export type QueryTemporalParams = {
-  id?: string[];
-  type?: string;
-  idPattern?: string;
-  attrs?: string[];
-  pick?: string[];
-  omit?: string[];
-  q?: string;
-  csf?: string;
-  geometry?: QueryGeometryParameter;
-  georel?: QueryGeorelParameter;
-  coordinates?: QueryCoordinatesParameter;
-  geoproperty?: QueryGeopropertyParameter;
-  timeproperty?: QueryTimepropertyParameter;
-  timerel?: QueryTimerelParameter;
-  timeAt?: string;
-  endTimeAt?: string;
-  lastN?: number;
-  lang?: string;
-  aggrMethods?: QueryAggrMethodsParameter;
-  aggrPeriodDuration?: string;
-  scopeQ?: string;
-  datasetId?: string | string[];
-  limit?: number;
-  count?: boolean;
-  options?: OptionsTemporal[] | OptionsSysAttrs[];
-  format?: FormatTemporal;
-  local?: boolean;
-};
-
-export type RetrieveTemporalParams = {
-  attrs?: string[];
-  pick?: string[];
-  omit?: string[];
-  timeproperty?: QueryTimepropertyParameter;
-  timerel?: QueryTimerelParameter;
-  timeAt?: string;
-  endTimeAt?: string;
-  lastN?: number;
-  lang?: string;
-  aggrMethods?: QueryAggrMethodsParameter;
-  aggrPeriodDuration?: string;
-  datasetId?: string | string[];
-  options?: OptionsTemporal[] | OptionsSysAttrs[];
-  format?: FormatTemporal;
-  local?: boolean;
-};
-
-export type DeleteTemporalParams = {
-  local?: boolean;
-};
-
-export type AppendAttrsTemporalParams = {
-  local?: boolean;
-};
-
-export type DeleteAttrsTemporalParams = {
-  deleteAll?: boolean;
-  datasetId?: string | string[];
-  local?: boolean;
-};
-
-export type UpdateAttrsTemporalParams = {
-  local?: boolean;
-};
-
-export type DeleteAttrInstanceTemporalParams = {
-  local?: boolean;
-};
-
-export type TemporalQueryBatchParams = {
-  local?: boolean;
-};
-
-export type RetrieveEntityTypesParams = {
-  details?: boolean;
-  local?: boolean;
-};
-
 export type RetrieveEntityTypes200 =
   | (EntityTypeList & {
       "@context": LdContext;
@@ -925,10 +605,6 @@ export type RetrieveContext200 =
       "@context"?: LdContext;
     }
   | LdContextMetadata;
-
-export type DeleteContextParams = {
-  reload?: boolean;
-};
 
 export type NgsildAttribute =
   | Property
