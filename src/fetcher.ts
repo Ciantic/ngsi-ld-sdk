@@ -1,7 +1,23 @@
-import { throwHttpError } from "./errors";
+import { ProblemDetails } from "./api/schemas";
+import { NGSILD_STATUS_TO_ERROR, NgsiLdHttpError } from "./errors";
 
 const BASE_URL =
   process.env.NGSILD_BROKER_URL || "http://localhost:1026/ngsi-ld/v1";
+
+/**
+ * Construct and throw the appropriate {@link NgsiLdHttpError} subclass
+ * for the given HTTP response.
+ *
+ * If the status code is not explicitly mapped, a plain {@link NgsiLdHttpError}
+ * is thrown (generic 4xx/5xx).
+ */
+function throwHttpError(response: Response, body: ProblemDetails): never {
+  const ErrorClass = NGSILD_STATUS_TO_ERROR[response.status];
+  if (ErrorClass) {
+    throw new ErrorClass(body, response);
+  }
+  throw new NgsiLdHttpError(response.status, body, response);
+}
 
 export const fetcher = async <T>(
   url: string,

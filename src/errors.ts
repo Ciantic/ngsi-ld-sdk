@@ -84,7 +84,7 @@ export class NgsiLdGatewayTimeout extends NgsiLdHttpError {
  * Map from HTTP status code to the appropriate error class.
  * Extend this with additional status codes as needed.
  */
-const STATUS_TO_ERROR: Record<
+export const NGSILD_STATUS_TO_ERROR: Record<
   number,
   new (body: ProblemDetails, response: Response) => NgsiLdHttpError
 > = {
@@ -96,23 +96,3 @@ const STATUS_TO_ERROR: Record<
   501: NgsiLdNotImplemented,
   504: NgsiLdGatewayTimeout,
 };
-
-/**
- * Construct and throw the appropriate {@link NgsiLdHttpError} subclass
- * for the given HTTP response.
- *
- * If the status code is not explicitly mapped, a plain {@link NgsiLdHttpError}
- * is thrown (generic 4xx/5xx).
- */
-export function throwHttpError(
-  response: Response,
-  body: ProblemDetails,
-): never {
-  const ErrorClass = STATUS_TO_ERROR[response.status];
-  if (ErrorClass) {
-    throw new ErrorClass(body, response);
-  }
-  throw new NgsiLdHttpError(response.status, body, response);
-}
-
-export { ProblemDetails };
