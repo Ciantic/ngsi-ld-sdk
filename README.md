@@ -14,7 +14,7 @@ however generation result was too verbose so I've continued to maintain it witho
 
 ```typescript
 interface TemperatureSensor extends schemas.Entity<"TemperatureSensor"> {
-  temperature: schemas.Property;
+  temperature: schemas.Property<number>;
 }
 await createEntity<TemperatureSensor>({
   "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",

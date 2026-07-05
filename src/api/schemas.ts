@@ -340,9 +340,9 @@ export type NotificationParamsStatus = "ok" | "failed";
 
 export type Path = string;
 
-export interface Property {
+export interface Property<TValue = DateTimeValue | JsonValue> {
   type: "Property";
-  value: DateTimeValue | JsonValue;
+  value: TValue;
   observedAt?: string;
   unitCode?: string;
   datasetId?: string;
@@ -350,7 +350,7 @@ export interface Property {
   readonly modifiedAt?: string;
   readonly deletedAt?: string;
   readonly instanceId?: string;
-  readonly previousValue?: DateTimeValue | JsonValue;
+  readonly previousValue?: TValue;
 }
 
 export interface Query {

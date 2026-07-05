@@ -11,7 +11,7 @@ beforeEach(cleanUpAll);
 describe("README examples", () => {
   it("createEntity example should work", async () => {
     interface TemperatureSensor extends schemas.Entity<"TemperatureSensor"> {
-      temperature: schemas.Property;
+      temperature: schemas.Property<number>;
     }
 
     await createEntity<TemperatureSensor>({
