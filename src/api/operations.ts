@@ -81,20 +81,7 @@ import {
 } from "./urls";
 
 import { fetcher } from "../fetcher";
-/**
- * 5.6.1 Create Entity
- *
- * This operation allows creating a new NGSI-LD Entity.
- * @summary Entity creation
 
- */
-/**
- * 5.6.1 Create Entity
- *
- * This operation allows creating a new NGSI-LD Entity.
- * @summary Entity creation
-
- */
 export const createEntity = <T extends Entity = Entity>(
   createEntityBody?: WithContext<NonReadonly<T>>,
   params?: Parameters<typeof getCreateEntityUrl>[0],
@@ -107,20 +94,7 @@ export const createEntity = <T extends Entity = Entity>(
     body: JSON.stringify(createEntityBody),
   });
 };
-/**
- * 5.7.2 Query Entities (excluding batch entity queries).
- *
- * This operation allows querying an NGSI-LD system.
- * @summary Query entities
 
- */
-/**
- * 5.7.2 Query Entities (excluding batch entity queries).
- *
- * This operation allows querying an NGSI-LD system.
- * @summary Query entities
-
- */
 export const queryEntity = <T extends Entity = Entity>(
   params?: Parameters<typeof getQueryEntityUrl>[0],
   options?: RequestInit,
@@ -131,17 +105,7 @@ export const queryEntity = <T extends Entity = Entity>(
     returnFormat: "body",
   });
 };
-/**
- * 5.7.2 Query Entities — with `Accept: application/geo+json`.
- *
- * Convenience wrapper around {@link queryEntity} that sets the Accept
- * header to application/geo+json.  The response data is narrowed to
- * `FeatureCollection` instead of `Entity[] | FeatureCollection`.
- *
- * This is not a separate operation in the NGSI-LD spec — it is the same
- * `queryEntity` operation with GeoJSON content negotiation.
- * @summary Query entities as GeoJSON
- */
+
 export const queryGeoEntity = <T extends Entity = Entity>(
   params?: Parameters<typeof getQueryEntityUrl>[0],
   options?: RequestInit,
@@ -153,20 +117,7 @@ export const queryGeoEntity = <T extends Entity = Entity>(
     returnFormat: "body",
   });
 };
-/**
- * 5.7.1 Retrieve Entity.
- *
- * This operation allows retrieving an NGSI-LD Entity.
- * @summary Entity retrieval by id
 
- */
-/**
- * 5.7.1 Retrieve Entity.
- *
- * This operation allows retrieving an NGSI-LD Entity.
- * @summary Entity retrieval by id
-
- */
 export const retrieveEntity = <T extends Entity = Entity>(
   entityId: string,
   params?: Parameters<typeof getRetrieveEntityUrl>[1],
@@ -178,17 +129,7 @@ export const retrieveEntity = <T extends Entity = Entity>(
     returnFormat: "body",
   });
 };
-/**
- * 5.7.1 Retrieve Entity — with `Accept: application/geo+json`.
- *
- * Convenience wrapper around {@link retrieveEntity} that sets the Accept
- * header to application/geo+json.  The response data is narrowed to
- * `Feature` instead of `Entity | Feature`.
- *
- * This is not a separate operation in the NGSI-LD spec — it is the same
- * `retrieveEntity` operation with GeoJSON content negotiation.
- * @summary Entity retrieval by id as GeoJSON
- */
+
 export const retrieveGeoEntity = <T extends Entity = Entity>(
   entityId: string,
   params?: Omit<Parameters<typeof getRetrieveEntityUrl>[1], "options">,
@@ -201,20 +142,7 @@ export const retrieveGeoEntity = <T extends Entity = Entity>(
     returnFormat: "body",
   });
 };
-/**
- * 5.6.6 Delete entity.
- *
- * This operation allows deleting an NGSI-LD Entity.
- * @summary Entity deletion by id
 
- */
-/**
- * 5.6.6 Delete entity.
- *
- * This operation allows deleting an NGSI-LD Entity.
- * @summary Entity deletion by id
-
- */
 export const deleteEntity = (
   entityId: string,
   params?: Parameters<typeof getDeleteEntityUrl>[1],
@@ -225,24 +153,7 @@ export const deleteEntity = (
     method: "DELETE",
   });
 };
-/**
- * 5.6.17 Merge Entity.
- *
- * This operation allows modification of an existing NGSI-LD Entity aligning to the JSON Merge Patch
- * processing rules defined in IETF RFC 7396 by adding new Attributes (Properties or Relationships)
- * or modifying or deleting existing Attributes associated with an existing Entity.
- * @summary Entity merge by id
 
- */
-
-/**
- * 5.6.17 Merge Entity.
- *
- * This operation allows modification of an existing NGSI-LD Entity aligning to the JSON Merge Patch
- * processing rules defined in IETF RFC 7396 by adding new Attributes (Properties or Relationships)
- * or modifying or deleting existing Attributes associated with an existing Entity.
- * @summary Entity merge by id
- */
 export const mergeEntity = <T extends Entity = Entity>(
   entityId: string,
 
@@ -258,22 +169,7 @@ export const mergeEntity = <T extends Entity = Entity>(
     body: JSON.stringify(mergeEntityBody),
   });
 };
-/**
- * 5.6.18 Replace Entity.
- *
- * This operation allows the modification of an existing NGSI-LD Entity
- * by replacing all of the Attributes (Properties or Relationships).
- * @summary Entity replacement by id
 
- */
-/**
- * 5.6.18 Replace Entity.
- *
- * This operation allows the modification of an existing NGSI-LD Entity
- * by replacing all of the Attributes (Properties or Relationships).
- * @summary Entity replacement by id
-
- */
 export const replaceEntity = <T extends Entity = Entity>(
   entityId: string,
   replaceEntityBody?: WithContext<NonReadonly<Partial<T>>>,
@@ -287,22 +183,7 @@ export const replaceEntity = <T extends Entity = Entity>(
     body: JSON.stringify(replaceEntityBody),
   });
 };
-/**
- * 5.6.3 Append Entity Attributes.
- *
- * This operation allows modifying an NGSI-LD Entity by adding
- * new attributes (Properties or Relationships).
- * @summary Append Attributes to Entity
 
- */
-/**
- * 5.6.3 Append Entity Attributes.
- *
- * This operation allows modifying an NGSI-LD Entity by adding
- * new attributes (Properties or Relationships).
- * @summary Append Attributes to Entity
-
- */
 export const appendAttrs = <T extends Entity = Entity>(
   entityId: string,
   appendAttrsBody?: WithContext<NonReadonly<Partial<T>>>,
@@ -316,22 +197,7 @@ export const appendAttrs = <T extends Entity = Entity>(
     body: JSON.stringify(appendAttrsBody),
   });
 };
-/**
- * 5.6.2 Update Entity Attributes.
- *
- * This operation allows modifying an existing NGSI-LD Entity by updating
- * already existing Attributes (Properties or Relationships).
- * @summary Update Attributes of an Entity
 
- */
-/**
- * 5.6.2 Update Entity Attributes.
- *
- * This operation allows modifying an existing NGSI-LD Entity by updating
- * already existing Attributes (Properties or Relationships).
- * @summary Update Attributes of an Entity
-
- */
 export const updateEntity = <T extends Entity = Entity>(
   entityId: string,
   updateEntityBody?: WithContext<NonReadonly<Partial<T>>>,
@@ -345,24 +211,7 @@ export const updateEntity = <T extends Entity = Entity>(
     body: JSON.stringify(updateEntityBody),
   });
 };
-/**
- * 5.6.4 Partial Attribute Update.
- *
- * This operation allows performing a partial update on an NGSI-LD Entity's Attribute (Property or Relationship).
- * A partial update only changes the elements provided in an Entity Fragment, leaving the rest as they are.
- * This operation supports the deletion of sub-Attributes but not the deletion of the whole Attribute itself.
- * @summary Partial Attribute Update
 
- */
-/**
- * 5.6.4 Partial Attribute Update.
- *
- * This operation allows performing a partial update on an NGSI-LD Entity's Attribute (Property or Relationship).
- * A partial update only changes the elements provided in an Entity Fragment, leaving the rest as they are.
- * This operation supports the deletion of sub-Attributes but not the deletion of the whole Attribute itself.
- * @summary Partial Attribute Update
-
- */
 export const updateAttrs = (
   entityId: string,
   attrId: string,
@@ -380,22 +229,7 @@ export const updateAttrs = (
     },
   );
 };
-/**
- * 5.6.5 Delete Entity Attribute.
- *
- * This operation allows deleting an NGSI-LD Entity's Attribute (Property or Relationship).
- * The Attribute itself and all its children shall be deleted.
- * @summary Attribute delete
 
- */
-/**
- * 5.6.5 Delete Entity Attribute.
- *
- * This operation allows deleting an NGSI-LD Entity's Attribute (Property or Relationship).
- * The Attribute itself and all its children shall be deleted.
- * @summary Attribute delete
-
- */
 export const deleteAttrs = (
   entityId: string,
   attrId: string,
@@ -410,22 +244,7 @@ export const deleteAttrs = (
     },
   );
 };
-/**
- * 5.6.19 Attribute Replace.
- *
- * This operation allows the replacement of a single Attribute (Property or Relationship)
- * within an NGSI-LD Entity.
- * @summary Attribute replace
 
- */
-/**
- * 5.6.19 Attribute Replace.
- *
- * This operation allows the replacement of a single Attribute (Property or Relationship)
- * within an NGSI-LD Entity.
- * @summary Attribute replace
-
- */
 export const replaceAttrs = (
   entityId: string,
   attrId: string,
@@ -443,20 +262,7 @@ export const replaceAttrs = (
     },
   );
 };
-/**
- * 5.9.2 Register Context Source.
- *
- * This operation allows registering a context source within an NGSI-LD system.
- * @summary Csource registration creation
 
- */
-/**
- * 5.9.2 Register Context Source.
- *
- * This operation allows registering a context source within an NGSI-LD system.
- * @summary Csource registration creation
-
- */
 export const createCSR = (
   createCSRBody?: WithContext<NonReadonly<CsourceRegistration>>,
   options?: RequestInit,
@@ -469,44 +275,7 @@ export const createCSR = (
     returnFormat: "body",
   });
 };
-/**
- * 5.10.2 Query Context Source Registrations.
- *
- * This operation allows discovering context source registrations from an NGSI-LD system.
- * The behaviour of the discovery of context source registrations differs significantly from
- * the querying of entities as described in clause 5.7.2. The approach is that the client
- * submits a query for entities as described in clause 5.7.2, but instead of receiving
- * the Entity information, it receives a list of Context Source Registrations describing
- * Context Sources that possibly have some of the requested Entity information. This means
- * that the requested Entities and Attributes are matched against the 'information' property
- * as described in clause 5.12.
- *
- * If no temporal query is present, only Context Source Registrations for Context Sources
- * providing latest information, i.e. without specified time intervals, are considered.
- * If a temporal query is present only Context Source Registrations with matching time intervals,
- * i.e. observationInterval or managementInterval, are considered.
- * @summary Discover Csource registrations
 
- */
-/**
- * 5.10.2 Query Context Source Registrations.
- *
- * This operation allows discovering context source registrations from an NGSI-LD system.
- * The behaviour of the discovery of context source registrations differs significantly from
- * the querying of entities as described in clause 5.7.2. The approach is that the client
- * submits a query for entities as described in clause 5.7.2, but instead of receiving
- * the Entity information, it receives a list of Context Source Registrations describing
- * Context Sources that possibly have some of the requested Entity information. This means
- * that the requested Entities and Attributes are matched against the 'information' property
- * as described in clause 5.12.
- *
- * If no temporal query is present, only Context Source Registrations for Context Sources
- * providing latest information, i.e. without specified time intervals, are considered.
- * If a temporal query is present only Context Source Registrations with matching time intervals,
- * i.e. observationInterval or managementInterval, are considered.
- * @summary Discover Csource registrations
-
- */
 export const queryCSR = (
   params?: Parameters<typeof getQueryCSRUrl>[0],
   options?: RequestInit,
@@ -517,20 +286,7 @@ export const queryCSR = (
     returnFormat: "body",
   });
 };
-/**
- * 5.10.1 Retrieve Context Source Registration.
- *
- * This operation allows retrieving a specific context source registration from an NGSI-LD system.
- * @summary Csource registration retrieval by id
 
- */
-/**
- * 5.10.1 Retrieve Context Source Registration.
- *
- * This operation allows retrieving a specific context source registration from an NGSI-LD system.
- * @summary Csource registration retrieval by id
-
- */
 export const retrieveCSR = (
   registrationId: string,
   params?: Parameters<typeof getRetrieveCSRUrl>[1],
@@ -545,20 +301,7 @@ export const retrieveCSR = (
     },
   );
 };
-/**
- * 5.9.3 Update Context Source Registration.
- *
- * This operation allows updating a Context Source Registration in an NGSI-LD system.
- * @summary Csource registration update by id
 
- */
-/**
- * 5.9.3 Update Context Source Registration.
- *
- * This operation allows updating a Context Source Registration in an NGSI-LD system.
- * @summary Csource registration update by id
-
- */
 export const updateCSR = (
   registrationId: string,
   updateCSRBody?: WithContext<NonReadonly<Partial<CsourceRegistration>>>,
@@ -572,20 +315,7 @@ export const updateCSR = (
     returnFormat: "body",
   });
 };
-/**
- * 5.9.4 Delete Context Source Registration.
- *
- * This operation allows deleting a Context Source Registration from an NGSI-LD system.
- * @summary Csource registration deletion by id
 
- */
-/**
- * 5.9.4 Delete Context Source Registration.
- *
- * This operation allows deleting a Context Source Registration from an NGSI-LD system.
- * @summary Csource registration deletion by id
-
- */
 export const deleteCSR = (registrationId: string, options?: RequestInit) => {
   return fetcher<void>(getDeleteCSRUrl(registrationId), {
     ...options,
@@ -593,20 +323,7 @@ export const deleteCSR = (registrationId: string, options?: RequestInit) => {
     returnFormat: "body",
   });
 };
-/**
- * 5.8.1 Create subscription.
- *
- * This operation allows creating a new subscription.
- * @summary Create Subscription
 
- */
-/**
- * 5.8.1 Create subscription.
- *
- * This operation allows creating a new subscription.
- * @summary Create Subscription
-
- */
 export const createSubscription = (
   subscriptionBody?: WithContext<Subscription>,
   params?: Parameters<typeof getCreateSubscriptionUrl>[0],
@@ -620,20 +337,7 @@ export const createSubscription = (
     returnFormat: "body",
   });
 };
-/**
- * 5.8.4 Query Subscriptions.
- *
- * This operation allows querying existing Subscriptions.
- * @summary Retrieve list of Subscriptions
 
- */
-/**
- * 5.8.4 Query Subscriptions.
- *
- * This operation allows querying existing Subscriptions.
- * @summary Retrieve list of Subscriptions
-
- */
 export const querySubscription = (
   params?: Parameters<typeof getQuerySubscriptionUrl>[0],
   options?: RequestInit,
@@ -647,20 +351,7 @@ export const querySubscription = (
     },
   );
 };
-/**
- * 5.8.3 Retrieve Subscription.
- *
- * This operation allows retrieving an existing subscription.
- * @summary Subscription retrieval by id
 
- */
-/**
- * 5.8.3 Retrieve Subscription.
- *
- * This operation allows retrieving an existing subscription.
- * @summary Subscription retrieval by id
-
- */
 export const retrieveSubscription = (
   subscriptionId: string,
   params?: Parameters<typeof getRetrieveSubscriptionUrl>[1],
@@ -675,20 +366,7 @@ export const retrieveSubscription = (
     },
   );
 };
-/**
- * 5.8.2 Update Subscription.
- *
- * This operation allows updating an existing subscription.
- * @summary Subscription update by id
 
- */
-/**
- * 5.8.2 Update Subscription.
- *
- * This operation allows updating an existing subscription.
- * @summary Subscription update by id
-
- */
 export const updateSubscription = (
   subscriptionId: string,
   subscriptionFragmentBody?: WithContext<Partial<Subscription>>,
@@ -703,20 +381,7 @@ export const updateSubscription = (
     returnFormat: "body",
   });
 };
-/**
- * 5.8.5 Delete Subscription.
- *
- * This operation allows deleting an existing subscription.
- * @summary Subscription deletion by id
 
- */
-/**
- * 5.8.5 Delete Subscription.
- *
- * This operation allows deleting an existing subscription.
- * @summary Subscription deletion by id
-
- */
 export const deleteSubscription = (
   subscriptionId: string,
   params?: Parameters<typeof getDeleteSubscriptionUrl>[1],
@@ -728,20 +393,7 @@ export const deleteSubscription = (
     returnFormat: "body",
   });
 };
-/**
- * 5.11.2 Create Context Source Registration Subscription.
- *
- * This operation allows creating a new Context Source Registration Subscription.
- * @summary Create subscription to Csource registration
 
- */
-/**
- * 5.11.2 Create Context Source Registration Subscription.
- *
- * This operation allows creating a new Context Source Registration Subscription.
- * @summary Create subscription to Csource registration
-
- */
 export const createCSRSubscription = (
   subscriptionBody?: WithContext<Subscription>,
   options?: RequestInit,
@@ -754,20 +406,7 @@ export const createCSRSubscription = (
     returnFormat: "body",
   });
 };
-/**
- * 5.11.5 Query Context Source Registration Subscriptions.
- *
- * This operation allows querying existing Context Source Registration Subscriptions.
- * @summary Retrieval of list of subscriptions to Csource registrations
 
- */
-/**
- * 5.11.5 Query Context Source Registration Subscriptions.
- *
- * This operation allows querying existing Context Source Registration Subscriptions.
- * @summary Retrieval of list of subscriptions to Csource registrations
-
- */
 export const queryCSRSubscription = (
   params?: Parameters<typeof getQueryCSRSubscriptionUrl>[0],
   options?: RequestInit,
@@ -781,20 +420,7 @@ export const queryCSRSubscription = (
     },
   );
 };
-/**
- * 5.11.4 Retrieve Context Source Registration Subscription.
- *
- * This operation allows retrieving an existing Context Source Registration Subscription.
- * @summary Csource registration subscription update by id
 
- */
-/**
- * 5.11.4 Retrieve Context Source Registration Subscription.
- *
- * This operation allows retrieving an existing Context Source Registration Subscription.
- * @summary Csource registration subscription update by id
-
- */
 export const retrieveCSRSubscription = (
   subscriptionId: string,
   params?: Parameters<typeof getRetrieveCSRSubscriptionUrl>[1],
@@ -809,20 +435,7 @@ export const retrieveCSRSubscription = (
     },
   );
 };
-/**
- * 5.11.3 Update Context Source Registration Subscription.
- *
- * This operation allows updating an existing Context Source Registration Subscription.
- * @summary Csource registration subscription update by id
 
- */
-/**
- * 5.11.3 Update Context Source Registration Subscription.
- *
- * This operation allows updating an existing Context Source Registration Subscription.
- * @summary Csource registration subscription update by id
-
- */
 export const updateCSRSubscription = (
   subscriptionId: string,
   subscriptionFragmentBody?: WithContext<Partial<Subscription>>,
@@ -836,20 +449,7 @@ export const updateCSRSubscription = (
     returnFormat: "body",
   });
 };
-/**
- * 5.11.6 Delete Context Source Registration Subscription.
- *
- * This operation allows deleting an existing Context Source Registration Subscription.
- * @summary Csource registration subscription deletion by id
 
- */
-/**
- * 5.11.6 Delete Context Source Registration Subscription.
- *
- * This operation allows deleting an existing Context Source Registration Subscription.
- * @summary Csource registration subscription deletion by id
-
- */
 export const deleteCSRSubscription = (
   subscriptionId: string,
   options?: RequestInit,
@@ -860,20 +460,7 @@ export const deleteCSRSubscription = (
     returnFormat: "body",
   });
 };
-/**
- * 5.6.7 Batch Entity Creation.
- *
- * This operation allows creating a batch of NGSI-LD Entities.
- * @summary Batch Entity Creation
 
- */
-/**
- * 5.6.7 Batch Entity Creation.
- *
- * This operation allows creating a batch of NGSI-LD Entities.
- * @summary Batch Entity Creation
-
- */
 export const createBatch = <T extends Entity = Entity>(
   createBatchBodyItem?: NonReadonly<MaybeContext<T>>[],
   params?: Parameters<typeof getCreateBatchUrl>[0],
@@ -886,22 +473,7 @@ export const createBatch = <T extends Entity = Entity>(
     body: JSON.stringify(createBatchBodyItem),
   });
 };
-/**
- * 5.6.8 Batch Entity Upsert.
- *
- * This operation allows creating a batch of NGSI-LD Entities, updating each of them if they already existed.
- * In some database jargon this kind of operation is known as "upsert".
- * @summary Batch Entity Creation or Update (Upsert)
 
- */
-/**
- * 5.6.8 Batch Entity Upsert.
- *
- * This operation allows creating a batch of NGSI-LD Entities, updating each of them if they already existed.
- * In some database jargon this kind of operation is known as "upsert".
- * @summary Batch Entity Creation or Update (Upsert)
-
- */
 export const upsertBatch = <T extends Entity = Entity>(
   upsertBatchBodyItem?: NonReadonly<MaybeContext<T>>[],
   params?: Parameters<typeof getUpsertBatchUrl>[0],
@@ -914,20 +486,7 @@ export const upsertBatch = <T extends Entity = Entity>(
     body: JSON.stringify(upsertBatchBodyItem),
   });
 };
-/**
- * 5.6.9 Batch Entity Update.
- *
- * This operation allows updating a batch of NGSI-LD Entities.
- * @summary Batch Entity Update
 
- */
-/**
- * 5.6.9 Batch Entity Update.
- *
- * This operation allows updating a batch of NGSI-LD Entities.
- * @summary Batch Entity Update
-
- */
 export const updateBatch = <T extends Entity = Entity>(
   updateBatchBodyItem?: NonReadonly<MaybeContext<T>>[],
   params?: Parameters<typeof getUpdateBatchUrl>[0],
@@ -940,20 +499,7 @@ export const updateBatch = <T extends Entity = Entity>(
     body: JSON.stringify(updateBatchBodyItem),
   });
 };
-/**
- * 5.6.10 Batch Entity Delete.
- *
- * This operation allows deleting a batch of NGSI-LD Entities.
- * @summary Batch Entity Delete
 
- */
-/**
- * 5.6.10 Batch Entity Delete.
- *
- * This operation allows deleting a batch of NGSI-LD Entities.
- * @summary Batch Entity Delete
-
- */
 export const deleteBatch = (
   deleteBatchBody?: string[],
   params?: Parameters<typeof getDeleteBatchUrl>[0],
@@ -966,20 +512,7 @@ export const deleteBatch = (
     body: JSON.stringify(deleteBatchBody),
   });
 };
-/**
- * 5.7.2 Query Entity (batch entity queries only).
- *
- * This operation allows querying an NGSI-LD system.
- * @summary Query entities based on POST
 
- */
-/**
- * 5.7.2 Query Entity (batch entity queries only).
- *
- * This operation allows querying an NGSI-LD system.
- * @summary Query entities based on POST
-
- */
 export const queryBatch = <T extends Entity = Entity>(
   query?: Query,
   params?: Parameters<typeof getQueryBatchUrl>[0],
@@ -993,17 +526,7 @@ export const queryBatch = <T extends Entity = Entity>(
     returnFormat: "body",
   });
 };
-/**
- * 5.7.2 Query Entity (batch) — with `Accept: application/geo+json`.
- *
- * Convenience wrapper around {@link queryBatch} that sets the Accept
- * header to application/geo+json.  The response data is narrowed to
- * `FeatureCollection` instead of `Entity[] | FeatureCollection`.
- *
- * This is not a separate operation in the NGSI-LD spec — it is the same
- * `queryBatch` operation with GeoJSON content negotiation.
- * @summary Query entities (batch) as GeoJSON
- */
+
 export const queryGeoBatch = <T extends Entity = Entity>(
   query?: Query,
   params?: Parameters<typeof getQueryBatchUrl>[0],
@@ -1021,24 +544,7 @@ export const queryGeoBatch = <T extends Entity = Entity>(
     returnFormat: "body",
   });
 };
-/**
- * 5.6.20 Batch Entity Merge.
- *
- * This operation allows modification of a batch of NGSI-LD Entities according to the JSON Merge Patch
- * processing rules defined in IETF RFC 7396 by adding new attributes (Properties or Relationships)
- * or modifying or deleting existing attributes associated with an existing Entity.
- * @summary Batch Entity Merge
 
- */
-/**
- * 5.6.20 Batch Entity Merge.
- *
- * This operation allows modification of a batch of NGSI-LD Entities according to the JSON Merge Patch
- * processing rules defined in IETF RFC 7396 by adding new attributes (Properties or Relationships)
- * or modifying or deleting existing attributes associated with an existing Entity.
- * @summary Batch Entity Merge
-
- */
 export const mergeBatch = <T extends Entity = Entity>(
   mergeBatchBodyItem?: NonReadonly<MaybeContext<T>>[],
   params?: Parameters<typeof getMergeBatchUrl>[0],
@@ -1051,22 +557,7 @@ export const mergeBatch = <T extends Entity = Entity>(
     body: JSON.stringify(mergeBatchBodyItem),
   });
 };
-/**
- * 5.6.11 Create or Update Temporal Representation of an Entity.
- *
- * This operation allows creating or updating (by adding new Attribute instances)
- * a Temporal Representation of an Entity.
- * @summary Temporal Representation of Entity creation
 
- */
-/**
- * 5.6.11 Create or Update Temporal Representation of an Entity.
- *
- * This operation allows creating or updating (by adding new Attribute instances)
- * a Temporal Representation of an Entity.
- * @summary Temporal Representation of Entity creation
-
- */
 export const upsertTemporal = <T extends EntityTemporal = EntityTemporal>(
   entityTemporalBody?: WithContext<T>,
   params?: Parameters<typeof getUpsertTemporalUrl>[0],
@@ -1079,26 +570,7 @@ export const upsertTemporal = <T extends EntityTemporal = EntityTemporal>(
     body: JSON.stringify(entityTemporalBody),
   });
 };
-/**
- * 5.7.4 Query Temporal Evolution of Entities.
- *
- * This operation allows querying the temporal evolution of Entities present in an NGSI-LD system.
- * It is similar to the operation defined by clause 5.7.2 (Query Entities) with the addition of a temporal query.
- *
- * *The query parameters timerel and timeAt are required.
- * @summary Query temporal evolution of Entities
 
- */
-/**
- * 5.7.4 Query Temporal Evolution of Entities.
- *
- * This operation allows querying the temporal evolution of Entities present in an NGSI-LD system.
- * It is similar to the operation defined by clause 5.7.2 (Query Entities) with the addition of a temporal query.
- *
- * *The query parameters timerel and timeAt are required.
- * @summary Query temporal evolution of Entities
-
- */
 export const queryTemporal = <T extends EntityTemporal = EntityTemporal>(
   params?: Parameters<typeof getQueryTemporalUrl>[0],
   options?: RequestInit,
@@ -1109,20 +581,7 @@ export const queryTemporal = <T extends EntityTemporal = EntityTemporal>(
     returnFormat: "body",
   });
 };
-/**
- * 5.7.3 Retrieve Temporal Evolution of an Entity.
- *
- * This operation allows retrieving the temporal evolution of an NGSI-LD Entity.
- * @summary Temporal Representation of Entity retrieval by id
 
- */
-/**
- * 5.7.3 Retrieve Temporal Evolution of an Entity.
- *
- * This operation allows retrieving the temporal evolution of an NGSI-LD Entity.
- * @summary Temporal Representation of Entity retrieval by id
-
- */
 export const retrieveTemporal = <T extends EntityTemporal = EntityTemporal>(
   entityId: string,
   params?: Parameters<typeof getRetrieveTemporalUrl>[1],
@@ -1134,20 +593,7 @@ export const retrieveTemporal = <T extends EntityTemporal = EntityTemporal>(
     returnFormat: "body",
   });
 };
-/**
- * 5.6.16 Delete Temporal Representation of an Entity.
- *
- * This operation allows deleting the Temporal Representation of an Entity.
- * @summary Temporal Representation of Entity deletion by id
 
- */
-/**
- * 5.6.16 Delete Temporal Representation of an Entity.
- *
- * This operation allows deleting the Temporal Representation of an Entity.
- * @summary Temporal Representation of Entity deletion by id
-
- */
 export const deleteTemporal = (
   entityId: string,
   params?: Parameters<typeof getDeleteTemporalUrl>[1],
@@ -1159,20 +605,7 @@ export const deleteTemporal = (
     returnFormat: "body",
   });
 };
-/**
- * 5.6.12 Add Attributes to Temporal Representation of an Entity.
- *
- * This operation allows modifying a Temporal Representation of an Entity by adding new Attribute instances.
- * @summary Temporal Representation of Entity Attribute instance addition
 
- */
-/**
- * 5.6.12 Add Attributes to Temporal Representation of an Entity.
- *
- * This operation allows modifying a Temporal Representation of an Entity by adding new Attribute instances.
- * @summary Temporal Representation of Entity Attribute instance addition
-
- */
 export const appendAttrsTemporal = <T extends EntityTemporal = EntityTemporal>(
   entityId: string,
   entityTemporalFragmentBody?: WithContext<Partial<T>>,
@@ -1187,22 +620,7 @@ export const appendAttrsTemporal = <T extends EntityTemporal = EntityTemporal>(
     returnFormat: "body",
   });
 };
-/**
- * 5.6.13 Delete Attributes from Temporal Representation of an Entity.
- *
- * This operation allows deleting an Attribute (Property or Relationship) of the Temporal Representation of an Entity.
- * The Attribute itself and all its children shall be deleted.
- * @summary Attribute from Temporal Representation of Entity deletion
 
- */
-/**
- * 5.6.13 Delete Attributes from Temporal Representation of an Entity.
- *
- * This operation allows deleting an Attribute (Property or Relationship) of the Temporal Representation of an Entity.
- * The Attribute itself and all its children shall be deleted.
- * @summary Attribute from Temporal Representation of Entity deletion
-
- */
 export const deleteAttrsTemporal = (
   entityId: string,
   attrId: string,
@@ -1215,28 +633,7 @@ export const deleteAttrsTemporal = (
     returnFormat: "body",
   });
 };
-/**
- * 5.6.14 Partial Update Attribute instance in Temporal Representation of an Entity.
- *
- * This operation allows modifying a specific Attribute (Property or Relationship) instance,
- * identified by its instanceId, of a Temporal Representation of an Entity.
- *
- * This operation enables the correction of wrong information that could have been previously added
- * to the Temporal Representation of an Entity.
- * @summary Attribute Instance update
 
- */
-/**
- * 5.6.14 Partial Update Attribute instance in Temporal Representation of an Entity.
- *
- * This operation allows modifying a specific Attribute (Property or Relationship) instance,
- * identified by its instanceId, of a Temporal Representation of an Entity.
- *
- * This operation enables the correction of wrong information that could have been previously added
- * to the Temporal Representation of an Entity.
- * @summary Attribute Instance update
-
- */
 export const updateAttrsTemporal = (
   entityId: string,
   attrId: string,
@@ -1258,28 +655,7 @@ export const updateAttrsTemporal = (
     },
   );
 };
-/**
- * 5.6.15 Delete Attribute Instance from Temporal Representation of an Entity.
- *
- * This operation allows deleting one Attribute instance (Property or Relationship),
- * identified by its instanceId, of a Temporal Representation of an Entity.
- * The Attribute itself and all its child elements shall be deleted. This operation enables
- * the removal of individual Attribute instances that could have been previously added
- * to the Temporal Representation of an Entity.
- * @summary Attribute Instance deletion by instance id
 
- */
-/**
- * 5.6.15 Delete Attribute Instance from Temporal Representation of an Entity.
- *
- * This operation allows deleting one Attribute instance (Property or Relationship),
- * identified by its instanceId, of a Temporal Representation of an Entity.
- * The Attribute itself and all its child elements shall be deleted. This operation enables
- * the removal of individual Attribute instances that could have been previously added
- * to the Temporal Representation of an Entity.
- * @summary Attribute Instance deletion by instance id
-
- */
 export const deleteAttrInstanceTemporal = (
   entityId: string,
   attrId: string,
@@ -1296,22 +672,7 @@ export const deleteAttrInstanceTemporal = (
     },
   );
 };
-/**
- * 5.7.4 Query Temporal Evolution of Entities.
- *
- * This operation allows querying the temporal evolution of Entities present in an NGSI-LD system.
- * It is similar to the operation defined by clause 5.7.2 (Query Entities) with the addition of a temporal query.
- * @summary Temporal Representation of Entity Query based on POST
 
- */
-/**
- * 5.7.4 Query Temporal Evolution of Entities.
- *
- * This operation allows querying the temporal evolution of Entities present in an NGSI-LD system.
- * It is similar to the operation defined by clause 5.7.2 (Query Entities) with the addition of a temporal query.
- * @summary Temporal Representation of Entity Query based on POST
-
- */
 export const temporalQueryBatch = <T extends EntityTemporal = EntityTemporal>(
   queryTemporalBody: QueryTemporal,
   params?: Parameters<typeof getTemporalQueryBatchUrl>[0],
@@ -1325,32 +686,7 @@ export const temporalQueryBatch = <T extends EntityTemporal = EntityTemporal>(
     returnFormat: "body",
   });
 };
-/**
- * 5.7.5 Retrieve Available Entity Types.
- *
- * This operation allows retrieving a list of NGSI-LD entity types for which
- * entity instances exist within the NGSI-LD system.
- *
- * 5.7.6  Retrieve Details of Available Entity Types.
- *
- * This operation allows retrieving a list with a detailed representation of
- * NGSI-LD entity types for which entity instances exist within the NGSI-LD system.
- * @summary Retrieve available entity types
 
- */
-/**
- * 5.7.5 Retrieve Available Entity Types.
- *
- * This operation allows retrieving a list of NGSI-LD entity types for which
- * entity instances exist within the NGSI-LD system.
- *
- * 5.7.6  Retrieve Details of Available Entity Types.
- *
- * This operation allows retrieving a list with a detailed representation of
- * NGSI-LD entity types for which entity instances exist within the NGSI-LD system.
- * @summary Retrieve available entity types
-
- */
 export const retrieveEntityTypes = (
   params?: Parameters<typeof getRetrieveEntityTypesUrl>[0],
   options?: RequestInit,
@@ -1364,18 +700,7 @@ export const retrieveEntityTypes = (
     },
   );
 };
-/**
- * 5.7.7 Retrieve Available Entity Type information.
- *
- * This operation allows retrieving detailed entity type information about a specified NGSI-LD entity
- * type for which entity instances exist within the NGSI-LD system. The detailed representation includes
- * the type name (as short name if available in the provided @context), the count of available entity
- * instances and details about attributes that existing instances of this entity type have, including
- * their name (as short name if available in the provided @context) and a list of types the attribute
- * can have (e.g. Property, Relationship or GeoProperty).
- * @summary Details about available entity type
 
- */
 export const retrieveEntityTypeInfo = (
   type: string,
   params?: Parameters<typeof getRetrieveEntityTypeInfoUrl>[1],
@@ -1390,32 +715,7 @@ export const retrieveEntityTypeInfo = (
     },
   );
 };
-/**
- * 5.7.8 Retrieve Available Attributes.
- *
- * This operation allows retrieving a list of NGSI-LD attributes that belong to
- * entity instances existing within the NGSI- LD system.
- *
- * 5.7.9 Retrieve Details of Available Attributes.
- *
- * This operation allows retrieving a list with a detailed representation of NGSI-LD
- * attributes that belong to entity instances existing within the NGSI-LD system.
- * @summary Available attributes
 
- */
-/**
- * 5.7.8 Retrieve Available Attributes.
- *
- * This operation allows retrieving a list of NGSI-LD attributes that belong to
- * entity instances existing within the NGSI- LD system.
- *
- * 5.7.9 Retrieve Details of Available Attributes.
- *
- * This operation allows retrieving a list with a detailed representation of NGSI-LD
- * attributes that belong to entity instances existing within the NGSI-LD system.
- * @summary Available attributes
-
- */
 export const retrieveAttrTypes = (
   params?: Parameters<typeof getRetrieveAttrTypesUrl>[0],
   options?: RequestInit,
@@ -1429,28 +729,7 @@ export const retrieveAttrTypes = (
     },
   );
 };
-/**
- * 5.7.10 Retrieve Available Attribute Information.
- *
- * This operation allows retrieving detailed attribute information about a specified NGSI-LD attribute
- * that belongs to entity instances existing within the NGSI-LD system. The detailed representation includes
- * the attribute name (as short name if available in the provided @context) and the type names
- * for which entity instances exist that have the respective attribute, a count of available
- * attribute instances and a list of types the attribute can have (e.g. Property, Relationship or GeoProperty).
- * @summary Details about available attribute
 
- */
-/**
- * 5.7.10 Retrieve Available Attribute Information.
- *
- * This operation allows retrieving detailed attribute information about a specified NGSI-LD attribute
- * that belongs to entity instances existing within the NGSI-LD system. The detailed representation includes
- * the attribute name (as short name if available in the provided @context) and the type names
- * for which entity instances exist that have the respective attribute, a count of available
- * attribute instances and a list of types the attribute can have (e.g. Property, Relationship or GeoProperty).
- * @summary Details about available attribute
-
- */
 export const retrieveAttrTypeInfo = (
   attrId: string,
   params?: Parameters<typeof getRetrieveAttrTypeInfoUrl>[1],
@@ -1465,22 +744,7 @@ export const retrieveAttrTypeInfo = (
     },
   );
 };
-/**
- * 5.13.2 Add @context.
- *
- * With this operation, a client can ask the Broker to store the full content
- * of a specific @context, by giving it to the Broker.
- * @summary Add a user @context to the internal cache
 
- */
-/**
- * 5.13.2 Add @context.
- *
- * With this operation, a client can ask the Broker to store the full content
- * of a specific @context, by giving it to the Broker.
- * @summary Add a user @context to the internal cache
-
- */
 export const createContext = (
   createContextBody?: { "@context": LdContext },
   options?: RequestInit,
@@ -1493,38 +757,7 @@ export const createContext = (
     returnFormat: "body",
   });
 };
-/**
- * 5.13.3 List @contexts.
- *
- * With this operation a client can obtain a list of URLs that represent all of the @contexts
- * stored in the local context store of the Broker. Each URL can be used to download the
- * corresponding @context, and, in case the @context's kind is "Cached", it shall be
- * the original URL the Broker downloaded the @context from.
- *
- * In case a "details" flag is set to true, the client obtains a list of JSON objects,
- * each representing information (metadata) about an @context currently stored by the Broker.
- * Each JSON object contains information about the @context's original URL (if any), its
- * local identifier in the Broker's storage, its kind ("Cached", "Hosted" and "ImplicitlyCreated"),
- * its creation timestamp, its expiry date (if "Cached"), and additional optional information.
- * @summary List all cached @contexts
 
- */
-/**
- * 5.13.3 List @contexts.
- *
- * With this operation a client can obtain a list of URLs that represent all of the @contexts
- * stored in the local context store of the Broker. Each URL can be used to download the
- * corresponding @context, and, in case the @context's kind is "Cached", it shall be
- * the original URL the Broker downloaded the @context from.
- *
- * In case a "details" flag is set to true, the client obtains a list of JSON objects,
- * each representing information (metadata) about an @context currently stored by the Broker.
- * Each JSON object contains information about the @context's original URL (if any), its
- * local identifier in the Broker's storage, its kind ("Cached", "Hosted" and "ImplicitlyCreated"),
- * its creation timestamp, its expiry date (if "Cached"), and additional optional information.
- * @summary List all cached @contexts
-
- */
 export const listContexts = (
   params?: Parameters<typeof getListContextsUrl>[0],
   options?: RequestInit,
@@ -1535,24 +768,7 @@ export const listContexts = (
     returnFormat: "body",
   });
 };
-/**
- * 5.13.4 Serve @context.
- *
- * With this operation a client can obtain the full content of a specific @context
- * (only for @contexts of kind "Hosted" or "ImplicitlyCreated"), which is currently
- * stored in the Broker's internal storage, or its metadata (for all kinds of stored @contexts).
- * @summary Serve one specific user @context
 
- */
-/**
- * 5.13.4 Serve @context.
- *
- * With this operation a client can obtain the full content of a specific @context
- * (only for @contexts of kind "Hosted" or "ImplicitlyCreated"), which is currently
- * stored in the Broker's internal storage, or its metadata (for all kinds of stored @contexts).
- * @summary Serve one specific user @context
-
- */
 export const retrieveContext = (
   contextId: string,
   params?: Parameters<typeof getRetrieveContextUrl>[1],
@@ -1567,30 +783,7 @@ export const retrieveContext = (
     },
   );
 };
-/**
- * 5.13.5 Delete and Reload @context
- *
- * With this operation, a client supplies a local identifier to the Broker, indicating
- * a stored @context, that the Broker shall remove from its storage. For @contexts of
- * kind "Cached" this can also be the original URL the Broker downloaded the @context from.
- * If the entry in the local storage that corresponds to the identifier is itself
- * an array of @contexts, this operation will not delete the children,
- * i.e. the @contexts in the array, but just the entry.
- * @summary Delete one specific @context from internal cache, possibly re-inserting a freshly downloaded copy of it
 
- */
-/**
- * 5.13.5 Delete and Reload @context
- *
- * With this operation, a client supplies a local identifier to the Broker, indicating
- * a stored @context, that the Broker shall remove from its storage. For @contexts of
- * kind "Cached" this can also be the original URL the Broker downloaded the @context from.
- * If the entry in the local storage that corresponds to the identifier is itself
- * an array of @contexts, this operation will not delete the children,
- * i.e. the @contexts in the array, but just the entry.
- * @summary Delete one specific @context from internal cache, possibly re-inserting a freshly downloaded copy of it
-
- */
 export const deleteContext = (
   contextId: string,
   params?: Parameters<typeof getDeleteContextUrl>[1],
@@ -1602,20 +795,7 @@ export const deleteContext = (
     returnFormat: "body",
   });
 };
-/**
- * 5.14.1 Retrieve EntityMap.
- *
- * With this operation a client can obtain a cached EntityMap which is currently stored in the broker's internal storage, or memory.
- * @summary EntityMap Retrieval by id
 
- */
-/**
- * 5.14.1 Retrieve EntityMap.
- *
- * With this operation a client can obtain a cached EntityMap which is currently stored in the broker's internal storage, or memory.
- * @summary EntityMap Retrieval by id
-
- */
 export const retrieveEntityMap = (
   entityMapId: string,
   options?: RequestInit,
@@ -1629,22 +809,7 @@ export const retrieveEntityMap = (
     },
   );
 };
-/**
- * 5.14.2 Update EntityMap.
- *
- * This operation allows performing a partial update on an NGSI-LD EntityMap. A partial update only changes the
- * elements provided in the EntityMap, leaving the rest as they are.
- * @summary EntityMap Update by id
 
- */
-/**
- * 5.14.2 Update EntityMap.
- *
- * This operation allows performing a partial update on an NGSI-LD EntityMap. A partial update only changes the
- * elements provided in the EntityMap, leaving the rest as they are.
- * @summary EntityMap Update by id
-
- */
 export const updateEntityMap = (
   entityMapId: string,
   updateEntityMapBody?: WithContext<NonReadonly<EntityMap>>,
@@ -1658,20 +823,7 @@ export const updateEntityMap = (
     returnFormat: "body",
   });
 };
-/**
- * 5.14.3 Delete EntityMap.
- *
- * This operation allows deleting an NGSI-LD EntityMap.
- * @summary EntityMap Deletion by id
 
- */
-/**
- * 5.14.3 Delete EntityMap.
- *
- * This operation allows deleting an NGSI-LD EntityMap.
- * @summary EntityMap Deletion by id
-
- */
 export const deleteEntityMap = (entityMapId: string, options?: RequestInit) => {
   return fetcher<void>(getDeleteEntityMapUrl(entityMapId), {
     ...options,
@@ -1679,22 +831,7 @@ export const deleteEntityMap = (entityMapId: string, options?: RequestInit) => {
     returnFormat: "body",
   });
 };
-/**
- * 5.15.1 Retrieve Context Source Identity Information.
- *
- * With this operation, a client can obtain Context Source identity information which uniquely defines the Context Source itself.
- * In the multi-tenancy use case (see clause 4.14), a client can obtain identify information about a specific Tenant within a Context Source.
- * @summary Context Source Identity Retrieval
 
- */
-/**
- * 5.15.1 Retrieve Context Source Identity Information.
- *
- * With this operation, a client can obtain Context Source identity information which uniquely defines the Context Source itself.
- * In the multi-tenancy use case (see clause 4.14), a client can obtain identify information about a specific Tenant within a Context Source.
- * @summary Context Source Identity Retrieval
-
- */
 export const retrieveCSIdentityInfo = (options?: RequestInit) => {
   return fetcher<MaybeContext<ContextSourceIdentity>>(
     getRetrieveCSIdentityInfoUrl(),
