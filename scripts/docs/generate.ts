@@ -141,9 +141,14 @@ async function generateOperationsTable(): Promise<string> {
   ];
 
   for (const name of sdkExports) {
-    const spec = specByOperationId.get(name);
+    // Geo helpers (queryGeoEntity, queryGeoBatch, etc.) are not separate spec
+    // operations — they call the same endpoint as their non-Geo counterpart
+    // but with Accept: application/geo+json. Look up the base operation.
+    const baseName = name.replace("Geo", "");
+    const spec = specByOperationId.get(name) ?? specByOperationId.get(baseName);
+    const note = name !== baseName ? " application/geo+json" : "";
     rows.push(
-      `| \`${name}\` | \`${spec?.method ?? "—"}\` | \`${spec?.path ?? "—"}\` |`,
+      `| \`${name}\` | \`${spec?.method ?? "—"}\` | \`${spec?.path ?? "—"}\` ${note} |`,
     );
   }
 
