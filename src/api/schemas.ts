@@ -297,20 +297,16 @@ export interface GeoQuery {
   geoproperty?: string;
 }
 
-export type LanguagePropertyLanguageMap = { [key: string]: unknown };
-
-export type LanguagePropertyPreviousLanguageMap = { [key: string]: unknown };
-
 export interface LanguageProperty {
   type: "LanguageProperty";
-  languageMap?: LanguagePropertyLanguageMap;
+  languageMap?: { [key: string]: unknown };
   observedAt?: ObservedAt;
   datasetId?: string;
   readonly createdAt?: CreatedAt;
   readonly modifiedAt?: ModifiedAt;
   readonly deletedAt?: DeletedAt;
   readonly instanceId?: string;
-  readonly previousLanguageMap?: LanguagePropertyPreviousLanguageMap;
+  readonly previousLanguageMap?: { [key: string]: unknown };
 }
 
 export type LdContextMetadataItemKind =
@@ -505,15 +501,9 @@ export interface ListProperty {
   readonly previousValueList?: readonly (DateTimeValue | JsonValue)[];
 }
 
-export type ListRelationshipObjectList =
-  { [key: string]: unknown }[] | string[];
-
-export type ListRelationshipPreviousObjectList =
-  { [key: string]: unknown }[] | string[];
-
 export interface ListRelationship {
   type: "ListRelationship";
-  objectList?: ListRelationshipObjectList;
+  objectList?: { [key: string]: unknown }[] | string[];
   objectType?: string | string[];
   observedAt?: ObservedAt;
   datasetId?: string;
@@ -521,18 +511,14 @@ export interface ListRelationship {
   readonly modifiedAt?: ModifiedAt;
   readonly deletedAt?: DeletedAt;
   readonly instanceId?: string;
-  readonly previousObjectList?: ListRelationshipPreviousObjectList;
+  readonly previousObjectList?: { [key: string]: unknown }[] | string[];
   readonly entityList?: readonly Entity[];
 }
 
-export type JsonPropertyJson = { [key: string]: unknown };
-
-export type JsonPropertyPreviousJson = { [key: string]: unknown };
-
 export interface JsonProperty {
   type: "JsonProperty";
-  json?: JsonPropertyJson;
-  readonly previousJson?: JsonPropertyPreviousJson;
+  json?: { [key: string]: unknown };
+  readonly previousJson?: { [key: string]: unknown };
   observedAt?: ObservedAt;
   datasetId?: string;
   readonly createdAt?: CreatedAt;
@@ -541,32 +527,26 @@ export interface JsonProperty {
   readonly instanceId?: string;
 }
 
-export type EntityMapEntityMap = { [key: string]: unknown };
-
-export type EntityMapLinkedMaps = { [key: string]: unknown };
-
 export interface EntityMap {
   id?: string;
   type: "EntityMap";
   expiresAt: string;
-  readonly entityMap?: EntityMapEntityMap;
-  readonly linkedMaps?: EntityMapLinkedMaps;
+  readonly entityMap?: { [key: string]: unknown };
+  readonly linkedMaps?: { [key: string]: unknown };
 }
-
-export type ContextSourceIdentityContextSourceExtras = {
-  [key: string]: unknown;
-};
 
 export interface ContextSourceIdentity {
   id: string;
   type: "ContextSourceIdentity";
-  contextSourceExtras?: ContextSourceIdentityContextSourceExtras;
+  contextSourceExtras?: {
+    [key: string]: unknown;
+  };
   contextSourceUpTime: string;
   contextSourceTimeAt: string;
   contextSourceAlias: string;
 }
 
-export type AttributeFragmentBody = (
+export type AttributeFragmentBody =
   | Property
   | Relationship
   | GeoProperty
@@ -574,10 +554,7 @@ export type AttributeFragmentBody = (
   | VocabProperty
   | JsonProperty
   | ListProperty
-  | ListRelationship
-) & {
-  "@context"?: LdContext;
-};
+  | ListRelationship;
 
 export type TemporalAttributeFragmentBody = WithContext<
   RequiredObservedAt<
@@ -591,20 +568,6 @@ export type TemporalAttributeFragmentBody = WithContext<
     | ListRelationship
   >
 >;
-
-export type RetrieveEntityTypes200 =
-  | (EntityTypeList & {
-      "@context": LdContext;
-    })
-  | (EntityType & {
-      "@context": LdContext;
-    })[];
-
-export type RetrieveContext200 =
-  | {
-      "@context"?: LdContext;
-    }
-  | LdContextMetadata;
 
 export type NgsildAttribute =
   | Property
