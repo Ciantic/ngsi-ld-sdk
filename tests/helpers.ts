@@ -76,7 +76,7 @@ export async function cleanUpAll(): Promise<void> {
   const results = await Promise.allSettled([
     queryEntity({ type: "TestEntity", limit: 100 }),
     queryEntity({
-      type: "DiscoveryTestEntity,DiscoveryDetailsEntity,DiscoveryLocalEntity,EntityTypeInfoTest,TemperatureSensor",
+      type: "DiscoveryTestEntity,DiscoveryDetailsEntity,DiscoveryLocalEntity,EntityTypeInfoTest,TemperatureSensor,HumiditySensor",
       limit: 100,
     }),
     queryEntity({

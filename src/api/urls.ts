@@ -63,9 +63,9 @@ type QueryTimepropertyParameter =
 
 type QueryTimerelParameter = "after" | "before" | "between";
 
-type QueryEntityParams = {
+type QueryEntityParams<T extends string = string> = {
   id?: string[];
-  type?: string;
+  type?: T | T[];
   idPattern?: string;
   attrs?: string[];
   pick?: string[];
@@ -249,9 +249,9 @@ type UpsertTemporalParams = {
   local?: boolean;
 };
 
-type QueryTemporalParams = {
+type QueryTemporalParams<T extends string = string> = {
   id?: string[];
-  type?: string;
+  type?: T | T[];
   idPattern?: string;
   attrs?: string[];
   pick?: string[];
@@ -348,7 +348,9 @@ export const getCreateEntityUrl = (params?: { local?: boolean }) => {
     : `/entities`;
 };
 
-export const getQueryEntityUrl = (params?: QueryEntityParams) => {
+export const getQueryEntityUrl = <T extends string = string>(
+  params?: QueryEntityParams<T>,
+) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
@@ -871,7 +873,9 @@ export const getUpsertTemporalUrl = (params?: UpsertTemporalParams) => {
     : `/temporal/entities`;
 };
 
-export const getQueryTemporalUrl = (params?: QueryTemporalParams) => {
+export const getQueryTemporalUrl = <T extends string = string>(
+  params?: QueryTemporalParams<T>,
+) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {

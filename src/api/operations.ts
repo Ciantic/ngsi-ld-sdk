@@ -96,26 +96,36 @@ export const createEntity = <T extends Entity = Entity>(
 };
 
 export const queryEntity = <T extends Entity = Entity>(
-  params?: Parameters<typeof getQueryEntityUrl>[0],
+  params?: Parameters<
+    typeof getQueryEntityUrl<T["type"] extends string ? T["type"] : string>
+  >[0],
   options?: RequestInit,
 ) => {
-  return fetcher<MaybeContext<T>[]>(getQueryEntityUrl(params), {
-    ...options,
-    method: "GET",
-    returnFormat: "body",
-  });
+  return fetcher<MaybeContext<T>[]>(
+    getQueryEntityUrl<T["type"] extends string ? T["type"] : string>(params),
+    {
+      ...options,
+      method: "GET",
+      returnFormat: "body",
+    },
+  );
 };
 
 export const queryGeoEntity = <T extends Entity = Entity>(
-  params?: Parameters<typeof getQueryEntityUrl>[0],
+  params?: Parameters<
+    typeof getQueryEntityUrl<T["type"] extends string ? T["type"] : string>
+  >[0],
   options?: RequestInit,
 ) => {
-  return fetcher<FeatureCollection<T>>(getQueryEntityUrl(params), {
-    ...options,
-    method: "GET",
-    headers: { Accept: "application/geo+json", ...options?.headers },
-    returnFormat: "body",
-  });
+  return fetcher<FeatureCollection<T>>(
+    getQueryEntityUrl<T["type"] extends string ? T["type"] : string>(params),
+    {
+      ...options,
+      method: "GET",
+      headers: { Accept: "application/geo+json", ...options?.headers },
+      returnFormat: "body",
+    },
+  );
 };
 
 export const retrieveEntity = <T extends Entity = Entity>(
@@ -572,14 +582,19 @@ export const upsertTemporal = <T extends EntityTemporal = EntityTemporal>(
 };
 
 export const queryTemporal = <T extends EntityTemporal = EntityTemporal>(
-  params?: Parameters<typeof getQueryTemporalUrl>[0],
+  params?: Parameters<
+    typeof getQueryTemporalUrl<T["type"] extends string ? T["type"] : string>
+  >[0],
   options?: RequestInit,
 ) => {
-  return fetcher<MaybeContext<T>[]>(getQueryTemporalUrl(params), {
-    ...options,
-    method: "GET",
-    returnFormat: "body",
-  });
+  return fetcher<MaybeContext<T>[]>(
+    getQueryTemporalUrl<T["type"] extends string ? T["type"] : string>(params),
+    {
+      ...options,
+      method: "GET",
+      returnFormat: "body",
+    },
+  );
 };
 
 export const retrieveTemporal = <T extends EntityTemporal = EntityTemporal>(

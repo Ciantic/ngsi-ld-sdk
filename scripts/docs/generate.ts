@@ -88,9 +88,7 @@ async function getDocTestExamples(): Promise<string> {
     const rawDesc = args[0].getText();
     const description = rawDesc.replace(/^["']|["']$/g, "");
     // Derive a heading from the description (e.g. "createEntity example should work" → "createEntity")
-    const heading = description
-      .replace(/\s+example.*$/, "")
-      .replace(/\s+should.*$/, "");
+    const heading = description;
 
     // Second arg: the callback (arrow function or function expression)
     const callback = args[1];
