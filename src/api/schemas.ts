@@ -549,7 +549,7 @@ export type AttributeFragmentBody =
   | ListRelationship;
 
 export type TemporalAttributeFragmentBody = WithContext<
-  Requiredstring<
+  RequiredObservedAt<
     | Property
     | Relationship
     | GeoProperty
@@ -571,9 +571,9 @@ export type NgsildAttribute =
   | Relationship
   | ListRelationship;
 
-type Requiredstring<T> = T & {
+type RequiredObservedAt<T> = T & {
   observedAt: string;
 };
 
 export type NgsildAttributeTemporal =
-  Requiredstring<NgsildAttribute> | Requiredstring<NgsildAttribute>[];
+  RequiredObservedAt<NgsildAttribute> | RequiredObservedAt<NgsildAttribute>[];
