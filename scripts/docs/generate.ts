@@ -56,10 +56,16 @@ function extractBodyText(fn: ArrowFunction | FunctionExpression): string {
 
   if (body.isKind(SyntaxKind.Block)) {
     const block = body as Block;
-    const raw = block
-      .getStatements()
-      .map((s) => s.getText())
-      .join("\n");
+    const statements = block.getStatements();
+    if (statements.length === 0) return "";
+
+    // Extract text from first statement's start to last statement's end,
+    // preserving blank lines between statements in the original source.
+    const sourceFile = body.getSourceFile();
+    const fullText = sourceFile.getFullText();
+    const firstStmt = statements[0]!;
+    const lastStmt = statements[statements.length - 1]!;
+    const raw = fullText.slice(firstStmt.getPos(), lastStmt.getEnd());
     return dedent4(raw);
   }
 
@@ -67,7 +73,7 @@ function extractBodyText(fn: ArrowFunction | FunctionExpression): string {
   return body.getText();
 }
 
-async function getDocTestExamples(): Promise<string> {
+async function generateDocTestExamples(): Promise<string> {
   const project = new Project();
   const sourceFile = project.addSourceFileAtPath(TEST_FILE);
 
@@ -157,7 +163,7 @@ export async function generateReadme() {
   // Generate README.md content
   let readme = README_START;
   readme += "\n## Usage\n\n";
-  readme += await getDocTestExamples();
+  readme += await generateDocTestExamples();
   readme += "\n\n## Operations\n\n";
   readme +=
     "Operations are named after operationId defined in the OpenAPI specification.\n\n";

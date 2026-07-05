@@ -16,9 +16,11 @@ however generation result was too verbose so I've continued to maintain it witho
 interface TemperatureSensor extends schemas.Entity<"TemperatureSensor"> {
   temperature: schemas.Property<number>;
 }
+
 interface HumiditySensor extends schemas.Entity<"HumiditySensor"> {
   humidity: schemas.Property<number>;
 }
+
 await createEntity<HumiditySensor>({
   "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
   id: "urn:ngsi-ld:HumiditySensor:001",
@@ -28,6 +30,7 @@ await createEntity<HumiditySensor>({
     value: 55.0,
   },
 });
+
 await createEntity<TemperatureSensor>({
   "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
   id: "urn:ngsi-ld:TemperatureSensor:001",
@@ -37,6 +40,7 @@ await createEntity<TemperatureSensor>({
     value: 18.0,
   },
 });
+
 await createEntity<TemperatureSensor>({
   "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
   id: "urn:ngsi-ld:TemperatureSensor:002",
@@ -46,11 +50,13 @@ await createEntity<TemperatureSensor>({
     value: 23.5,
   },
 });
+
 const entities = await queryEntity<TemperatureSensor | HumiditySensor>({
   type: ["TemperatureSensor", "HumiditySensor"],
   attrs: ["temperature", "humidity"],
   q: "temperature>20|humidity>50",
 });
+
 expect(entities.length).toBe(2);
 ```
 
