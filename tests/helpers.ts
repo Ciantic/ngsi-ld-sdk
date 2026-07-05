@@ -1,16 +1,18 @@
 import { expect } from "vitest";
 import type { NgsiLdHttpError } from "../src";
-import { deleteBatch, queryEntity, queryCSR, querySubscription } from "../src";
+import {
+  deleteBatch,
+  queryEntity,
+  queryCSR,
+  querySubscription,
+  NGSILD_CORE_CONTEXT,
+} from "../src";
 
 // --- Broker URL ---
 
 /** Broker base URL. Defaults to Orion-LD default port + NGSI-LD API prefix. */
 export const brokerUrl: string =
   process.env["NGSILD_BROKER_URL"] ?? "http://localhost:1026/ngsi-ld/v1";
-
-export const NGSILD_CORE_CONTEXT = [
-  "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
-];
 
 export function detectBroker(): "orion" | "stellio" | "unknown" {
   const explicit = process.env["NGSILD_BROKER_NAME"];

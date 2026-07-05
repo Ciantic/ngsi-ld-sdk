@@ -10,8 +10,9 @@ import {
   retrieveCSRSubscription,
   updateCSRSubscription,
   deleteCSRSubscription,
+  NGSILD_CORE_CONTEXT,
 } from "../src";
-import { expectHttpError, cleanUpAll, NGSILD_CORE_CONTEXT } from "./helpers";
+import { expectHttpError, cleanUpAll } from "./helpers";
 import { NgsiLdNotFound, NgsiLdConflict } from "../src";
 import { EntitySelector, MaybeContext, Subscription } from "../src/api/schemas";
 

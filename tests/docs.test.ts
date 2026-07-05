@@ -1,7 +1,7 @@
 import { schemas, createEntity, queryEntity } from "../src";
 
 import { describe, it, expect, afterAll, beforeEach } from "vitest";
-import { cleanUpAll, NGSILD_CORE_CONTEXT } from "./helpers";
+import { cleanUpAll } from "./helpers";
 
 // ---------------------------------------------------------------------------
 // Tests that verify the code examples from README.md actually work
