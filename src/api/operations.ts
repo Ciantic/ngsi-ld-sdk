@@ -1,22 +1,8 @@
 import type {
-  AppendAttrsParams,
-  AppendAttrsTemporalParams,
   Attribute,
   AttributeFragmentBody,
   TemporalAttributeFragmentBody,
-  CreateBatchParams,
-  CreateContextBody,
-  CreateEntityParams,
-  CreateSubscriptionParams,
   CsourceRegistration,
-  DeleteAttrInstanceTemporalParams,
-  DeleteAttrsParams,
-  DeleteAttrsTemporalParams,
-  DeleteBatchParams,
-  DeleteContextParams,
-  DeleteEntityParams,
-  DeleteSubscriptionParams,
-  DeleteTemporalParams,
   Entity,
   EntityMap,
   EntityTemporal,
@@ -25,39 +11,10 @@ import type {
   EntityTypeList,
   Feature,
   FeatureCollection,
-  ListContextsParams,
   MaybeContext,
-  MergeBatchParams,
-  MergeEntityParams,
   Query,
-  QueryBatchParams,
-  QueryCSRParams,
-  QueryCSRSubscriptionParams,
-  QueryEntityParams,
-  QuerySubscriptionParams,
   QueryTemporal,
-  QueryTemporalParams,
-  ReplaceAttrsParams,
-  ReplaceEntityParams,
-  RetrieveAttrTypeInfoParams,
-  RetrieveAttrTypesParams,
-  RetrieveCSRParams,
-  RetrieveCSRSubscriptionParams,
-  RetrieveContextParams,
-  RetrieveEntityParams,
-  RetrieveEntityTypeInfoParams,
-  RetrieveEntityTypesParams,
-  RetrieveSubscriptionParams,
-  RetrieveTemporalParams,
   Subscription,
-  TemporalQueryBatchParams,
-  UpdateAttrsParams,
-  UpdateAttrsTemporalParams,
-  UpdateBatchParams,
-  UpdateEntityParams,
-  UpdateSubscriptionParams,
-  UpsertBatchParams,
-  UpsertTemporalParams,
   WithContext,
   AttributeList,
   ContextSourceIdentity,
@@ -157,7 +114,7 @@ import { fetcher } from "../fetcher";
  */
 export const createEntity = <T extends Entity = Entity>(
   createEntityBody?: WithContext<NonReadonly<T>>,
-  params?: CreateEntityParams,
+  params?: Parameters<typeof getCreateEntityUrl>[0],
   options?: RequestInit,
 ) => {
   return fetcher<CreateEntityResponse>(getCreateEntityUrl(params), {
@@ -182,7 +139,7 @@ export const createEntity = <T extends Entity = Entity>(
 
  */
 export const queryEntity = <T extends Entity = Entity>(
-  params?: QueryEntityParams,
+  params?: Parameters<typeof getQueryEntityUrl>[0],
   options?: RequestInit,
 ) => {
   return fetcher<MaybeContext<T>[]>(getQueryEntityUrl(params), {
@@ -203,7 +160,7 @@ export const queryEntity = <T extends Entity = Entity>(
  * @summary Query entities as GeoJSON
  */
 export const queryGeoEntity = <T extends Entity = Entity>(
-  params?: QueryEntityParams,
+  params?: Parameters<typeof getQueryEntityUrl>[0],
   options?: RequestInit,
 ) => {
   return fetcher<FeatureCollection<T>>(getQueryEntityUrl(params), {
@@ -229,7 +186,7 @@ export const queryGeoEntity = <T extends Entity = Entity>(
  */
 export const retrieveEntity = <T extends Entity = Entity>(
   entityId: string,
-  params?: RetrieveEntityParams,
+  params?: Parameters<typeof getRetrieveEntityUrl>[1],
   options?: RequestInit,
 ) => {
   return fetcher<MaybeContext<T>>(getRetrieveEntityUrl(entityId, params), {
@@ -251,7 +208,7 @@ export const retrieveEntity = <T extends Entity = Entity>(
  */
 export const retrieveGeoEntity = <T extends Entity = Entity>(
   entityId: string,
-  params?: Omit<RetrieveEntityParams, "options">,
+  params?: Omit<Parameters<typeof getRetrieveEntityUrl>[1], "options">,
   options?: RequestInit,
 ) => {
   return fetcher<Feature<T>>(getRetrieveEntityUrl(entityId, params), {
@@ -277,7 +234,7 @@ export const retrieveGeoEntity = <T extends Entity = Entity>(
  */
 export const deleteEntity = (
   entityId: string,
-  params?: DeleteEntityParams,
+  params?: Parameters<typeof getDeleteEntityUrl>[1],
   options?: RequestInit,
 ) => {
   return fetcher<DeleteEntityResponse>(getDeleteEntityUrl(entityId, params), {
@@ -308,7 +265,7 @@ export const mergeEntity = <T extends Entity = Entity>(
 
   // TODO: How to ensure there is no extra parameters in mergeEntityBody?
   mergeEntityBody?: WithContext<NonReadonly<Partial<T>>>,
-  params?: MergeEntityParams,
+  params?: Parameters<typeof getMergeEntityUrl>[1],
   options?: RequestInit,
 ) => {
   return fetcher<MergeEntityResponse>(getMergeEntityUrl(entityId, params), {
@@ -337,7 +294,7 @@ export const mergeEntity = <T extends Entity = Entity>(
 export const replaceEntity = <T extends Entity = Entity>(
   entityId: string,
   replaceEntityBody?: WithContext<NonReadonly<Partial<T>>>,
-  params?: ReplaceEntityParams,
+  params?: Parameters<typeof getReplaceEntityUrl>[1],
   options?: RequestInit,
 ) => {
   return fetcher<ReplaceEntityResponse>(getReplaceEntityUrl(entityId, params), {
@@ -366,7 +323,7 @@ export const replaceEntity = <T extends Entity = Entity>(
 export const appendAttrs = <T extends Entity = Entity>(
   entityId: string,
   appendAttrsBody?: WithContext<NonReadonly<Partial<T>>>,
-  params?: AppendAttrsParams,
+  params?: Parameters<typeof getAppendAttrsUrl>[1],
   options?: RequestInit,
 ) => {
   return fetcher<AppendAttrsResponse>(getAppendAttrsUrl(entityId, params), {
@@ -395,7 +352,7 @@ export const appendAttrs = <T extends Entity = Entity>(
 export const updateEntity = <T extends Entity = Entity>(
   entityId: string,
   updateEntityBody?: WithContext<NonReadonly<Partial<T>>>,
-  params?: UpdateEntityParams,
+  params?: Parameters<typeof getUpdateEntityUrl>[1],
   options?: RequestInit,
 ) => {
   return fetcher<UpdateEntityResponse>(getUpdateEntityUrl(entityId, params), {
@@ -427,7 +384,7 @@ export const updateAttrs = (
   entityId: string,
   attrId: string,
   attributeFragmentBody?: WithContext<AttributeFragmentBody>,
-  params?: UpdateAttrsParams,
+  params?: Parameters<typeof getUpdateAttrsUrl>[2],
   options?: RequestInit,
 ) => {
   return fetcher<UpdateAttrsResponse>(
@@ -459,7 +416,7 @@ export const updateAttrs = (
 export const deleteAttrs = (
   entityId: string,
   attrId: string,
-  params?: DeleteAttrsParams,
+  params?: Parameters<typeof getDeleteAttrsUrl>[2],
   options?: RequestInit,
 ) => {
   return fetcher<DeleteAttrsResponse>(
@@ -490,7 +447,7 @@ export const replaceAttrs = (
   entityId: string,
   attrId: string,
   attributeFragmentBody?: WithContext<AttributeFragmentBody>,
-  params?: ReplaceAttrsParams,
+  params?: Parameters<typeof getReplaceAttrsUrl>[2],
   options?: RequestInit,
 ) => {
   return fetcher<ReplaceAttrsResponse>(
@@ -567,7 +524,10 @@ export const createCSR = (
  * @summary Discover Csource registrations
 
  */
-export const queryCSR = (params?: QueryCSRParams, options?: RequestInit) => {
+export const queryCSR = (
+  params?: Parameters<typeof getQueryCSRUrl>[0],
+  options?: RequestInit,
+) => {
   return fetcher<MaybeContext<CsourceRegistration>[]>(getQueryCSRUrl(params), {
     ...options,
     method: "GET",
@@ -590,7 +550,7 @@ export const queryCSR = (params?: QueryCSRParams, options?: RequestInit) => {
  */
 export const retrieveCSR = (
   registrationId: string,
-  params?: RetrieveCSRParams,
+  params?: Parameters<typeof getRetrieveCSRUrl>[1],
   options?: RequestInit,
 ) => {
   return fetcher<MaybeContext<CsourceRegistration>>(
@@ -666,7 +626,7 @@ export const deleteCSR = (registrationId: string, options?: RequestInit) => {
  */
 export const createSubscription = (
   subscriptionBody?: WithContext<Subscription>,
-  params?: CreateSubscriptionParams,
+  params?: Parameters<typeof getCreateSubscriptionUrl>[0],
   options?: RequestInit,
 ) => {
   return fetcher<{ location: string }>(getCreateSubscriptionUrl(params), {
@@ -692,7 +652,7 @@ export const createSubscription = (
 
  */
 export const querySubscription = (
-  params?: QuerySubscriptionParams,
+  params?: Parameters<typeof getQuerySubscriptionUrl>[0],
   options?: RequestInit,
 ) => {
   return fetcher<MaybeContext<Subscription>[]>(
@@ -720,7 +680,7 @@ export const querySubscription = (
  */
 export const retrieveSubscription = (
   subscriptionId: string,
-  params?: RetrieveSubscriptionParams,
+  params?: Parameters<typeof getRetrieveSubscriptionUrl>[1],
   options?: RequestInit,
 ) => {
   return fetcher<MaybeContext<Subscription>>(
@@ -749,7 +709,7 @@ export const retrieveSubscription = (
 export const updateSubscription = (
   subscriptionId: string,
   subscriptionFragmentBody?: WithContext<Partial<Subscription>>,
-  params?: UpdateSubscriptionParams,
+  params?: Parameters<typeof getUpdateSubscriptionUrl>[1],
   options?: RequestInit,
 ) => {
   return fetcher<void>(getUpdateSubscriptionUrl(subscriptionId, params), {
@@ -776,7 +736,7 @@ export const updateSubscription = (
  */
 export const deleteSubscription = (
   subscriptionId: string,
-  params?: DeleteSubscriptionParams,
+  params?: Parameters<typeof getDeleteSubscriptionUrl>[1],
   options?: RequestInit,
 ) => {
   return fetcher<void>(getDeleteSubscriptionUrl(subscriptionId, params), {
@@ -826,7 +786,7 @@ export const createCSRSubscription = (
 
  */
 export const queryCSRSubscription = (
-  params?: QueryCSRSubscriptionParams,
+  params?: Parameters<typeof getQueryCSRSubscriptionUrl>[0],
   options?: RequestInit,
 ) => {
   return fetcher<MaybeContext<Subscription>[]>(
@@ -854,7 +814,7 @@ export const queryCSRSubscription = (
  */
 export const retrieveCSRSubscription = (
   subscriptionId: string,
-  params?: RetrieveCSRSubscriptionParams,
+  params?: Parameters<typeof getRetrieveCSRSubscriptionUrl>[1],
   options?: RequestInit,
 ) => {
   return fetcher<MaybeContext<Subscription>>(
@@ -933,7 +893,7 @@ export const deleteCSRSubscription = (
  */
 export const createBatch = <T extends Entity = Entity>(
   createBatchBodyItem?: NonReadonly<MaybeContext<T>>[],
-  params?: CreateBatchParams,
+  params?: Parameters<typeof getCreateBatchUrl>[0],
   options?: RequestInit,
 ) => {
   return fetcher<CreateBatchResponse>(getCreateBatchUrl(params), {
@@ -961,7 +921,7 @@ export const createBatch = <T extends Entity = Entity>(
  */
 export const upsertBatch = <T extends Entity = Entity>(
   upsertBatchBodyItem?: NonReadonly<MaybeContext<T>>[],
-  params?: UpsertBatchParams,
+  params?: Parameters<typeof getUpsertBatchUrl>[0],
   options?: RequestInit,
 ) => {
   return fetcher<UpsertBatchResponse>(getUpsertBatchUrl(params), {
@@ -987,7 +947,7 @@ export const upsertBatch = <T extends Entity = Entity>(
  */
 export const updateBatch = <T extends Entity = Entity>(
   updateBatchBodyItem?: NonReadonly<MaybeContext<T>>[],
-  params?: UpdateBatchParams,
+  params?: Parameters<typeof getUpdateBatchUrl>[0],
   options?: RequestInit,
 ) => {
   return fetcher<UpdateBatchResponse>(getUpdateBatchUrl(params), {
@@ -1013,7 +973,7 @@ export const updateBatch = <T extends Entity = Entity>(
  */
 export const deleteBatch = (
   deleteBatchBody?: string[],
-  params?: DeleteBatchParams,
+  params?: Parameters<typeof getDeleteBatchUrl>[0],
   options?: RequestInit,
 ) => {
   return fetcher<DeleteBatchResponse>(getDeleteBatchUrl(params), {
@@ -1039,7 +999,7 @@ export const deleteBatch = (
  */
 export const queryBatch = <T extends Entity = Entity>(
   query?: Query,
-  params?: QueryBatchParams,
+  params?: Parameters<typeof getQueryBatchUrl>[0],
   options?: RequestInit,
 ) => {
   return fetcher<MaybeContext<T>[]>(getQueryBatchUrl(params), {
@@ -1063,7 +1023,7 @@ export const queryBatch = <T extends Entity = Entity>(
  */
 export const queryGeoBatch = <T extends Entity = Entity>(
   query?: Query,
-  params?: QueryBatchParams,
+  params?: Parameters<typeof getQueryBatchUrl>[0],
   options?: RequestInit,
 ) => {
   return fetcher<FeatureCollection<T>>(getQueryBatchUrl(params), {
@@ -1098,7 +1058,7 @@ export const queryGeoBatch = <T extends Entity = Entity>(
  */
 export const mergeBatch = <T extends Entity = Entity>(
   mergeBatchBodyItem?: NonReadonly<MaybeContext<T>>[],
-  params?: MergeBatchParams,
+  params?: Parameters<typeof getMergeBatchUrl>[0],
   options?: RequestInit,
 ) => {
   return fetcher<MergeBatchResponse>(getMergeBatchUrl(params), {
@@ -1126,7 +1086,7 @@ export const mergeBatch = <T extends Entity = Entity>(
  */
 export const upsertTemporal = <T extends EntityTemporal = EntityTemporal>(
   entityTemporalBody?: WithContext<T>,
-  params?: UpsertTemporalParams,
+  params?: Parameters<typeof getUpsertTemporalUrl>[0],
   options?: RequestInit,
 ) => {
   return fetcher<UpsertTemporalResponse>(getUpsertTemporalUrl(params), {
@@ -1157,7 +1117,7 @@ export const upsertTemporal = <T extends EntityTemporal = EntityTemporal>(
 
  */
 export const queryTemporal = <T extends EntityTemporal = EntityTemporal>(
-  params?: QueryTemporalParams,
+  params?: Parameters<typeof getQueryTemporalUrl>[0],
   options?: RequestInit,
 ) => {
   return fetcher<MaybeContext<T>[]>(getQueryTemporalUrl(params), {
@@ -1182,7 +1142,7 @@ export const queryTemporal = <T extends EntityTemporal = EntityTemporal>(
  */
 export const retrieveTemporal = <T extends EntityTemporal = EntityTemporal>(
   entityId: string,
-  params?: RetrieveTemporalParams,
+  params?: Parameters<typeof getRetrieveTemporalUrl>[1],
   options?: RequestInit,
 ) => {
   return fetcher<MaybeContext<T>>(getRetrieveTemporalUrl(entityId, params), {
@@ -1207,7 +1167,7 @@ export const retrieveTemporal = <T extends EntityTemporal = EntityTemporal>(
  */
 export const deleteTemporal = (
   entityId: string,
-  params?: DeleteTemporalParams,
+  params?: Parameters<typeof getDeleteTemporalUrl>[1],
   options?: RequestInit,
 ) => {
   return fetcher<void>(getDeleteTemporalUrl(entityId, params), {
@@ -1233,7 +1193,7 @@ export const deleteTemporal = (
 export const appendAttrsTemporal = <T extends EntityTemporal = EntityTemporal>(
   entityId: string,
   entityTemporalFragmentBody?: WithContext<Partial<T>>,
-  params?: AppendAttrsTemporalParams,
+  params?: Parameters<typeof getAppendAttrsTemporalUrl>[1],
   options?: RequestInit,
 ) => {
   return fetcher<void>(getAppendAttrsTemporalUrl(entityId, params), {
@@ -1263,7 +1223,7 @@ export const appendAttrsTemporal = <T extends EntityTemporal = EntityTemporal>(
 export const deleteAttrsTemporal = (
   entityId: string,
   attrId: string,
-  params?: DeleteAttrsTemporalParams,
+  params?: Parameters<typeof getDeleteAttrsTemporalUrl>[2],
   options?: RequestInit,
 ) => {
   return fetcher<void>(getDeleteAttrsTemporalUrl(entityId, attrId, params), {
@@ -1299,7 +1259,7 @@ export const updateAttrsTemporal = (
   attrId: string,
   instanceId: string,
   temporalAttrFragmentBody?: TemporalAttributeFragmentBody,
-  params?: UpdateAttrsTemporalParams,
+  params?: Parameters<typeof getUpdateAttrsTemporalUrl>[3],
   options?: RequestInit,
 ) => {
   return fetcher<void>(
@@ -1341,7 +1301,7 @@ export const deleteAttrInstanceTemporal = (
   entityId: string,
   attrId: string,
   instanceId: string,
-  params?: DeleteAttrInstanceTemporalParams,
+  params?: Parameters<typeof getDeleteAttrInstanceTemporalUrl>[3],
   options?: RequestInit,
 ) => {
   return fetcher<void>(
@@ -1371,7 +1331,7 @@ export const deleteAttrInstanceTemporal = (
  */
 export const temporalQueryBatch = <T extends EntityTemporal = EntityTemporal>(
   queryTemporalBody: QueryTemporal,
-  params?: TemporalQueryBatchParams,
+  params?: Parameters<typeof getTemporalQueryBatchUrl>[0],
   options?: RequestInit,
 ) => {
   return fetcher<MaybeContext<T>[]>(getTemporalQueryBatchUrl(params), {
@@ -1409,7 +1369,7 @@ export const temporalQueryBatch = <T extends EntityTemporal = EntityTemporal>(
 
  */
 export const retrieveEntityTypes = (
-  params?: RetrieveEntityTypesParams,
+  params?: Parameters<typeof getRetrieveEntityTypesUrl>[0],
   options?: RequestInit,
 ) => {
   return fetcher<WithContext<EntityTypeList> | WithContext<EntityType>[]>(
@@ -1435,7 +1395,7 @@ export const retrieveEntityTypes = (
  */
 export const retrieveEntityTypeInfo = (
   type: string,
-  params?: RetrieveEntityTypeInfoParams,
+  params?: Parameters<typeof getRetrieveEntityTypeInfoUrl>[1],
   options?: RequestInit,
 ) => {
   return fetcher<WithContext<EntityTypeInfo>>(
@@ -1474,7 +1434,7 @@ export const retrieveEntityTypeInfo = (
 
  */
 export const retrieveAttrTypes = (
-  params?: RetrieveAttrTypesParams,
+  params?: Parameters<typeof getRetrieveAttrTypesUrl>[0],
   options?: RequestInit,
 ) => {
   return fetcher<WithContext<AttributeList> | WithContext<Attribute>[]>(
@@ -1510,7 +1470,7 @@ export const retrieveAttrTypes = (
  */
 export const retrieveAttrTypeInfo = (
   attrId: string,
-  params?: RetrieveAttrTypeInfoParams,
+  params?: Parameters<typeof getRetrieveAttrTypeInfoUrl>[1],
   options?: RequestInit,
 ) => {
   return fetcher<WithContext<Attribute>>(
@@ -1539,7 +1499,7 @@ export const retrieveAttrTypeInfo = (
 
  */
 export const createContext = (
-  createContextBody?: CreateContextBody,
+  createContextBody?: { "@context": LdContext },
   options?: RequestInit,
 ) => {
   return fetcher<{ location: string }>(getCreateContextUrl(), {
@@ -1583,7 +1543,7 @@ export const createContext = (
 
  */
 export const listContexts = (
-  params?: ListContextsParams,
+  params?: Parameters<typeof getListContextsUrl>[0],
   options?: RequestInit,
 ) => {
   return fetcher<string[] | LdContextMetadata[]>(getListContextsUrl(params), {
@@ -1612,7 +1572,7 @@ export const listContexts = (
  */
 export const retrieveContext = (
   contextId: string,
-  params?: RetrieveContextParams,
+  params?: Parameters<typeof getRetrieveContextUrl>[1],
   options?: RequestInit,
 ) => {
   return fetcher<{ "@context"?: LdContext } | LdContextMetadata>(
@@ -1650,7 +1610,7 @@ export const retrieveContext = (
  */
 export const deleteContext = (
   contextId: string,
-  params?: DeleteContextParams,
+  params?: Parameters<typeof getDeleteContextUrl>[1],
   options?: RequestInit,
 ) => {
   return fetcher<void>(getDeleteContextUrl(contextId, params), {

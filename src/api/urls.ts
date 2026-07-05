@@ -2,7 +2,6 @@ import type {
   AppendAttrsParams,
   AppendAttrsTemporalParams,
   CreateBatchParams,
-  CreateEntityParams,
   CreateSubscriptionParams,
   DeleteAttrInstanceTemporalParams,
   DeleteAttrsParams,
@@ -12,7 +11,6 @@ import type {
   DeleteEntityParams,
   DeleteSubscriptionParams,
   DeleteTemporalParams,
-  ListContextsParams,
   MergeBatchParams,
   MergeEntityParams,
   QueryBatchParams,
@@ -23,13 +21,9 @@ import type {
   QueryTemporalParams,
   ReplaceAttrsParams,
   ReplaceEntityParams,
-  RetrieveAttrTypeInfoParams,
-  RetrieveAttrTypesParams,
   RetrieveCSRParams,
   RetrieveCSRSubscriptionParams,
-  RetrieveContextParams,
   RetrieveEntityParams,
-  RetrieveEntityTypeInfoParams,
   RetrieveEntityTypesParams,
   RetrieveSubscriptionParams,
   RetrieveTemporalParams,
@@ -41,9 +35,10 @@ import type {
   UpdateSubscriptionParams,
   UpsertBatchParams,
   UpsertTemporalParams,
+  QueryKindParameter,
 } from "./schemas";
 
-export const getCreateEntityUrl = (params?: CreateEntityParams) => {
+export const getCreateEntityUrl = (params?: { local?: boolean }) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
@@ -780,7 +775,7 @@ export const getRetrieveEntityTypesUrl = (
 
 export const getRetrieveEntityTypeInfoUrl = (
   type: string,
-  params?: RetrieveEntityTypeInfoParams,
+  params?: { local?: boolean },
 ) => {
   const normalizedParams = new URLSearchParams();
 
@@ -797,7 +792,10 @@ export const getRetrieveEntityTypeInfoUrl = (
     : `/types/${type}`;
 };
 
-export const getRetrieveAttrTypesUrl = (params?: RetrieveAttrTypesParams) => {
+export const getRetrieveAttrTypesUrl = (params?: {
+  details?: boolean;
+  local?: boolean;
+}) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
@@ -815,7 +813,7 @@ export const getRetrieveAttrTypesUrl = (params?: RetrieveAttrTypesParams) => {
 
 export const getRetrieveAttrTypeInfoUrl = (
   attrId: string,
-  params?: RetrieveAttrTypeInfoParams,
+  params?: { local?: boolean },
 ) => {
   const normalizedParams = new URLSearchParams();
 
@@ -836,7 +834,10 @@ export const getCreateContextUrl = () => {
   return `/jsonldContexts`;
 };
 
-export const getListContextsUrl = (params?: ListContextsParams) => {
+export const getListContextsUrl = (params?: {
+  details?: boolean;
+  kind?: QueryKindParameter;
+}) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
@@ -854,7 +855,7 @@ export const getListContextsUrl = (params?: ListContextsParams) => {
 
 export const getRetrieveContextUrl = (
   contextId: string,
-  params?: RetrieveContextParams,
+  params?: { details?: boolean },
 ) => {
   const normalizedParams = new URLSearchParams();
 

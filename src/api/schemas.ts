@@ -647,10 +647,6 @@ export type QueryTimepropertyParameter =
 
 export type QueryTimerelParameter = "after" | "before" | "between";
 
-export type CreateEntityParams = {
-  local?: boolean;
-};
-
 export type QueryEntityParams = {
   id?: string[];
   type?: string;
@@ -923,32 +919,6 @@ export type RetrieveEntityTypes200 =
   | (EntityType & {
       "@context": LdContext;
     })[];
-
-export type RetrieveEntityTypeInfoParams = {
-  local?: boolean;
-};
-
-export type RetrieveAttrTypesParams = {
-  details?: boolean;
-  local?: boolean;
-};
-
-export type RetrieveAttrTypeInfoParams = {
-  local?: boolean;
-};
-
-export type CreateContextBody = {
-  "@context": LdContext;
-};
-
-export type ListContextsParams = {
-  details?: boolean;
-  kind?: QueryKindParameter;
-};
-
-export type RetrieveContextParams = {
-  details?: boolean;
-};
 
 export type RetrieveContext200 =
   | {
