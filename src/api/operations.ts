@@ -35,7 +35,7 @@ import type {
   QueryCSRSubscriptionParams,
   QueryEntityParams,
   QuerySubscriptionParams,
-  QueryTemporalBody,
+  QueryTemporal,
   QueryTemporalParams,
   ReplaceAttrsParams,
   ReplaceEntityParams,
@@ -1370,7 +1370,7 @@ export const deleteAttrInstanceTemporal = (
 
  */
 export const temporalQueryBatch = <T extends EntityTemporal = EntityTemporal>(
-  queryTemporalBody: QueryTemporalBody,
+  queryTemporalBody: QueryTemporal,
   params?: TemporalQueryBatchParams,
   options?: RequestInit,
 ) => {

@@ -1,7 +1,4 @@
-import type {
-  MultiStatusBatchOperationResultResponse,
-  MultiStatusUpdateResultResponse,
-} from "./schemas";
+import type { BatchOperationResult, UpdateResult } from "./schemas";
 
 export type NonReadonly<T> = {
   -readonly [P in keyof T]: T[P];
@@ -14,7 +11,7 @@ export type CreateEntityResponse =
       location: string;
     }
   | {
-      data: MultiStatusBatchOperationResultResponse;
+      data: BatchOperationResult;
       status: 207;
     };
 
@@ -23,7 +20,7 @@ export type DeleteEntityResponse =
       status: 204;
     }
   | {
-      data: MultiStatusBatchOperationResultResponse;
+      data: BatchOperationResult;
       status: 207;
     };
 
@@ -32,7 +29,7 @@ export type MergeEntityResponse =
       status: 204;
     }
   | {
-      data: MultiStatusBatchOperationResultResponse;
+      data: BatchOperationResult;
       status: 207;
     };
 
@@ -41,7 +38,7 @@ export type ReplaceEntityResponse =
       status: 204;
     }
   | {
-      data: MultiStatusBatchOperationResultResponse;
+      data: BatchOperationResult;
       status: 207;
     };
 
@@ -50,7 +47,7 @@ export type AppendAttrsResponse =
       status: 204;
     }
   | {
-      data: MultiStatusUpdateResultResponse;
+      data: UpdateResult;
       status: 207;
     };
 
@@ -59,7 +56,7 @@ export type UpdateEntityResponse =
       status: 204;
     }
   | {
-      data: MultiStatusUpdateResultResponse;
+      data: UpdateResult;
       status: 207;
     };
 
@@ -68,7 +65,7 @@ export type UpdateAttrsResponse =
       status: 204;
     }
   | {
-      data: MultiStatusUpdateResultResponse;
+      data: UpdateResult;
       status: 207;
     };
 
@@ -77,7 +74,7 @@ export type DeleteAttrsResponse =
       status: 204;
     }
   | {
-      data: MultiStatusUpdateResultResponse;
+      data: UpdateResult;
       status: 207;
     };
 
@@ -86,7 +83,7 @@ export type ReplaceAttrsResponse =
       status: 204;
     }
   | {
-      data: MultiStatusUpdateResultResponse;
+      data: UpdateResult;
       status: 207;
     };
 
@@ -96,7 +93,7 @@ export type CreateBatchResponse =
       status: 201;
     }
   | {
-      data: MultiStatusBatchOperationResultResponse;
+      data: BatchOperationResult;
       status: 207;
     };
 
@@ -110,7 +107,7 @@ export type UpsertBatchResponse =
     }
   | {
       status: 207;
-      data: MultiStatusBatchOperationResultResponse;
+      data: BatchOperationResult;
     };
 
 export type UpdateBatchResponse =
@@ -118,7 +115,7 @@ export type UpdateBatchResponse =
       status: 204;
     }
   | {
-      data: MultiStatusBatchOperationResultResponse;
+      data: BatchOperationResult;
       status: 207;
     };
 
@@ -127,7 +124,7 @@ export type DeleteBatchResponse =
       status: 204;
     }
   | {
-      data: MultiStatusBatchOperationResultResponse;
+      data: BatchOperationResult;
       status: 207;
     };
 
@@ -136,7 +133,7 @@ export type MergeBatchResponse =
       status: 204;
     }
   | {
-      data: MultiStatusBatchOperationResultResponse;
+      data: BatchOperationResult;
       status: 207;
     };
 

@@ -577,22 +577,6 @@ export interface ContextSourceIdentity {
   contextSourceAlias: string;
 }
 
-export type BadRequestResponse = ProblemDetails;
-
-export type ConflictResponse = ProblemDetails;
-
-export type MultiStatusBatchOperationResultResponse = BatchOperationResult;
-
-export type MultiStatusUpdateResultResponse = UpdateResult;
-
-export type NotFoundResponse = ProblemDetails;
-
-export type GatewayTimeoutResponse = ProblemDetails;
-
-export type UnprocessableResponse = ProblemDetails;
-
-export type NotImplementedResponse = ProblemDetails;
-
 export type AttributeFragmentBody = (
   | Property
   | Relationship
@@ -619,16 +603,6 @@ export type TemporalAttributeFragmentBody = WithContext<
   >
 >;
 
-export type QueryTemporalBody = QueryTemporal;
-
-export type HeadersNgsildEntityMapParameter = string;
-
-export type HeadersLinkParameter = string;
-
-export type HeadersNgsildTenantParameter = string;
-
-export type HeadersViaParameter = string;
-
 export type QueryAggrMethodsParameter =
   | "totalCount"
   | "distinctCount"
@@ -639,42 +613,12 @@ export type QueryAggrMethodsParameter =
   | "stddev"
   | "sumsq";
 
-export type QueryAggrPeriodDurationParameter = string;
-
-export type QueryAttrsParameter = string[];
-
-export type QueryContainedByParameter = string[];
-
 export type QueryCoordinatesParameter =
   | GeometryPosition
   | GeometryPositionArray
   | GeometryLineStringCoordinates
   | GeometryLinearRing
   | GeometryPolygonCoordinates;
-
-export type QueryCountParameter = boolean;
-
-export type QueryCsfParameter = string;
-
-export type QueryDatasetIdParameter = string | string[];
-
-export type QueryDetailsParameter = boolean;
-
-export type QueryDeleteAllParameter = boolean;
-
-export type QueryEndTimeAtParameter = string;
-
-export type QueryEntityMapParameter = boolean;
-
-export type QueryFormatEntitiesParameter = FormatRepresentation;
-
-export type QueryFormatTemporalParameter = FormatTemporal;
-
-export type QueryIdParameter = string[];
-
-export type QueryIdPatternParameter = string;
-
-export type QueryGeometryPropertyParameter = string;
 
 export type QueryGeometryParameter =
   | "LineString"
@@ -696,318 +640,280 @@ export type QueryGeorelParameter =
   | "overlaps"
   | string;
 
-export type QueryJoinParameter = string;
-
-export type QueryJoinLevelParameter = number;
-
 export type QueryKindParameter = "Cached" | "Hosted" | "ImplicitlyCreated";
-
-export type QueryLangParameter = string;
-
-export type QueryLastNParameter = number;
-
-export type QueryLimitParameter = number;
-
-export type QueryLocalParameter = boolean;
-
-export type QueryObservedAtParameter = string;
-
-export type QueryOmitParameter = string[];
-
-export type QueryOptionsParameter = (OptionsRepresentation | OptionsSysAttrs)[];
-
-export type QueryOptionsNoOverwriteParameter = OptionsNoOverwrite[];
-
-export type QueryOptionsSysAttrsParameter = OptionsSysAttrs[];
-
-export type QueryOptionsTemporalParameter = OptionsTemporal[];
-
-export type QueryOptionsUpsertParameter = OptionsUpsert[];
-
-export type QueryPickParameter = string[];
-
-export type QueryQParameter = string;
-
-export type QueryReloadParameter = boolean;
-
-export type QueryScopeQParameter = string;
-
-export type QueryTimeAtParameter = string;
 
 export type QueryTimepropertyParameter =
   "createdAt" | "deletedAt" | "modifiedAt" | "observedAt";
 
 export type QueryTimerelParameter = "after" | "before" | "between";
 
-export type QueryTypeParameter = string;
-
 export type CreateEntityParams = {
-  local?: QueryLocalParameter;
+  local?: boolean;
 };
 
 export type QueryEntityParams = {
-  id?: QueryIdParameter;
-  type?: QueryTypeParameter;
-  idPattern?: QueryIdPatternParameter;
-  attrs?: QueryAttrsParameter;
-  pick?: QueryPickParameter;
-  omit?: QueryOmitParameter;
-  q?: QueryQParameter;
-  csf?: QueryCsfParameter;
+  id?: string[];
+  type?: string;
+  idPattern?: string;
+  attrs?: string[];
+  pick?: string[];
+  omit?: string[];
+  q?: string;
+  csf?: string;
   geometry?: QueryGeometryParameter;
   georel?: QueryGeorelParameter;
   coordinates?: QueryCoordinatesParameter;
   geoproperty?: QueryGeopropertyParameter;
-  geometryProperty?: QueryGeometryPropertyParameter;
-  lang?: QueryLangParameter;
-  scopeQ?: QueryScopeQParameter;
-  containedBy?: QueryContainedByParameter;
-  join?: QueryJoinParameter;
-  joinLevel?: QueryJoinLevelParameter;
-  datasetId?: QueryDatasetIdParameter;
-  details?: QueryEntityMapParameter;
-  limit?: QueryLimitParameter;
-  count?: QueryCountParameter;
-  options?: QueryOptionsParameter;
-  format?: QueryFormatEntitiesParameter;
-  local?: QueryLocalParameter;
+  geometryProperty?: string;
+  lang?: string;
+  scopeQ?: string;
+  containedBy?: string[];
+  join?: string;
+  joinLevel?: number;
+  datasetId?: string | string[];
+  details?: boolean;
+  limit?: number;
+  count?: boolean;
+  options?: (OptionsRepresentation | OptionsSysAttrs)[];
+  format?: FormatRepresentation;
+  local?: boolean;
 };
 
 export type RetrieveEntityParams = {
-  type?: QueryTypeParameter;
-  attrs?: QueryAttrsParameter;
-  pick?: QueryPickParameter;
-  omit?: QueryOmitParameter;
-  geometryProperty?: QueryGeometryPropertyParameter;
-  lang?: QueryLangParameter;
-  containedBy?: QueryContainedByParameter;
-  join?: QueryJoinParameter;
-  joinLevel?: QueryJoinLevelParameter;
-  datasetId?: QueryDatasetIdParameter;
-  details?: QueryEntityMapParameter;
-  options?: QueryOptionsParameter;
-  format?: QueryFormatEntitiesParameter;
-  local?: QueryLocalParameter;
+  type?: string;
+  attrs?: string[];
+  pick?: string[];
+  omit?: string[];
+  geometryProperty?: string;
+  lang?: string;
+  containedBy?: string[];
+  join?: string;
+  joinLevel?: number;
+  datasetId?: string | string[];
+  details?: boolean;
+  options?: (OptionsRepresentation | OptionsSysAttrs)[];
+  format?: FormatRepresentation;
+  local?: boolean;
 };
 
 export type DeleteEntityParams = {
-  type?: QueryTypeParameter;
-  local?: QueryLocalParameter;
+  type?: string;
+  local?: boolean;
 };
 
 export type MergeEntityParams = {
   options?: OptionsRepresentation[];
-  format?: QueryFormatEntitiesParameter;
-  type?: QueryTypeParameter;
-  observedAt?: QueryObservedAtParameter;
-  lang?: QueryLangParameter;
-  local?: QueryLocalParameter;
+  format?: FormatRepresentation;
+  type?: string;
+  observedAt?: string;
+  lang?: string;
+  local?: boolean;
 };
 
 export type ReplaceEntityParams = {
-  type?: QueryTypeParameter;
-  local?: QueryLocalParameter;
+  type?: string;
+  local?: boolean;
 };
 
 export type AppendAttrsParams = {
-  type?: QueryTypeParameter;
-  options?: QueryOptionsNoOverwriteParameter;
-  local?: QueryLocalParameter;
+  type?: string;
+  options?: OptionsNoOverwrite[];
+  local?: boolean;
 };
 
 export type UpdateEntityParams = {
-  local?: QueryLocalParameter;
-  type?: QueryTypeParameter;
+  local?: boolean;
+  type?: string;
 };
 
 export type UpdateAttrsParams = {
-  local?: QueryLocalParameter;
-  type?: QueryTypeParameter;
+  local?: boolean;
+  type?: string;
 };
 
 export type DeleteAttrsParams = {
-  deleteAll?: QueryDeleteAllParameter;
-  datasetId?: QueryDatasetIdParameter;
-  type?: QueryTypeParameter;
-  local?: QueryLocalParameter;
+  deleteAll?: boolean;
+  datasetId?: string | string[];
+  type?: string;
+  local?: boolean;
 };
 
 export type ReplaceAttrsParams = {
-  local?: QueryLocalParameter;
-  type?: QueryTypeParameter;
+  local?: boolean;
+  type?: string;
 };
 
 export type QueryCSRParams = {
-  id?: QueryIdParameter;
-  type?: QueryTypeParameter;
-  idPattern?: QueryIdPatternParameter;
-  attrs?: QueryAttrsParameter;
-  q?: QueryQParameter;
-  csf?: QueryCsfParameter;
+  id?: string[];
+  type?: string;
+  idPattern?: string;
+  attrs?: string[];
+  q?: string;
+  csf?: string;
   geometry?: QueryGeometryParameter;
   georel?: QueryGeorelParameter;
   coordinates?: QueryCoordinatesParameter;
   geoproperty?: QueryGeopropertyParameter;
   timeproperty?: QueryTimepropertyParameter;
   timerel?: QueryTimerelParameter;
-  timeAt?: QueryTimeAtParameter;
-  endTimeAt?: QueryEndTimeAtParameter;
-  geometryProperty?: QueryGeometryPropertyParameter;
-  lang?: QueryLangParameter;
-  scopeQ?: QueryScopeQParameter;
-  options?: QueryOptionsSysAttrsParameter;
-  limit?: QueryLimitParameter;
-  count?: QueryCountParameter;
+  timeAt?: string;
+  endTimeAt?: string;
+  geometryProperty?: string;
+  lang?: string;
+  scopeQ?: string;
+  options?: OptionsSysAttrs[];
+  limit?: number;
+  count?: boolean;
 };
 
 export type RetrieveCSRParams = {
-  options?: QueryOptionsSysAttrsParameter;
+  options?: OptionsSysAttrs[];
 };
 
 export type CreateSubscriptionParams = {
-  local?: QueryLocalParameter;
+  local?: boolean;
 };
 
 export type QuerySubscriptionParams = {
-  options?: QueryOptionsSysAttrsParameter;
-  limit?: QueryLimitParameter;
-  count?: QueryCountParameter;
-  local?: QueryLocalParameter;
+  options?: OptionsSysAttrs[];
+  limit?: number;
+  count?: boolean;
+  local?: boolean;
 };
 
 export type RetrieveSubscriptionParams = {
-  options?: QueryOptionsSysAttrsParameter;
-  local?: QueryLocalParameter;
+  options?: OptionsSysAttrs[];
+  local?: boolean;
 };
 
 export type UpdateSubscriptionParams = {
-  local?: QueryLocalParameter;
+  local?: boolean;
 };
 
 export type DeleteSubscriptionParams = {
-  local?: QueryLocalParameter;
+  local?: boolean;
 };
 
 export type QueryCSRSubscriptionParams = {
-  options?: QueryOptionsSysAttrsParameter;
-  limit?: QueryLimitParameter;
-  count?: QueryCountParameter;
+  options?: OptionsSysAttrs[];
+  limit?: number;
+  count?: boolean;
 };
 
 export type RetrieveCSRSubscriptionParams = {
-  options?: QueryOptionsSysAttrsParameter;
+  options?: OptionsSysAttrs[];
 };
 
 export type CreateBatchParams = {
-  local?: QueryLocalParameter;
+  local?: boolean;
 };
 
 export type UpsertBatchParams = {
-  options?: QueryOptionsUpsertParameter;
-  local?: QueryLocalParameter;
+  options?: OptionsUpsert[];
+  local?: boolean;
 };
 
 export type UpdateBatchParams = {
-  options?: QueryOptionsNoOverwriteParameter;
-  local?: QueryLocalParameter;
+  options?: OptionsNoOverwrite[];
+  local?: boolean;
 };
 
 export type DeleteBatchParams = {
-  local?: QueryLocalParameter;
+  local?: boolean;
 };
 
 export type QueryBatchParams = {
-  count?: QueryCountParameter;
-  limit?: QueryLimitParameter;
-  local?: QueryLocalParameter;
-  options?: QueryOptionsParameter;
+  count?: boolean;
+  limit?: number;
+  local?: boolean;
+  options?: (OptionsRepresentation | OptionsSysAttrs)[];
 };
 
 export type MergeBatchParams = {
-  local?: QueryLocalParameter;
+  local?: boolean;
 };
 
 export type UpsertTemporalParams = {
-  local?: QueryLocalParameter;
+  local?: boolean;
 };
 
 export type QueryTemporalParams = {
-  id?: QueryIdParameter;
-  type?: QueryTypeParameter;
-  idPattern?: QueryIdPatternParameter;
-  attrs?: QueryAttrsParameter;
-  pick?: QueryPickParameter;
-  omit?: QueryOmitParameter;
-  q?: QueryQParameter;
-  csf?: QueryCsfParameter;
+  id?: string[];
+  type?: string;
+  idPattern?: string;
+  attrs?: string[];
+  pick?: string[];
+  omit?: string[];
+  q?: string;
+  csf?: string;
   geometry?: QueryGeometryParameter;
   georel?: QueryGeorelParameter;
   coordinates?: QueryCoordinatesParameter;
   geoproperty?: QueryGeopropertyParameter;
   timeproperty?: QueryTimepropertyParameter;
   timerel?: QueryTimerelParameter;
-  timeAt?: QueryTimeAtParameter;
-  endTimeAt?: QueryEndTimeAtParameter;
-  lastN?: QueryLastNParameter;
-  lang?: QueryLangParameter;
+  timeAt?: string;
+  endTimeAt?: string;
+  lastN?: number;
+  lang?: string;
   aggrMethods?: QueryAggrMethodsParameter;
-  aggrPeriodDuration?: QueryAggrPeriodDurationParameter;
-  scopeQ?: QueryScopeQParameter;
-  datasetId?: QueryDatasetIdParameter;
-  limit?: QueryLimitParameter;
-  count?: QueryCountParameter;
-  options?: QueryOptionsTemporalParameter | QueryOptionsSysAttrsParameter;
-  format?: QueryFormatTemporalParameter;
-  local?: QueryLocalParameter;
+  aggrPeriodDuration?: string;
+  scopeQ?: string;
+  datasetId?: string | string[];
+  limit?: number;
+  count?: boolean;
+  options?: OptionsTemporal[] | OptionsSysAttrs[];
+  format?: FormatTemporal;
+  local?: boolean;
 };
 
 export type RetrieveTemporalParams = {
-  attrs?: QueryAttrsParameter;
-  pick?: QueryPickParameter;
-  omit?: QueryOmitParameter;
+  attrs?: string[];
+  pick?: string[];
+  omit?: string[];
   timeproperty?: QueryTimepropertyParameter;
   timerel?: QueryTimerelParameter;
-  timeAt?: QueryTimeAtParameter;
-  endTimeAt?: QueryEndTimeAtParameter;
-  lastN?: QueryLastNParameter;
-  lang?: QueryLangParameter;
+  timeAt?: string;
+  endTimeAt?: string;
+  lastN?: number;
+  lang?: string;
   aggrMethods?: QueryAggrMethodsParameter;
-  aggrPeriodDuration?: QueryAggrPeriodDurationParameter;
-  datasetId?: QueryDatasetIdParameter;
-  options?: QueryOptionsTemporalParameter | QueryOptionsSysAttrsParameter;
-  format?: QueryFormatTemporalParameter;
-  local?: QueryLocalParameter;
+  aggrPeriodDuration?: string;
+  datasetId?: string | string[];
+  options?: OptionsTemporal[] | OptionsSysAttrs[];
+  format?: FormatTemporal;
+  local?: boolean;
 };
 
 export type DeleteTemporalParams = {
-  local?: QueryLocalParameter;
+  local?: boolean;
 };
 
 export type AppendAttrsTemporalParams = {
-  local?: QueryLocalParameter;
+  local?: boolean;
 };
 
 export type DeleteAttrsTemporalParams = {
-  deleteAll?: QueryDeleteAllParameter;
-  datasetId?: QueryDatasetIdParameter;
-  local?: QueryLocalParameter;
+  deleteAll?: boolean;
+  datasetId?: string | string[];
+  local?: boolean;
 };
 
 export type UpdateAttrsTemporalParams = {
-  local?: QueryLocalParameter;
+  local?: boolean;
 };
 
 export type DeleteAttrInstanceTemporalParams = {
-  local?: QueryLocalParameter;
+  local?: boolean;
 };
 
 export type TemporalQueryBatchParams = {
-  local?: QueryLocalParameter;
+  local?: boolean;
 };
 
 export type RetrieveEntityTypesParams = {
   details?: boolean;
-  local?: QueryLocalParameter;
+  local?: boolean;
 };
 
 export type RetrieveEntityTypes200 =
@@ -1019,16 +925,16 @@ export type RetrieveEntityTypes200 =
     })[];
 
 export type RetrieveEntityTypeInfoParams = {
-  local?: QueryLocalParameter;
+  local?: boolean;
 };
 
 export type RetrieveAttrTypesParams = {
   details?: boolean;
-  local?: QueryLocalParameter;
+  local?: boolean;
 };
 
 export type RetrieveAttrTypeInfoParams = {
-  local?: QueryLocalParameter;
+  local?: boolean;
 };
 
 export type CreateContextBody = {
@@ -1036,12 +942,12 @@ export type CreateContextBody = {
 };
 
 export type ListContextsParams = {
-  details?: QueryDetailsParameter;
+  details?: boolean;
   kind?: QueryKindParameter;
 };
 
 export type RetrieveContextParams = {
-  details?: QueryDetailsParameter;
+  details?: boolean;
 };
 
 export type RetrieveContext200 =
@@ -1051,7 +957,7 @@ export type RetrieveContext200 =
   | LdContextMetadata;
 
 export type DeleteContextParams = {
-  reload?: QueryReloadParameter;
+  reload?: boolean;
 };
 
 export type NgsildAttribute =
