@@ -1,26 +1,6 @@
 import { expect } from "vitest";
-import {
-  type Entity,
-  type CsourceRegistration,
-  type EntitySelector,
-  type SubscriptionCommon,
-  type Property,
-  type GeoProperty,
-  type EntityTemporal,
-  type Subscription,
-  type QueryTemporalBody,
-  type MaybeContext,
-} from "../src/api/schemas";
-import { NgsiLdHttpError, NgsiLdNotFound } from "../src";
-import {
-  deleteBatch,
-  deleteCSR,
-  deleteSubscription,
-  deleteCSRSubscription,
-  queryEntity,
-  queryCSR,
-  querySubscription,
-} from "../src";
+import type { NgsiLdHttpError } from "../src";
+import { deleteBatch, queryEntity, queryCSR, querySubscription } from "../src";
 
 // --- Broker URL ---
 
@@ -52,17 +32,11 @@ export function makeEntity() {
   return {
     "@context": NGSILD_CORE_CONTEXT,
     id,
-    type: "TestEntity",
-    $props: {
-      temperature: {
-        type: "Property" as const,
-        value: 25 + entityCounter,
-      },
+    type: "TestEntity" as const,
+    temperature: {
+      type: "Property" as const,
+      value: 25 + entityCounter,
     },
-  } as const satisfies Entity & {
-    id: string;
-    type: string;
-    "@context": string[];
   };
 }
 
@@ -73,11 +47,11 @@ export function makeEntityWithGeo() {
     location: {
       type: "GeoProperty" as const,
       value: {
-        type: "Point",
-        coordinates: [24.93, 60.17],
+        type: "Point" as const,
+        coordinates: [24.93, 60.17] as [number, number],
       },
     },
-  } as const satisfies Entity & { id: string; type: string };
+  };
 }
 
 function extractIds(data: unknown): string[] {

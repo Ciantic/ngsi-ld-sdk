@@ -37,15 +37,13 @@ function makeTemporalEntity(overrides?: {
     "@context": NGSILD_CORE_CONTEXT,
     id,
     type: overrides?.type ?? "TemporalTestEntity",
-    $props: {
-      temperature: [
-        {
-          type: "Property" as const,
-          value: 25 + temporalCounter,
-          observedAt,
-        },
-      ],
-    },
+    temperature: [
+      {
+        type: "Property" as const,
+        value: 25 + temporalCounter,
+        observedAt,
+      },
+    ],
   };
 }
 
@@ -277,19 +275,19 @@ describe("updateAttrsTemporal", () => {
       timerel: "before",
       timeAt: new Date(Date.now() + 60000).toISOString(),
     });
-    const props = retrieved.$props ?? {};
-    const tempInstances = (props["temperature"] ?? []) as {
+    const tempInstances = (retrieved as any)["temperature"] ?? [];
+    const typedInstances = tempInstances as {
       instanceId?: string;
       observedAt?: string;
     }[];
-    const instanceId = tempInstances[0]?.instanceId;
+    const instanceId = typedInstances[0]?.instanceId;
     if (!instanceId) return; // skip if broker doesn't expose instanceId
 
     const patch = {
       "@context": NGSILD_CORE_CONTEXT,
       type: "Property" as const,
       value: 999,
-      observedAt: tempInstances[0]?.observedAt ?? new Date().toISOString(),
+      observedAt: typedInstances[0]?.observedAt ?? new Date().toISOString(),
     };
 
     if (detectBroker() === "orion") {
@@ -346,11 +344,10 @@ describe("deleteAttrInstanceTemporal", () => {
       timerel: "before",
       timeAt: new Date(Date.now() + 60000).toISOString(),
     });
-    const props = retrieved.$props ?? {};
-    const tempInstances = (props["temperature"] ?? []) as {
+    const tempList = ((retrieved as any)["temperature"] ?? []) as {
       instanceId?: string;
     }[];
-    const instanceId = tempInstances[0]?.instanceId;
+    const instanceId = tempList[0]?.instanceId;
     if (!instanceId) return;
 
     if (detectBroker() === "orion") {

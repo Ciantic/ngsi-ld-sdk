@@ -294,6 +294,7 @@ export const deleteEntity = (
  * @summary Entity merge by id
 
  */
+
 /**
  * 5.6.17 Merge Entity.
  *
@@ -301,10 +302,11 @@ export const deleteEntity = (
  * processing rules defined in IETF RFC 7396 by adding new Attributes (Properties or Relationships)
  * or modifying or deleting existing Attributes associated with an existing Entity.
  * @summary Entity merge by id
-
  */
 export const mergeEntity = <T extends Entity = Entity>(
   entityId: string,
+
+  // TODO: How to ensure there is no extra parameters in mergeEntityBody?
   mergeEntityBody?: WithContext<NonReadonly<Partial<T>>>,
   params?: MergeEntityParams,
   options?: RequestInit,

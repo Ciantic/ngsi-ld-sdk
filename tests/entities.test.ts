@@ -23,6 +23,7 @@ import {
   detectBroker,
 } from "./helpers";
 import { NgsiLdNotFound, NgsiLdConflict } from "../src";
+import { Entity, Property, WithContext } from "../src/api/schemas";
 
 // Wipe all stale resources from previous crashed runs before each test.
 beforeEach(cleanUpAll);
@@ -71,10 +72,8 @@ describe("createEntity", () => {
     // and "humidity" is created locally.
     const entity = {
       ...makeEntity(),
-      $props: {
-        temperature: { type: "Property" as const, value: 25 },
-        humidity: { type: "Property" as const, value: 60 },
-      },
+      temperature: { type: "Property" as const, value: 25 },
+      humidity: { type: "Property" as const, value: 60 },
     };
 
     const response = await createEntity(entity);
@@ -210,18 +209,22 @@ describe("deleteEntity", () => {
 // ---------------------------------------------------------------------------
 describe("mergeEntity", () => {
   it("should merge (PATCH) attributes into an existing entity", async () => {
+    interface TemperatureHumidityEntity extends Entity<"TestEntity"> {
+      temperature: Property;
+      humidity?: Property;
+    }
+
     const entity = makeEntity();
+
     await createEntity(entity);
 
-    const patch = {
+    const patch: WithContext<Partial<TemperatureHumidityEntity>> = {
       "@context": [
         "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
       ],
-      $props: {
-        humidity: {
-          type: "Property" as const,
-          value: 55,
-        },
+      humidity: {
+        type: "Property" as const,
+        value: 55,
       },
     };
 
@@ -229,9 +232,8 @@ describe("mergeEntity", () => {
     expect(response.status).toBe(204);
 
     // Verify the merge worked: retrieve and check the new attribute exists
-    const data = await retrieveEntity(entity.id!);
-    const props = data["$props"];
-    expect(props?.["humidity"]).toBeDefined();
+    const data = await retrieveEntity<TemperatureHumidityEntity>(entity.id!);
+    expect(data.humidity).toBeDefined();
   });
 });
 
@@ -249,11 +251,9 @@ describe("replaceEntity", () => {
       ],
       id: entity.id,
       type: "TestEntity",
-      $props: {
-        replacedAttr: {
-          type: "Property" as const,
-          value: 100,
-        },
+      replacedAttr: {
+        type: "Property" as const,
+        value: 100,
       },
     };
 
@@ -274,11 +274,9 @@ describe("appendAttrs", () => {
       "@context": [
         "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
       ],
-      $props: {
-        newProperty: {
-          type: "Property" as const,
-          value: 42,
-        },
+      newProperty: {
+        type: "Property" as const,
+        value: 42,
       },
     };
 
@@ -299,11 +297,9 @@ describe("updateEntity", () => {
       "@context": [
         "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
       ],
-      $props: {
-        temperature: {
-          type: "Property" as const,
-          value: 99,
-        },
+      temperature: {
+        type: "Property" as const,
+        value: 99,
       },
     };
 
@@ -356,12 +352,10 @@ describe("updateAttrs", () => {
 // ---------------------------------------------------------------------------
 describe("deleteAttrs", () => {
   it("should delete a single attribute from an entity", async () => {
+    const base = makeEntity();
     const entity = {
-      ...makeEntity(),
-      $props: {
-        ...makeEntity().$props,
-        extraAttr: { type: "Property" as const, value: 1 },
-      },
+      ...base,
+      extraAttr: { type: "Property" as const, value: 1 },
     };
     await createEntity(entity);
 
