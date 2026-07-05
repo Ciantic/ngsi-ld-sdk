@@ -20,26 +20,9 @@ import type {
   ContextSourceIdentity,
   LdContext,
   LdContextMetadata,
+  BatchOperationResult,
+  UpdateResult,
 } from "./schemas";
-
-import {
-  AppendAttrsResponse,
-  CreateBatchResponse,
-  CreateEntityResponse,
-  DeleteAttrsResponse,
-  DeleteBatchResponse,
-  DeleteEntityResponse,
-  MergeBatchResponse,
-  MergeEntityResponse,
-  NonReadonly,
-  ReplaceAttrsResponse,
-  ReplaceEntityResponse,
-  UpdateAttrsResponse,
-  UpdateBatchResponse,
-  UpdateEntityResponse,
-  UpsertBatchResponse,
-  UpsertTemporalResponse,
-} from "./types.ts";
 
 import {
   getAppendAttrsTemporalUrl,
@@ -1722,3 +1705,148 @@ export const retrieveCSIdentityInfo = (options?: RequestInit) => {
     },
   );
 };
+
+type NonReadonly<T> = {
+  -readonly [P in keyof T]: T[P];
+};
+
+type CreateEntityResponse =
+  | {
+      status: 201;
+      location: string;
+    }
+  | {
+      data: BatchOperationResult;
+      status: 207;
+    };
+
+type DeleteEntityResponse =
+  | {
+      status: 204;
+    }
+  | {
+      data: BatchOperationResult;
+      status: 207;
+    };
+
+type MergeEntityResponse =
+  | {
+      status: 204;
+    }
+  | {
+      data: BatchOperationResult;
+      status: 207;
+    };
+
+type ReplaceEntityResponse =
+  | {
+      status: 204;
+    }
+  | {
+      data: BatchOperationResult;
+      status: 207;
+    };
+
+type AppendAttrsResponse =
+  | {
+      status: 204;
+    }
+  | {
+      data: UpdateResult;
+      status: 207;
+    };
+
+type UpdateEntityResponse =
+  | {
+      status: 204;
+    }
+  | {
+      data: UpdateResult;
+      status: 207;
+    };
+
+type UpdateAttrsResponse =
+  | {
+      status: 204;
+    }
+  | {
+      data: UpdateResult;
+      status: 207;
+    };
+
+type DeleteAttrsResponse =
+  | {
+      status: 204;
+    }
+  | {
+      data: UpdateResult;
+      status: 207;
+    };
+
+type ReplaceAttrsResponse =
+  | {
+      status: 204;
+    }
+  | {
+      data: UpdateResult;
+      status: 207;
+    };
+
+type CreateBatchResponse =
+  | {
+      data: string[];
+      status: 201;
+    }
+  | {
+      data: BatchOperationResult;
+      status: 207;
+    };
+
+type UpsertBatchResponse =
+  | {
+      status: 201;
+      location: string;
+    }
+  | {
+      status: 204;
+    }
+  | {
+      status: 207;
+      data: BatchOperationResult;
+    };
+
+type UpdateBatchResponse =
+  | {
+      status: 204;
+    }
+  | {
+      data: BatchOperationResult;
+      status: 207;
+    };
+
+type DeleteBatchResponse =
+  | {
+      status: 204;
+    }
+  | {
+      data: BatchOperationResult;
+      status: 207;
+    };
+
+type MergeBatchResponse =
+  | {
+      status: 204;
+    }
+  | {
+      data: BatchOperationResult;
+      status: 207;
+    };
+
+type UpsertTemporalResponse =
+  | {
+      status: 201;
+      location: string;
+    }
+  | {
+      status: 204;
+    };
