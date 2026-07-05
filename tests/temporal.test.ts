@@ -9,7 +9,9 @@ import {
   updateAttrsTemporal,
   deleteAttrInstanceTemporal,
   temporalQueryBatch,
+  retrieveEntity,
   NgsiLdNotImplemented,
+  schemas,
 } from "../src";
 import { cleanUpAll, detectBroker, expectHttpError } from "./helpers";
 import { NgsiLdBadRequest, NgsiLdNotFound } from "../src";
@@ -22,6 +24,14 @@ const NGSILD_CORE_CONTEXT = [
 ];
 
 let temporalCounter = 0;
+
+interface TemperatureSensor extends schemas.Entity<"TemperatureSensor"> {
+  temperature: schemas.Property<number>;
+}
+
+interface TemporalTemperatureSensor extends schemas.EntityTemporal<"TemperatureSensor"> {
+  temperature: schemas.Property<number>[];
+}
 
 /** Create a minimal temporal entity body with observedAt timestamps. */
 function makeTemporalEntity(overrides?: {
@@ -73,10 +83,40 @@ describe("upsertTemporal", () => {
 
     expect([201, 204]).toContain(response.status);
   });
-});
+  it("should make the entity available via retrieveEntity with the latest temporal value", async () => {
+    // Test verifies that temporal entity value is available via the regular
+    // entity endpoint, with the latest temporal value as a plain Property (not
+    // an array).
 
-// ---------------------------------------------------------------------------
-// 2. queryTemporal
+    const observedAt = new Date().toISOString();
+    const entity = makeTemporalEntity({
+      observedAt,
+    });
+    await upsertTemporal(entity);
+
+    // Orion-LD does not sync temporal data to the regular entity endpoint, and thus gives 404
+    if (detectBroker() === "orion") {
+      try {
+        await retrieveEntity(entity.id!);
+      } catch (err) {
+        expect(err).toBeInstanceOf(NgsiLdNotFound);
+        return;
+      }
+    }
+
+    // The regular entity endpoint should return the entity, with the latest
+    // temporal attribute value as a plain Property (not an array).
+    const regular = await retrieveEntity<TemperatureSensor>(entity.id!);
+
+    expect(regular.id).toBe(entity.id);
+    expect(regular.type).toBe(entity.type);
+    // The temporal Property[] is collapsed to a single Property on the
+    // regular entity endpoint.;
+    expect(regular.temperature).toBeDefined();
+    expect(regular.temperature.type).toBe("Property");
+    expect(regular.temperature.value).toBe(entity.temperature[0].value);
+  });
+});
 // ---------------------------------------------------------------------------
 describe("queryTemporal", () => {
   const timeAt = new Date().toISOString();
