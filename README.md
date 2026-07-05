@@ -129,7 +129,7 @@ await upsertTemporal<TemperatureSensorTemporal>({
   ],
 });
 
-const temporalData = await queryTemporal<TemperatureSensorTemporal>({
+const tempEntities = await queryTemporal<TemperatureSensorTemporal>({
   type: "TemperatureSensor",
   timerel: "between",
   timeAt: now,
@@ -138,10 +138,10 @@ const temporalData = await queryTemporal<TemperatureSensorTemporal>({
   limit: 1, // Number of entities
 });
 
-expect(temporalData.length).toBe(1);
-expect(temporalData[0].id).toBe("urn:ngsi-ld:TemperatureSensor:001");
-expect(temporalData[0].temperature!.length).toBe(1);
-expect(temporalData[0].temperature![0].value).toBe(25.0);
+expect(tempEntities.length).toBe(1);
+expect(tempEntities[0].id).toBe("urn:ngsi-ld:TemperatureSensor:001");
+expect(tempEntities[0].temperature!.length).toBe(1);
+expect(tempEntities[0].temperature![0].value).toBe(25.0);
 ```
 
 ## Operations
