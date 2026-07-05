@@ -142,7 +142,10 @@ const ourEntity = temporalData.find(
   (e) => e.id === "urn:ngsi-ld:TemperatureSensor:001",
 );
 
-expect(ourEntity?.temperature[0].value).toBe(25);
+const ourValue = ourEntity?.temperature?.find(
+  (t) => t.observedAt === later,
+);
+expect(ourValue?.value).toBe(25.0);
 ```
 
 ## Operations
