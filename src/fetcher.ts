@@ -50,7 +50,7 @@ export const fetcher = async <T>(
 
   const response = await fetch(targetUrl, {
     method,
-    body: wireBody,
+    ...(typeof wireBody !== "undefined" ? { body: wireBody } : {}),
     headers: {
       "Content-Type": "application/ld+json",
       Accept: "application/ld+json",

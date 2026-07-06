@@ -222,9 +222,15 @@ export interface EntityTemporal<TType extends EntityTypeName = EntityTypeName> {
   id: string;
   type: TType;
   scope?: Scope;
-  location?: GeoProperty;
-  observationSpace?: GeoProperty;
-  operationSpace?: GeoProperty;
+
+  // Specs define following as non-array values, but implementations handle them
+  // like normal properties, meaning they appear as array of values in temporal
+  // entities:
+
+  // location?: GeoProperty;
+  // observationSpace?: GeoProperty;
+  // operationSpace?: GeoProperty;
+
   readonly createdAt?: string;
   readonly modifiedAt?: string;
   readonly deletedAt?: string;
@@ -560,3 +566,42 @@ export type RequiredObservedAt<T> = T & {
 
 export type NgsildAttributeTemporal =
   RequiredObservedAt<NgsildAttribute> | RequiredObservedAt<NgsildAttribute>[];
+
+type FinalType<T> = T extends infer U ? { [K in keyof U]: U[K] } : never;
+
+type NonOptionalKeys<T> = {
+  [K in keyof T]-?: T extends { [K1 in K]: any } ? K : never;
+}[keyof T];
+
+type OptionalKeys<T> = {
+  [K in keyof T]-?: T extends { [K1 in K]: any } ? never : K;
+}[keyof T];
+
+type RemoveUndefined<T> = T extends undefined ? never : T;
+
+export type InferEntityTemporal<TEntity extends Entity> = FinalType<
+  {
+    id: string;
+    type: TEntity["type"];
+    scope?: Scope;
+    readonly createdAt?: string;
+    readonly modifiedAt?: string;
+    readonly deletedAt?: string;
+  } & {
+    // Required properties
+    [
+      K in NonOptionalKeys<TEntity> as [TEntity[K]] extends [NgsildAttribute]
+        ? K
+        : never
+    ]: RequiredObservedAt<TEntity[K]>[];
+  } & {
+    // Optional properties
+    [
+      K in OptionalKeys<TEntity> as [TEntity[K]] extends [
+        NgsildAttribute | undefined,
+      ]
+        ? K
+        : never
+    ]?: RequiredObservedAt<RemoveUndefined<TEntity[K]>>[];
+  }
+>;

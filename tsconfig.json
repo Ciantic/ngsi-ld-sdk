@@ -8,6 +8,7 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "allowImportingTsExtensions": true,
+    "exactOptionalPropertyTypes": true,
     "skipLibCheck": true
   },
   "include": ["src", "tests"],
