@@ -27,4 +27,45 @@ describe("schemas", () => {
       temperature: schemas.RequiredObservedAt<schemas.Property<number>>[];
     }>();
   });
+
+  it("should infer data setted temporal entity type correctly", () => {
+    interface TemperatureSensor extends schemas.Entity<"TemperatureSensor"> {
+      temperature: schemas.Datasetted<
+        [
+          schemas.WithDatasetId<
+            schemas.Property<number>,
+            "urn:ngsi-ld:Dataset:SensorA"
+          >,
+          schemas.WithDatasetId<
+            schemas.Property<number>,
+            "urn:ngsi-ld:Dataset:SensorB"
+          >,
+        ]
+      >;
+    }
+    type TemporalTemperatureSensor =
+      schemas.InferEntityTemporal<TemperatureSensor>;
+
+    expectTypeOf<TemporalTemperatureSensor>().toEqualTypeOf<{
+      id: string;
+      type: "TemperatureSensor";
+      scope?: schemas.Scope;
+      readonly createdAt?: string;
+      readonly modifiedAt?: string;
+      readonly deletedAt?: string;
+      location?: schemas.RequiredObservedAt<schemas.GeoProperty>[];
+      observationSpace?: schemas.RequiredObservedAt<schemas.GeoProperty>[];
+      operationSpace?: schemas.RequiredObservedAt<schemas.GeoProperty>[];
+      temperature: schemas.RequiredObservedAt<
+        | schemas.WithDatasetId<
+            schemas.Property<number>,
+            "urn:ngsi-ld:Dataset:SensorA"
+          >
+        | schemas.WithDatasetId<
+            schemas.Property<number>,
+            "urn:ngsi-ld:Dataset:SensorB"
+          >
+      >[];
+    }>();
+  });
 });

@@ -158,16 +158,14 @@ describe("README.md examples", () => {
     interface TemperatureSensor extends schemas.Entity<"TemperatureSensor"> {
       temperature: schemas.Datasetted<
         [
-          {
-            type: "Property";
-            value: number;
-            datasetId: "urn:ngsi-ld:Dataset:SensorA";
-          },
-          {
-            type: "Property";
-            value: number;
-            datasetId: "urn:ngsi-ld:Dataset:SensorB";
-          },
+          schemas.WithDatasetId<
+            schemas.Property<number>,
+            "urn:ngsi-ld:Dataset:SensorA"
+          >,
+          schemas.WithDatasetId<
+            schemas.Property<number>,
+            "urn:ngsi-ld:Dataset:SensorB"
+          >,
         ]
       >;
     }
@@ -179,7 +177,6 @@ describe("README.md examples", () => {
       "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
       id: "urn:ngsi-ld:TemperatureSensor:002",
       type: "TemperatureSensor",
-      // @ts-expect-error
       temperature: [
         {
           type: "Property",
@@ -208,7 +205,6 @@ describe("README.md examples", () => {
 
     expect(tempEntities.length).toBe(1);
     expect(tempEntities[0].id).toBe("urn:ngsi-ld:TemperatureSensor:002");
-    // @ts-expect-error
     expect(tempEntities[0].temperature!.length).toBe(2);
   });
 });

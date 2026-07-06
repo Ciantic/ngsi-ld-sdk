@@ -159,16 +159,14 @@ expect(tempEntities[0].temperature![0].value).toBe(25.0);
 interface TemperatureSensor extends schemas.Entity<"TemperatureSensor"> {
   temperature: schemas.Datasetted<
     [
-      {
-        type: "Property";
-        value: number;
-        datasetId: "urn:ngsi-ld:Dataset:SensorA";
-      },
-      {
-        type: "Property";
-        value: number;
-        datasetId: "urn:ngsi-ld:Dataset:SensorB";
-      },
+      schemas.WithDatasetId<
+        schemas.Property<number>,
+        "urn:ngsi-ld:Dataset:SensorA"
+      >,
+      schemas.WithDatasetId<
+        schemas.Property<number>,
+        "urn:ngsi-ld:Dataset:SensorB"
+      >,
     ]
   >;
 }
@@ -180,7 +178,6 @@ await upsertTemporal<TemperatureSensor>({
   "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
   id: "urn:ngsi-ld:TemperatureSensor:002",
   type: "TemperatureSensor",
-  // @ts-expect-error
   temperature: [
     {
       type: "Property",
@@ -209,7 +206,6 @@ const tempEntities = await queryTemporal<TemperatureSensor>({
 
 expect(tempEntities.length).toBe(1);
 expect(tempEntities[0].id).toBe("urn:ngsi-ld:TemperatureSensor:002");
-// @ts-expect-error
 expect(tempEntities[0].temperature!.length).toBe(2);
 ```
 

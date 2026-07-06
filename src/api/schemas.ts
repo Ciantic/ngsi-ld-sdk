@@ -594,8 +594,31 @@ export type InferEntityTemporal<TEntity extends Entity> = FinalType<
         ? K
         : never
     ]?: RequiredObservedAt<RemoveUndefined<TEntity[K]>>[];
+  } & {
+    // Datasetted required properties (tuple/array of attributes, e.g. Datasetted<[...]>)
+    [
+      K in NonOptionalKeys<TEntity> as [TEntity[K]] extends [
+        readonly NgsildAttribute[],
+      ]
+        ? [TEntity[K]] extends [NgsildAttribute]
+          ? never
+          : K
+        : never
+    ]: RequiredObservedAt<
+      TEntity[K] extends readonly (infer E)[] ? E : never
+    >[];
+  } & {
+    // Datasetted optional properties
+    [
+      K in OptionalKeys<TEntity> as [RemoveUndefined<TEntity[K]>] extends [
+        readonly NgsildAttribute[],
+      ]
+        ? [RemoveUndefined<TEntity[K]>] extends [NgsildAttribute]
+          ? never
+          : K
+        : never
+    ]?: RequiredObservedAt<
+      RemoveUndefined<TEntity[K]> extends readonly (infer E)[] ? E : never
+    >[];
   }
-  // TODO: Datasetted properties inference
-  // & {}
-  // & {}
 >;
