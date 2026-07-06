@@ -95,14 +95,14 @@ expect(updatedEntity.temperature!.value).toBe(25.0);
 ### Add temporal temperature values
 
 ```typescript
-interface TemperatureSensorTemporal extends schemas.EntityTemporal<"TemperatureSensor"> {
-  temperature: schemas.Property<number>[];
+interface TemperatureSensor extends schemas.Entity<"TemperatureSensor"> {
+  temperature: schemas.Property<number>;
 }
 
 const now = new Date().toISOString();
 const later = new Date(Date.now() + 3600000).toISOString();
 
-await upsertTemporal<TemperatureSensorTemporal>({
+await upsertTemporal<TemperatureSensor>({
   "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
   id: "urn:ngsi-ld:TemperatureSensor:001",
   type: "TemperatureSensor",
@@ -116,7 +116,7 @@ await upsertTemporal<TemperatureSensorTemporal>({
 });
 
 // Add a new temperature value later in time
-await upsertTemporal<TemperatureSensorTemporal>({
+await upsertTemporal<TemperatureSensor>({
   "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
   id: "urn:ngsi-ld:TemperatureSensor:001",
   type: "TemperatureSensor",
@@ -129,7 +129,7 @@ await upsertTemporal<TemperatureSensorTemporal>({
   ],
 });
 
-const tempEntities = await queryTemporal<TemperatureSensorTemporal>({
+const tempEntities = await queryTemporal<TemperatureSensor>({
   type: "TemperatureSensor",
   timerel: "between",
   timeAt: now,
