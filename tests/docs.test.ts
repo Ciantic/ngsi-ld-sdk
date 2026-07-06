@@ -96,14 +96,14 @@ describe("README.md examples", () => {
   });
 
   it("Add temporal temperature values", async () => {
-    interface TemperatureSensorTemporal extends schemas.EntityTemporal<"TemperatureSensor"> {
-      temperature: schemas.Property<number>[];
+    interface TemperatureSensor extends schemas.Entity<"TemperatureSensor"> {
+      temperature: schemas.Property<number>;
     }
 
     const now = new Date().toISOString();
     const later = new Date(Date.now() + 3600000).toISOString();
 
-    await upsertTemporal<TemperatureSensorTemporal>({
+    await upsertTemporal<TemperatureSensor>({
       "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
       id: "urn:ngsi-ld:TemperatureSensor:001",
       type: "TemperatureSensor",
@@ -117,7 +117,7 @@ describe("README.md examples", () => {
     });
 
     // Add a new temperature value later in time
-    await upsertTemporal<TemperatureSensorTemporal>({
+    await upsertTemporal<TemperatureSensor>({
       "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
       id: "urn:ngsi-ld:TemperatureSensor:001",
       type: "TemperatureSensor",
@@ -130,7 +130,7 @@ describe("README.md examples", () => {
       ],
     });
 
-    const tempEntities = await queryTemporal<TemperatureSensorTemporal>({
+    const tempEntities = await queryTemporal<TemperatureSensor>({
       type: "TemperatureSensor",
       timerel: "between",
       timeAt: now,

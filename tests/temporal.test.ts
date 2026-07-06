@@ -29,10 +29,6 @@ interface TemperatureSensor extends schemas.Entity<"TemperatureSensor"> {
   temperature: schemas.Property<number>;
 }
 
-interface TemporalTemperatureSensor extends schemas.EntityTemporal<"TemperatureSensor"> {
-  temperature: schemas.Property<number>[];
-}
-
 /** Create a minimal temporal entity body with observedAt timestamps. */
 function makeTemporalEntity(overrides?: {
   type?: string;

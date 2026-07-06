@@ -218,24 +218,6 @@ export interface EntitySelector {
   type: string;
 }
 
-export interface EntityTemporal<TType extends EntityTypeName = EntityTypeName> {
-  id: string;
-  type: TType;
-  scope?: Scope;
-
-  // Specs define following as non-array values, but implementations handle them
-  // like normal properties, meaning they appear as array of values in temporal
-  // entities:
-
-  // location?: GeoProperty;
-  // observationSpace?: GeoProperty;
-  // operationSpace?: GeoProperty;
-
-  readonly createdAt?: string;
-  readonly modifiedAt?: string;
-  readonly deletedAt?: string;
-}
-
 export interface EntityType {
   id: string;
   type: "EntityType";

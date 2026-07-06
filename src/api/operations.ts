@@ -3,7 +3,6 @@ import type {
   CsourceRegistration,
   Entity,
   EntityMap,
-  EntityTemporal,
   EntityTypeInfo,
   EntityType,
   EntityTypeList,
@@ -22,6 +21,7 @@ import type {
   UpdateResult,
   NgsildAttribute,
   RequiredObservedAt,
+  InferEntityTemporal,
 } from "./schemas";
 
 import {
@@ -568,8 +568,8 @@ export const mergeBatch = <T extends Entity = Entity>(
   });
 };
 
-export const upsertTemporal = <T extends EntityTemporal = EntityTemporal>(
-  entityTemporalBody?: WithContext<T>,
+export const upsertTemporal = <T extends Entity = Entity>(
+  entityTemporalBody?: WithContext<InferEntityTemporal<T>>,
   params?: Parameters<typeof getUpsertTemporalUrl>[0],
   options?: RequestInit,
 ) => {
@@ -581,13 +581,13 @@ export const upsertTemporal = <T extends EntityTemporal = EntityTemporal>(
   });
 };
 
-export const queryTemporal = <T extends EntityTemporal = EntityTemporal>(
+export const queryTemporal = <T extends Entity = Entity>(
   params?: Parameters<
     typeof getQueryTemporalUrl<T["type"] extends string ? T["type"] : string>
   >[0],
   options?: RequestInit,
 ) => {
-  return fetcher<MaybeContext<T>[]>(
+  return fetcher<MaybeContext<InferEntityTemporal<T>>[]>(
     getQueryTemporalUrl<T["type"] extends string ? T["type"] : string>(params),
     {
       ...options,
@@ -597,16 +597,19 @@ export const queryTemporal = <T extends EntityTemporal = EntityTemporal>(
   );
 };
 
-export const retrieveTemporal = <T extends EntityTemporal = EntityTemporal>(
+export const retrieveTemporal = <T extends Entity = Entity>(
   entityId: string,
   params?: Parameters<typeof getRetrieveTemporalUrl>[1],
   options?: RequestInit,
 ) => {
-  return fetcher<MaybeContext<T>>(getRetrieveTemporalUrl(entityId, params), {
-    ...options,
-    method: "GET",
-    returnFormat: "body",
-  });
+  return fetcher<MaybeContext<InferEntityTemporal<T>>>(
+    getRetrieveTemporalUrl(entityId, params),
+    {
+      ...options,
+      method: "GET",
+      returnFormat: "body",
+    },
+  );
 };
 
 export const deleteTemporal = (
@@ -621,9 +624,9 @@ export const deleteTemporal = (
   });
 };
 
-export const appendAttrsTemporal = <T extends EntityTemporal = EntityTemporal>(
+export const appendAttrsTemporal = <T extends Entity = Entity>(
   entityId: string,
-  entityTemporalFragmentBody?: WithContext<Partial<T>>,
+  entityTemporalFragmentBody?: WithContext<Partial<InferEntityTemporal<T>>>,
   params?: Parameters<typeof getAppendAttrsTemporalUrl>[1],
   options?: RequestInit,
 ) => {
@@ -688,18 +691,21 @@ export const deleteAttrInstanceTemporal = (
   );
 };
 
-export const temporalQueryBatch = <T extends EntityTemporal = EntityTemporal>(
+export const temporalQueryBatch = <T extends Entity = Entity>(
   queryTemporalBody: QueryTemporal,
   params?: Parameters<typeof getTemporalQueryBatchUrl>[0],
   options?: RequestInit,
 ) => {
-  return fetcher<MaybeContext<T>[]>(getTemporalQueryBatchUrl(params), {
-    ...options,
-    method: "POST",
-    headers: { "Content-Type": "application/json", ...options?.headers },
-    body: JSON.stringify(queryTemporalBody),
-    returnFormat: "body",
-  });
+  return fetcher<MaybeContext<InferEntityTemporal<T>>[]>(
+    getTemporalQueryBatchUrl(params),
+    {
+      ...options,
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...options?.headers },
+      body: JSON.stringify(queryTemporalBody),
+      returnFormat: "body",
+    },
+  );
 };
 
 export const retrieveEntityTypes = (
