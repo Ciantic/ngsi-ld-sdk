@@ -38,23 +38,6 @@ declare module "vitest" {
   }
 }
 
-/**
- * Call instead of comparing {@link detectBroker} directly in test bodies.
- * Returns `true` when the running broker matches one of the expected values,
- * and records the gate for the end-of-run summary table via Vitest's
- * {@link https://vitest.dev/api/advanced/metadata | TaskMeta} RPC.
- *
- * Only records the gate when the broker actually matches — so "orion" gates
- * don't show up when running against Stellio and vice versa.
- *
- * @example
- * // single broker
- * if (gateBroker("orion", "no 207 multi-status")) { ... }
- *
- * @example
- * // multiple brokers (either matches)
- * if (gateBroker(["stellio", "orion"], "ListProperty not implemented")) { ... }
- */
 export function gateBroker(
   expected: BrokerName | BrokerName[],
   reason: string,
@@ -65,9 +48,6 @@ export function gateBroker(
     : expected === broker;
 
   if (matched) {
-    // getCurrentTest() uses AsyncLocalStorage internally — works from any
-    // test() or describe() callback without { task } destructuring.
-    // The meta is then shipped to the reporter by Vitest's RPC layer.
     const meta = TestRunner.getCurrentTest()?.meta;
     if (meta) {
       meta.brokerGate = { broker, reason };

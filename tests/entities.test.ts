@@ -109,7 +109,7 @@ describe("createEntity", () => {
     const response = await createEntity(entity);
 
     // NOTE: This test fails with Orion-LD, it doesn't support 207, it always gives 201
-    if (gateBroker("orion", "no 207 multi-status")) {
+    if (gateBroker("orion", "createEntity has no 207 multi-status")) {
       expect(response.status).toBe(201);
       return;
     }

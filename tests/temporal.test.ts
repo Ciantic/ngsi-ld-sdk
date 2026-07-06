@@ -229,9 +229,7 @@ describe("deleteTemporal", () => {
         "urn:ngsi-ld:TemporalEntity:nonexistent-delete-99999",
       );
     } catch (err) {
-      if (
-        gateBroker("orion", "deleteTemporal returns not-implemented for 404")
-      ) {
+      if (gateBroker("orion", "deleteTemporal not implemented")) {
         expect(err).toBeInstanceOf(NgsiLdNotImplemented);
         return;
       }
@@ -288,7 +286,7 @@ describe("appendAttrsTemporal", () => {
         newAttrs,
       );
     } catch (err) {
-      if (gateBroker("orion", "appendAttrsTemporal returns not-implemented")) {
+      if (gateBroker("orion", "appendAttrsTemporal not implemented")) {
         expect(err).toBeInstanceOf(NgsiLdNotImplemented);
         return;
       }
@@ -332,7 +330,7 @@ describe("deleteAttrsTemporal", () => {
         "temperature",
       );
     } catch (err) {
-      if (gateBroker("orion", "deleteAttrsTemporal returns not-implemented")) {
+      if (gateBroker("orion", "deleteAttrsTemporal not implemented")) {
         expect(err).toBeInstanceOf(NgsiLdNotImplemented);
         return;
       }
@@ -401,7 +399,7 @@ describe("updateAttrsTemporal", () => {
         patch,
       );
     } catch (err) {
-      if (gateBroker("orion", "updateAttrsTemporal returns not-implemented")) {
+      if (gateBroker("orion", "updateAttrsTemporal not implemented")) {
         expect(err).toBeInstanceOf(NgsiLdNotImplemented);
         return;
       }
@@ -452,12 +450,7 @@ describe("deleteAttrInstanceTemporal", () => {
         "urn:ngsi-ld:instanceId:nonexistent",
       );
     } catch (err) {
-      if (
-        gateBroker(
-          "orion",
-          "deleteAttrInstanceTemporal returns not-implemented",
-        )
-      ) {
+      if (gateBroker("orion", "deleteAttrInstanceTemporal not implemented")) {
         expect(err).toBeInstanceOf(NgsiLdNotImplemented);
         return;
       }
