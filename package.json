@@ -3,12 +3,7 @@
   "version": "0.0.1",
   "description": "NGSI-LD SDK for interacting with FIWARE Orion-LD broker",
   "homepage": "https://github.com/Ciantic/ngsi-ld-sdk",
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "https://github.com/Ciantic/ngsi-ld-sdk/blob/main/LICENSE.txt"
-    }
-  ],
+  "license": "MIT",
   "repository": {
     "url": "https://github.com/Ciantic/ngsi-ld-sdk.git",
     "type": "git"
@@ -30,7 +25,6 @@
     "test:docker-orion-temporal": "node test-runner.ts docker-test-orion-with-temporal http://orion-ld:1026/ngsi-ld/v1",
     "test:docker-stellio": "node test-runner.ts docker-test-stellio http://api-gateway:8080/ngsi-ld/v1"
   },
-  "license": "MIT",
   "devDependencies": {
     "prettier": "^3.9.1",
     "ts-morph": "^28.0.0",
