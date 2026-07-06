@@ -16,12 +16,7 @@ import {
   NgsiLdNotImplemented,
   NgsiLdInternalServerError,
 } from "../src";
-import {
-  makeEntity,
-  expectHttpError,
-  cleanUpAll,
-  gateBroker,
-} from "./helpers";
+import { makeEntity, expectHttpError, cleanUpAll, gateBroker } from "./helpers";
 import { NgsiLdNotFound, NgsiLdHttpError } from "../src";
 
 // Wipe all stale resources from previous crashed runs before each test.
@@ -51,7 +46,9 @@ describe("retrieveEntityTypes", () => {
     const entity = { ...makeEntity(), type: "DiscoveryLocalEntity" };
     await createEntity(entity);
 
-    if (gateBroker("stellio", "no local=true for entityTypes")) {
+    if (
+      gateBroker("stellio", "retrieveEntityTypes has no ?local=true support")
+    ) {
       await expect(() => retrieveEntityTypes({ local: true })).rejects.toThrow(
         NgsiLdNotImplemented,
       );
@@ -136,7 +133,7 @@ describe("createContext", () => {
       },
     };
 
-    if (gateBroker("stellio", "no jsonldContexts endpoints")) {
+    if (gateBroker("stellio", "jsonldContexts not implemented")) {
       // Stellio does not support jsonldContexts endpoints; returns 500 with
       // "No static resource ngsi-ld/v1/jsonldContexts for request
       // 'http://search-service:8083/ngsi-ld/v1/jsonldContexts'."
@@ -157,7 +154,7 @@ describe("createContext", () => {
 // ---------------------------------------------------------------------------
 describe("listContexts", () => {
   it("should list all contexts and return 200", async () => {
-    if (gateBroker("stellio", "no jsonldContexts endpoints")) {
+    if (gateBroker("stellio", "jsonldContexts not implemented")) {
       // Stellio does not support jsonldContexts endpoints
       await expect(() => listContexts()).rejects.toThrow(
         NgsiLdInternalServerError,
@@ -170,7 +167,7 @@ describe("listContexts", () => {
   });
 
   it("should support details=true query parameter", async () => {
-    if (gateBroker("stellio", "no jsonldContexts endpoints")) {
+    if (gateBroker("stellio", "jsonldContexts not implemented")) {
       // Stellio does not support jsonldContexts endpoints
       await expect(() => listContexts({ details: true })).rejects.toThrow(
         NgsiLdInternalServerError,
@@ -198,7 +195,7 @@ describe("retrieveContext", () => {
       },
     };
 
-    if (gateBroker("stellio", "no jsonldContexts endpoints")) {
+    if (gateBroker("stellio", "jsonldContexts not implemented")) {
       // Stellio does not support jsonldContexts endpoints, so createContext
       // will fail, and we cannot retrieve a context that was never created.
       await expect(() => createContext(contextBody)).rejects.toThrow(
@@ -222,7 +219,7 @@ describe("retrieveContext", () => {
       },
     };
 
-    if (gateBroker("stellio", "no jsonldContexts endpoints")) {
+    if (gateBroker("stellio", "jsonldContexts not implemented")) {
       // Stellio does not support jsonldContexts endpoints
       await expect(() => createContext(contextBody)).rejects.toThrow(
         NgsiLdInternalServerError,
@@ -242,7 +239,7 @@ describe("retrieveContext", () => {
     try {
       await retrieveContext("urn:ngsi-ld:context:nonexistent-12345");
     } catch (err) {
-      if (gateBroker("stellio", "jsonldContexts returns 405 not 404")) {
+      if (gateBroker("stellio", "jsonldContexts not implemented")) {
         // Stellio returns 405 (only DELETE is supported) since the jsonldContexts
         // endpoint is not implemented.
         expect(err).toBeInstanceOf(NgsiLdHttpError);
@@ -263,7 +260,7 @@ describe("deleteContext", () => {
         deleteTestCtx: "http://example.org/delete-test/",
       },
     };
-    if (gateBroker("stellio", "no jsonldContexts endpoints")) {
+    if (gateBroker("stellio", "jsonldContexts not implemented")) {
       // Stellio does not support jsonldContexts endpoints, so createContext
       // will fail, and we cannot delete a context that was never created.
       await expect(() => createContext(contextBody)).rejects.toThrow(
@@ -333,7 +330,7 @@ describe("deleteEntityMap", () => {
 // ---------------------------------------------------------------------------
 describe("retrieveCSIdentityInfo", () => {
   it("should retrieve context source identity info", async () => {
-    if (gateBroker("stellio", "no /info/sourceIdentity endpoint")) {
+    if (gateBroker("stellio", "retrieveCSIdentityInfo not implemented")) {
       // Stellio returns 404 for the /info/sourceIdentity endpoint
       await expect(() => retrieveCSIdentityInfo()).rejects.toThrow(
         NgsiLdNotFound,

@@ -71,7 +71,7 @@ describe("upsertTemporal", () => {
   it("should support local=true query parameter", async () => {
     const entity = makeTemporalEntity();
 
-    if (gateBroker("stellio", "no local=true for temporal")) {
+    if (gateBroker("stellio", "upsertTemporal has no ?local=true support")) {
       // Stellio does not support local=true for temporal operations
       await expect(() =>
         upsertTemporal(entity, { local: true }),
