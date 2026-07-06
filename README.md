@@ -274,6 +274,6 @@ Operations are named after operationId defined in the OpenAPI specification.
 
 ## Notes
 
-This wrapper intentionally sets the Content-Type and Accept headers to `application/ld+json` for all requests. Exceptions: `queryBatch` and `temporalQueryBatch` are still using `application/json`, reason being that Stellio didn't support `@context` proeprty in query batch and temporal query batch, but Orion-LD did. Thus the SDK wrapper sets the Content-Type and Accept headers to `application/json` for those two requests.
+This wrapper intentionally sets the Content-Type and Accept headers to `application/ld+json` for all requests. Exceptions: `queryBatch` and `temporalQueryBatch` are still using `application/json`, reason being that Stellio didn't support `@context` property in query batch and temporal query batch, but Orion-LD did. Thus the SDK wrapper sets the Content-Type and Accept headers to `application/json` for those two requests.
 
 Geo functions use `application/geo+json` for Accept headers, as required by the NGSI-LD specification.

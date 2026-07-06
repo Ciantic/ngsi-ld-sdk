@@ -101,7 +101,7 @@ export const queryEntity = <T extends Entity = Entity>(
   >[0],
   options?: RequestInit,
 ) => {
-  return fetcher<MaybeContext<T>[]>(
+  return fetcher<WithContext<T>[]>(
     getQueryEntityUrl<T["type"] extends string ? T["type"] : string>(params),
     {
       ...options,
@@ -133,7 +133,7 @@ export const retrieveEntity = <T extends Entity = Entity>(
   params?: Parameters<typeof getRetrieveEntityUrl>[1],
   options?: RequestInit,
 ) => {
-  return fetcher<MaybeContext<T>>(getRetrieveEntityUrl(entityId, params), {
+  return fetcher<WithContext<T>>(getRetrieveEntityUrl(entityId, params), {
     ...options,
     method: "GET",
     returnFormat: "body",
@@ -290,7 +290,7 @@ export const queryCSR = (
   params?: Parameters<typeof getQueryCSRUrl>[0],
   options?: RequestInit,
 ) => {
-  return fetcher<MaybeContext<CsourceRegistration>[]>(getQueryCSRUrl(params), {
+  return fetcher<WithContext<CsourceRegistration>[]>(getQueryCSRUrl(params), {
     ...options,
     method: "GET",
     returnFormat: "body",
@@ -302,7 +302,7 @@ export const retrieveCSR = (
   params?: Parameters<typeof getRetrieveCSRUrl>[1],
   options?: RequestInit,
 ) => {
-  return fetcher<MaybeContext<CsourceRegistration>>(
+  return fetcher<WithContext<CsourceRegistration>>(
     getRetrieveCSRUrl(registrationId, params),
     {
       ...options,
@@ -352,14 +352,11 @@ export const querySubscription = (
   params?: Parameters<typeof getQuerySubscriptionUrl>[0],
   options?: RequestInit,
 ) => {
-  return fetcher<MaybeContext<Subscription>[]>(
-    getQuerySubscriptionUrl(params),
-    {
-      ...options,
-      method: "GET",
-      returnFormat: "body",
-    },
-  );
+  return fetcher<WithContext<Subscription>[]>(getQuerySubscriptionUrl(params), {
+    ...options,
+    method: "GET",
+    returnFormat: "body",
+  });
 };
 
 export const retrieveSubscription = (
@@ -367,7 +364,7 @@ export const retrieveSubscription = (
   params?: Parameters<typeof getRetrieveSubscriptionUrl>[1],
   options?: RequestInit,
 ) => {
-  return fetcher<MaybeContext<Subscription>>(
+  return fetcher<WithContext<Subscription>>(
     getRetrieveSubscriptionUrl(subscriptionId, params),
     {
       ...options,
@@ -421,7 +418,7 @@ export const queryCSRSubscription = (
   params?: Parameters<typeof getQueryCSRSubscriptionUrl>[0],
   options?: RequestInit,
 ) => {
-  return fetcher<MaybeContext<Subscription>[]>(
+  return fetcher<WithContext<Subscription>[]>(
     getQueryCSRSubscriptionUrl(params),
     {
       ...options,
@@ -436,7 +433,7 @@ export const retrieveCSRSubscription = (
   params?: Parameters<typeof getRetrieveCSRSubscriptionUrl>[1],
   options?: RequestInit,
 ) => {
-  return fetcher<MaybeContext<Subscription>>(
+  return fetcher<WithContext<Subscription>>(
     getRetrieveCSRSubscriptionUrl(subscriptionId, params),
     {
       ...options,
@@ -528,7 +525,7 @@ export const queryBatch = <T extends Entity = Entity>(
   params?: Parameters<typeof getQueryBatchUrl>[0],
   options?: RequestInit,
 ) => {
-  return fetcher<MaybeContext<T>[]>(getQueryBatchUrl(params), {
+  return fetcher<WithContext<T>[]>(getQueryBatchUrl(params), {
     ...options,
     method: "POST",
     headers: { "Content-Type": "application/json", ...options?.headers },
@@ -587,7 +584,7 @@ export const queryTemporal = <T extends Entity = Entity>(
   >[0],
   options?: RequestInit,
 ) => {
-  return fetcher<MaybeContext<InferEntityTemporal<T>>[]>(
+  return fetcher<WithContext<InferEntityTemporal<T>>[]>(
     getQueryTemporalUrl<T["type"] extends string ? T["type"] : string>(params),
     {
       ...options,
@@ -602,7 +599,7 @@ export const retrieveTemporal = <T extends Entity = Entity>(
   params?: Parameters<typeof getRetrieveTemporalUrl>[1],
   options?: RequestInit,
 ) => {
-  return fetcher<MaybeContext<InferEntityTemporal<T>>>(
+  return fetcher<WithContext<InferEntityTemporal<T>>>(
     getRetrieveTemporalUrl(entityId, params),
     {
       ...options,
@@ -696,7 +693,7 @@ export const temporalQueryBatch = <T extends Entity = Entity>(
   params?: Parameters<typeof getTemporalQueryBatchUrl>[0],
   options?: RequestInit,
 ) => {
-  return fetcher<MaybeContext<InferEntityTemporal<T>>[]>(
+  return fetcher<WithContext<InferEntityTemporal<T>>[]>(
     getTemporalQueryBatchUrl(params),
     {
       ...options,
@@ -821,14 +818,11 @@ export const retrieveEntityMap = (
   entityMapId: string,
   options?: RequestInit,
 ) => {
-  return fetcher<MaybeContext<EntityMap>>(
-    getRetrieveEntityMapUrl(entityMapId),
-    {
-      ...options,
-      method: "GET",
-      returnFormat: "body",
-    },
-  );
+  return fetcher<WithContext<EntityMap>>(getRetrieveEntityMapUrl(entityMapId), {
+    ...options,
+    method: "GET",
+    returnFormat: "body",
+  });
 };
 
 export const updateEntityMap = (
@@ -854,7 +848,7 @@ export const deleteEntityMap = (entityMapId: string, options?: RequestInit) => {
 };
 
 export const retrieveCSIdentityInfo = (options?: RequestInit) => {
-  return fetcher<MaybeContext<ContextSourceIdentity>>(
+  return fetcher<WithContext<ContextSourceIdentity>>(
     getRetrieveCSIdentityInfoUrl(),
     {
       ...options,
