@@ -20,9 +20,9 @@ import {
   makeEntityWithGeo,
   expectHttpError,
   cleanUpAll,
-  detectBroker,
+  gateBroker,
 } from "./helpers";
-import { NgsiLdNotFound, NgsiLdConflict } from "../src";
+import { NgsiLdNotFound, NgsiLdConflict, NgsiLdBadRequest } from "../src";
 import { Entity, Property, WithContext } from "../src/api/schemas";
 
 // Wipe all stale resources from previous crashed runs before each test.
@@ -44,6 +44,36 @@ describe("createEntity", () => {
     await createEntity(entity);
 
     await expectHttpError(409, NgsiLdConflict, () => createEntity(entity));
+  });
+
+  it("should support ListProperty", async () => {
+    // ListProperty is defined in the NGSI-LD spec (§5.2.36) but neither
+    // Stellio nor Orion-LD implement it yet. Both reject with 400.
+    const entity = {
+      ...makeEntity(),
+      readings: {
+        type: "ListProperty" as const,
+        valueList: [1, 2, 3],
+      },
+    };
+
+    const isGated = gateBroker(
+      ["stellio", "orion"],
+      "ListProperty not implemented",
+    );
+    if (isGated) {
+      await expectHttpError(400, NgsiLdBadRequest, () => createEntity(entity));
+      return;
+    }
+
+    // Unknown / future broker — just verify it either succeeds or gives a
+    // recognizable error.
+    try {
+      const response = await createEntity(entity);
+      expect([201, 204]).toContain(response.status);
+    } catch (err) {
+      expect(err).toBeInstanceOf(NgsiLdBadRequest);
+    }
   });
 
   it("should return 207 when a matching CSR fails but local creation succeeds", async () => {
@@ -79,7 +109,7 @@ describe("createEntity", () => {
     const response = await createEntity(entity);
 
     // NOTE: This test fails with Orion-LD, it doesn't support 207, it always gives 201
-    if (detectBroker() === "orion") {
+    if (gateBroker("orion", "no 207 multi-status")) {
       expect(response.status).toBe(201);
       return;
     }

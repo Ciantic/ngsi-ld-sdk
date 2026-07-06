@@ -13,7 +13,7 @@ import {
   NgsiLdNotImplemented,
   schemas,
 } from "../src";
-import { cleanUpAll, detectBroker, expectHttpError } from "./helpers";
+import { cleanUpAll, gateBroker, expectHttpError } from "./helpers";
 import { NgsiLdBadRequest, NgsiLdNotFound } from "../src";
 
 // Wipe all stale resources from previous crashed runs before each test.
@@ -71,7 +71,7 @@ describe("upsertTemporal", () => {
   it("should support local=true query parameter", async () => {
     const entity = makeTemporalEntity();
 
-    if (detectBroker() === "stellio") {
+    if (gateBroker("stellio", "no local=true for temporal")) {
       // Stellio does not support local=true for temporal operations
       await expect(() =>
         upsertTemporal(entity, { local: true }),
@@ -83,6 +83,43 @@ describe("upsertTemporal", () => {
 
     expect([201, 204]).toContain(response.status);
   });
+  it("should support ListProperty", async () => {
+    // ListProperty is defined in the NGSI-LD spec (§5.2.36) and the spec
+    // explicitly mentions instanceId is "only used in temporal representation
+    // of ListProperties". However, neither Stellio nor Orion-LD implement it.
+    const observedAt = new Date().toISOString();
+    const entity = {
+      ...makeTemporalEntity({ observedAt }),
+      readings: [
+        {
+          type: "ListProperty" as const,
+          valueList: [1, 2, 3],
+          observedAt,
+        },
+      ],
+    };
+
+    const isGated = gateBroker(
+      ["stellio", "orion"],
+      "ListProperty not implemented",
+    );
+    if (isGated) {
+      await expectHttpError(400, NgsiLdBadRequest, () =>
+        upsertTemporal(entity),
+      );
+      return;
+    }
+
+    // Unknown / future broker — just verify it either succeeds or gives a
+    // recognizable error.
+    try {
+      const response = await upsertTemporal(entity);
+      expect([201, 204]).toContain(response.status);
+    } catch (err) {
+      expect(err).toBeInstanceOf(NgsiLdBadRequest);
+    }
+  });
+
   it("should make the entity available via retrieveEntity with the latest temporal value", async () => {
     // Test verifies that temporal entity value is available via the regular
     // entity endpoint, with the latest temporal value as a plain Property (not
@@ -95,7 +132,7 @@ describe("upsertTemporal", () => {
     await upsertTemporal(entity);
 
     // Orion-LD does not sync temporal data to the regular entity endpoint, and thus gives 404
-    if (detectBroker() === "orion") {
+    if (gateBroker("orion", "temporal not synced to regular entity")) {
       try {
         await retrieveEntity(entity.id!);
       } catch (err) {
@@ -175,7 +212,7 @@ describe("deleteTemporal", () => {
     const entity = makeTemporalEntity();
     await upsertTemporal(entity);
 
-    if (detectBroker() === "orion") {
+    if (gateBroker("orion", "deleteTemporal not implemented")) {
       await expect(() => deleteTemporal(entity.id!)).rejects.toThrow(
         NgsiLdNotImplemented,
       );
@@ -192,7 +229,9 @@ describe("deleteTemporal", () => {
         "urn:ngsi-ld:TemporalEntity:nonexistent-delete-99999",
       );
     } catch (err) {
-      if (detectBroker() === "orion") {
+      if (
+        gateBroker("orion", "deleteTemporal returns not-implemented for 404")
+      ) {
         expect(err).toBeInstanceOf(NgsiLdNotImplemented);
         return;
       }
@@ -220,7 +259,7 @@ describe("appendAttrsTemporal", () => {
       ],
     };
 
-    if (detectBroker() === "orion") {
+    if (gateBroker("orion", "appendAttrsTemporal not implemented")) {
       await expect(() =>
         appendAttrsTemporal(entity.id!, newAttrs),
       ).rejects.toThrow(NgsiLdNotImplemented);
@@ -249,7 +288,7 @@ describe("appendAttrsTemporal", () => {
         newAttrs,
       );
     } catch (err) {
-      if (detectBroker() === "orion") {
+      if (gateBroker("orion", "appendAttrsTemporal returns not-implemented")) {
         expect(err).toBeInstanceOf(NgsiLdNotImplemented);
         return;
       }
@@ -275,7 +314,7 @@ describe("deleteAttrsTemporal", () => {
     };
     await upsertTemporal(entity);
 
-    if (detectBroker() === "orion") {
+    if (gateBroker("orion", "deleteAttrsTemporal not implemented")) {
       await expect(() =>
         deleteAttrsTemporal(entity.id!, "humidity"),
       ).rejects.toThrow(NgsiLdNotImplemented);
@@ -293,7 +332,7 @@ describe("deleteAttrsTemporal", () => {
         "temperature",
       );
     } catch (err) {
-      if (detectBroker() === "orion") {
+      if (gateBroker("orion", "deleteAttrsTemporal returns not-implemented")) {
         expect(err).toBeInstanceOf(NgsiLdNotImplemented);
         return;
       }
@@ -330,7 +369,7 @@ describe("updateAttrsTemporal", () => {
       observedAt: typedInstances[0]?.observedAt ?? new Date().toISOString(),
     };
 
-    if (detectBroker() === "orion") {
+    if (gateBroker("orion", "updateAttrsTemporal not implemented")) {
       await expect(() =>
         updateAttrsTemporal(entity.id!, "temperature", instanceId, patch),
       ).rejects.toThrow(NgsiLdNotImplemented);
@@ -362,7 +401,7 @@ describe("updateAttrsTemporal", () => {
         patch,
       );
     } catch (err) {
-      if (detectBroker() === "orion") {
+      if (gateBroker("orion", "updateAttrsTemporal returns not-implemented")) {
         expect(err).toBeInstanceOf(NgsiLdNotImplemented);
         return;
       }
@@ -390,7 +429,7 @@ describe("deleteAttrInstanceTemporal", () => {
     const instanceId = tempList[0]?.instanceId;
     if (!instanceId) return;
 
-    if (detectBroker() === "orion") {
+    if (gateBroker("orion", "deleteAttrInstanceTemporal not implemented")) {
       await expect(() =>
         deleteAttrInstanceTemporal(entity.id!, "temperature", instanceId),
       ).rejects.toThrow(NgsiLdNotImplemented);
@@ -413,7 +452,12 @@ describe("deleteAttrInstanceTemporal", () => {
         "urn:ngsi-ld:instanceId:nonexistent",
       );
     } catch (err) {
-      if (detectBroker() === "orion") {
+      if (
+        gateBroker(
+          "orion",
+          "deleteAttrInstanceTemporal returns not-implemented",
+        )
+      ) {
         expect(err).toBeInstanceOf(NgsiLdNotImplemented);
         return;
       }

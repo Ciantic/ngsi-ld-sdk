@@ -538,14 +538,20 @@ export interface ContextSourceIdentity {
   contextSourceAlias: string;
 }
 
+/**
+ * Valid property types
+ *
+ * Note: ListProperty and ListRelationship are not implemented by Orion-LD and
+ * Stellio.
+ */
 export type NgsildAttribute =
   | Property
   | GeoProperty
   | LanguageProperty
   | VocabProperty
   | JsonProperty
-  | ListProperty
   | Relationship
+  | ListProperty
   | ListRelationship;
 
 export type RequiredObservedAt<T> = T & {
