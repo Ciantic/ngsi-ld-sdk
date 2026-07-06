@@ -341,6 +341,15 @@ export interface Property<TValue = DateTimeValue | JsonValue> {
   readonly previousValue?: TValue;
 }
 
+export type WithDatasetId<T, D extends string = string> = T & { datasetId: D };
+
+export type Datasetted<
+  T extends WithDatasetId<Property>[] = [
+    WithDatasetId<Property>,
+    WithDatasetId<Property>,
+  ],
+> = T;
+
 export interface Query {
   type: "Query";
   entities?: EntitySelector[];
@@ -586,4 +595,7 @@ export type InferEntityTemporal<TEntity extends Entity> = FinalType<
         : never
     ]?: RequiredObservedAt<RemoveUndefined<TEntity[K]>>[];
   }
+  // TODO: Datasetted properties inference
+  // & {}
+  // & {}
 >;
