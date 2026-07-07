@@ -12,7 +12,7 @@ import {
   deleteCSRSubscription,
   NGSILD_CORE_CONTEXT,
 } from "../src";
-import { expectHttpError, cleanUpAll } from "./helpers";
+import { expectHttpError, cleanUpAll, gateBroker } from "./helpers";
 import { NgsiLdNotFound, NgsiLdConflict } from "../src";
 import { EntitySelector, MaybeContext, Subscription } from "../src/api/schemas";
 
@@ -176,29 +176,23 @@ describe("deleteSubscription", () => {
 // 6. createCSRSubscription
 // ---------------------------------------------------------------------------
 describe("createCSRSubscription", () => {
-  // Helper: call createCSRSubscription and return the location,
-  // or return undefined if the endpoint is not implemented (404).
-  async function tryCreateCSRSubscription(
-    sub: unknown,
-  ): Promise<{ location: string } | undefined> {
-    try {
-      return await createCSRSubscription(
-        sub as Parameters<typeof createCSRSubscription>[0],
-      );
-    } catch (err) {
-      if (err instanceof NgsiLdNotFound) return undefined;
-      throw err;
-    }
-  }
-
   it("should create a CSR subscription", async () => {
     // CSR subscriptions get an auto-generated id from the broker;
     // spread makeSubscription then omit the explicit id
     const { id: _omit, ...sub } = makeSubscription();
-    const result = await tryCreateCSRSubscription(sub);
 
-    // Some brokers (e.g. Orion-LD) may not implement /csourceSubscriptions
-    if (!result) return;
+    let result;
+    try {
+      result = await createCSRSubscription(sub);
+    } catch (err) {
+      if (
+        gateBroker(["stellio", "orion"], "CSR subscriptions not implemented")
+      ) {
+        expect(err).toBeInstanceOf(NgsiLdNotFound);
+        return;
+      }
+      throw err;
+    }
 
     expect(typeof result.location).toBe("string");
     expect(result.location).toBeTruthy();
@@ -206,14 +200,21 @@ describe("createCSRSubscription", () => {
 
   it("should reject duplicate CSR subscription", async () => {
     const sub = makeSubscription();
-    const result1 = await tryCreateCSRSubscription(sub);
 
-    // Skip if endpoint not implemented
-    if (!result1) return;
-    expect(typeof result1.location).toBe("string");
+    try {
+      await createCSRSubscription(sub);
+    } catch (err) {
+      if (
+        gateBroker(["stellio", "orion"], "CSR subscriptions not implemented")
+      ) {
+        expect(err).toBeInstanceOf(NgsiLdNotFound);
+        return;
+      }
+      throw err;
+    }
 
     await expectHttpError(409, NgsiLdConflict, () =>
-      tryCreateCSRSubscription(sub),
+      createCSRSubscription(sub),
     );
   });
 });
@@ -224,16 +225,18 @@ describe("createCSRSubscription", () => {
 describe("queryCSRSubscription", () => {
   it("should query CSR subscriptions", async () => {
     const sub = makeSubscription();
-    let result;
+
     try {
-      result = await createCSRSubscription(sub);
+      await createCSRSubscription(sub);
     } catch (err) {
-      if (err instanceof NgsiLdNotFound) return;
+      if (
+        gateBroker(["stellio", "orion"], "CSR subscriptions not implemented")
+      ) {
+        expect(err).toBeInstanceOf(NgsiLdNotFound);
+        return;
+      }
       throw err;
     }
-
-    // Skip if endpoint not implemented
-    if (!result) return;
 
     const data = await queryCSRSubscription();
 
@@ -248,15 +251,19 @@ describe("queryCSRSubscription", () => {
 describe("retrieveCSRSubscription", () => {
   it("should retrieve a CSR subscription by id", async () => {
     const sub = makeSubscription();
+
     let result;
     try {
       result = await createCSRSubscription(sub);
     } catch (err) {
-      if (err instanceof NgsiLdNotFound) return;
+      if (
+        gateBroker(["stellio", "orion"], "CSR subscriptions not implemented")
+      ) {
+        expect(err).toBeInstanceOf(NgsiLdNotFound);
+        return;
+      }
       throw err;
     }
-
-    if (!result) return;
 
     const parts = result.location.split("/");
     const csrSubId = parts[parts.length - 1];
@@ -279,15 +286,20 @@ describe("retrieveCSRSubscription", () => {
 describe("updateCSRSubscription", () => {
   it("should update (PATCH) a CSR subscription", async () => {
     const sub = makeSubscription();
+
     let createResult;
     try {
       createResult = await createCSRSubscription(sub);
     } catch (err) {
-      if (err instanceof NgsiLdNotFound) return;
+      if (
+        gateBroker(["stellio", "orion"], "CSR subscriptions not implemented")
+      ) {
+        expect(err).toBeInstanceOf(NgsiLdNotFound);
+        return;
+      }
       throw err;
     }
 
-    if (!createResult) return;
     const parts = createResult.location.split("/");
     const csrSubId = parts[parts.length - 1];
 
@@ -333,21 +345,24 @@ describe("updateCSRSubscription", () => {
 describe("deleteCSRSubscription", () => {
   it("should delete a CSR subscription", async () => {
     const sub = makeSubscription();
+
     let result;
     try {
       result = await createCSRSubscription(sub);
     } catch (err) {
-      if (err instanceof NgsiLdNotFound) return;
+      if (
+        gateBroker(["stellio", "orion"], "CSR subscriptions not implemented")
+      ) {
+        expect(err).toBeInstanceOf(NgsiLdNotFound);
+        return;
+      }
       throw err;
     }
 
-    if (!result) return;
     const parts = result.location.split("/");
     const csrSubId = parts[parts.length - 1];
 
-    const deleteResult = await deleteCSRSubscription(csrSubId);
-
-    expect(result).toBeUndefined();
+    await deleteCSRSubscription(csrSubId);
     // don't track — already deleted
   });
 
