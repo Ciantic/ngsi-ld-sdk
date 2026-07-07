@@ -421,6 +421,7 @@ describe("replaceAttrs", () => {
       );
       expect(response.status).toBe(204);
     } catch (err) {
+      // https://github.com/ScorpioBroker/ScorpioBroker/issues/677
       if (gateBroker("scorpio", "replaceAttrs not implemented")) {
         expect(err).toBeInstanceOf(NgsiLdBadRequest);
         return;
