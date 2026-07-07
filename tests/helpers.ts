@@ -108,13 +108,18 @@ function extractIds(data: unknown): string[] {
 export async function cleanUpAll(): Promise<void> {
   // Max limit in stellio is 100 by default
   const results = await Promise.allSettled([
-    queryEntity({ type: "TestEntity", limit: 100 }),
     queryEntity({
-      type: "DiscoveryTestEntity,DiscoveryDetailsEntity,DiscoveryLocalEntity,EntityTypeInfoTest,TemperatureSensor,HumiditySensor",
-      limit: 100,
-    }),
-    queryEntity({
-      type: "TemporalTestEntity,BatchQueryTemporalTest",
+      type: [
+        "TestEntity",
+        "DiscoveryTestEntity",
+        "DiscoveryDetailsEntity",
+        "DiscoveryLocalEntity",
+        "EntityTypeInfoTest",
+        "TemperatureSensor",
+        "HumiditySensor",
+        "TemporalTestEntity",
+        "BatchQueryTemporalTest",
+      ],
       limit: 100,
     }),
     querySubscription({ limit: 100 }),
