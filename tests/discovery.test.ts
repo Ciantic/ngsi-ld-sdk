@@ -16,6 +16,7 @@ import {
   NgsiLdNotImplemented,
   NgsiLdInternalServerError,
   NgsiLdMethodNotAllowed,
+  NgsiLdBadRequest,
 } from "../src";
 import { makeEntity, cleanUpAll, gateBroker } from "./helpers";
 import { NgsiLdNotFound } from "../src";
@@ -114,9 +115,9 @@ describe("retrieveAttrTypeInfo", () => {
   });
 
   it("should return 404 for a non-existent attribute", async () => {
-    await expect(
-      retrieveAttrTypeInfo("nonExistentAttr999"),
-    ).rejects.toThrow(NgsiLdNotFound);
+    await expect(retrieveAttrTypeInfo("nonExistentAttr999")).rejects.toThrow(
+      NgsiLdNotFound,
+    );
   });
 });
 
@@ -288,9 +289,21 @@ describe("deleteContext", () => {
 // ---------------------------------------------------------------------------
 describe("retrieveEntityMap", () => {
   it("should return 404 for a non-existent entity map", async () => {
-    await expect(
-      retrieveEntityMap("nonExistentMap12345"),
-    ).rejects.toThrow(NgsiLdNotFound);
+    if (
+      gateBroker(
+        "scorpio",
+        "returns 400 InvalidRequest instead of 404 for unknown entity map",
+      )
+    ) {
+      await expect(retrieveEntityMap("nonExistentMap12345")).rejects.toThrow(
+        NgsiLdBadRequest,
+      );
+      return;
+    }
+
+    await expect(retrieveEntityMap("nonExistentMap12345")).rejects.toThrow(
+      NgsiLdNotFound,
+    );
   });
 });
 
@@ -307,9 +320,9 @@ describe("updateEntityMap", () => {
       expiresAt: new Date(Date.now() + 3600000).toISOString(),
     };
 
-    await expect(
-      updateEntityMap("nonExistentMap12345", patch),
-    ).rejects.toThrow(NgsiLdNotFound);
+    await expect(updateEntityMap("nonExistentMap12345", patch)).rejects.toThrow(
+      NgsiLdNotFound,
+    );
   });
 });
 
@@ -318,9 +331,9 @@ describe("updateEntityMap", () => {
 // ---------------------------------------------------------------------------
 describe("deleteEntityMap", () => {
   it("should return 404 when deleting a non-existent entity map", async () => {
-    await expect(
-      deleteEntityMap("nonExistentMap12345"),
-    ).rejects.toThrow(NgsiLdNotFound);
+    await expect(deleteEntityMap("nonExistentMap12345")).rejects.toThrow(
+      NgsiLdNotFound,
+    );
   });
 });
 
@@ -330,10 +343,16 @@ describe("deleteEntityMap", () => {
 describe("retrieveCSIdentityInfo", () => {
   it("should retrieve context source identity info", async () => {
     if (gateBroker("stellio", "retrieveCSIdentityInfo not implemented")) {
-      // Stellio returns 404 for the /info/sourceIdentity endpoint
       await expect(() => retrieveCSIdentityInfo()).rejects.toThrow(
         NgsiLdNotFound,
       );
+      return;
+    }
+
+    if (
+      gateBroker("scorpio", "returns text/plain URL instead of JSON object")
+    ) {
+      await expect(() => retrieveCSIdentityInfo()).rejects.toThrow(SyntaxError);
       return;
     }
 

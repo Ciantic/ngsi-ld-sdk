@@ -22,7 +22,8 @@
     "orion-temporal:up": "podman compose -f tests/docker-test-orion-with-temporal/compose.yaml up -d",
     "orion-temporal:down": "podman compose -f tests/docker-test-orion-with-temporal/compose.yaml down",
     "test:docker-orion-temporal": "node test-runner.ts docker-test-orion-with-temporal http://orion-ld:1026/ngsi-ld/v1",
-    "test:docker-stellio": "node test-runner.ts docker-test-stellio http://api-gateway:8080/ngsi-ld/v1"
+    "test:docker-stellio": "node test-runner.ts docker-test-stellio http://api-gateway:8080/ngsi-ld/v1",
+    "test:docker-scorpio": "node test-runner.ts docker-test-scorpio http://scorpio:9090/ngsi-ld/v1"
   },
   "devDependencies": {
     "prettier": "^3.9.1",

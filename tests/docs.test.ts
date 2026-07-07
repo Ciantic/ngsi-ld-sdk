@@ -9,7 +9,7 @@ import {
 } from "../src";
 
 import { describe, it, expect, afterAll, beforeEach } from "vitest";
-import { cleanUpAll } from "./helpers";
+import { cleanUpAll, gateBroker } from "./helpers";
 
 // ---------------------------------------------------------------------------
 // Tests that verify the code examples from README.md actually work
@@ -205,6 +205,12 @@ describe("README.md examples", () => {
 
     expect(tempEntities.length).toBe(1);
     expect(tempEntities[0].id).toBe("urn:ngsi-ld:TemperatureSensor:002");
+
+    if (gateBroker("scorpio", "lastN per dataset returns different count")) {
+      expect(tempEntities[0].temperature!.length).toBe(1);
+      return;
+    }
+
     expect(tempEntities[0].temperature!.length).toBe(2);
   });
 });

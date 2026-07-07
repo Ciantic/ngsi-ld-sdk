@@ -120,8 +120,11 @@ describe("upsertTemporal", () => {
     });
     await upsertTemporal(entity);
 
-    // Orion-LD does not sync temporal data to the regular entity endpoint, and thus gives 404
-    if (gateBroker("orion", "temporal not synced to regular entity")) {
+    // Orion-LD and Scorpio do not sync temporal data to the regular entity
+    // endpoint, and thus give 404
+    if (
+      gateBroker(["orion", "scorpio"], "temporal not synced to regular entity")
+    ) {
       try {
         await retrieveEntity(entity.id!);
       } catch (err) {
@@ -160,6 +163,18 @@ describe("queryTemporal", () => {
   });
 
   it("should return 400 when required temporal query params are missing", async () => {
+    if (
+      gateBroker(
+        "scorpio",
+        "returns empty array instead of 400 for missing temporal params",
+      )
+    ) {
+      const data = await queryTemporal({ type: "NonExistent12345" });
+      expect(Array.isArray(data)).toBe(true);
+      expect(data.length).toBe(0);
+      return;
+    }
+
     await expect(queryTemporal({ type: "NonExistent12345" })).rejects.toThrow(
       NgsiLdBadRequest,
     );
@@ -170,7 +185,7 @@ describe("queryTemporal", () => {
 // 3. retrieveTemporal
 // ---------------------------------------------------------------------------
 describe("retrieveTemporal", () => {
-  const timeAt = new Date().toISOString();
+  const timeAt = new Date(Date.now() + 3600000).toISOString();
 
   it("should retrieve temporal evolution of an entity", async () => {
     const entity = makeTemporalEntity();

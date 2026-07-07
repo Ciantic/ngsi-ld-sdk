@@ -185,6 +185,11 @@ describe("createCSRSubscription", () => {
     try {
       result = await createCSRSubscription(sub);
     } catch (err) {
+      if (gateBroker("scorpio", "CSR Create gives Conflict?")) {
+        expect(err).toBeInstanceOf(NgsiLdConflict);
+        return;
+      }
+
       if (
         gateBroker(["stellio", "orion"], "CSR subscriptions not implemented")
       ) {
@@ -205,7 +210,10 @@ describe("createCSRSubscription", () => {
       await createCSRSubscription(sub);
     } catch (err) {
       if (
-        gateBroker(["stellio", "orion"], "CSR subscriptions not implemented")
+        gateBroker(
+          ["stellio", "orion", "scorpio"],
+          "CSR subscriptions not implemented",
+        )
       ) {
         expect(err).toBeInstanceOf(NgsiLdNotFound);
         return;
@@ -228,7 +236,10 @@ describe("queryCSRSubscription", () => {
       await createCSRSubscription(sub);
     } catch (err) {
       if (
-        gateBroker(["stellio", "orion"], "CSR subscriptions not implemented")
+        gateBroker(
+          ["stellio", "orion", "scorpio"],
+          "CSR subscriptions not implemented",
+        )
       ) {
         expect(err).toBeInstanceOf(NgsiLdNotFound);
         return;
@@ -255,7 +266,10 @@ describe("retrieveCSRSubscription", () => {
       result = await createCSRSubscription(sub);
     } catch (err) {
       if (
-        gateBroker(["stellio", "orion"], "CSR subscriptions not implemented")
+        gateBroker(
+          ["stellio", "orion", "scorpio"],
+          "CSR subscriptions not implemented",
+        )
       ) {
         expect(err).toBeInstanceOf(NgsiLdNotFound);
         return;
@@ -290,7 +304,10 @@ describe("updateCSRSubscription", () => {
       createResult = await createCSRSubscription(sub);
     } catch (err) {
       if (
-        gateBroker(["stellio", "orion"], "CSR subscriptions not implemented")
+        gateBroker(
+          ["stellio", "orion", "scorpio"],
+          "CSR subscriptions not implemented",
+        )
       ) {
         expect(err).toBeInstanceOf(NgsiLdNotFound);
         return;
@@ -349,7 +366,10 @@ describe("deleteCSRSubscription", () => {
       result = await createCSRSubscription(sub);
     } catch (err) {
       if (
-        gateBroker(["stellio", "orion"], "CSR subscriptions not implemented")
+        gateBroker(
+          ["stellio", "orion", "scorpio"],
+          "CSR subscriptions not implemented",
+        )
       ) {
         expect(err).toBeInstanceOf(NgsiLdNotFound);
         return;

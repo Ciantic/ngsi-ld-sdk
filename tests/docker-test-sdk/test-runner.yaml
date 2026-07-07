@@ -5,6 +5,9 @@
 #
 #   NGSILD_BROKER_URL=http://api-gateway:8080/ngsi-ld/v1 \
 #     podman compose -f tests/docker-test-stellio/compose.yaml -f tests/docker-test-sdk/test-runner.yaml up --abort-on-container-exit --timeout 10
+#
+#   NGSILD_BROKER_URL=http://scorpio:9090/ngsi-ld/v1 \
+#     podman compose -f tests/docker-test-scorpio/compose.yaml -f tests/docker-test-sdk/test-runner.yaml up --abort-on-container-exit --timeout 10
 
 services:
   test-runner:

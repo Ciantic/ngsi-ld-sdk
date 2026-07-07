@@ -102,8 +102,11 @@ describe("createEntity", () => {
 
     const response = await createEntity(entity);
 
-    // NOTE: This test fails with Orion-LD, it doesn't support 207, it always gives 201
-    if (gateBroker("orion", "createEntity has no 207 multi-status")) {
+    // NOTE: This test fails with Orion-LD and Scorpio. They don't support
+    // 207 multi-status for createEntity when a CSR fails.
+    if (
+      gateBroker(["orion", "scorpio"], "createEntity has no 207 multi-status")
+    ) {
       expect(response.status).toBe(201);
       return;
     }

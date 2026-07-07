@@ -15,19 +15,21 @@ import {
 export const brokerUrl: string =
   process.env["NGSILD_BROKER_URL"] ?? "http://localhost:1026/ngsi-ld/v1";
 
-export function detectBroker(): "orion" | "stellio" | "unknown" {
+export function detectBroker(): "orion" | "stellio" | "scorpio" | "unknown" {
   const explicit = process.env["NGSILD_BROKER_NAME"];
-  if (explicit === "orion" || explicit === "stellio") return explicit;
+  if (explicit === "orion" || explicit === "stellio" || explicit === "scorpio")
+    return explicit;
 
   const url = process.env["NGSILD_BROKER_URL"] ?? "";
   if (url.includes("orion-ld") || url.includes(":1026")) return "orion";
   if (url.includes("stellio") || url.includes(":8080")) return "stellio";
+  if (url.includes("scorpio") || url.includes(":9090")) return "scorpio";
   return "unknown";
 }
 
 // --- Broker gate tracking ---
 
-type BrokerName = "orion" | "stellio" | "unknown";
+type BrokerName = "orion" | "stellio" | "scorpio" | "unknown";
 
 // Augment TaskMeta so TypeScript knows about our custom key that is
 // communicated from the worker to the reporter via Vitest's RPC.
@@ -122,7 +124,7 @@ export async function cleanUpAll(): Promise<void> {
       limit: 100,
     }),
     querySubscription({ limit: 100 }),
-    queryCSR({ limit: 100 }),
+    queryCSR({ type: "ContextSourceRegistration", limit: 100 }),
   ]);
 
   const deleteIds: string[] = [];

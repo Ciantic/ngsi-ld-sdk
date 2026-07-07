@@ -1,0 +1,63 @@
+# Scorpio NGSI-LD Context Broker — test stack with temporal support
+# NGSI-LD API: http://localhost:9090/ngsi-ld/v1
+#
+# Scorpio stores temporal data natively in PostgreSQL+PostGIS.
+# Based on: https://github.com/ScorpioBroker/ScorpioBroker/tree/development-quarkus/compose-files
+
+services:
+  postgres:
+    image: docker.io/postgis/postgis:17-3.5
+    container_name: test-scorpio-postgres
+    environment:
+      POSTGRES_USER: ngb
+      POSTGRES_PASSWORD: ngb
+      POSTGRES_DB: ngb
+    tmpfs:
+      - /var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ngb"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+
+  kafka:
+    image: docker.io/apache/kafka:3.8.1
+    container_name: test-scorpio-kafka
+    hostname: scorpio-kafka
+    environment:
+      # KRaft settings
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@scorpio-kafka:9093
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      # Listener configuration
+      KAFKA_LISTENERS: PLAINTEXT://scorpio-kafka:9092,CONTROLLER://scorpio-kafka:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://scorpio-kafka:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT
+      # Log retention settings
+      KAFKA_LOG_RETENTION_MS: 10000
+      KAFKA_LOG_RETENTION_CHECK_INTERVAL_MS: 5000
+      # Single broker configuration
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_OFFSETS_TOPIC_NUM_PARTITIONS: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      # Cluster ID (required for KRaft)
+      CLUSTER_ID: MkU3OEVBNTcwNTJENDM2Qk
+
+  scorpio:
+    image: docker.io/scorpiobroker/all-in-one-runner:java-kafka-latest
+    container_name: test-scorpio
+    environment:
+      DBHOST: postgres
+      BUSHOST: scorpio-kafka
+      # Disable logging for cleaner test output
+      QUARKUS_LOG_LEVEL: INFO
+    ports:
+      - "9090:9090"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      kafka:
+        condition: service_started

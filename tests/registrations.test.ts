@@ -7,7 +7,7 @@ import {
   deleteCSR,
   NGSILD_CORE_CONTEXT,
 } from "../src";
-import { cleanUpAll } from "./helpers";
+import { cleanUpAll, gateBroker } from "./helpers";
 import { NgsiLdNotFound, NgsiLdConflict } from "../src";
 import { CsourceRegistration, EntitySelector } from "../src/api/schemas";
 
@@ -63,6 +63,14 @@ describe("queryCSR", () => {
     const csr = makeCSR();
     await createCSR(csr);
 
+    // Scorpio requires at least one filter param (id, type, attrs, etc.)
+    if (gateBroker("scorpio", "CSR query requires filter params like type")) {
+      // Skip this test — CSR query without filter is not supported.
+      // The next test "should support query parameters to filter CSRs"
+      // passes fine because it provides type param.
+      return;
+    }
+
     const data = await queryCSR();
 
     expect(Array.isArray(data)).toBe(true);
@@ -101,9 +109,9 @@ describe("retrieveCSR", () => {
   });
 
   it("should return 404 for a non-existent CSR", async () => {
-    await expect(
-      retrieveCSR("urn:ngsi-ld:CSR:nonexistent"),
-    ).rejects.toThrow(NgsiLdNotFound);
+    await expect(retrieveCSR("urn:ngsi-ld:CSR:nonexistent")).rejects.toThrow(
+      NgsiLdNotFound,
+    );
   });
 });
 
@@ -161,8 +169,8 @@ describe("deleteCSR", () => {
   });
 
   it("should return 404 when deleting a non-existent CSR", async () => {
-    await expect(
-      deleteCSR("urn:ngsi-ld:CSR:nonexistent"),
-    ).rejects.toThrow(NgsiLdNotFound);
+    await expect(deleteCSR("urn:ngsi-ld:CSR:nonexistent")).rejects.toThrow(
+      NgsiLdNotFound,
+    );
   });
 });
