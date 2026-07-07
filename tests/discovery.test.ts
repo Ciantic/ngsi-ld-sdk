@@ -17,7 +17,7 @@ import {
   NgsiLdInternalServerError,
   NgsiLdMethodNotAllowed,
 } from "../src";
-import { makeEntity, expectHttpError, cleanUpAll, gateBroker } from "./helpers";
+import { makeEntity, cleanUpAll, gateBroker } from "./helpers";
 import { NgsiLdNotFound } from "../src";
 
 // Wipe all stale resources from previous crashed runs before each test.
@@ -74,9 +74,9 @@ describe("retrieveEntityTypeInfo", () => {
   });
 
   it("should return 404 for a non-existent entity type", async () => {
-    await expectHttpError(404, NgsiLdNotFound, () =>
+    await expect(
       retrieveEntityTypeInfo("NonExistentType12345"),
-    );
+    ).rejects.toThrow(NgsiLdNotFound);
   });
 });
 
@@ -114,9 +114,9 @@ describe("retrieveAttrTypeInfo", () => {
   });
 
   it("should return 404 for a non-existent attribute", async () => {
-    await expectHttpError(404, NgsiLdNotFound, () =>
+    await expect(
       retrieveAttrTypeInfo("nonExistentAttr999"),
-    );
+    ).rejects.toThrow(NgsiLdNotFound);
   });
 });
 
@@ -277,9 +277,9 @@ describe("deleteContext", () => {
   });
 
   it("should return 404 when deleting a non-existent context", async () => {
-    await expectHttpError(404, NgsiLdNotFound, () =>
+    await expect(
       deleteContext("urn:ngsi-ld:context:nonexistent-delete-12345"),
-    );
+    ).rejects.toThrow(NgsiLdNotFound);
   });
 });
 
@@ -288,9 +288,9 @@ describe("deleteContext", () => {
 // ---------------------------------------------------------------------------
 describe("retrieveEntityMap", () => {
   it("should return 404 for a non-existent entity map", async () => {
-    await expectHttpError(404, NgsiLdNotFound, () =>
+    await expect(
       retrieveEntityMap("nonExistentMap12345"),
-    );
+    ).rejects.toThrow(NgsiLdNotFound);
   });
 });
 
@@ -307,9 +307,9 @@ describe("updateEntityMap", () => {
       expiresAt: new Date(Date.now() + 3600000).toISOString(),
     };
 
-    await expectHttpError(404, NgsiLdNotFound, () =>
+    await expect(
       updateEntityMap("nonExistentMap12345", patch),
-    );
+    ).rejects.toThrow(NgsiLdNotFound);
   });
 });
 
@@ -318,9 +318,9 @@ describe("updateEntityMap", () => {
 // ---------------------------------------------------------------------------
 describe("deleteEntityMap", () => {
   it("should return 404 when deleting a non-existent entity map", async () => {
-    await expectHttpError(404, NgsiLdNotFound, () =>
+    await expect(
       deleteEntityMap("nonExistentMap12345"),
-    );
+    ).rejects.toThrow(NgsiLdNotFound);
   });
 });
 

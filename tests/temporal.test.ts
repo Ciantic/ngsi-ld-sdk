@@ -13,7 +13,7 @@ import {
   NgsiLdNotImplemented,
   schemas,
 } from "../src";
-import { cleanUpAll, gateBroker, expectHttpError } from "./helpers";
+import { cleanUpAll, gateBroker } from "./helpers";
 import { NgsiLdBadRequest, NgsiLdNotFound } from "../src";
 
 // Wipe all stale resources from previous crashed runs before each test.
@@ -100,9 +100,7 @@ describe("upsertTemporal", () => {
       "ListProperty not implemented",
     );
     if (isGated) {
-      await expectHttpError(400, NgsiLdBadRequest, () =>
-        upsertTemporal(entity),
-      );
+      await expect(upsertTemporal(entity)).rejects.toThrow(NgsiLdBadRequest);
       return;
     }
 
@@ -162,8 +160,8 @@ describe("queryTemporal", () => {
   });
 
   it("should return 400 when required temporal query params are missing", async () => {
-    await expectHttpError(400, NgsiLdBadRequest, () =>
-      queryTemporal({ type: "NonExistent12345" }),
+    await expect(queryTemporal({ type: "NonExistent12345" })).rejects.toThrow(
+      NgsiLdBadRequest,
     );
   });
 });
@@ -186,12 +184,12 @@ describe("retrieveTemporal", () => {
   });
 
   it("should return 404 for a non-existent entity", async () => {
-    await expectHttpError(404, NgsiLdNotFound, () =>
+    await expect(
       retrieveTemporal("urn:ngsi-ld:TemporalEntity:nonexistent-99999", {
         timerel: "before",
         timeAt,
       }),
-    );
+    ).rejects.toThrow(NgsiLdNotFound);
   });
 });
 

@@ -7,7 +7,7 @@ import {
   deleteCSR,
   NGSILD_CORE_CONTEXT,
 } from "../src";
-import { expectHttpError, cleanUpAll } from "./helpers";
+import { cleanUpAll } from "./helpers";
 import { NgsiLdNotFound, NgsiLdConflict } from "../src";
 import { CsourceRegistration, EntitySelector } from "../src/api/schemas";
 
@@ -50,7 +50,7 @@ describe("createCSR", () => {
     const csr = makeCSR();
     await createCSR(csr);
 
-    await expectHttpError(409, NgsiLdConflict, () => createCSR(csr));
+    await expect(createCSR(csr)).rejects.toThrow(NgsiLdConflict);
   });
 });
 
@@ -101,9 +101,9 @@ describe("retrieveCSR", () => {
   });
 
   it("should return 404 for a non-existent CSR", async () => {
-    await expectHttpError(404, NgsiLdNotFound, () =>
+    await expect(
       retrieveCSR("urn:ngsi-ld:CSR:nonexistent"),
-    );
+    ).rejects.toThrow(NgsiLdNotFound);
   });
 });
 
@@ -140,9 +140,9 @@ describe("updateCSR", () => {
       endpoint: "http://updated.example.com/ngsi-ld",
     };
 
-    await expectHttpError(404, NgsiLdNotFound, () =>
+    await expect(
       updateCSR("urn:ngsi-ld:CSR:nonexistent", patch),
-    );
+    ).rejects.toThrow(NgsiLdNotFound);
   });
 });
 
@@ -161,8 +161,8 @@ describe("deleteCSR", () => {
   });
 
   it("should return 404 when deleting a non-existent CSR", async () => {
-    await expectHttpError(404, NgsiLdNotFound, () =>
+    await expect(
       deleteCSR("urn:ngsi-ld:CSR:nonexistent"),
-    );
+    ).rejects.toThrow(NgsiLdNotFound);
   });
 });

@@ -1,5 +1,4 @@
-import { expect, TestRunner } from "vitest";
-import type { NgsiLdHttpError } from "../src";
+import { TestRunner } from "vitest";
 import {
   deleteBatch,
   deleteTemporal,
@@ -160,25 +159,4 @@ export async function cleanUpAll(): Promise<void> {
       }
     }
   }
-}
-
-export async function expectHttpError<T extends NgsiLdHttpError>(
-  expectedStatus: number,
-  errorClass: new (...args: any[]) => T,
-  fn: () => Promise<unknown>,
-): Promise<T> {
-  try {
-    await fn();
-  } catch (err) {
-    if (!(err instanceof errorClass)) {
-      throw new Error(
-        `Expected ${errorClass.name} but got ${(err as Error).constructor.name}: ${(err as Error).message}`,
-      );
-    }
-    expect(err.status).toBe(expectedStatus);
-    return err as T;
-  }
-  throw new Error(
-    `Expected ${errorClass.name} with status ${expectedStatus}, but no error was thrown`,
-  );
 }

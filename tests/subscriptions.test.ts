@@ -12,7 +12,7 @@ import {
   deleteCSRSubscription,
   NGSILD_CORE_CONTEXT,
 } from "../src";
-import { expectHttpError, cleanUpAll, gateBroker } from "./helpers";
+import { cleanUpAll, gateBroker } from "./helpers";
 import { NgsiLdNotFound, NgsiLdConflict } from "../src";
 import { EntitySelector, MaybeContext, Subscription } from "../src/api/schemas";
 
@@ -57,7 +57,7 @@ describe("createSubscription", () => {
     const sub = makeSubscription();
     await createSubscription(sub);
 
-    await expectHttpError(409, NgsiLdConflict, () => createSubscription(sub));
+    await expect(createSubscription(sub)).rejects.toThrow(NgsiLdConflict);
   });
 });
 
@@ -90,9 +90,9 @@ describe("retrieveSubscription", () => {
   });
 
   it("should return 404 for a non-existent subscription", async () => {
-    await expectHttpError(404, NgsiLdNotFound, () =>
+    await expect(
       retrieveSubscription("urn:ngsi-ld:Subscription:nonexistent"),
-    );
+    ).rejects.toThrow(NgsiLdNotFound);
   });
 });
 
@@ -141,9 +141,9 @@ describe("updateSubscription", () => {
       },
     };
 
-    await expectHttpError(404, NgsiLdNotFound, () =>
+    await expect(
       updateSubscription("urn:ngsi-ld:Subscription:nonexistent", patch),
-    );
+    ).rejects.toThrow(NgsiLdNotFound);
   });
 });
 
@@ -162,9 +162,9 @@ describe("deleteSubscription", () => {
   });
 
   it("should return 404 when deleting a non-existent subscription", async () => {
-    await expectHttpError(404, NgsiLdNotFound, () =>
+    await expect(
       deleteSubscription("urn:ngsi-ld:Subscription:nonexistent"),
-    );
+    ).rejects.toThrow(NgsiLdNotFound);
   });
 });
 
@@ -213,9 +213,7 @@ describe("createCSRSubscription", () => {
       throw err;
     }
 
-    await expectHttpError(409, NgsiLdConflict, () =>
-      createCSRSubscription(sub),
-    );
+    await expect(createCSRSubscription(sub)).rejects.toThrow(NgsiLdConflict);
   });
 });
 
@@ -274,9 +272,9 @@ describe("retrieveCSRSubscription", () => {
   });
 
   it("should return 404 for a non-existent CSR subscription", async () => {
-    await expectHttpError(404, NgsiLdNotFound, () =>
+    await expect(
       retrieveCSRSubscription("urn:ngsi-ld:Subscription:nonexistent"),
-    );
+    ).rejects.toThrow(NgsiLdNotFound);
   });
 });
 
@@ -333,9 +331,9 @@ describe("updateCSRSubscription", () => {
       },
     };
 
-    await expectHttpError(404, NgsiLdNotFound, () =>
+    await expect(
       updateCSRSubscription("urn:ngsi-ld:Subscription:nonexistent", patch),
-    );
+    ).rejects.toThrow(NgsiLdNotFound);
   });
 });
 
@@ -367,8 +365,8 @@ describe("deleteCSRSubscription", () => {
   });
 
   it("should return 404 when deleting a non-existent CSR subscription", async () => {
-    await expectHttpError(404, NgsiLdNotFound, () =>
+    await expect(
       deleteCSRSubscription("urn:ngsi-ld:Subscription:nonexistent"),
-    );
+    ).rejects.toThrow(NgsiLdNotFound);
   });
 });
