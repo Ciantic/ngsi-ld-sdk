@@ -15,9 +15,10 @@ import {
   createEntity,
   NgsiLdNotImplemented,
   NgsiLdInternalServerError,
+  NgsiLdMethodNotAllowed,
 } from "../src";
 import { makeEntity, expectHttpError, cleanUpAll, gateBroker } from "./helpers";
-import { NgsiLdNotFound, NgsiLdHttpError } from "../src";
+import { NgsiLdNotFound } from "../src";
 
 // Wipe all stale resources from previous crashed runs before each test.
 beforeEach(cleanUpAll);
@@ -240,9 +241,7 @@ describe("retrieveContext", () => {
       await retrieveContext("urn:ngsi-ld:context:nonexistent-12345");
     } catch (err) {
       if (gateBroker("stellio", "jsonldContexts not implemented")) {
-        // Stellio returns 405 (only DELETE is supported) since the jsonldContexts
-        // endpoint is not implemented.
-        expect(err).toBeInstanceOf(NgsiLdHttpError);
+        expect(err).toBeInstanceOf(NgsiLdMethodNotAllowed);
         return;
       }
       expect(err).toBeInstanceOf(NgsiLdNotFound);

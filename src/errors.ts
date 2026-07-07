@@ -40,6 +40,14 @@ export class NgsiLdNotFound extends NgsiLdHttpError {
   }
 }
 
+/** 405 Method Not Allowed — the requested operation is not supported for this resource. */
+export class NgsiLdMethodNotAllowed extends NgsiLdHttpError {
+  constructor(body: ProblemDetails, response: Response) {
+    super(405, body, response);
+    this.name = "NgsiLdMethodNotAllowed";
+  }
+}
+
 /** 409 Conflict — the resource already exists or there is a registration conflict. */
 export class NgsiLdConflict extends NgsiLdHttpError {
   constructor(body: ProblemDetails, response: Response) {
@@ -90,6 +98,7 @@ export const NGSILD_STATUS_TO_ERROR: Record<
 > = {
   400: NgsiLdBadRequest,
   404: NgsiLdNotFound,
+  405: NgsiLdMethodNotAllowed,
   409: NgsiLdConflict,
   422: NgsiLdUnprocessable,
   500: NgsiLdInternalServerError,

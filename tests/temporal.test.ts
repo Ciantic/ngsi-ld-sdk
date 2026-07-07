@@ -57,11 +57,11 @@ function makeTemporalEntity(overrides?: {
 // 1. upsertTemporal
 // ---------------------------------------------------------------------------
 describe("upsertTemporal", () => {
-  it("should upsert a temporal entity and return 201 or 204", async () => {
+  it("should upsert a temporal entity and return 201", async () => {
     const entity = makeTemporalEntity();
     const response = await upsertTemporal(entity);
 
-    expect([201, 204]).toContain(response.status);
+    expect(response.status).toBe(201);
   });
 
   it("should support local=true query parameter", async () => {
@@ -77,7 +77,7 @@ describe("upsertTemporal", () => {
 
     const response = await upsertTemporal(entity, { local: true });
 
-    expect([201, 204]).toContain(response.status);
+    expect(response.status).toBe(201);
   });
   it("should support ListProperty", async () => {
     // ListProperty is defined in the NGSI-LD spec (§5.2.36) and the spec
@@ -106,14 +106,9 @@ describe("upsertTemporal", () => {
       return;
     }
 
-    // Unknown / future broker — just verify it either succeeds or gives a
-    // recognizable error.
-    try {
-      const response = await upsertTemporal(entity);
-      expect([201, 204]).toContain(response.status);
-    } catch (err) {
-      expect(err).toBeInstanceOf(NgsiLdBadRequest);
-    }
+    // Unknown / future broker — assert the spec-correct behavior.
+    const response = await upsertTemporal(entity);
+    expect(response.status).toBe(201);
   });
 
   it("should make the entity available via retrieveEntity with the latest temporal value", async () => {

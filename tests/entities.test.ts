@@ -66,14 +66,9 @@ describe("createEntity", () => {
       return;
     }
 
-    // Unknown / future broker — just verify it either succeeds or gives a
-    // recognizable error.
-    try {
-      const response = await createEntity(entity);
-      expect([201, 204]).toContain(response.status);
-    } catch (err) {
-      expect(err).toBeInstanceOf(NgsiLdBadRequest);
-    }
+    // Unknown / future broker — assert the spec-correct behavior.
+    const response = await createEntity(entity);
+    expect(response.status).toBe(201);
   });
 
   it("should return 207 when a matching CSR fails but local creation succeeds", async () => {

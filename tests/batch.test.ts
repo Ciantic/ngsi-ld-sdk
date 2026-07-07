@@ -4,6 +4,7 @@ import {
   createEntity,
   deleteBatch,
   mergeBatch,
+  NgsiLdNotFound,
   queryBatch,
   queryGeoBatch,
   updateBatch,
@@ -11,11 +12,10 @@ import {
 } from "../src";
 import {
   cleanUpAll,
+  gateBroker,
   makeEntity,
   makeEntityWithGeo,
-  expectHttpError,
 } from "./helpers";
-import { NgsiLdNotFound } from "../src";
 
 // Wipe all stale resources from previous crashed runs before each test.
 beforeEach(cleanUpAll);
@@ -42,12 +42,11 @@ describe("createBatch", () => {
     const entity2 = makeEntity();
 
     // Create first batch
-    const first = await createBatch([entity1, entity2]);
+    await createBatch([entity1, entity2]);
 
     // Try to create again with same IDs
     const second = await createBatch([entity1, entity2]);
-    // Multi-status: may return 207 for partial success or 409
-    expect([207, 409]).toContain(second.status);
+    expect(second.status).toBe(207);
   });
 });
 
@@ -61,8 +60,7 @@ describe("upsertBatch", () => {
 
     const response = await upsertBatch([entity1, entity2]);
 
-    // Upsert can return 201 (created), 204 (updated), or 207 (multi-status)
-    expect([201, 204, 207]).toContain(response.status);
+    expect(response.status).toBe(201);
   });
 
   it("should update entities on second upsert (204)", async () => {
@@ -80,7 +78,7 @@ describe("upsertBatch", () => {
     };
 
     const response = await upsertBatch([updated]);
-    expect([204, 207]).toContain(response.status);
+    expect(response.status).toBe(204);
   });
 });
 
@@ -109,17 +107,15 @@ describe("updateBatch", () => {
 
     const response = await updateBatch([update1, update2]);
 
-    // Update can return 204 or 207 (multi-status)
-    expect([204, 207]).toContain(response.status);
+    expect(response.status).toBe(204);
   });
 
-  it("should return 207/400 for non-existent entity in update batch", async () => {
+  it("should return 207 for non-existent entity in update batch", async () => {
     const ghost = makeEntity();
 
     const response = await updateBatch([ghost]);
 
-    // Non-existent entity: 207 (multi-status with errors) or 400
-    expect([207, 400]).toContain(response.status);
+    expect(response.status).toBe(207);
   });
 });
 
@@ -135,8 +131,7 @@ describe("deleteBatch", () => {
 
     const response = await deleteBatch([entity1.id!, entity2.id!]);
 
-    // Delete can return 204 or 207
-    expect([204, 207]).toContain(response.status);
+    expect(response.status).toBe(204);
 
     // Entities are already deleted, no need to clean up
   });
@@ -146,8 +141,7 @@ describe("deleteBatch", () => {
       "urn:ngsi-ld:TestEntity:nonexistent-1",
     ]);
 
-    // Non-existent: 207 (multi-status with errors)
-    expect([207, 400]).toContain(response.status);
+    expect(response.status).toBe(207);
   });
 });
 
@@ -251,16 +245,15 @@ describe("mergeBatch", () => {
 
     try {
       const response = await mergeBatch([patch1, patch2]);
-
-      // Merge can return 204, 207 (multi-status)
-      expect([204, 207]).toContain(response.status);
+      expect(response.status).toBe(204);
     } catch (err) {
-      // Some brokers don't implement merge and return 404
-      if (err instanceof NgsiLdNotFound) {
-        expect(err.status).toBe(404);
-      } else {
-        throw err;
+      if (
+        gateBroker("orion", "mergeBatch gives 404?") &&
+        err instanceof NgsiLdNotFound
+      ) {
+        return;
       }
+      throw err;
     }
   });
 });
