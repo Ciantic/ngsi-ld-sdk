@@ -413,7 +413,19 @@ describe("replaceAttrs", () => {
       value: 200,
     };
 
-    const response = await replaceAttrs(entity.id!, "temperature", replacement);
-    expect(response.status).toBe(204);
+    try {
+      const response = await replaceAttrs(
+        entity.id!,
+        "temperature",
+        replacement,
+      );
+      expect(response.status).toBe(204);
+    } catch (err) {
+      if (gateBroker("scorpio", "replaceAttrs not implemented")) {
+        expect(err).toBeInstanceOf(NgsiLdBadRequest);
+        return;
+      }
+      throw err;
+    }
   });
 });
