@@ -206,6 +206,12 @@ const tempEntities = await queryTemporal<TemperatureSensor>({
 
 expect(tempEntities.length).toBe(1);
 expect(tempEntities[0].id).toBe("urn:ngsi-ld:TemperatureSensor:002");
+
+if (gateBroker("scorpio", "lastN per dataset returns different count")) {
+  expect(tempEntities[0].temperature!.length).toBe(1);
+  return;
+}
+
 expect(tempEntities[0].temperature!.length).toBe(2);
 ```
 
