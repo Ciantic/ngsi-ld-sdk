@@ -528,6 +528,7 @@ export const queryBatch = <T extends Entity = Entity>(
   return fetcher<WithContext<T>[]>(getQueryBatchUrl(params), {
     ...options,
     method: "POST",
+    // https://github.com/stellio-hub/stellio-context-broker/issues/1809
     headers: { "Content-Type": "application/json", ...options?.headers },
     body: JSON.stringify(query),
     returnFormat: "body",
@@ -543,6 +544,7 @@ export const queryGeoBatch = <T extends Entity = Entity>(
     ...options,
     method: "POST",
     headers: {
+      // https://github.com/stellio-hub/stellio-context-broker/issues/1809
       "Content-Type": "application/json",
       Accept: "application/geo+json",
       ...options?.headers,
@@ -698,6 +700,7 @@ export const temporalQueryBatch = <T extends Entity = Entity>(
     {
       ...options,
       method: "POST",
+      // https://github.com/stellio-hub/stellio-context-broker/issues/1809
       headers: { "Content-Type": "application/json", ...options?.headers },
       body: JSON.stringify(queryTemporalBody),
       returnFormat: "body",
