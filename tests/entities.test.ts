@@ -236,7 +236,8 @@ describe("deleteEntity", () => {
 // ---------------------------------------------------------------------------
 describe("mergeEntity", () => {
   it("should merge (PATCH) attributes into an existing entity", async () => {
-    interface TemperatureHumidityEntity extends Entity<"TestEntity"> {
+    interface TemperatureHumidityEntity extends Entity {
+      type: "TestEntity";
       temperature: Property;
       humidity?: Property;
     }

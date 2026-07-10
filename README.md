@@ -13,11 +13,13 @@ however generation result was too verbose so I've continued to maintain it witho
 ### Create some entities and query data
 
 ```typescript
-interface TemperatureSensor extends schemas.Entity<"TemperatureSensor"> {
+interface TemperatureSensor extends schemas.Entity {
+  type: "TemperatureSensor";
   temperature: schemas.Property<number>;
 }
 
-interface HumiditySensor extends schemas.Entity<"HumiditySensor"> {
+interface HumiditySensor extends schemas.Entity {
+  type: "HumiditySensor";
   humidity: schemas.Property<number>;
 }
 
@@ -63,7 +65,8 @@ expect(entities.length).toBe(2);
 ### Update an entity
 
 ```typescript
-interface TemperatureSensor extends schemas.Entity<"TemperatureSensor"> {
+interface TemperatureSensor extends schemas.Entity {
+  type: "TemperatureSensor";
   temperature: schemas.Property<number>;
 }
 
@@ -95,7 +98,8 @@ expect(updatedEntity.temperature!.value).toBe(25.0);
 ### Add temporal temperature values
 
 ```typescript
-interface TemperatureSensor extends schemas.Entity<"TemperatureSensor"> {
+interface TemperatureSensor extends schemas.Entity {
+  type: "TemperatureSensor";
   temperature: schemas.Property<number>;
 }
 
@@ -156,7 +160,8 @@ expect(tempEntities[0].temperature![0].value).toBe(25.0);
 // I think this is overcomplicating things. But spec defines datasets so it
 // is implemented here. I would prefer to simply have two properties with
 // different names, like temperatureA and temperatureB.
-interface TemperatureSensor extends schemas.Entity<"TemperatureSensor"> {
+interface TemperatureSensor extends schemas.Entity {
+  type: "TemperatureSensor";
   temperature: schemas.Datasetted<
     [
       schemas.WithDatasetId<

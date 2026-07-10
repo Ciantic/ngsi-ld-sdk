@@ -3,7 +3,8 @@ import type { schemas } from "../src";
 
 describe("schemas", () => {
   it("should infer temporal entity type correctly", () => {
-    interface TemperatureSensor extends schemas.Entity<"TemperatureSensor"> {
+    interface TemperatureSensor extends schemas.Entity {
+      type: "TemperatureSensor";
       temperature: schemas.Property<number>;
       zoo: "Yes";
     }
@@ -29,7 +30,8 @@ describe("schemas", () => {
   });
 
   it("should infer data setted temporal entity type correctly", () => {
-    interface TemperatureSensor extends schemas.Entity<"TemperatureSensor"> {
+    interface TemperatureSensor extends schemas.Entity {
+      type: "TemperatureSensor";
       temperature: schemas.Datasetted<
         [
           schemas.WithDatasetId<

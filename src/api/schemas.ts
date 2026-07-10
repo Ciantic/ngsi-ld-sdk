@@ -200,9 +200,9 @@ export interface GeoProperty {
   readonly previousValue?: Geometry;
 }
 
-export interface Entity<TType extends EntityTypeName = EntityTypeName> {
+export interface Entity {
   id: string;
-  type: TType;
+  type: EntityTypeName;
   scope?: Scope;
   location?: GeoProperty;
   observationSpace?: GeoProperty;

@@ -18,11 +18,13 @@ beforeEach(cleanUpAll);
 
 describe("README.md examples", () => {
   it("Create some entities and query data", async () => {
-    interface TemperatureSensor extends schemas.Entity<"TemperatureSensor"> {
+    interface TemperatureSensor extends schemas.Entity {
+      type: "TemperatureSensor";
       temperature: schemas.Property<number>;
     }
 
-    interface HumiditySensor extends schemas.Entity<"HumiditySensor"> {
+    interface HumiditySensor extends schemas.Entity {
+      type: "HumiditySensor";
       humidity: schemas.Property<number>;
     }
 
@@ -66,7 +68,8 @@ describe("README.md examples", () => {
   });
 
   it("Update an entity", async () => {
-    interface TemperatureSensor extends schemas.Entity<"TemperatureSensor"> {
+    interface TemperatureSensor extends schemas.Entity {
+      type: "TemperatureSensor";
       temperature: schemas.Property<number>;
     }
 
@@ -96,7 +99,8 @@ describe("README.md examples", () => {
   });
 
   it("Add temporal temperature values", async () => {
-    interface TemperatureSensor extends schemas.Entity<"TemperatureSensor"> {
+    interface TemperatureSensor extends schemas.Entity {
+      type: "TemperatureSensor";
       temperature: schemas.Property<number>;
     }
 
@@ -155,7 +159,8 @@ describe("README.md examples", () => {
     // I think this is overcomplicating things. But spec defines datasets so it
     // is implemented here. I would prefer to simply have two properties with
     // different names, like temperatureA and temperatureB.
-    interface TemperatureSensor extends schemas.Entity<"TemperatureSensor"> {
+    interface TemperatureSensor extends schemas.Entity {
+      type: "TemperatureSensor";
       temperature: schemas.Datasetted<
         [
           schemas.WithDatasetId<

@@ -25,7 +25,8 @@ const NGSILD_CORE_CONTEXT = [
 
 let temporalCounter = 0;
 
-interface TemperatureSensor extends schemas.Entity<"TemperatureSensor"> {
+interface TemperatureSensor extends schemas.Entity {
+  type: "TemperatureSensor";
   temperature: schemas.Property<number>;
 }
 
