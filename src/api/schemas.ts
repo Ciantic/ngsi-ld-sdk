@@ -382,18 +382,18 @@ export type QueryTemporal = Query & {
   temporalQ: TemporalQuery;
 };
 
-export interface Relationship {
+export interface Relationship<TTarget extends Entity = Entity> {
   type: "Relationship";
-  object?: string | string[];
-  objectType?: string | string[];
+  object?: TTarget["id"] | TTarget["id"][];
+  objectType?: TTarget["type"] | TTarget["type"][];
   observedAt?: string;
   datasetId?: string;
   readonly createdAt?: string;
   readonly modifiedAt?: string;
   readonly deletedAt?: string;
   readonly instanceId?: string;
-  readonly previousObject?: string | string[];
-  readonly entity?: Entity | Entity[];
+  readonly previousObject?: TTarget["id"] | TTarget["id"][];
+  readonly entity?: TTarget | TTarget[];
 }
 
 export type SubscriptionCommonNotificationTriggerItem =

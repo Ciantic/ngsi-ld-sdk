@@ -70,4 +70,47 @@ describe("schemas", () => {
       >[];
     }>();
   });
+
+  it("should default a Relationship to a generic Entity target", () => {
+    expectTypeOf<schemas.Relationship>().toEqualTypeOf<
+      schemas.Relationship<schemas.Entity>
+    >();
+  });
+
+  it("should narrow a generic Relationship target fields", () => {
+    interface Building extends schemas.Entity {
+      type: "Building";
+      name: schemas.Property<string>;
+    }
+
+    type LocatedAt = schemas.Relationship<Building>;
+
+    // object is an IRI — branding entity ids would make this checkable, but
+    // today it resolves to string.
+    expectTypeOf<LocatedAt["object"]>().toEqualTypeOf<
+      string | string[] | undefined
+    >();
+    expectTypeOf<LocatedAt["objectType"]>().toEqualTypeOf<
+      "Building" | "Building"[] | undefined
+    >();
+    expectTypeOf<LocatedAt["entity"]>().toEqualTypeOf<
+      Building | Building[] | undefined
+    >();
+  });
+
+  it("should preserve a generic Relationship through temporal inference", () => {
+    interface Building extends schemas.Entity {
+      type: "Building";
+    }
+    interface TemperatureSensor extends schemas.Entity {
+      type: "TemperatureSensor";
+      locatedAt: schemas.Relationship<Building>;
+    }
+    type TemporalTemperatureSensor =
+      schemas.InferEntityTemporal<TemperatureSensor>;
+
+    expectTypeOf<TemporalTemperatureSensor["locatedAt"]>().toEqualTypeOf<
+      schemas.RequiredObservedAt<schemas.Relationship<Building>>[]
+    >();
+  });
 });
