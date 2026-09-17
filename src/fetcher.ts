@@ -2,7 +2,9 @@ import { ProblemDetails } from "./api/schemas";
 import { NGSILD_STATUS_TO_ERROR, NgsiLdHttpError } from "./errors";
 
 const BASE_URL =
-  process.env.NGSILD_BROKER_URL || "http://localhost:1026/ngsi-ld/v1";
+  (typeof process !== "undefined" && process.env.NGSILD_BROKER_URL) ||
+  import.meta.env?.NGSILD_BROKER_URL ||
+  "http://localhost:1026/ngsi-ld/v1";
 
 /**
  * Construct and throw the appropriate {@link NgsiLdHttpError} subclass
@@ -27,6 +29,7 @@ export const fetcher = async <T>(
     headers,
     body,
     returnFormat,
+    ...requestInit
   }: {
     method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
     params?: any;
@@ -34,7 +37,7 @@ export const fetcher = async <T>(
     body?: any;
     responseType?: string;
     returnFormat?: "body" | "status-data";
-  },
+  } & Omit<RequestInit, "method" | "body" | "headers">,
 ): Promise<T> => {
   let targetUrl = `${BASE_URL}${url}`;
   if (params) {
@@ -49,13 +52,14 @@ export const fetcher = async <T>(
       : undefined;
 
   const response = await fetch(targetUrl, {
+    ...requestInit,
     method,
     ...(typeof wireBody !== "undefined" ? { body: wireBody } : {}),
-    headers: {
+    headers: new Headers({
       "Content-Type": "application/ld+json",
       Accept: "application/ld+json",
-      ...headers,
-    },
+      ...Object.fromEntries(new Headers(headers)),
+    }),
   });
   const responseBody = [204, 205, 304].includes(response.status)
     ? undefined
