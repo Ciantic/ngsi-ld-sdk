@@ -7,10 +7,6 @@ settings:
 importers:
 
   .:
-    dependencies:
-      zod:
-        specifier: ^4.4.3
-        version: 4.4.3
     devDependencies:
       prettier:
         specifier: ^3.9.5
@@ -1035,9 +1031,6 @@ packages:
   yuku-parser@0.5.46:
     resolution: {integrity: sha512-eMNzX5eYnkqo6zNYf2H8WHcMPHfIf7ijmw0X8NYZ1ANXAU5Y9rwTB9MgfCuvLxlR7fV/96v3gWa8y/YUGFLxjw==}
 
-  zod@4.4.3:
-    resolution: {integrity: sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ==}
-
 snapshots:
 
   '@emnapi/core@1.11.1':
@@ -1760,5 +1753,3 @@ snapshots:
       '@yuku-parser/binding-linux-x64-musl': 0.5.46
       '@yuku-parser/binding-win32-arm64': 0.5.46
       '@yuku-parser/binding-win32-x64': 0.5.46
-
-  zod@4.4.3: {}
