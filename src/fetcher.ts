@@ -33,7 +33,7 @@ export const fetcher = async <T>(
   }: {
     method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
     params?: any;
-    headers?: [string, string][] | Record<string, string> | Headers;
+    headers?: HeadersInit;
     body?: any;
     responseType?: string;
     returnFormat?: "body" | "status-data";
@@ -51,15 +51,17 @@ export const fetcher = async <T>(
         : JSON.stringify(body)
       : undefined;
 
+  const mergedHeaders = new Headers({
+    "Content-Type": "application/ld+json",
+    Accept: "application/ld+json",
+  });
+  new Headers(headers).forEach((value, key) => mergedHeaders.set(key, value));
+
   const response = await fetch(targetUrl, {
     ...requestInit,
     method,
     ...(typeof wireBody !== "undefined" ? { body: wireBody } : {}),
-    headers: new Headers({
-      "Content-Type": "application/ld+json",
-      Accept: "application/ld+json",
-      ...Object.fromEntries(new Headers(headers)),
-    }),
+    headers: mergedHeaders,
   });
   const responseBody = [204, 205, 304].includes(response.status)
     ? undefined
