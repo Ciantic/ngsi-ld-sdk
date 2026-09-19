@@ -10,11 +10,11 @@ import {
   retrieveCSRSubscription,
   updateCSRSubscription,
   deleteCSRSubscription,
-  NGSILD_CORE_CONTEXT,
-} from "../src";
+} from "../src/operations";
+import { NGSILD_CORE_CONTEXT } from "../src";
 import { cleanUpAll, gateBroker } from "./helpers";
-import { NgsiLdNotFound, NgsiLdConflict } from "../src";
-import { EntitySelector, MaybeContext, Subscription } from "../src/api/schemas";
+import { NgsiLdNotFound, NgsiLdConflict } from "../src/errors";
+import { EntitySelector, MaybeContext, Subscription } from "../src/schemas";
 
 // Wipe all stale resources from previous crashed runs before each test.
 beforeEach(cleanUpAll);

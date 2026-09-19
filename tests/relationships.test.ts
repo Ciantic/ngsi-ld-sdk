@@ -4,10 +4,10 @@ import {
   retrieveEntity,
   queryEntity,
   updateEntity,
-  NGSILD_CORE_CONTEXT,
-  NgsiLdBadRequest,
-  schemas,
-} from "../src";
+} from "../src/operations";
+import { NgsiLdBadRequest } from "../src/errors";
+import { NGSILD_CORE_CONTEXT } from "../src";
+import type * as schemas from "../src/schemas";
 import { cleanUpAll, gateBroker } from "./helpers";
 
 // NGSI-LD treats Relationships as opaque references: the broker stores and

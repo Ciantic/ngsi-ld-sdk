@@ -1,4 +1,4 @@
-import { ProblemDetails } from "./api/schemas";
+import { ProblemDetails } from "./schemas";
 import { NGSILD_STATUS_TO_ERROR, NgsiLdHttpError } from "./errors";
 
 const BASE_URL =

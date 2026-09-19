@@ -13,7 +13,12 @@
   "types": "./dist/index.d.mts",
   "exports": {
     ".": "./dist/index.mjs",
-    "./api/operations": "./dist/api/operations.mjs"
+    "./client": "./dist/client.mjs",
+    "./operations": "./dist/operations.mjs",
+    "./schemas": "./dist/schemas.mjs",
+    "./errors": "./dist/errors.mjs",
+    "./fetcher": "./dist/fetcher.mjs",
+    "./urls": "./dist/urls.mjs"
   },
   "scripts": {
     "build": "tsdown",

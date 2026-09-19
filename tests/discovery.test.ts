@@ -13,13 +13,15 @@ import {
   deleteEntityMap,
   retrieveCSIdentityInfo,
   createEntity,
+} from "../src/operations";
+import {
   NgsiLdNotImplemented,
   NgsiLdInternalServerError,
   NgsiLdMethodNotAllowed,
   NgsiLdBadRequest,
-} from "../src";
+  NgsiLdNotFound,
+} from "../src/errors";
 import { makeEntity, cleanUpAll, gateBroker } from "./helpers";
-import { NgsiLdNotFound } from "../src";
 
 // Wipe all stale resources from previous crashed runs before each test.
 beforeEach(cleanUpAll);

@@ -1,5 +1,5 @@
 import { describe, expectTypeOf, it } from "vitest";
-import type { schemas } from "../src";
+import type * as schemas from "../src/schemas";
 
 describe("schemas", () => {
   it("should infer temporal entity type correctly", () => {

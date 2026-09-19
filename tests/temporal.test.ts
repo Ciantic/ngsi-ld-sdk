@@ -10,11 +10,14 @@ import {
   deleteAttrInstanceTemporal,
   temporalQueryBatch,
   retrieveEntity,
-  NgsiLdNotImplemented,
-  schemas,
-} from "../src";
+} from "../src/operations";
 import { cleanUpAll, gateBroker } from "./helpers";
-import { NgsiLdBadRequest, NgsiLdNotFound } from "../src";
+import {
+  NgsiLdBadRequest,
+  NgsiLdNotFound,
+  NgsiLdNotImplemented,
+} from "../src/errors";
+import type * as schemas from "../src/schemas";
 
 // Wipe all stale resources from previous crashed runs before each test.
 beforeEach(cleanUpAll);

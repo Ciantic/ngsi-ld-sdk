@@ -1,12 +1,12 @@
 import {
-  schemas,
   createEntity,
   queryEntity,
   updateEntity,
   retrieveEntity,
   upsertTemporal,
   queryTemporal,
-} from "../src";
+} from "../src/operations";
+import type * as schemas from "../src/schemas";
 
 import { describe, it, expect, afterAll, beforeEach } from "vitest";
 import { cleanUpAll, gateBroker } from "./helpers";

@@ -4,12 +4,12 @@ import {
   createEntity,
   deleteBatch,
   mergeBatch,
-  NgsiLdNotFound,
   queryBatch,
   queryGeoBatch,
   updateBatch,
   upsertBatch,
-} from "../src";
+} from "../src/operations";
+import { NgsiLdNotFound } from "../src/errors";
 import {
   cleanUpAll,
   gateBroker,

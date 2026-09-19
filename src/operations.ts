@@ -125,7 +125,7 @@ import {
   getUpsertTemporalUrl,
 } from "./urls";
 
-import { fetcher, type NgsiLdRequestOpts } from "../fetcher";
+import { fetcher, type NgsiLdRequestOpts } from "./fetcher";
 
 export const createEntity = <T extends Entity = Entity>(opts: {
   entity: WithContext<NonReadonly<T>>;

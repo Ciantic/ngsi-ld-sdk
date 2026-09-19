@@ -6,8 +6,8 @@ import {
   queryTemporal,
   queryCSR,
   querySubscription,
-  NGSILD_CORE_CONTEXT,
-} from "../src";
+} from "../src/operations";
+import { NGSILD_CORE_CONTEXT } from "../src";
 
 // --- Broker URL ---
 

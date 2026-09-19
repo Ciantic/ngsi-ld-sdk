@@ -1,4 +1,4 @@
-import { NgsiLdRequestOpts } from "../fetcher";
+import { NgsiLdRequestOpts } from "./fetcher";
 import * as operations from "./operations";
 
 const normalizeBaseUrl = (baseUrl: string): string =>

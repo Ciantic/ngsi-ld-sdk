@@ -14,15 +14,19 @@ import {
   updateAttrs,
   deleteAttrs,
   replaceAttrs,
-} from "../src";
+} from "../src/operations";
 import {
   makeEntity,
   makeEntityWithGeo,
   cleanUpAll,
   gateBroker,
 } from "./helpers";
-import { NgsiLdNotFound, NgsiLdConflict, NgsiLdBadRequest } from "../src";
-import { Entity, Property, WithContext } from "../src/api/schemas";
+import {
+  NgsiLdNotFound,
+  NgsiLdConflict,
+  NgsiLdBadRequest,
+} from "../src/errors";
+import { Entity, Property, WithContext } from "../src/schemas";
 
 // Wipe all stale resources from previous crashed runs before each test.
 beforeEach(cleanUpAll);

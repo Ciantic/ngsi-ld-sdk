@@ -130,7 +130,7 @@ async function generateOperationsTable(): Promise<string> {
   // Use ts-morph to extract all exported const names from operations.ts
   const project = new Project();
   const operationsFile = project.addSourceFileAtPath(
-    resolve(__dirname, "../../src/api/operations.ts"),
+    resolve(__dirname, "../../src/operations.ts"),
   );
 
   const sdkExports = operationsFile
