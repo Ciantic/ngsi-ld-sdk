@@ -12,7 +12,8 @@
   "main": "./dist/index.mjs",
   "types": "./dist/index.d.mts",
   "exports": {
-    ".": "./dist/index.mjs"
+    ".": "./dist/index.mjs",
+    "./api/operations": "./dist/api/operations.mjs"
   },
   "scripts": {
     "build": "tsdown",

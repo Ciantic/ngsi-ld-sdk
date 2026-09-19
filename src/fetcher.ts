@@ -24,11 +24,11 @@ function throwHttpError(response: Response, body: ProblemDetails): never {
 type NgsiLdRequest = {
   path: string;
   method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
+  params?: any;
+  returnFormat?: "body" | "status-data";
 };
 
 export type NgsiLdRequestOpts = {
-  params?: any;
-  returnFormat?: "body" | "status-data";
   baseUrl?: string;
 } & RequestInit;
 
