@@ -128,7 +128,7 @@ import {
 import { fetcher } from "../fetcher";
 
 export const createEntity = <T extends Entity = Entity>(
-  createEntityBody?: WithContext<NonReadonly<T>>,
+  entity: WithContext<NonReadonly<T>>,
   params?: CreateEntityParams,
   options?: RequestInit,
 ) => {
@@ -136,7 +136,7 @@ export const createEntity = <T extends Entity = Entity>(
     ...options,
     method: "POST",
     headers: { ...options?.headers },
-    body: JSON.stringify(createEntityBody),
+    body: JSON.stringify(entity),
   });
 };
 
@@ -214,9 +214,7 @@ export const deleteEntity = (
 
 export const mergeEntity = <T extends Entity = Entity>(
   entityId: string,
-
-  // TODO: How to ensure there is no extra parameters in mergeEntityBody?
-  mergeEntityBody?: WithContext<NonReadonly<Partial<T>>>,
+  entityFragment: WithContext<NonReadonly<Partial<T>>>,
   params?: MergeEntityParams,
   options?: RequestInit,
 ) => {
@@ -224,13 +222,13 @@ export const mergeEntity = <T extends Entity = Entity>(
     ...options,
     method: "PATCH",
     headers: { ...options?.headers },
-    body: JSON.stringify(mergeEntityBody),
+    body: JSON.stringify(entityFragment),
   });
 };
 
 export const replaceEntity = <T extends Entity = Entity>(
   entityId: string,
-  replaceEntityBody?: WithContext<NonReadonly<Partial<T>>>,
+  entityFragment: WithContext<NonReadonly<Partial<T>>>,
   params?: ReplaceEntityParams,
   options?: RequestInit,
 ) => {
@@ -240,14 +238,14 @@ export const replaceEntity = <T extends Entity = Entity>(
       ...options,
       method: "PUT",
       headers: { ...options?.headers },
-      body: JSON.stringify(replaceEntityBody),
+      body: JSON.stringify(entityFragment),
     },
   );
 };
 
 export const appendAttrs = <T extends Entity = Entity>(
   entityId: string,
-  appendAttrsBody?: WithContext<NonReadonly<Partial<T>>>,
+  entityFragment: WithContext<NonReadonly<Partial<T>>>,
   params?: AppendAttrsParams,
   options?: RequestInit,
 ) => {
@@ -255,13 +253,13 @@ export const appendAttrs = <T extends Entity = Entity>(
     ...options,
     method: "POST",
     headers: { ...options?.headers },
-    body: JSON.stringify(appendAttrsBody),
+    body: JSON.stringify(entityFragment),
   });
 };
 
 export const updateEntity = <T extends Entity = Entity>(
   entityId: string,
-  updateEntityBody?: WithContext<NonReadonly<Partial<T>>>,
+  entityFragment: WithContext<NonReadonly<Partial<T>>>,
   params?: UpdateEntityParams,
   options?: RequestInit,
 ) => {
@@ -271,7 +269,7 @@ export const updateEntity = <T extends Entity = Entity>(
       ...options,
       method: "PATCH",
       headers: { ...options?.headers },
-      body: JSON.stringify(updateEntityBody),
+      body: JSON.stringify(entityFragment),
     },
   );
 };
@@ -279,7 +277,7 @@ export const updateEntity = <T extends Entity = Entity>(
 export const updateAttrs = (
   entityId: string,
   attrId: string,
-  attributeFragmentBody?: WithContext<NgsildAttribute>,
+  attr: WithContext<NgsildAttribute>,
   params?: UpdateAttrsParams,
   options?: RequestInit,
 ) => {
@@ -289,7 +287,7 @@ export const updateAttrs = (
       ...options,
       method: "PATCH",
       headers: { ...options?.headers },
-      body: JSON.stringify(attributeFragmentBody),
+      body: JSON.stringify(attr),
     },
   );
 };
@@ -312,7 +310,7 @@ export const deleteAttrs = (
 export const replaceAttrs = (
   entityId: string,
   attrId: string,
-  attributeFragmentBody?: WithContext<NgsildAttribute>,
+  attr: WithContext<NgsildAttribute>,
   params?: ReplaceAttrsParams,
   options?: RequestInit,
 ) => {
@@ -322,20 +320,20 @@ export const replaceAttrs = (
       ...options,
       method: "PUT",
       headers: { ...options?.headers },
-      body: JSON.stringify(attributeFragmentBody),
+      body: JSON.stringify(attr),
     },
   );
 };
 
 export const createCSR = (
-  createCSRBody?: WithContext<NonReadonly<CsourceRegistration>>,
+  csr: WithContext<NonReadonly<CsourceRegistration>>,
   options?: RequestInit,
 ) => {
   return fetcher<{ location: string }>(getCreateCSRUrl(), {
     ...options,
     method: "POST",
     headers: { ...options?.headers },
-    body: JSON.stringify(createCSRBody),
+    body: JSON.stringify(csr),
     returnFormat: "body",
   });
 };
@@ -368,14 +366,14 @@ export const retrieveCSR = (
 
 export const updateCSR = (
   registrationId: string,
-  updateCSRBody?: WithContext<NonReadonly<Partial<CsourceRegistration>>>,
+  csrFragment: WithContext<NonReadonly<Partial<CsourceRegistration>>>,
   options?: RequestInit,
 ) => {
   return fetcher<void>(getUpdateCSRUrl({ registrationId }), {
     ...options,
     method: "PATCH",
     headers: { ...options?.headers },
-    body: JSON.stringify(updateCSRBody),
+    body: JSON.stringify(csrFragment),
     returnFormat: "body",
   });
 };
@@ -389,7 +387,7 @@ export const deleteCSR = (registrationId: string, options?: RequestInit) => {
 };
 
 export const createSubscription = (
-  subscriptionBody?: WithContext<Subscription>,
+  subscription: WithContext<Subscription>,
   params?: CreateSubscriptionParams,
   options?: RequestInit,
 ) => {
@@ -397,7 +395,7 @@ export const createSubscription = (
     ...options,
     method: "POST",
     headers: { ...options?.headers },
-    body: JSON.stringify(subscriptionBody),
+    body: JSON.stringify(subscription),
     returnFormat: "body",
   });
 };
@@ -433,7 +431,7 @@ export const retrieveSubscription = (
 
 export const updateSubscription = (
   subscriptionId: string,
-  subscriptionFragmentBody?: WithContext<Partial<Subscription>>,
+  subscriptionFragment: WithContext<Partial<Subscription>>,
   params?: UpdateSubscriptionParams,
   options?: RequestInit,
 ) => {
@@ -441,7 +439,7 @@ export const updateSubscription = (
     ...options,
     method: "PATCH",
     headers: { ...options?.headers },
-    body: JSON.stringify(subscriptionFragmentBody),
+    body: JSON.stringify(subscriptionFragment),
     returnFormat: "body",
   });
 };
@@ -459,14 +457,14 @@ export const deleteSubscription = (
 };
 
 export const createCSRSubscription = (
-  subscriptionBody?: WithContext<Subscription>,
+  csrSubscription: WithContext<Subscription>,
   options?: RequestInit,
 ) => {
   return fetcher<{ location: string }>(getCreateCSRSubscriptionUrl(), {
     ...options,
     method: "POST",
     headers: { ...options?.headers },
-    body: JSON.stringify(subscriptionBody),
+    body: JSON.stringify(csrSubscription),
     returnFormat: "body",
   });
 };
@@ -501,32 +499,38 @@ export const retrieveCSRSubscription = (
 };
 
 export const updateCSRSubscription = (
-  subscriptionId: string,
-  subscriptionFragmentBody?: WithContext<Partial<Subscription>>,
+  csrSubscriptionId: string,
+  csrSubscriptionFragment: WithContext<Partial<Subscription>>,
   options?: RequestInit,
 ) => {
-  return fetcher<void>(getUpdateCSRSubscriptionUrl({ subscriptionId }), {
-    ...options,
-    method: "PATCH",
-    headers: { ...options?.headers },
-    body: JSON.stringify(subscriptionFragmentBody),
-    returnFormat: "body",
-  });
+  return fetcher<void>(
+    getUpdateCSRSubscriptionUrl({ subscriptionId: csrSubscriptionId }),
+    {
+      ...options,
+      method: "PATCH",
+      headers: { ...options?.headers },
+      body: JSON.stringify(csrSubscriptionFragment),
+      returnFormat: "body",
+    },
+  );
 };
 
 export const deleteCSRSubscription = (
-  subscriptionId: string,
+  csrSubscriptionId: string,
   options?: RequestInit,
 ) => {
-  return fetcher<void>(getDeleteCSRSubscriptionUrl({ subscriptionId }), {
-    ...options,
-    method: "DELETE",
-    returnFormat: "body",
-  });
+  return fetcher<void>(
+    getDeleteCSRSubscriptionUrl({ subscriptionId: csrSubscriptionId }),
+    {
+      ...options,
+      method: "DELETE",
+      returnFormat: "body",
+    },
+  );
 };
 
 export const createBatch = <T extends Entity = Entity>(
-  createBatchBodyItem?: NonReadonly<MaybeContext<T>>[],
+  entities: NonReadonly<MaybeContext<T>>[],
   params?: CreateBatchParams,
   options?: RequestInit,
 ) => {
@@ -534,12 +538,12 @@ export const createBatch = <T extends Entity = Entity>(
     ...options,
     method: "POST",
     headers: { ...options?.headers },
-    body: JSON.stringify(createBatchBodyItem),
+    body: JSON.stringify(entities),
   });
 };
 
 export const upsertBatch = <T extends Entity = Entity>(
-  upsertBatchBodyItem?: NonReadonly<MaybeContext<T>>[],
+  entities: NonReadonly<MaybeContext<T>>[],
   params?: UpsertBatchParams,
   options?: RequestInit,
 ) => {
@@ -547,12 +551,12 @@ export const upsertBatch = <T extends Entity = Entity>(
     ...options,
     method: "POST",
     headers: { ...options?.headers },
-    body: JSON.stringify(upsertBatchBodyItem),
+    body: JSON.stringify(entities),
   });
 };
 
 export const updateBatch = <T extends Entity = Entity>(
-  updateBatchBodyItem?: NonReadonly<MaybeContext<T>>[],
+  entities: NonReadonly<MaybeContext<T>>[],
   params?: UpdateBatchParams,
   options?: RequestInit,
 ) => {
@@ -560,12 +564,12 @@ export const updateBatch = <T extends Entity = Entity>(
     ...options,
     method: "POST",
     headers: { ...options?.headers },
-    body: JSON.stringify(updateBatchBodyItem),
+    body: JSON.stringify(entities),
   });
 };
 
 export const deleteBatch = (
-  deleteBatchBody?: string[],
+  entityIds: string[],
   params?: DeleteBatchParams,
   options?: RequestInit,
 ) => {
@@ -573,12 +577,12 @@ export const deleteBatch = (
     ...options,
     method: "POST",
     headers: { "Content-Type": "application/json", ...options?.headers },
-    body: JSON.stringify(deleteBatchBody),
+    body: JSON.stringify(entityIds),
   });
 };
 
 export const queryBatch = <T extends Entity = Entity>(
-  query?: Query,
+  query: Query,
   params?: QueryBatchParams,
   options?: RequestInit,
 ) => {
@@ -593,7 +597,7 @@ export const queryBatch = <T extends Entity = Entity>(
 };
 
 export const queryGeoBatch = <T extends Entity = Entity>(
-  query?: Query,
+  query: Query,
   params?: QueryBatchParams,
   options?: RequestInit,
 ) => {
@@ -612,7 +616,7 @@ export const queryGeoBatch = <T extends Entity = Entity>(
 };
 
 export const mergeBatch = <T extends Entity = Entity>(
-  mergeBatchBodyItem?: NonReadonly<MaybeContext<T>>[],
+  entities: NonReadonly<MaybeContext<T>>[],
   params?: MergeBatchParams,
   options?: RequestInit,
 ) => {
@@ -620,12 +624,12 @@ export const mergeBatch = <T extends Entity = Entity>(
     ...options,
     method: "POST",
     headers: { ...options?.headers },
-    body: JSON.stringify(mergeBatchBodyItem),
+    body: JSON.stringify(entities),
   });
 };
 
 export const upsertTemporal = <T extends Entity = Entity>(
-  entityTemporalBody?: WithContext<InferEntityTemporal<T>>,
+  entityTemporal: WithContext<InferEntityTemporal<T>>,
   params?: UpsertTemporalParams,
   options?: RequestInit,
 ) => {
@@ -633,7 +637,7 @@ export const upsertTemporal = <T extends Entity = Entity>(
     ...options,
     method: "POST",
     headers: { ...options?.headers },
-    body: JSON.stringify(entityTemporalBody),
+    body: JSON.stringify(entityTemporal),
   });
 };
 
@@ -682,7 +686,7 @@ export const deleteTemporal = (
 
 export const appendAttrsTemporal = <T extends Entity = Entity>(
   entityId: string,
-  entityTemporalFragmentBody?: WithContext<Partial<InferEntityTemporal<T>>>,
+  entityTemporalFragment: WithContext<Partial<InferEntityTemporal<T>>>,
   params?: AppendAttrsTemporalParams,
   options?: RequestInit,
 ) => {
@@ -690,7 +694,7 @@ export const appendAttrsTemporal = <T extends Entity = Entity>(
     ...options,
     method: "POST",
     headers: { ...options?.headers },
-    body: JSON.stringify(entityTemporalFragmentBody),
+    body: JSON.stringify(entityTemporalFragment),
     returnFormat: "body",
   });
 };
@@ -715,7 +719,11 @@ export const updateAttrsTemporal = (
   entityId: string,
   attrId: string,
   instanceId: string,
-  temporalAttrFragmentBody?: WithContext<RequiredObservedAt<NgsildAttribute>>,
+
+  // Bare attribute *instance* (Property/Relationship + observedAt), NOT an
+  // entity-temporal fragment — despite the yaml spec ref to
+  // EntityTemporalFragment for this operation.
+  attr: WithContext<RequiredObservedAt<NgsildAttribute>>,
   params?: UpdateAttrsTemporalParams,
   options?: RequestInit,
 ) => {
@@ -725,9 +733,7 @@ export const updateAttrsTemporal = (
       ...options,
       method: "PATCH",
       headers: { ...options?.headers },
-      body: temporalAttrFragmentBody
-        ? JSON.stringify(temporalAttrFragmentBody)
-        : undefined,
+      body: JSON.stringify(attr),
       returnFormat: "body",
     },
   );
@@ -751,7 +757,7 @@ export const deleteAttrInstanceTemporal = (
 };
 
 export const temporalQueryBatch = <T extends Entity = Entity>(
-  queryTemporalBody: QueryTemporal,
+  query: QueryTemporal,
   params?: TemporalQueryBatchParams,
   options?: RequestInit,
 ) => {
@@ -762,7 +768,7 @@ export const temporalQueryBatch = <T extends Entity = Entity>(
       method: "POST",
       // https://github.com/stellio-hub/stellio-context-broker/issues/1809
       headers: { "Content-Type": "application/json", ...options?.headers },
-      body: JSON.stringify(queryTemporalBody),
+      body: JSON.stringify(query),
       returnFormat: "body",
     },
   );
@@ -827,14 +833,14 @@ export const retrieveAttrTypeInfo = (
 };
 
 export const createContext = (
-  createContextBody?: { "@context": LdContext },
+  context: { "@context": LdContext },
   options?: RequestInit,
 ) => {
   return fetcher<{ location: string }>(getCreateContextUrl(), {
     ...options,
     method: "POST",
     headers: { ...options?.headers },
-    body: JSON.stringify(createContextBody),
+    body: JSON.stringify(context),
     returnFormat: "body",
   });
 };
@@ -896,14 +902,14 @@ export const retrieveEntityMap = (
 
 export const updateEntityMap = (
   entityMapId: string,
-  updateEntityMapBody?: WithContext<NonReadonly<EntityMap>>,
+  entityMap: WithContext<NonReadonly<EntityMap>>,
   options?: RequestInit,
 ) => {
   return fetcher<void>(getUpdateEntityMapUrl({ entityMapId }), {
     ...options,
     method: "PATCH",
     headers: { ...options?.headers },
-    body: JSON.stringify(updateEntityMapBody),
+    body: JSON.stringify(entityMap),
     returnFormat: "body",
   });
 };
