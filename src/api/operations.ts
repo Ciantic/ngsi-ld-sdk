@@ -125,12 +125,12 @@ import {
   getUpsertTemporalUrl,
 } from "./urls";
 
-import { fetcher } from "../fetcher";
+import { fetcher, NgsiLdRequestOpts } from "../fetcher";
 
 export const createEntity = <T extends Entity = Entity>(
   entity: WithContext<NonReadonly<T>>,
   params?: CreateEntityParams,
-  options?: RequestInit,
+  options?: NgsiLdRequestOpts,
 ) => {
   return fetcher<CreateEntityResponse>(getCreateEntityUrl({ params }), {
     ...options,
@@ -142,7 +142,7 @@ export const createEntity = <T extends Entity = Entity>(
 
 export const queryEntity = <T extends Entity = Entity>(
   params?: QueryEntityParams<T["type"] extends string ? T["type"] : string>,
-  options?: RequestInit,
+  options?: NgsiLdRequestOpts,
 ) => {
   return fetcher<WithContext<T>[]>(
     getQueryEntityUrl<T["type"] extends string ? T["type"] : string>({
@@ -158,7 +158,7 @@ export const queryEntity = <T extends Entity = Entity>(
 
 export const queryGeoEntity = <T extends Entity = Entity>(
   params?: QueryEntityParams<T["type"] extends string ? T["type"] : string>,
-  options?: RequestInit,
+  options?: NgsiLdRequestOpts,
 ) => {
   return fetcher<FeatureCollection<T>>(
     getQueryEntityUrl<T["type"] extends string ? T["type"] : string>({
@@ -176,7 +176,7 @@ export const queryGeoEntity = <T extends Entity = Entity>(
 export const retrieveEntity = <T extends Entity = Entity>(
   entityId: string,
   params?: RetrieveEntityParams,
-  options?: RequestInit,
+  options?: NgsiLdRequestOpts,
 ) => {
   return fetcher<WithContext<T>>(getRetrieveEntityUrl({ entityId, params }), {
     ...options,
@@ -188,7 +188,7 @@ export const retrieveEntity = <T extends Entity = Entity>(
 export const retrieveGeoEntity = <T extends Entity = Entity>(
   entityId: string,
   params?: Omit<RetrieveEntityParams, "options">,
-  options?: RequestInit,
+  options?: NgsiLdRequestOpts,
 ) => {
   return fetcher<Feature<T>>(getRetrieveEntityUrl({ entityId, params }), {
     ...options,
@@ -201,7 +201,7 @@ export const retrieveGeoEntity = <T extends Entity = Entity>(
 export const deleteEntity = (
   entityId: string,
   params?: DeleteEntityParams,
-  options?: RequestInit,
+  options?: NgsiLdRequestOpts,
 ) => {
   return fetcher<DeleteEntityResponse>(
     getDeleteEntityUrl({ entityId, params }),
@@ -216,7 +216,7 @@ export const mergeEntity = <T extends Entity = Entity>(
   entityId: string,
   entityFragment: WithContext<NonReadonly<Partial<T>>>,
   params?: MergeEntityParams,
-  options?: RequestInit,
+  options?: NgsiLdRequestOpts,
 ) => {
   return fetcher<MergeEntityResponse>(getMergeEntityUrl({ entityId, params }), {
     ...options,
@@ -230,7 +230,7 @@ export const replaceEntity = <T extends Entity = Entity>(
   entityId: string,
   entityFragment: WithContext<NonReadonly<Partial<T>>>,
   params?: ReplaceEntityParams,
-  options?: RequestInit,
+  options?: NgsiLdRequestOpts,
 ) => {
   return fetcher<ReplaceEntityResponse>(
     getReplaceEntityUrl({ entityId, params }),
@@ -247,7 +247,7 @@ export const appendAttrs = <T extends Entity = Entity>(
   entityId: string,
   entityFragment: WithContext<NonReadonly<Partial<T>>>,
   params?: AppendAttrsParams,
-  options?: RequestInit,
+  options?: NgsiLdRequestOpts,
 ) => {
   return fetcher<AppendAttrsResponse>(getAppendAttrsUrl({ entityId, params }), {
     ...options,
@@ -261,7 +261,7 @@ export const updateEntity = <T extends Entity = Entity>(
   entityId: string,
   entityFragment: WithContext<NonReadonly<Partial<T>>>,
   params?: UpdateEntityParams,
-  options?: RequestInit,
+  options?: NgsiLdRequestOpts,
 ) => {
   return fetcher<UpdateEntityResponse>(
     getUpdateEntityUrl({ entityId, params }),
@@ -279,7 +279,7 @@ export const updateAttrs = (
   attrId: string,
   attr: WithContext<NgsildAttribute>,
   params?: UpdateAttrsParams,
-  options?: RequestInit,
+  options?: NgsiLdRequestOpts,
 ) => {
   return fetcher<UpdateAttrsResponse>(
     getUpdateAttrsUrl({ entityId, attrId, params }),
@@ -296,7 +296,7 @@ export const deleteAttrs = (
   entityId: string,
   attrId: string,
   params?: DeleteAttrsParams,
-  options?: RequestInit,
+  options?: NgsiLdRequestOpts,
 ) => {
   return fetcher<DeleteAttrsResponse>(
     getDeleteAttrsUrl({ entityId, attrId, params }),
@@ -312,7 +312,7 @@ export const replaceAttrs = (
   attrId: string,
   attr: WithContext<NgsildAttribute>,
   params?: ReplaceAttrsParams,
-  options?: RequestInit,
+  options?: NgsiLdRequestOpts,
 ) => {
   return fetcher<ReplaceAttrsResponse>(
     getReplaceAttrsUrl({ entityId, attrId, params }),
@@ -327,7 +327,7 @@ export const replaceAttrs = (
 
 export const createCSR = (
   csr: WithContext<NonReadonly<CsourceRegistration>>,
-  options?: RequestInit,
+  options?: NgsiLdRequestOpts,
 ) => {
   return fetcher<{ location: string }>(getCreateCSRUrl(), {
     ...options,
@@ -338,7 +338,10 @@ export const createCSR = (
   });
 };
 
-export const queryCSR = (params?: QueryCSRParams, options?: RequestInit) => {
+export const queryCSR = (
+  params?: QueryCSRParams,
+  options?: NgsiLdRequestOpts,
+) => {
   return fetcher<WithContext<CsourceRegistration>[]>(
     getQueryCSRUrl({ params }),
     {
@@ -352,7 +355,7 @@ export const queryCSR = (params?: QueryCSRParams, options?: RequestInit) => {
 export const retrieveCSR = (
   registrationId: string,
   params?: RetrieveCSRParams,
-  options?: RequestInit,
+  options?: NgsiLdRequestOpts,
 ) => {
   return fetcher<WithContext<CsourceRegistration>>(
     getRetrieveCSRUrl({ registrationId, params }),
@@ -367,7 +370,7 @@ export const retrieveCSR = (
 export const updateCSR = (
   registrationId: string,
   csrFragment: WithContext<NonReadonly<Partial<CsourceRegistration>>>,
-  options?: RequestInit,
+  options?: NgsiLdRequestOpts,
 ) => {
   return fetcher<void>(getUpdateCSRUrl({ registrationId }), {
     ...options,
@@ -378,7 +381,10 @@ export const updateCSR = (
   });
 };
 
-export const deleteCSR = (registrationId: string, options?: RequestInit) => {
+export const deleteCSR = (
+  registrationId: string,
+  options?: NgsiLdRequestOpts,
+) => {
   return fetcher<void>(getDeleteCSRUrl({ registrationId }), {
     ...options,
     method: "DELETE",
@@ -389,7 +395,7 @@ export const deleteCSR = (registrationId: string, options?: RequestInit) => {
 export const createSubscription = (
   subscription: WithContext<Subscription>,
   params?: CreateSubscriptionParams,
-  options?: RequestInit,
+  options?: NgsiLdRequestOpts,
 ) => {
   return fetcher<{ location: string }>(getCreateSubscriptionUrl({ params }), {
     ...options,
@@ -402,7 +408,7 @@ export const createSubscription = (
 
 export const querySubscription = (
   params?: QuerySubscriptionParams,
-  options?: RequestInit,
+  options?: NgsiLdRequestOpts,
 ) => {
   return fetcher<WithContext<Subscription>[]>(
     getQuerySubscriptionUrl({ params }),
@@ -417,7 +423,7 @@ export const querySubscription = (
 export const retrieveSubscription = (
   subscriptionId: string,
   params?: RetrieveSubscriptionParams,
-  options?: RequestInit,
+  options?: NgsiLdRequestOpts,
 ) => {
   return fetcher<WithContext<Subscription>>(
     getRetrieveSubscriptionUrl({ subscriptionId, params }),
@@ -433,7 +439,7 @@ export const updateSubscription = (
   subscriptionId: string,
   subscriptionFragment: WithContext<Partial<Subscription>>,
   params?: UpdateSubscriptionParams,
-  options?: RequestInit,
+  options?: NgsiLdRequestOpts,
 ) => {
   return fetcher<void>(getUpdateSubscriptionUrl({ subscriptionId, params }), {
     ...options,
@@ -447,7 +453,7 @@ export const updateSubscription = (
 export const deleteSubscription = (
   subscriptionId: string,
   params?: DeleteSubscriptionParams,
-  options?: RequestInit,
+  options?: NgsiLdRequestOpts,
 ) => {
   return fetcher<void>(getDeleteSubscriptionUrl({ subscriptionId, params }), {
     ...options,
@@ -458,7 +464,7 @@ export const deleteSubscription = (
 
 export const createCSRSubscription = (
   csrSubscription: WithContext<Subscription>,
-  options?: RequestInit,
+  options?: NgsiLdRequestOpts,
 ) => {
   return fetcher<{ location: string }>(getCreateCSRSubscriptionUrl(), {
     ...options,
@@ -471,7 +477,7 @@ export const createCSRSubscription = (
 
 export const queryCSRSubscription = (
   params?: QueryCSRSubscriptionParams,
-  options?: RequestInit,
+  options?: NgsiLdRequestOpts,
 ) => {
   return fetcher<WithContext<Subscription>[]>(
     getQueryCSRSubscriptionUrl({ params }),
@@ -486,7 +492,7 @@ export const queryCSRSubscription = (
 export const retrieveCSRSubscription = (
   subscriptionId: string,
   params?: RetrieveCSRSubscriptionParams,
-  options?: RequestInit,
+  options?: NgsiLdRequestOpts,
 ) => {
   return fetcher<WithContext<Subscription>>(
     getRetrieveCSRSubscriptionUrl({ subscriptionId, params }),
@@ -501,7 +507,7 @@ export const retrieveCSRSubscription = (
 export const updateCSRSubscription = (
   csrSubscriptionId: string,
   csrSubscriptionFragment: WithContext<Partial<Subscription>>,
-  options?: RequestInit,
+  options?: NgsiLdRequestOpts,
 ) => {
   return fetcher<void>(
     getUpdateCSRSubscriptionUrl({ subscriptionId: csrSubscriptionId }),
@@ -517,7 +523,7 @@ export const updateCSRSubscription = (
 
 export const deleteCSRSubscription = (
   csrSubscriptionId: string,
-  options?: RequestInit,
+  options?: NgsiLdRequestOpts,
 ) => {
   return fetcher<void>(
     getDeleteCSRSubscriptionUrl({ subscriptionId: csrSubscriptionId }),
@@ -532,7 +538,7 @@ export const deleteCSRSubscription = (
 export const createBatch = <T extends Entity = Entity>(
   entities: NonReadonly<MaybeContext<T>>[],
   params?: CreateBatchParams,
-  options?: RequestInit,
+  options?: NgsiLdRequestOpts,
 ) => {
   return fetcher<CreateBatchResponse>(getCreateBatchUrl({ params }), {
     ...options,
@@ -545,7 +551,7 @@ export const createBatch = <T extends Entity = Entity>(
 export const upsertBatch = <T extends Entity = Entity>(
   entities: NonReadonly<MaybeContext<T>>[],
   params?: UpsertBatchParams,
-  options?: RequestInit,
+  options?: NgsiLdRequestOpts,
 ) => {
   return fetcher<UpsertBatchResponse>(getUpsertBatchUrl({ params }), {
     ...options,
@@ -558,7 +564,7 @@ export const upsertBatch = <T extends Entity = Entity>(
 export const updateBatch = <T extends Entity = Entity>(
   entities: NonReadonly<MaybeContext<T>>[],
   params?: UpdateBatchParams,
-  options?: RequestInit,
+  options?: NgsiLdRequestOpts,
 ) => {
   return fetcher<UpdateBatchResponse>(getUpdateBatchUrl({ params }), {
     ...options,
@@ -571,7 +577,7 @@ export const updateBatch = <T extends Entity = Entity>(
 export const deleteBatch = (
   entityIds: string[],
   params?: DeleteBatchParams,
-  options?: RequestInit,
+  options?: NgsiLdRequestOpts,
 ) => {
   return fetcher<DeleteBatchResponse>(getDeleteBatchUrl({ params }), {
     ...options,
@@ -584,7 +590,7 @@ export const deleteBatch = (
 export const queryBatch = <T extends Entity = Entity>(
   query: Query,
   params?: QueryBatchParams,
-  options?: RequestInit,
+  options?: NgsiLdRequestOpts,
 ) => {
   return fetcher<WithContext<T>[]>(getQueryBatchUrl({ params }), {
     ...options,
@@ -599,7 +605,7 @@ export const queryBatch = <T extends Entity = Entity>(
 export const queryGeoBatch = <T extends Entity = Entity>(
   query: Query,
   params?: QueryBatchParams,
-  options?: RequestInit,
+  options?: NgsiLdRequestOpts,
 ) => {
   return fetcher<FeatureCollection<T>>(getQueryBatchUrl({ params }), {
     ...options,
@@ -618,7 +624,7 @@ export const queryGeoBatch = <T extends Entity = Entity>(
 export const mergeBatch = <T extends Entity = Entity>(
   entities: NonReadonly<MaybeContext<T>>[],
   params?: MergeBatchParams,
-  options?: RequestInit,
+  options?: NgsiLdRequestOpts,
 ) => {
   return fetcher<MergeBatchResponse>(getMergeBatchUrl({ params }), {
     ...options,
@@ -631,7 +637,7 @@ export const mergeBatch = <T extends Entity = Entity>(
 export const upsertTemporal = <T extends Entity = Entity>(
   entityTemporal: WithContext<InferEntityTemporal<T>>,
   params?: UpsertTemporalParams,
-  options?: RequestInit,
+  options?: NgsiLdRequestOpts,
 ) => {
   return fetcher<UpsertTemporalResponse>(getUpsertTemporalUrl({ params }), {
     ...options,
@@ -643,7 +649,7 @@ export const upsertTemporal = <T extends Entity = Entity>(
 
 export const queryTemporal = <T extends Entity = Entity>(
   params?: QueryTemporalParams<T["type"] extends string ? T["type"] : string>,
-  options?: RequestInit,
+  options?: NgsiLdRequestOpts,
 ) => {
   return fetcher<WithContext<InferEntityTemporal<T>>[]>(
     getQueryTemporalUrl<T["type"] extends string ? T["type"] : string>({
@@ -660,7 +666,7 @@ export const queryTemporal = <T extends Entity = Entity>(
 export const retrieveTemporal = <T extends Entity = Entity>(
   entityId: string,
   params?: RetrieveTemporalParams,
-  options?: RequestInit,
+  options?: NgsiLdRequestOpts,
 ) => {
   return fetcher<WithContext<InferEntityTemporal<T>>>(
     getRetrieveTemporalUrl({ entityId, params }),
@@ -675,7 +681,7 @@ export const retrieveTemporal = <T extends Entity = Entity>(
 export const deleteTemporal = (
   entityId: string,
   params?: DeleteTemporalParams,
-  options?: RequestInit,
+  options?: NgsiLdRequestOpts,
 ) => {
   return fetcher<void>(getDeleteTemporalUrl({ entityId, params }), {
     ...options,
@@ -688,7 +694,7 @@ export const appendAttrsTemporal = <T extends Entity = Entity>(
   entityId: string,
   entityTemporalFragment: WithContext<Partial<InferEntityTemporal<T>>>,
   params?: AppendAttrsTemporalParams,
-  options?: RequestInit,
+  options?: NgsiLdRequestOpts,
 ) => {
   return fetcher<void>(getAppendAttrsTemporalUrl({ entityId, params }), {
     ...options,
@@ -703,7 +709,7 @@ export const deleteAttrsTemporal = (
   entityId: string,
   attrId: string,
   params?: DeleteAttrsTemporalParams,
-  options?: RequestInit,
+  options?: NgsiLdRequestOpts,
 ) => {
   return fetcher<void>(
     getDeleteAttrsTemporalUrl({ entityId, attrId, params }),
@@ -725,7 +731,7 @@ export const updateAttrsTemporal = (
   // EntityTemporalFragment for this operation.
   attr: WithContext<RequiredObservedAt<NgsildAttribute>>,
   params?: UpdateAttrsTemporalParams,
-  options?: RequestInit,
+  options?: NgsiLdRequestOpts,
 ) => {
   return fetcher<void>(
     getUpdateAttrsTemporalUrl({ entityId, attrId, instanceId, params }),
@@ -744,7 +750,7 @@ export const deleteAttrInstanceTemporal = (
   attrId: string,
   instanceId: string,
   params?: DeleteAttrInstanceTemporalParams,
-  options?: RequestInit,
+  options?: NgsiLdRequestOpts,
 ) => {
   return fetcher<void>(
     getDeleteAttrInstanceTemporalUrl({ entityId, attrId, instanceId, params }),
@@ -759,7 +765,7 @@ export const deleteAttrInstanceTemporal = (
 export const temporalQueryBatch = <T extends Entity = Entity>(
   query: QueryTemporal,
   params?: TemporalQueryBatchParams,
-  options?: RequestInit,
+  options?: NgsiLdRequestOpts,
 ) => {
   return fetcher<WithContext<InferEntityTemporal<T>>[]>(
     getTemporalQueryBatchUrl({ params }),
@@ -776,7 +782,7 @@ export const temporalQueryBatch = <T extends Entity = Entity>(
 
 export const retrieveEntityTypes = (
   params?: RetrieveEntityTypesParams,
-  options?: RequestInit,
+  options?: NgsiLdRequestOpts,
 ) => {
   return fetcher<WithContext<EntityTypeList> | WithContext<EntityType>[]>(
     getRetrieveEntityTypesUrl({ params }),
@@ -791,7 +797,7 @@ export const retrieveEntityTypes = (
 export const retrieveEntityTypeInfo = (
   type: string,
   params?: RetrieveEntityTypeInfoParams,
-  options?: RequestInit,
+  options?: NgsiLdRequestOpts,
 ) => {
   return fetcher<WithContext<EntityTypeInfo>>(
     getRetrieveEntityTypeInfoUrl({ type, params }),
@@ -805,7 +811,7 @@ export const retrieveEntityTypeInfo = (
 
 export const retrieveAttrTypes = (
   params?: RetrieveAttrTypesParams,
-  options?: RequestInit,
+  options?: NgsiLdRequestOpts,
 ) => {
   return fetcher<WithContext<AttributeList> | WithContext<Attribute>[]>(
     getRetrieveAttrTypesUrl({ params }),
@@ -820,7 +826,7 @@ export const retrieveAttrTypes = (
 export const retrieveAttrTypeInfo = (
   attrId: string,
   params?: RetrieveAttrTypeInfoParams,
-  options?: RequestInit,
+  options?: NgsiLdRequestOpts,
 ) => {
   return fetcher<WithContext<Attribute>>(
     getRetrieveAttrTypeInfoUrl({ attrId, params }),
@@ -834,7 +840,7 @@ export const retrieveAttrTypeInfo = (
 
 export const createContext = (
   context: { "@context": LdContext },
-  options?: RequestInit,
+  options?: NgsiLdRequestOpts,
 ) => {
   return fetcher<{ location: string }>(getCreateContextUrl(), {
     ...options,
@@ -847,7 +853,7 @@ export const createContext = (
 
 export const listContexts = (
   params?: ListContextsParams,
-  options?: RequestInit,
+  options?: NgsiLdRequestOpts,
 ) => {
   return fetcher<string[] | LdContextMetadata[]>(
     getListContextsUrl({ params }),
@@ -862,7 +868,7 @@ export const listContexts = (
 export const retrieveContext = (
   contextId: string,
   params?: RetrieveContextParams,
-  options?: RequestInit,
+  options?: NgsiLdRequestOpts,
 ) => {
   return fetcher<{ "@context"?: LdContext } | LdContextMetadata>(
     getRetrieveContextUrl({ contextId, params }),
@@ -877,7 +883,7 @@ export const retrieveContext = (
 export const deleteContext = (
   contextId: string,
   params?: DeleteContextParams,
-  options?: RequestInit,
+  options?: NgsiLdRequestOpts,
 ) => {
   return fetcher<void>(getDeleteContextUrl({ contextId, params }), {
     ...options,
@@ -888,7 +894,7 @@ export const deleteContext = (
 
 export const retrieveEntityMap = (
   entityMapId: string,
-  options?: RequestInit,
+  options?: NgsiLdRequestOpts,
 ) => {
   return fetcher<WithContext<EntityMap>>(
     getRetrieveEntityMapUrl({ entityMapId }),
@@ -903,7 +909,7 @@ export const retrieveEntityMap = (
 export const updateEntityMap = (
   entityMapId: string,
   entityMap: WithContext<NonReadonly<EntityMap>>,
-  options?: RequestInit,
+  options?: NgsiLdRequestOpts,
 ) => {
   return fetcher<void>(getUpdateEntityMapUrl({ entityMapId }), {
     ...options,
@@ -914,7 +920,10 @@ export const updateEntityMap = (
   });
 };
 
-export const deleteEntityMap = (entityMapId: string, options?: RequestInit) => {
+export const deleteEntityMap = (
+  entityMapId: string,
+  options?: NgsiLdRequestOpts,
+) => {
   return fetcher<void>(getDeleteEntityMapUrl({ entityMapId }), {
     ...options,
     method: "DELETE",
@@ -922,7 +931,7 @@ export const deleteEntityMap = (entityMapId: string, options?: RequestInit) => {
   });
 };
 
-export const retrieveCSIdentityInfo = (options?: RequestInit) => {
+export const retrieveCSIdentityInfo = (options?: NgsiLdRequestOpts) => {
   return fetcher<WithContext<ContextSourceIdentity>>(
     getRetrieveCSIdentityInfoUrl(),
     {
