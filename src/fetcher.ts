@@ -21,25 +21,27 @@ function throwHttpError(response: Response, body: ProblemDetails): never {
   throw new NgsiLdHttpError(response.status, body, response);
 }
 
-export type NgsiLdRequestOpts = {
+type NgsiLdRequest = {
+  path: string;
   method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
+};
+
+export type NgsiLdRequestOpts = {
   params?: any;
   returnFormat?: "body" | "status-data";
   baseUrl?: string;
 } & RequestInit;
 
-export const fetcher = async <T>(
-  path: string,
-  {
-    method,
-    params,
-    headers,
-    body,
-    returnFormat,
-    baseUrl,
-    ...requestInit
-  }: NgsiLdRequestOpts,
-): Promise<T> => {
+export const fetcher = async <T>({
+  path,
+  method,
+  params,
+  headers,
+  body,
+  returnFormat,
+  baseUrl,
+  ...requestInit
+}: NgsiLdRequestOpts & NgsiLdRequest): Promise<T> => {
   let targetUrl = `${baseUrl ?? BASE_URL}${path}`;
   if (params) {
     targetUrl += "?" + new URLSearchParams(params);
