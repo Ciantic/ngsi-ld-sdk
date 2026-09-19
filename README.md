@@ -24,39 +24,50 @@ interface HumiditySensor extends schemas.Entity {
 }
 
 await createEntity<HumiditySensor>({
-  "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
-  id: "urn:ngsi-ld:HumiditySensor:001",
-  type: "HumiditySensor",
-  humidity: {
-    type: "Property",
-    value: 55.0,
+  entity: {
+    "@context":
+      "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
+    id: "urn:ngsi-ld:HumiditySensor:001",
+    type: "HumiditySensor",
+    humidity: {
+      type: "Property",
+      value: 55.0,
+    },
   },
 });
 
 await createEntity<TemperatureSensor>({
-  "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
-  id: "urn:ngsi-ld:TemperatureSensor:001",
-  type: "TemperatureSensor",
-  temperature: {
-    type: "Property",
-    value: 18.0,
+  entity: {
+    "@context":
+      "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
+    id: "urn:ngsi-ld:TemperatureSensor:001",
+    type: "TemperatureSensor",
+    temperature: {
+      type: "Property",
+      value: 18.0,
+    },
   },
 });
 
 await createEntity<TemperatureSensor>({
-  "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
-  id: "urn:ngsi-ld:TemperatureSensor:002",
-  type: "TemperatureSensor",
-  temperature: {
-    type: "Property",
-    value: 23.5,
+  entity: {
+    "@context":
+      "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
+    id: "urn:ngsi-ld:TemperatureSensor:002",
+    type: "TemperatureSensor",
+    temperature: {
+      type: "Property",
+      value: 23.5,
+    },
   },
 });
 
 const entities = await queryEntity<TemperatureSensor | HumiditySensor>({
-  type: ["TemperatureSensor", "HumiditySensor"],
-  attrs: ["temperature", "humidity"],
-  q: "temperature>20|humidity>50",
+  params: {
+    type: ["TemperatureSensor", "HumiditySensor"],
+    attrs: ["temperature", "humidity"],
+    q: "temperature>20|humidity>50",
+  },
 });
 
 expect(entities.length).toBe(2);
@@ -71,26 +82,33 @@ interface TemperatureSensor extends schemas.Entity {
 }
 
 await createEntity<TemperatureSensor>({
-  "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
-  id: "urn:ngsi-ld:TemperatureSensor:001",
-  type: "TemperatureSensor",
-  temperature: {
-    type: "Property",
-    value: 18.0,
+  entity: {
+    "@context":
+      "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
+    id: "urn:ngsi-ld:TemperatureSensor:001",
+    type: "TemperatureSensor",
+    temperature: {
+      type: "Property",
+      value: 18.0,
+    },
   },
 });
 
-await updateEntity<TemperatureSensor>("urn:ngsi-ld:TemperatureSensor:001", {
-  "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
-  temperature: {
-    type: "Property",
-    value: 25.0,
+await updateEntity<TemperatureSensor>({
+  entityId: "urn:ngsi-ld:TemperatureSensor:001",
+  entityFragment: {
+    "@context":
+      "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
+    temperature: {
+      type: "Property",
+      value: 25.0,
+    },
   },
 });
 
-const updatedEntity = await retrieveEntity<TemperatureSensor>(
-  "urn:ngsi-ld:TemperatureSensor:001",
-);
+const updatedEntity = await retrieveEntity<TemperatureSensor>({
+  entityId: "urn:ngsi-ld:TemperatureSensor:001",
+});
 
 expect(updatedEntity.temperature!.value).toBe(25.0);
 ```
@@ -108,44 +126,52 @@ const later = new Date(Date.now() + 3600000).toISOString();
 const evenlater = new Date(Date.now() + 7200000).toISOString();
 
 await upsertTemporal<TemperatureSensor>({
-  "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
-  id: "urn:ngsi-ld:TemperatureSensor:001",
-  type: "TemperatureSensor",
-  temperature: [
-    {
-      type: "Property",
-      value: 18.0,
-      observedAt: now,
-    },
-  ],
+  entityTemporal: {
+    "@context":
+      "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
+    id: "urn:ngsi-ld:TemperatureSensor:001",
+    type: "TemperatureSensor",
+    temperature: [
+      {
+        type: "Property",
+        value: 18.0,
+        observedAt: now,
+      },
+    ],
+  },
 });
 
 // Add a new temperature value later in time
 await upsertTemporal<TemperatureSensor>({
-  "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
-  id: "urn:ngsi-ld:TemperatureSensor:001",
-  type: "TemperatureSensor",
-  temperature: [
-    {
-      type: "Property",
-      value: 24.0,
-      observedAt: later,
-    },
-    {
-      type: "Property",
-      value: 25.0,
-      observedAt: evenlater,
-    },
-  ],
+  entityTemporal: {
+    "@context":
+      "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
+    id: "urn:ngsi-ld:TemperatureSensor:001",
+    type: "TemperatureSensor",
+    temperature: [
+      {
+        type: "Property",
+        value: 24.0,
+        observedAt: later,
+      },
+      {
+        type: "Property",
+        value: 25.0,
+        observedAt: evenlater,
+      },
+    ],
+  },
 });
 
 const tempEntities = await queryTemporal<TemperatureSensor>({
-  type: "TemperatureSensor",
-  timerel: "between",
-  timeAt: now,
-  endTimeAt: new Date(Date.now() + 7200000).toISOString(),
-  lastN: 1, // Number of temporal values to retrieve
-  limit: 1, // Number of entities
+  params: {
+    type: "TemperatureSensor",
+    timerel: "between",
+    timeAt: now,
+    endTimeAt: new Date(Date.now() + 7200000).toISOString(),
+    lastN: 1, // Number of temporal values to retrieve
+    limit: 1, // Number of entities
+  },
 });
 
 expect(tempEntities.length).toBe(1);
@@ -180,33 +206,38 @@ const now = new Date().toISOString();
 const later = new Date(Date.now() + 3600000).toISOString();
 
 await upsertTemporal<TemperatureSensor>({
-  "@context": "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
-  id: "urn:ngsi-ld:TemperatureSensor:002",
-  type: "TemperatureSensor",
-  temperature: [
-    {
-      type: "Property",
-      value: 18.0,
-      observedAt: now,
-      datasetId: "urn:ngsi-ld:Dataset:SensorA",
-    },
-    {
-      type: "Property",
-      value: 20.0,
-      observedAt: later,
-      datasetId: "urn:ngsi-ld:Dataset:SensorB",
-    },
-  ],
+  entityTemporal: {
+    "@context":
+      "https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context.jsonld",
+    id: "urn:ngsi-ld:TemperatureSensor:002",
+    type: "TemperatureSensor",
+    temperature: [
+      {
+        type: "Property",
+        value: 18.0,
+        observedAt: now,
+        datasetId: "urn:ngsi-ld:Dataset:SensorA",
+      },
+      {
+        type: "Property",
+        value: 20.0,
+        observedAt: later,
+        datasetId: "urn:ngsi-ld:Dataset:SensorB",
+      },
+    ],
+  },
 });
 
 const tempEntities = await queryTemporal<TemperatureSensor>({
-  id: ["urn:ngsi-ld:TemperatureSensor:002"],
-  type: "TemperatureSensor",
-  timerel: "between",
-  timeAt: now,
-  endTimeAt: new Date(Date.now() + 7200000).toISOString(),
-  lastN: 1, // Number of temporal values to retrieve (per dataset)
-  limit: 1, // Number of entities
+  params: {
+    id: ["urn:ngsi-ld:TemperatureSensor:002"],
+    type: "TemperatureSensor",
+    timerel: "between",
+    timeAt: now,
+    endTimeAt: new Date(Date.now() + 7200000).toISOString(),
+    lastN: 1, // Number of temporal values to retrieve (per dataset)
+    limit: 1, // Number of entities
+  },
 });
 
 expect(tempEntities.length).toBe(1);

@@ -30,7 +30,7 @@ beforeEach(cleanUpAll);
 describe("retrieveEntityTypes", () => {
   it("should retrieve entity types list", async () => {
     const entity = { ...makeEntity(), type: "DiscoveryTestEntity" };
-    await createEntity(entity);
+    await createEntity({ entity });
 
     const data = await retrieveEntityTypes();
     expect(data).toBeDefined();
@@ -38,26 +38,26 @@ describe("retrieveEntityTypes", () => {
 
   it("should support details=true query parameter", async () => {
     const entity = { ...makeEntity(), type: "DiscoveryDetailsEntity" };
-    await createEntity(entity);
+    await createEntity({ entity });
 
-    const data = await retrieveEntityTypes({ details: true });
+    const data = await retrieveEntityTypes({ params: { details: true } });
     expect(data).toBeDefined();
   });
 
   it("should support local=true query parameter", async () => {
     const entity = { ...makeEntity(), type: "DiscoveryLocalEntity" };
-    await createEntity(entity);
+    await createEntity({ entity });
 
     if (
       gateBroker("stellio", "retrieveEntityTypes has no ?local=true support")
     ) {
-      await expect(() => retrieveEntityTypes({ local: true })).rejects.toThrow(
-        NgsiLdNotImplemented,
-      );
+      await expect(() =>
+        retrieveEntityTypes({ params: { local: true } }),
+      ).rejects.toThrow(NgsiLdNotImplemented);
       return;
     }
 
-    const data = await retrieveEntityTypes({ local: true });
+    const data = await retrieveEntityTypes({ params: { local: true } });
     expect(data).toBeDefined();
   });
 });
@@ -68,15 +68,15 @@ describe("retrieveEntityTypes", () => {
 describe("retrieveEntityTypeInfo", () => {
   it("should retrieve type info for an existing entity type", async () => {
     const entity = { ...makeEntity(), type: "EntityTypeInfoTest" };
-    await createEntity(entity);
+    await createEntity({ entity });
 
-    const data = await retrieveEntityTypeInfo("EntityTypeInfoTest");
+    const data = await retrieveEntityTypeInfo({ type: "EntityTypeInfoTest" });
     expect(data).toBeDefined();
   });
 
   it("should return 404 for a non-existent entity type", async () => {
     await expect(
-      retrieveEntityTypeInfo("NonExistentType12345"),
+      retrieveEntityTypeInfo({ type: "NonExistentType12345" }),
     ).rejects.toThrow(NgsiLdNotFound);
   });
 });
@@ -87,7 +87,7 @@ describe("retrieveEntityTypeInfo", () => {
 describe("retrieveAttrTypes", () => {
   it("should retrieve attribute types list", async () => {
     const entity = makeEntity();
-    await createEntity(entity);
+    await createEntity({ entity });
 
     const data = await retrieveAttrTypes();
     expect(data).toBeDefined();
@@ -95,9 +95,9 @@ describe("retrieveAttrTypes", () => {
 
   it("should support details=true query parameter", async () => {
     const entity = makeEntity();
-    await createEntity(entity);
+    await createEntity({ entity });
 
-    const data = await retrieveAttrTypes({ details: true });
+    const data = await retrieveAttrTypes({ params: { details: true } });
     expect(data).toBeDefined();
   });
 });
@@ -108,16 +108,16 @@ describe("retrieveAttrTypes", () => {
 describe("retrieveAttrTypeInfo", () => {
   it("should retrieve attribute type info for an existing attribute", async () => {
     const entity = makeEntity();
-    await createEntity(entity);
+    await createEntity({ entity });
 
-    const data = await retrieveAttrTypeInfo("temperature");
+    const data = await retrieveAttrTypeInfo({ attrId: "temperature" });
     expect(data).toBeDefined();
   });
 
   it("should return 404 for a non-existent attribute", async () => {
-    await expect(retrieveAttrTypeInfo("nonExistentAttr999")).rejects.toThrow(
-      NgsiLdNotFound,
-    );
+    await expect(
+      retrieveAttrTypeInfo({ attrId: "nonExistentAttr999" }),
+    ).rejects.toThrow(NgsiLdNotFound);
   });
 });
 
@@ -139,13 +139,13 @@ describe("createContext", () => {
       // Stellio does not support jsonldContexts endpoints; returns 500 with
       // "No static resource ngsi-ld/v1/jsonldContexts for request
       // 'http://search-service:8083/ngsi-ld/v1/jsonldContexts'."
-      await expect(() => createContext(contextBody)).rejects.toThrow(
-        NgsiLdInternalServerError,
-      );
+      await expect(() =>
+        createContext({ context: contextBody }),
+      ).rejects.toThrow(NgsiLdInternalServerError);
       return;
     }
 
-    const result = await createContext(contextBody);
+    const result = await createContext({ context: contextBody });
     expect(typeof result.location).toBe("string");
     expect(result.location).toBeTruthy();
   });
@@ -171,13 +171,13 @@ describe("listContexts", () => {
   it("should support details=true query parameter", async () => {
     if (gateBroker("stellio", "jsonldContexts not implemented")) {
       // Stellio does not support jsonldContexts endpoints
-      await expect(() => listContexts({ details: true })).rejects.toThrow(
-        NgsiLdInternalServerError,
-      );
+      await expect(() =>
+        listContexts({ params: { details: true } }),
+      ).rejects.toThrow(NgsiLdInternalServerError);
       return;
     }
 
-    const data = await listContexts({ details: true });
+    const data = await listContexts({ params: { details: true } });
     expect(data).toBeDefined();
   });
 });
@@ -200,17 +200,19 @@ describe("retrieveContext", () => {
     if (gateBroker("stellio", "jsonldContexts not implemented")) {
       // Stellio does not support jsonldContexts endpoints, so createContext
       // will fail, and we cannot retrieve a context that was never created.
-      await expect(() => createContext(contextBody)).rejects.toThrow(
-        NgsiLdInternalServerError,
-      );
+      await expect(() =>
+        createContext({ context: contextBody }),
+      ).rejects.toThrow(NgsiLdInternalServerError);
       return;
     }
 
-    const { location: createLocation } = await createContext(contextBody);
+    const { location: createLocation } = await createContext({
+      context: contextBody,
+    });
 
     const contextId = decodeURIComponent(createLocation.split("/").pop()!);
 
-    const data = await retrieveContext(contextId);
+    const data = await retrieveContext({ contextId });
     expect(data).toBeDefined();
   });
 
@@ -223,23 +225,30 @@ describe("retrieveContext", () => {
 
     if (gateBroker("stellio", "jsonldContexts not implemented")) {
       // Stellio does not support jsonldContexts endpoints
-      await expect(() => createContext(contextBody)).rejects.toThrow(
-        NgsiLdInternalServerError,
-      );
+      await expect(() =>
+        createContext({ context: contextBody }),
+      ).rejects.toThrow(NgsiLdInternalServerError);
       return;
     }
 
-    const { location: createLocation } = await createContext(contextBody);
+    const { location: createLocation } = await createContext({
+      context: contextBody,
+    });
 
     const contextId = decodeURIComponent(createLocation.split("/").pop()!);
 
-    const data = await retrieveContext(contextId, { details: true });
+    const data = await retrieveContext({
+      contextId,
+      params: { details: true },
+    });
     expect(data).toBeDefined();
   });
 
   it("should return 404 for a non-existent context", async () => {
     try {
-      await retrieveContext("urn:ngsi-ld:context:nonexistent-12345");
+      await retrieveContext({
+        contextId: "urn:ngsi-ld:context:nonexistent-12345",
+      });
     } catch (err) {
       if (gateBroker("stellio", "jsonldContexts not implemented")) {
         expect(err).toBeInstanceOf(NgsiLdMethodNotAllowed);
@@ -263,23 +272,27 @@ describe("deleteContext", () => {
     if (gateBroker("stellio", "jsonldContexts not implemented")) {
       // Stellio does not support jsonldContexts endpoints, so createContext
       // will fail, and we cannot delete a context that was never created.
-      await expect(() => createContext(contextBody)).rejects.toThrow(
-        NgsiLdInternalServerError,
-      );
+      await expect(() =>
+        createContext({ context: contextBody }),
+      ).rejects.toThrow(NgsiLdInternalServerError);
       return;
     }
 
-    const { location: createLocation } = await createContext(contextBody);
+    const { location: createLocation } = await createContext({
+      context: contextBody,
+    });
 
     const contextId = decodeURIComponent(createLocation.split("/").pop()!);
 
-    const result = await deleteContext(contextId);
+    const result = await deleteContext({ contextId });
     expect(result).toBeUndefined();
   });
 
   it("should return 404 when deleting a non-existent context", async () => {
     await expect(
-      deleteContext("urn:ngsi-ld:context:nonexistent-delete-12345"),
+      deleteContext({
+        contextId: "urn:ngsi-ld:context:nonexistent-delete-12345",
+      }),
     ).rejects.toThrow(NgsiLdNotFound);
   });
 });
@@ -295,15 +308,15 @@ describe("retrieveEntityMap", () => {
         "returns 400 InvalidRequest instead of 404 for unknown entity map",
       )
     ) {
-      await expect(retrieveEntityMap("nonExistentMap12345")).rejects.toThrow(
-        NgsiLdBadRequest,
-      );
+      await expect(
+        retrieveEntityMap({ entityMapId: "nonExistentMap12345" }),
+      ).rejects.toThrow(NgsiLdBadRequest);
       return;
     }
 
-    await expect(retrieveEntityMap("nonExistentMap12345")).rejects.toThrow(
-      NgsiLdNotFound,
-    );
+    await expect(
+      retrieveEntityMap({ entityMapId: "nonExistentMap12345" }),
+    ).rejects.toThrow(NgsiLdNotFound);
   });
 });
 
@@ -320,9 +333,9 @@ describe("updateEntityMap", () => {
       expiresAt: new Date(Date.now() + 3600000).toISOString(),
     };
 
-    await expect(updateEntityMap("nonExistentMap12345", patch)).rejects.toThrow(
-      NgsiLdNotFound,
-    );
+    await expect(
+      updateEntityMap({ entityMapId: "nonExistentMap12345", entityMap: patch }),
+    ).rejects.toThrow(NgsiLdNotFound);
   });
 });
 
@@ -331,9 +344,9 @@ describe("updateEntityMap", () => {
 // ---------------------------------------------------------------------------
 describe("deleteEntityMap", () => {
   it("should return 404 when deleting a non-existent entity map", async () => {
-    await expect(deleteEntityMap("nonExistentMap12345")).rejects.toThrow(
-      NgsiLdNotFound,
-    );
+    await expect(
+      deleteEntityMap({ entityMapId: "nonExistentMap12345" }),
+    ).rejects.toThrow(NgsiLdNotFound);
   });
 });
 

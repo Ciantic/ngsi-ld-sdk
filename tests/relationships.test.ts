@@ -49,10 +49,12 @@ function makeIds() {
 
 async function createTarget(id: string, value = 42) {
   await createEntity({
-    "@context": NGSILD_CORE_CONTEXT,
-    id,
-    type: "TestEntity",
-    temperature: { type: "Property", value },
+    entity: {
+      "@context": NGSILD_CORE_CONTEXT,
+      id,
+      type: "TestEntity",
+      temperature: { type: "Property", value },
+    },
   });
 }
 
@@ -72,16 +74,18 @@ describe("Relationship storage", () => {
     await createTarget(targetId);
 
     await createEntity({
-      "@context": NGSILD_CORE_CONTEXT,
-      id: sourceId,
-      type: "TestEntity",
-      locatedAt: {
-        type: "Relationship",
-        object: targetId,
+      entity: {
+        "@context": NGSILD_CORE_CONTEXT,
+        id: sourceId,
+        type: "TestEntity",
+        locatedAt: {
+          type: "Relationship",
+          object: targetId,
+        },
       },
     });
 
-    const entity = await retrieveEntity<SourceEntity>(sourceId);
+    const entity = await retrieveEntity<SourceEntity>({ entityId: sourceId });
 
     expect(entity.locatedAt?.type).toBe("Relationship");
     expect(entity.locatedAt?.object).toBe(targetId);
@@ -94,16 +98,18 @@ describe("Relationship storage", () => {
     await createTarget(targetId);
 
     await createEntity({
-      "@context": NGSILD_CORE_CONTEXT,
-      id: sourceId,
-      type: "TestEntity",
-      hasPart: {
-        type: "Relationship",
-        object: targetId,
+      entity: {
+        "@context": NGSILD_CORE_CONTEXT,
+        id: sourceId,
+        type: "TestEntity",
+        hasPart: {
+          type: "Relationship",
+          object: targetId,
+        },
       },
     });
 
-    const entity = await retrieveEntity<SourceEntity>(sourceId);
+    const entity = await retrieveEntity<SourceEntity>({ entityId: sourceId });
 
     expect(entity.hasPart?.type).toBe("Relationship");
     expect(entity.hasPart?.object).toBe(targetId);
@@ -115,16 +121,18 @@ describe("Relationship storage", () => {
     await createTarget(otherTargetId);
 
     await createEntity({
-      "@context": NGSILD_CORE_CONTEXT,
-      id: sourceId,
-      type: "TestEntity",
-      hasPart: {
-        type: "Relationship",
-        object: [targetId, otherTargetId],
+      entity: {
+        "@context": NGSILD_CORE_CONTEXT,
+        id: sourceId,
+        type: "TestEntity",
+        hasPart: {
+          type: "Relationship",
+          object: [targetId, otherTargetId],
+        },
       },
     });
 
-    const entity = await retrieveEntity<SourceEntity>(sourceId);
+    const entity = await retrieveEntity<SourceEntity>({ entityId: sourceId });
     const objects = Array.isArray(entity.hasPart?.object)
       ? entity.hasPart?.object
       : [entity.hasPart?.object];
@@ -142,12 +150,14 @@ describe("Linked Entity Retrieval", () => {
     await createTarget(targetId, 7);
 
     await createEntity({
-      "@context": NGSILD_CORE_CONTEXT,
-      id: sourceId,
-      type: "TestEntity",
-      locatedAt: {
-        type: "Relationship",
-        object: targetId,
+      entity: {
+        "@context": NGSILD_CORE_CONTEXT,
+        id: sourceId,
+        type: "TestEntity",
+        locatedAt: {
+          type: "Relationship",
+          object: targetId,
+        },
       },
     });
 
@@ -155,10 +165,13 @@ describe("Linked Entity Retrieval", () => {
     // without it Scorpio returns the bare IRI. Both entities are local, so this
     // does not change the intent on Stellio or Orion-LD (which dereference
     // without it).
-    const entity = await retrieveEntity<SourceEntity>(sourceId, {
-      join: "inline",
-      joinLevel: 1,
-      local: true,
+    const entity = await retrieveEntity<SourceEntity>({
+      entityId: sourceId,
+      params: {
+        join: "inline",
+        joinLevel: 1,
+        local: true,
+      },
     });
 
     const linked = nestedEntity(entity.locatedAt?.entity);
@@ -178,24 +191,30 @@ describe("Relationship filtering", () => {
     await createTarget(otherTargetId);
 
     await createEntity({
-      "@context": NGSILD_CORE_CONTEXT,
-      id: sourceId,
-      type: "TestEntity",
-      locatedAt: {
-        type: "Relationship",
-        object: targetId,
+      entity: {
+        "@context": NGSILD_CORE_CONTEXT,
+        id: sourceId,
+        type: "TestEntity",
+        locatedAt: {
+          type: "Relationship",
+          object: targetId,
+        },
       },
     });
 
     const matches = await queryEntity<SourceEntity>({
-      type: "TestEntity",
-      q: `locatedAt=="${targetId}"`,
+      params: {
+        type: "TestEntity",
+        q: `locatedAt=="${targetId}"`,
+      },
     });
     expect(matches.some((e) => e.id === sourceId)).toBe(true);
 
     const misses = await queryEntity<SourceEntity>({
-      type: "TestEntity",
-      q: `locatedAt=="${otherTargetId}"`,
+      params: {
+        type: "TestEntity",
+        q: `locatedAt=="${otherTargetId}"`,
+      },
     });
     expect(misses.some((e) => e.id === sourceId)).toBe(false);
   });
@@ -211,24 +230,29 @@ describe("Relationship update", () => {
     await createTarget(otherTargetId);
 
     await createEntity({
-      "@context": NGSILD_CORE_CONTEXT,
-      id: sourceId,
-      type: "TestEntity",
-      locatedAt: {
-        type: "Relationship",
-        object: targetId,
+      entity: {
+        "@context": NGSILD_CORE_CONTEXT,
+        id: sourceId,
+        type: "TestEntity",
+        locatedAt: {
+          type: "Relationship",
+          object: targetId,
+        },
       },
     });
 
-    await updateEntity<SourceEntity>(sourceId, {
-      "@context": NGSILD_CORE_CONTEXT,
-      locatedAt: {
-        type: "Relationship",
-        object: otherTargetId,
+    await updateEntity<SourceEntity>({
+      entityId: sourceId,
+      entityFragment: {
+        "@context": NGSILD_CORE_CONTEXT,
+        locatedAt: {
+          type: "Relationship",
+          object: otherTargetId,
+        },
       },
     });
 
-    const entity = await retrieveEntity<SourceEntity>(sourceId);
+    const entity = await retrieveEntity<SourceEntity>({ entityId: sourceId });
     expect(entity.locatedAt?.object).toBe(otherTargetId);
   });
 });
@@ -245,7 +269,7 @@ describe("Relationship objectType", () => {
     const { sourceId, targetId } = makeIds();
     await createTarget(targetId);
 
-    const body = {
+    const entity = {
       "@context": NGSILD_CORE_CONTEXT,
       id: sourceId,
       type: "TestEntity",
@@ -257,7 +281,7 @@ describe("Relationship objectType", () => {
     } as const;
 
     try {
-      const response = await createEntity(body);
+      const response = await createEntity({ entity });
       expect(response.status).toBe(201);
     } catch (err) {
       if (

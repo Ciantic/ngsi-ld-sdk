@@ -28,7 +28,7 @@ describe("createBatch", () => {
     const entity1 = makeEntity();
     const entity2 = makeEntity();
 
-    const response = await createBatch([entity1, entity2]);
+    const response = await createBatch({ entities: [entity1, entity2] });
 
     expect(response.status).toBe(201);
 
@@ -42,10 +42,10 @@ describe("createBatch", () => {
     const entity2 = makeEntity();
 
     // Create first batch
-    await createBatch([entity1, entity2]);
+    await createBatch({ entities: [entity1, entity2] });
 
     // Try to create again with same IDs
-    const second = await createBatch([entity1, entity2]);
+    const second = await createBatch({ entities: [entity1, entity2] });
     expect(second.status).toBe(207);
   });
 });
@@ -58,14 +58,14 @@ describe("upsertBatch", () => {
     const entity1 = makeEntity();
     const entity2 = makeEntity();
 
-    const response = await upsertBatch([entity1, entity2]);
+    const response = await upsertBatch({ entities: [entity1, entity2] });
 
     expect(response.status).toBe(201);
   });
 
   it("should update entities on second upsert (204)", async () => {
     const entity = makeEntity();
-    await createEntity(entity);
+    await createEntity({ entity });
 
     // Second upsert with modified attribute
     const updated = {
@@ -77,7 +77,7 @@ describe("upsertBatch", () => {
       },
     };
 
-    const response = await upsertBatch([updated]);
+    const response = await upsertBatch({ entities: [updated] });
     expect(response.status).toBe(204);
   });
 });
@@ -90,7 +90,7 @@ describe("updateBatch", () => {
     const entity1 = makeEntity();
     const entity2 = makeEntity();
 
-    await createBatch([entity1, entity2]);
+    await createBatch({ entities: [entity1, entity2] });
 
     // Prepare updated versions
     const update1 = {
@@ -105,7 +105,7 @@ describe("updateBatch", () => {
       temperature: { type: "Property" as const, value: 200 },
     };
 
-    const response = await updateBatch([update1, update2]);
+    const response = await updateBatch({ entities: [update1, update2] });
 
     expect(response.status).toBe(204);
   });
@@ -113,7 +113,7 @@ describe("updateBatch", () => {
   it("should return 207 for non-existent entity in update batch", async () => {
     const ghost = makeEntity();
 
-    const response = await updateBatch([ghost]);
+    const response = await updateBatch({ entities: [ghost] });
 
     expect(response.status).toBe(207);
   });
@@ -127,9 +127,11 @@ describe("deleteBatch", () => {
     const entity1 = makeEntity();
     const entity2 = makeEntity();
 
-    await createBatch([entity1, entity2]);
+    await createBatch({ entities: [entity1, entity2] });
 
-    const response = await deleteBatch([entity1.id!, entity2.id!]);
+    const response = await deleteBatch({
+      entityIds: [entity1.id!, entity2.id!],
+    });
 
     expect(response.status).toBe(204);
 
@@ -137,9 +139,9 @@ describe("deleteBatch", () => {
   });
 
   it("should return 207 for non-existent entity IDs in delete batch", async () => {
-    const response = await deleteBatch([
-      "urn:ngsi-ld:TestEntity:nonexistent-1",
-    ]);
+    const response = await deleteBatch({
+      entityIds: ["urn:ngsi-ld:TestEntity:nonexistent-1"],
+    });
 
     expect(response.status).toBe(207);
   });
@@ -153,11 +155,10 @@ describe("queryBatch", () => {
     const entity1 = makeEntity();
     const entity2 = makeEntity();
 
-    await createBatch([entity1, entity2]);
+    await createBatch({ entities: [entity1, entity2] });
 
     const data = await queryBatch({
-      type: "Query",
-      entities: [{ type: "TestEntity" }],
+      query: { type: "Query", entities: [{ type: "TestEntity" }] },
     });
 
     expect(Array.isArray(data)).toBe(true);
@@ -166,8 +167,7 @@ describe("queryBatch", () => {
 
   it("should return empty array for query matching no entities", async () => {
     const data = await queryBatch({
-      type: "Query",
-      entities: [{ type: "NonExistentType" }],
+      query: { type: "Query", entities: [{ type: "NonExistentType" }] },
     });
 
     expect(Array.isArray(data)).toBe(true);
@@ -181,11 +181,10 @@ describe("queryBatch", () => {
 describe("queryGeoBatch", () => {
   it("should query entities as a GeoJSON FeatureCollection via batch", async () => {
     const entity = makeEntityWithGeo();
-    await createEntity(entity);
+    await createEntity({ entity });
 
     const fc = await queryGeoBatch({
-      type: "Query",
-      entities: [{ type: "TestEntity" }],
+      query: { type: "Query", entities: [{ type: "TestEntity" }] },
     });
 
     expect(fc.type).toBe("FeatureCollection");
@@ -200,8 +199,7 @@ describe("queryGeoBatch", () => {
 
   it("should return empty FeatureCollection for batch query with no matches", async () => {
     const fc = await queryGeoBatch({
-      type: "Query",
-      entities: [{ type: "NonExistentType" }],
+      query: { type: "Query", entities: [{ type: "NonExistentType" }] },
     });
 
     expect(fc.type).toBe("FeatureCollection");
@@ -217,7 +215,7 @@ describe("mergeBatch", () => {
     const entity1 = makeEntity();
     const entity2 = makeEntity();
 
-    await createBatch([entity1, entity2]);
+    await createBatch({ entities: [entity1, entity2] });
 
     const patch1 = {
       "@context": [
@@ -244,7 +242,7 @@ describe("mergeBatch", () => {
     };
 
     try {
-      const response = await mergeBatch([patch1, patch2]);
+      const response = await mergeBatch({ entities: [patch1, patch2] });
       expect(response.status).toBe(204);
     } catch (err) {
       if (

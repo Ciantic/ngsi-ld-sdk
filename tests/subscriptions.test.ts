@@ -47,7 +47,7 @@ function makeSubscription() {
 describe("createSubscription", () => {
   it("should create a subscription and return the location", async () => {
     const sub = makeSubscription();
-    const { location } = await createSubscription(sub);
+    const { location } = await createSubscription({ subscription: sub });
 
     expect(typeof location).toBe("string");
     expect(location).toBeTruthy();
@@ -55,9 +55,11 @@ describe("createSubscription", () => {
 
   it("should return 409 when creating a duplicate subscription", async () => {
     const sub = makeSubscription();
-    await createSubscription(sub);
+    await createSubscription({ subscription: sub });
 
-    await expect(createSubscription(sub)).rejects.toThrow(NgsiLdConflict);
+    await expect(createSubscription({ subscription: sub })).rejects.toThrow(
+      NgsiLdConflict,
+    );
   });
 });
 
@@ -67,7 +69,7 @@ describe("createSubscription", () => {
 describe("querySubscription", () => {
   it("should query subscriptions", async () => {
     const sub = makeSubscription();
-    await createSubscription(sub);
+    await createSubscription({ subscription: sub });
 
     const data = await querySubscription();
 
@@ -82,16 +84,18 @@ describe("querySubscription", () => {
 describe("retrieveSubscription", () => {
   it("should retrieve a subscription by id", async () => {
     const sub = makeSubscription();
-    await createSubscription(sub);
+    await createSubscription({ subscription: sub });
 
-    const data = await retrieveSubscription(sub.id);
+    const data = await retrieveSubscription({ subscriptionId: sub.id });
 
     expect(data).toBeDefined();
   });
 
   it("should return 404 for a non-existent subscription", async () => {
     await expect(
-      retrieveSubscription("urn:ngsi-ld:Subscription:nonexistent"),
+      retrieveSubscription({
+        subscriptionId: "urn:ngsi-ld:Subscription:nonexistent",
+      }),
     ).rejects.toThrow(NgsiLdNotFound);
   });
 });
@@ -102,7 +106,7 @@ describe("retrieveSubscription", () => {
 describe("updateSubscription", () => {
   it("should update (PATCH) a subscription", async () => {
     const sub = makeSubscription();
-    await createSubscription(sub);
+    await createSubscription({ subscription: sub });
 
     const patch = {
       "@context": [
@@ -116,12 +120,15 @@ describe("updateSubscription", () => {
       },
     };
 
-    const result = await updateSubscription(sub.id, patch);
+    const result = await updateSubscription({
+      subscriptionId: sub.id,
+      subscriptionFragment: patch,
+    });
 
     expect(result).toBeUndefined();
 
     // Verify the update
-    const retrieved = await retrieveSubscription(sub.id);
+    const retrieved = await retrieveSubscription({ subscriptionId: sub.id });
     const data = retrieved;
     const notification = data["notification"];
     const endpoint = notification["endpoint"];
@@ -142,7 +149,10 @@ describe("updateSubscription", () => {
     };
 
     await expect(
-      updateSubscription("urn:ngsi-ld:Subscription:nonexistent", patch),
+      updateSubscription({
+        subscriptionId: "urn:ngsi-ld:Subscription:nonexistent",
+        subscriptionFragment: patch,
+      }),
     ).rejects.toThrow(NgsiLdNotFound);
   });
 });
@@ -153,9 +163,9 @@ describe("updateSubscription", () => {
 describe("deleteSubscription", () => {
   it("should delete a subscription", async () => {
     const sub = makeSubscription();
-    await createSubscription(sub);
+    await createSubscription({ subscription: sub });
 
-    const result = await deleteSubscription(sub.id);
+    const result = await deleteSubscription({ subscriptionId: sub.id });
 
     expect(result).toBeUndefined();
     // don't track — already deleted
@@ -163,7 +173,9 @@ describe("deleteSubscription", () => {
 
   it("should return 404 when deleting a non-existent subscription", async () => {
     await expect(
-      deleteSubscription("urn:ngsi-ld:Subscription:nonexistent"),
+      deleteSubscription({
+        subscriptionId: "urn:ngsi-ld:Subscription:nonexistent",
+      }),
     ).rejects.toThrow(NgsiLdNotFound);
   });
 });
@@ -183,7 +195,7 @@ describe("createCSRSubscription", () => {
 
     let result;
     try {
-      result = await createCSRSubscription(sub);
+      result = await createCSRSubscription({ csrSubscription: sub });
     } catch (err) {
       if (gateBroker("scorpio", "CSR Create gives Conflict?")) {
         expect(err).toBeInstanceOf(NgsiLdConflict);
@@ -207,7 +219,7 @@ describe("createCSRSubscription", () => {
     const sub = makeSubscription();
 
     try {
-      await createCSRSubscription(sub);
+      await createCSRSubscription({ csrSubscription: sub });
     } catch (err) {
       if (
         gateBroker(
@@ -221,7 +233,9 @@ describe("createCSRSubscription", () => {
       throw err;
     }
 
-    await expect(createCSRSubscription(sub)).rejects.toThrow(NgsiLdConflict);
+    await expect(
+      createCSRSubscription({ csrSubscription: sub }),
+    ).rejects.toThrow(NgsiLdConflict);
   });
 });
 
@@ -233,7 +247,7 @@ describe("queryCSRSubscription", () => {
     const sub = makeSubscription();
 
     try {
-      await createCSRSubscription(sub);
+      await createCSRSubscription({ csrSubscription: sub });
     } catch (err) {
       if (
         gateBroker(
@@ -263,7 +277,7 @@ describe("retrieveCSRSubscription", () => {
 
     let result;
     try {
-      result = await createCSRSubscription(sub);
+      result = await createCSRSubscription({ csrSubscription: sub });
     } catch (err) {
       if (
         gateBroker(
@@ -280,14 +294,16 @@ describe("retrieveCSRSubscription", () => {
     const parts = result.location.split("/");
     const csrSubId = parts[parts.length - 1];
 
-    const data = await retrieveCSRSubscription(csrSubId);
+    const data = await retrieveCSRSubscription({ subscriptionId: csrSubId });
 
     expect(data).toBeDefined();
   });
 
   it("should return 404 for a non-existent CSR subscription", async () => {
     await expect(
-      retrieveCSRSubscription("urn:ngsi-ld:Subscription:nonexistent"),
+      retrieveCSRSubscription({
+        subscriptionId: "urn:ngsi-ld:Subscription:nonexistent",
+      }),
     ).rejects.toThrow(NgsiLdNotFound);
   });
 });
@@ -301,7 +317,7 @@ describe("updateCSRSubscription", () => {
 
     let createResult;
     try {
-      createResult = await createCSRSubscription(sub);
+      createResult = await createCSRSubscription({ csrSubscription: sub });
     } catch (err) {
       if (
         gateBroker(
@@ -330,7 +346,10 @@ describe("updateCSRSubscription", () => {
       },
     };
 
-    const result = await updateCSRSubscription(csrSubId, patch);
+    const result = await updateCSRSubscription({
+      csrSubscriptionId: csrSubId,
+      csrSubscriptionFragment: patch,
+    });
 
     expect(result).toBeUndefined();
   });
@@ -349,7 +368,10 @@ describe("updateCSRSubscription", () => {
     };
 
     await expect(
-      updateCSRSubscription("urn:ngsi-ld:Subscription:nonexistent", patch),
+      updateCSRSubscription({
+        csrSubscriptionId: "urn:ngsi-ld:Subscription:nonexistent",
+        csrSubscriptionFragment: patch,
+      }),
     ).rejects.toThrow(NgsiLdNotFound);
   });
 });
@@ -363,7 +385,7 @@ describe("deleteCSRSubscription", () => {
 
     let result;
     try {
-      result = await createCSRSubscription(sub);
+      result = await createCSRSubscription({ csrSubscription: sub });
     } catch (err) {
       if (
         gateBroker(
@@ -380,13 +402,15 @@ describe("deleteCSRSubscription", () => {
     const parts = result.location.split("/");
     const csrSubId = parts[parts.length - 1];
 
-    await deleteCSRSubscription(csrSubId);
+    await deleteCSRSubscription({ csrSubscriptionId: csrSubId });
     // don't track — already deleted
   });
 
   it("should return 404 when deleting a non-existent CSR subscription", async () => {
     await expect(
-      deleteCSRSubscription("urn:ngsi-ld:Subscription:nonexistent"),
+      deleteCSRSubscription({
+        csrSubscriptionId: "urn:ngsi-ld:Subscription:nonexistent",
+      }),
     ).rejects.toThrow(NgsiLdNotFound);
   });
 });

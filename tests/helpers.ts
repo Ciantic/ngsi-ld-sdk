@@ -110,21 +110,23 @@ export async function cleanUpAll(): Promise<void> {
   // Max limit in stellio is 100 by default
   const results = await Promise.allSettled([
     queryEntity({
-      type: [
-        "TestEntity",
-        "DiscoveryTestEntity",
-        "DiscoveryDetailsEntity",
-        "DiscoveryLocalEntity",
-        "EntityTypeInfoTest",
-        "TemperatureSensor",
-        "HumiditySensor",
-        "TemporalTestEntity",
-        "BatchQueryTemporalTest",
-      ],
-      limit: 100,
+      params: {
+        type: [
+          "TestEntity",
+          "DiscoveryTestEntity",
+          "DiscoveryDetailsEntity",
+          "DiscoveryLocalEntity",
+          "EntityTypeInfoTest",
+          "TemperatureSensor",
+          "HumiditySensor",
+          "TemporalTestEntity",
+          "BatchQueryTemporalTest",
+        ],
+        limit: 100,
+      },
     }),
-    querySubscription({ limit: 100 }),
-    queryCSR({ type: "ContextSourceRegistration", limit: 100 }),
+    querySubscription({ params: { limit: 100 } }),
+    queryCSR({ params: { type: "ContextSourceRegistration", limit: 100 } }),
   ]);
 
   const deleteIds: string[] = [];
@@ -136,16 +138,18 @@ export async function cleanUpAll(): Promise<void> {
     }
   }
 
-  if (deleteIds.length > 0) await deleteBatch(deleteIds);
+  if (deleteIds.length > 0) await deleteBatch({ entityIds: deleteIds });
 
   // Clean up temporal data — some brokers (Orion-LD) keep it after entity deletion
   const now = new Date(Date.now() + 86400000).toISOString();
   const temporalResults = await Promise.allSettled([
     queryTemporal({
-      type: "TemperatureSensor,HumiditySensor",
-      timerel: "before",
-      timeAt: now,
-      limit: 100,
+      params: {
+        type: "TemperatureSensor,HumiditySensor",
+        timerel: "before",
+        timeAt: now,
+        limit: 100,
+      },
     }),
   ]);
   for (const result of temporalResults) {
@@ -153,7 +157,7 @@ export async function cleanUpAll(): Promise<void> {
       for (const entity of result.value) {
         if (entity && typeof entity === "object" && "id" in entity) {
           try {
-            await deleteTemporal(entity.id as string);
+            await deleteTemporal({ entityId: entity.id as string });
           } catch {
             // Ignore — Orion-LD doesn't support temporal delete (returns 501)
           }

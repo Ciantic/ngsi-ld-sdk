@@ -60,7 +60,7 @@ function makeTemporalEntity(overrides?: {
 describe("upsertTemporal", () => {
   it("should upsert a temporal entity and return 201", async () => {
     const entity = makeTemporalEntity();
-    const response = await upsertTemporal(entity);
+    const response = await upsertTemporal({ entityTemporal: entity });
 
     expect(response.status).toBe(201);
   });
@@ -71,12 +71,15 @@ describe("upsertTemporal", () => {
     if (gateBroker("stellio", "upsertTemporal has no ?local=true support")) {
       // Stellio does not support local=true for temporal operations
       await expect(() =>
-        upsertTemporal(entity, { local: true }),
+        upsertTemporal({ entityTemporal: entity, params: { local: true } }),
       ).rejects.toThrow(NgsiLdNotImplemented);
       return;
     }
 
-    const response = await upsertTemporal(entity, { local: true });
+    const response = await upsertTemporal({
+      entityTemporal: entity,
+      params: { local: true },
+    });
 
     expect(response.status).toBe(201);
   });
@@ -101,12 +104,14 @@ describe("upsertTemporal", () => {
       "ListProperty not implemented",
     );
     if (isGated) {
-      await expect(upsertTemporal(entity)).rejects.toThrow(NgsiLdBadRequest);
+      await expect(upsertTemporal({ entityTemporal: entity })).rejects.toThrow(
+        NgsiLdBadRequest,
+      );
       return;
     }
 
     // Unknown / future broker — assert the spec-correct behavior.
-    const response = await upsertTemporal(entity);
+    const response = await upsertTemporal({ entityTemporal: entity });
     expect(response.status).toBe(201);
   });
 
@@ -119,7 +124,7 @@ describe("upsertTemporal", () => {
     const entity = makeTemporalEntity({
       observedAt,
     });
-    await upsertTemporal(entity);
+    await upsertTemporal({ entityTemporal: entity });
 
     // Orion-LD and Scorpio do not sync temporal data to the regular entity
     // endpoint, and thus give 404
@@ -127,7 +132,7 @@ describe("upsertTemporal", () => {
       gateBroker(["orion", "scorpio"], "temporal not synced to regular entity")
     ) {
       try {
-        await retrieveEntity(entity.id!);
+        await retrieveEntity({ entityId: entity.id! });
       } catch (err) {
         expect(err).toBeInstanceOf(NgsiLdNotFound);
         return;
@@ -136,7 +141,9 @@ describe("upsertTemporal", () => {
 
     // The regular entity endpoint should return the entity, with the latest
     // temporal attribute value as a plain Property (not an array).
-    const regular = await retrieveEntity<TemperatureSensor>(entity.id!);
+    const regular = await retrieveEntity<TemperatureSensor>({
+      entityId: entity.id!,
+    });
 
     expect(regular.id).toBe(entity.id);
     expect(regular.type).toBe(entity.type);
@@ -153,12 +160,14 @@ describe("queryTemporal", () => {
 
   it("should query temporal entities", async () => {
     const entity = makeTemporalEntity();
-    await upsertTemporal(entity);
+    await upsertTemporal({ entityTemporal: entity });
 
     const data = await queryTemporal({
-      type: entity.type as string,
-      timerel: "before",
-      timeAt,
+      params: {
+        type: entity.type as string,
+        timerel: "before",
+        timeAt,
+      },
     });
     expect(Array.isArray(data)).toBe(true);
   });
@@ -170,15 +179,17 @@ describe("queryTemporal", () => {
         "returns empty array instead of 400 for missing temporal params",
       )
     ) {
-      const data = await queryTemporal({ type: "NonExistent12345" });
+      const data = await queryTemporal({
+        params: { type: "NonExistent12345" },
+      });
       expect(Array.isArray(data)).toBe(true);
       expect(data.length).toBe(0);
       return;
     }
 
-    await expect(queryTemporal({ type: "NonExistent12345" })).rejects.toThrow(
-      NgsiLdBadRequest,
-    );
+    await expect(
+      queryTemporal({ params: { type: "NonExistent12345" } }),
+    ).rejects.toThrow(NgsiLdBadRequest);
   });
 });
 
@@ -190,20 +201,26 @@ describe("retrieveTemporal", () => {
 
   it("should retrieve temporal evolution of an entity", async () => {
     const entity = makeTemporalEntity();
-    await upsertTemporal(entity);
+    await upsertTemporal({ entityTemporal: entity });
 
-    const data = await retrieveTemporal(entity.id!, {
-      timerel: "before",
-      timeAt,
+    const data = await retrieveTemporal({
+      entityId: entity.id!,
+      params: {
+        timerel: "before",
+        timeAt,
+      },
     });
     expect(data).toBeDefined();
   });
 
   it("should return 404 for a non-existent entity", async () => {
     await expect(
-      retrieveTemporal("urn:ngsi-ld:TemporalEntity:nonexistent-99999", {
-        timerel: "before",
-        timeAt,
+      retrieveTemporal({
+        entityId: "urn:ngsi-ld:TemporalEntity:nonexistent-99999",
+        params: {
+          timerel: "before",
+          timeAt,
+        },
       }),
     ).rejects.toThrow(NgsiLdNotFound);
   });
@@ -215,24 +232,24 @@ describe("retrieveTemporal", () => {
 describe("deleteTemporal", () => {
   it("should delete temporal representation of an entity", async () => {
     const entity = makeTemporalEntity();
-    await upsertTemporal(entity);
+    await upsertTemporal({ entityTemporal: entity });
 
     if (gateBroker("orion", "deleteTemporal not implemented")) {
-      await expect(() => deleteTemporal(entity.id!)).rejects.toThrow(
-        NgsiLdNotImplemented,
-      );
+      await expect(() =>
+        deleteTemporal({ entityId: entity.id! }),
+      ).rejects.toThrow(NgsiLdNotImplemented);
       return;
     }
 
-    const result = await deleteTemporal(entity.id!);
+    const result = await deleteTemporal({ entityId: entity.id! });
     expect(result).toBeUndefined();
   });
 
   it("should return 404 when deleting temporal for non-existent entity", async () => {
     try {
-      await deleteTemporal(
-        "urn:ngsi-ld:TemporalEntity:nonexistent-delete-99999",
-      );
+      await deleteTemporal({
+        entityId: "urn:ngsi-ld:TemporalEntity:nonexistent-delete-99999",
+      });
     } catch (err) {
       if (gateBroker("orion", "deleteTemporal not implemented")) {
         expect(err).toBeInstanceOf(NgsiLdNotImplemented);
@@ -249,7 +266,7 @@ describe("deleteTemporal", () => {
 describe("appendAttrsTemporal", () => {
   it("should append temporal attributes to an existing temporal entity", async () => {
     const entity = makeTemporalEntity();
-    await upsertTemporal(entity);
+    await upsertTemporal({ entityTemporal: entity });
 
     const newAttrs = {
       "@context": NGSILD_CORE_CONTEXT,
@@ -264,12 +281,18 @@ describe("appendAttrsTemporal", () => {
 
     if (gateBroker("orion", "appendAttrsTemporal not implemented")) {
       await expect(() =>
-        appendAttrsTemporal(entity.id!, newAttrs),
+        appendAttrsTemporal({
+          entityId: entity.id!,
+          entityTemporalFragment: newAttrs,
+        }),
       ).rejects.toThrow(NgsiLdNotImplemented);
       return;
     }
 
-    const response = await appendAttrsTemporal(entity.id!, newAttrs);
+    const response = await appendAttrsTemporal({
+      entityId: entity.id!,
+      entityTemporalFragment: newAttrs,
+    });
     expect(response).toBeUndefined();
   });
 
@@ -286,10 +309,10 @@ describe("appendAttrsTemporal", () => {
     };
 
     try {
-      await appendAttrsTemporal(
-        "urn:ngsi-ld:TemporalEntity:nonexistent-append-99999",
-        newAttrs,
-      );
+      await appendAttrsTemporal({
+        entityId: "urn:ngsi-ld:TemporalEntity:nonexistent-append-99999",
+        entityTemporalFragment: newAttrs,
+      });
     } catch (err) {
       if (gateBroker("orion", "appendAttrsTemporal not implemented")) {
         expect(err).toBeInstanceOf(NgsiLdNotImplemented);
@@ -315,25 +338,28 @@ describe("deleteAttrsTemporal", () => {
         },
       ],
     };
-    await upsertTemporal(entity);
+    await upsertTemporal({ entityTemporal: entity });
 
     if (gateBroker("orion", "deleteAttrsTemporal not implemented")) {
       await expect(() =>
-        deleteAttrsTemporal(entity.id!, "humidity"),
+        deleteAttrsTemporal({ entityId: entity.id!, attrId: "humidity" }),
       ).rejects.toThrow(NgsiLdNotImplemented);
       return;
     }
 
-    const response = await deleteAttrsTemporal(entity.id!, "humidity");
+    const response = await deleteAttrsTemporal({
+      entityId: entity.id!,
+      attrId: "humidity",
+    });
     expect(response).toBeUndefined();
   });
 
   it("should return 404 for non-existent entity", async () => {
     try {
-      await deleteAttrsTemporal(
-        "urn:ngsi-ld:TemporalEntity:nonexistent-attr-99999",
-        "temperature",
-      );
+      await deleteAttrsTemporal({
+        entityId: "urn:ngsi-ld:TemporalEntity:nonexistent-attr-99999",
+        attrId: "temperature",
+      });
     } catch (err) {
       if (gateBroker("orion", "deleteAttrsTemporal not implemented")) {
         expect(err).toBeInstanceOf(NgsiLdNotImplemented);
@@ -350,12 +376,15 @@ describe("deleteAttrsTemporal", () => {
 describe("updateAttrsTemporal", () => {
   it("should update a specific attribute instance in a temporal entity", async () => {
     const entity = makeTemporalEntity();
-    await upsertTemporal(entity);
+    await upsertTemporal({ entityTemporal: entity });
 
     // Retrieve to get the real instanceId (broker-assigned, not guessable)
-    const retrieved = await retrieveTemporal(entity.id!, {
-      timerel: "before",
-      timeAt: new Date(Date.now() + 60000).toISOString(),
+    const retrieved = await retrieveTemporal({
+      entityId: entity.id!,
+      params: {
+        timerel: "before",
+        timeAt: new Date(Date.now() + 60000).toISOString(),
+      },
     });
     const tempInstances = (retrieved as any)["temperature"] ?? [];
     const typedInstances = tempInstances as {
@@ -374,17 +403,22 @@ describe("updateAttrsTemporal", () => {
 
     if (gateBroker("orion", "updateAttrsTemporal not implemented")) {
       await expect(() =>
-        updateAttrsTemporal(entity.id!, "temperature", instanceId, patch),
+        updateAttrsTemporal({
+          entityId: entity.id!,
+          attrId: "temperature",
+          instanceId,
+          attr: patch,
+        }),
       ).rejects.toThrow(NgsiLdNotImplemented);
       return;
     }
 
-    const response = await updateAttrsTemporal(
-      entity.id!,
-      "temperature",
+    const response = await updateAttrsTemporal({
+      entityId: entity.id!,
+      attrId: "temperature",
       instanceId,
-      patch,
-    );
+      attr: patch,
+    });
     expect(response).toBeUndefined();
   });
 
@@ -397,12 +431,12 @@ describe("updateAttrsTemporal", () => {
     };
 
     try {
-      await updateAttrsTemporal(
-        "urn:ngsi-ld:TemporalEntity:nonexistent-update-99999",
-        "temperature",
-        "urn:ngsi-ld:instanceId:nonexistent",
-        patch,
-      );
+      await updateAttrsTemporal({
+        entityId: "urn:ngsi-ld:TemporalEntity:nonexistent-update-99999",
+        attrId: "temperature",
+        instanceId: "urn:ngsi-ld:instanceId:nonexistent",
+        attr: patch,
+      });
     } catch (err) {
       if (gateBroker("orion", "updateAttrsTemporal not implemented")) {
         expect(err).toBeInstanceOf(NgsiLdNotImplemented);
@@ -419,12 +453,15 @@ describe("updateAttrsTemporal", () => {
 describe("deleteAttrInstanceTemporal", () => {
   it("should delete a specific attribute instance from a temporal entity", async () => {
     const entity = makeTemporalEntity();
-    await upsertTemporal(entity);
+    await upsertTemporal({ entityTemporal: entity });
 
     // Retrieve to get the real instanceId (broker-assigned, not guessable)
-    const retrieved = await retrieveTemporal(entity.id!, {
-      timerel: "before",
-      timeAt: new Date(Date.now() + 60000).toISOString(),
+    const retrieved = await retrieveTemporal({
+      entityId: entity.id!,
+      params: {
+        timerel: "before",
+        timeAt: new Date(Date.now() + 60000).toISOString(),
+      },
     });
     const tempList = ((retrieved as any)["temperature"] ?? []) as {
       instanceId?: string;
@@ -434,26 +471,30 @@ describe("deleteAttrInstanceTemporal", () => {
 
     if (gateBroker("orion", "deleteAttrInstanceTemporal not implemented")) {
       await expect(() =>
-        deleteAttrInstanceTemporal(entity.id!, "temperature", instanceId),
+        deleteAttrInstanceTemporal({
+          entityId: entity.id!,
+          attrId: "temperature",
+          instanceId,
+        }),
       ).rejects.toThrow(NgsiLdNotImplemented);
       return;
     }
 
-    const response = await deleteAttrInstanceTemporal(
-      entity.id!,
-      "temperature",
+    const response = await deleteAttrInstanceTemporal({
+      entityId: entity.id!,
+      attrId: "temperature",
       instanceId,
-    );
+    });
     expect(response).toBeUndefined();
   });
 
   it("should return 404 for non-existent entity", async () => {
     try {
-      await deleteAttrInstanceTemporal(
-        "urn:ngsi-ld:TemporalEntity:nonexistent-inst-99999",
-        "temperature",
-        "urn:ngsi-ld:instanceId:nonexistent",
-      );
+      await deleteAttrInstanceTemporal({
+        entityId: "urn:ngsi-ld:TemporalEntity:nonexistent-inst-99999",
+        attrId: "temperature",
+        instanceId: "urn:ngsi-ld:instanceId:nonexistent",
+      });
     } catch (err) {
       if (gateBroker("orion", "deleteAttrInstanceTemporal not implemented")) {
         expect(err).toBeInstanceOf(NgsiLdNotImplemented);
@@ -472,7 +513,7 @@ describe("temporalQueryBatch", () => {
 
   it("should query temporal entities via POST batch operation", async () => {
     const entity = makeTemporalEntity();
-    await upsertTemporal(entity);
+    await upsertTemporal({ entityTemporal: entity });
 
     const batchBody = {
       type: "Query" as const,
@@ -483,13 +524,13 @@ describe("temporalQueryBatch", () => {
       },
     };
 
-    const data = await temporalQueryBatch(batchBody);
+    const data = await temporalQueryBatch({ query: batchBody });
     expect(Array.isArray(data)).toBe(true);
   });
 
   it("should support temporal query batch with entity type filter", async () => {
     const entity = makeTemporalEntity({ type: "BatchQueryTemporalTest" });
-    await upsertTemporal(entity);
+    await upsertTemporal({ entityTemporal: entity });
 
     const batchBody = {
       type: "Query" as const,
@@ -501,7 +542,7 @@ describe("temporalQueryBatch", () => {
       },
     };
 
-    const data = await temporalQueryBatch(batchBody);
+    const data = await temporalQueryBatch({ query: batchBody });
     expect(Array.isArray(data)).toBe(true);
   });
 });

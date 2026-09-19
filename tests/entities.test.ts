@@ -33,16 +33,16 @@ beforeEach(cleanUpAll);
 describe("createEntity", () => {
   it("should create an entity and return 201", async () => {
     const entity = makeEntity();
-    const response = await createEntity(entity);
+    const response = await createEntity({ entity });
 
     expect(response.status).toBe(201);
   });
 
   it("should return 409 when creating a duplicate entity", async () => {
     const entity = makeEntity();
-    await createEntity(entity);
+    await createEntity({ entity });
 
-    await expect(createEntity(entity)).rejects.toThrow(NgsiLdConflict);
+    await expect(createEntity({ entity })).rejects.toThrow(NgsiLdConflict);
   });
 
   it("should support ListProperty", async () => {
@@ -61,12 +61,12 @@ describe("createEntity", () => {
       "ListProperty not implemented",
     );
     if (isGated) {
-      await expect(createEntity(entity)).rejects.toThrow(NgsiLdBadRequest);
+      await expect(createEntity({ entity })).rejects.toThrow(NgsiLdBadRequest);
       return;
     }
 
     // Unknown / future broker — assert the spec-correct behavior.
-    const response = await createEntity(entity);
+    const response = await createEntity({ entity });
     expect(response.status).toBe(201);
   });
 
@@ -89,7 +89,7 @@ describe("createEntity", () => {
       ],
     };
 
-    const { location: csrLocation } = await createCSR(csr);
+    const { location: csrLocation } = await createCSR({ csr });
     expect(typeof csrLocation).toBe("string");
 
     // Create an entity where "temperature" is forwarded to the failing CSR
@@ -100,7 +100,7 @@ describe("createEntity", () => {
       humidity: { type: "Property" as const, value: 60 },
     };
 
-    const response = await createEntity(entity);
+    const response = await createEntity({ entity });
 
     // NOTE: This test fails with Orion-LD and Scorpio. They don't support
     // 207 multi-status for createEntity when a CSR fails.
@@ -126,9 +126,9 @@ describe("queryEntity", () => {
   it("should query entities by type", async () => {
     // Create an entity first so there's something to query
     const entity = makeEntity();
-    await createEntity(entity);
+    await createEntity({ entity });
 
-    const data = await queryEntity({ type: "TestEntity" });
+    const data = await queryEntity({ params: { type: "TestEntity" } });
     expect(data.length).toBeGreaterThan(0);
   });
 });
@@ -139,9 +139,9 @@ describe("queryEntity", () => {
 describe("queryGeoEntity", () => {
   it("should query entities as a GeoJSON FeatureCollection", async () => {
     const entity = makeEntityWithGeo();
-    await createEntity(entity);
+    await createEntity({ entity });
 
-    const fc = await queryGeoEntity({ type: "TestEntity" });
+    const fc = await queryGeoEntity({ params: { type: "TestEntity" } });
     expect(fc.type).toBe("FeatureCollection");
     expect(fc.features).toBeDefined();
     expect(fc.features!.length).toBe(1);
@@ -154,7 +154,7 @@ describe("queryGeoEntity", () => {
   });
 
   it("should return empty FeatureCollection for no matches", async () => {
-    const fc = await queryGeoEntity({ type: "NonExistentType" });
+    const fc = await queryGeoEntity({ params: { type: "NonExistentType" } });
     expect(fc.type).toBe("FeatureCollection");
     expect(fc.features).toEqual([]);
   });
@@ -166,16 +166,16 @@ describe("queryGeoEntity", () => {
 describe("retrieveEntity", () => {
   it("should retrieve an entity by id", async () => {
     const entity = makeEntity();
-    await createEntity(entity);
+    await createEntity({ entity });
 
-    const data = await retrieveEntity(entity.id!);
+    const data = await retrieveEntity({ entityId: entity.id! });
     expect(data).toBeDefined();
     expect(data.id).toBe(entity.id);
   });
 
   it("should return 404 for a non-existent entity", async () => {
     await expect(
-      retrieveEntity("urn:ngsi-ld:TestEntity:nonexistent"),
+      retrieveEntity({ entityId: "urn:ngsi-ld:TestEntity:nonexistent" }),
     ).rejects.toThrow(NgsiLdNotFound);
   });
 });
@@ -186,9 +186,9 @@ describe("retrieveEntity", () => {
 describe("retrieveGeoEntity", () => {
   it("should retrieve an entity as a GeoJSON Feature", async () => {
     const entity = makeEntityWithGeo();
-    await createEntity(entity);
+    await createEntity({ entity });
 
-    const feature = await retrieveGeoEntity(entity.id!);
+    const feature = await retrieveGeoEntity({ entityId: entity.id! });
     expect(feature.type).toBe("Feature");
     expect(feature.id).toBe(entity.id);
     expect(feature.geometry).toBeDefined();
@@ -198,15 +198,15 @@ describe("retrieveGeoEntity", () => {
 
   it("should return 404 for a non-existent entity", async () => {
     await expect(
-      retrieveGeoEntity("urn:ngsi-ld:TestEntity:nonexistent"),
+      retrieveGeoEntity({ entityId: "urn:ngsi-ld:TestEntity:nonexistent" }),
     ).rejects.toThrow(NgsiLdNotFound);
   });
 
   it("should return Feature with null geometry for entity without GeoProperty", async () => {
     const entity = makeEntity();
-    await createEntity(entity);
+    await createEntity({ entity });
 
-    const feature = await retrieveGeoEntity(entity.id!);
+    const feature = await retrieveGeoEntity({ entityId: entity.id! });
     expect(feature.type).toBe("Feature");
     expect(feature.geometry).toBeNull();
   });
@@ -218,15 +218,15 @@ describe("retrieveGeoEntity", () => {
 describe("deleteEntity", () => {
   it("should delete an entity and return 204", async () => {
     const entity = makeEntity();
-    await createEntity(entity);
+    await createEntity({ entity });
 
-    const response = await deleteEntity(entity.id!);
+    const response = await deleteEntity({ entityId: entity.id! });
     expect(response.status).toBe(204);
   });
 
   it("should return 404 when deleting a non-existent entity", async () => {
     await expect(
-      deleteEntity("urn:ngsi-ld:TestEntity:nonexistent"),
+      deleteEntity({ entityId: "urn:ngsi-ld:TestEntity:nonexistent" }),
     ).rejects.toThrow(NgsiLdNotFound);
   });
 });
@@ -244,7 +244,7 @@ describe("mergeEntity", () => {
 
     const entity = makeEntity();
 
-    await createEntity(entity);
+    await createEntity({ entity });
 
     const patch: WithContext<Partial<TemperatureHumidityEntity>> = {
       "@context": [
@@ -256,11 +256,16 @@ describe("mergeEntity", () => {
       },
     };
 
-    const response = await mergeEntity(entity.id!, patch);
+    const response = await mergeEntity({
+      entityId: entity.id!,
+      entityFragment: patch,
+    });
     expect(response.status).toBe(204);
 
     // Verify the merge worked: retrieve and check the new attribute exists
-    const data = await retrieveEntity<TemperatureHumidityEntity>(entity.id!);
+    const data = await retrieveEntity<TemperatureHumidityEntity>({
+      entityId: entity.id!,
+    });
     expect(data.humidity).toBeDefined();
   });
 });
@@ -271,7 +276,7 @@ describe("mergeEntity", () => {
 describe("replaceEntity", () => {
   it("should replace an entity (PUT) and return 204", async () => {
     const entity = makeEntity();
-    await createEntity(entity);
+    await createEntity({ entity });
 
     const replacement = {
       "@context": [
@@ -285,7 +290,10 @@ describe("replaceEntity", () => {
       },
     };
 
-    const response = await replaceEntity(entity.id!, replacement);
+    const response = await replaceEntity({
+      entityId: entity.id!,
+      entityFragment: replacement,
+    });
     expect(response.status).toBe(204);
   });
 });
@@ -296,7 +304,7 @@ describe("replaceEntity", () => {
 describe("appendAttrs", () => {
   it("should append attributes to an existing entity", async () => {
     const entity = makeEntity();
-    await createEntity(entity);
+    await createEntity({ entity });
 
     const newAttrs = {
       "@context": [
@@ -308,7 +316,10 @@ describe("appendAttrs", () => {
       },
     };
 
-    const response = await appendAttrs(entity.id!, newAttrs);
+    const response = await appendAttrs({
+      entityId: entity.id!,
+      entityFragment: newAttrs,
+    });
     expect(response.status).toBe(204);
   });
 });
@@ -319,7 +330,7 @@ describe("appendAttrs", () => {
 describe("updateEntity", () => {
   it("should partially update an entity (PATCH) and return 204", async () => {
     const entity = makeEntity();
-    await createEntity(entity);
+    await createEntity({ entity });
 
     const patch = {
       "@context": [
@@ -331,7 +342,10 @@ describe("updateEntity", () => {
       },
     };
 
-    const response = await updateEntity(entity.id!, patch);
+    const response = await updateEntity({
+      entityId: entity.id!,
+      entityFragment: patch,
+    });
     expect(response.status).toBe(204);
   });
 });
@@ -342,7 +356,7 @@ describe("updateEntity", () => {
 describe("updateAttrs", () => {
   it("should partially update a single attribute", async () => {
     const entity = makeEntity();
-    await createEntity(entity);
+    await createEntity({ entity });
 
     const attrPatch = {
       "@context": [
@@ -352,7 +366,11 @@ describe("updateAttrs", () => {
       value: 100,
     };
 
-    const response = await updateAttrs(entity.id!, "temperature", attrPatch);
+    const response = await updateAttrs({
+      entityId: entity.id!,
+      attrId: "temperature",
+      attr: attrPatch,
+    });
     expect(response.status).toBe(204);
   });
 
@@ -366,11 +384,11 @@ describe("updateAttrs", () => {
     };
 
     await expect(
-      updateAttrs(
-        "urn:ngsi-ld:TestEntity:nonexistent",
-        "temperature",
-        attrPatch,
-      ),
+      updateAttrs({
+        entityId: "urn:ngsi-ld:TestEntity:nonexistent",
+        attrId: "temperature",
+        attr: attrPatch,
+      }),
     ).rejects.toThrow(NgsiLdNotFound);
   });
 });
@@ -385,15 +403,21 @@ describe("deleteAttrs", () => {
       ...base,
       extraAttr: { type: "Property" as const, value: 1 },
     };
-    await createEntity(entity);
+    await createEntity({ entity });
 
-    const response = await deleteAttrs(entity.id!, "extraAttr");
+    const response = await deleteAttrs({
+      entityId: entity.id!,
+      attrId: "extraAttr",
+    });
     expect(response.status).toBe(204);
   });
 
   it("should return 404 when deleting attribute on non-existent entity", async () => {
     await expect(
-      deleteAttrs("urn:ngsi-ld:TestEntity:nonexistent", "temperature"),
+      deleteAttrs({
+        entityId: "urn:ngsi-ld:TestEntity:nonexistent",
+        attrId: "temperature",
+      }),
     ).rejects.toThrow(NgsiLdNotFound);
   });
 });
@@ -404,7 +428,7 @@ describe("deleteAttrs", () => {
 describe("replaceAttrs", () => {
   it("should replace a single attribute (PUT) and return 204", async () => {
     const entity = makeEntity();
-    await createEntity(entity);
+    await createEntity({ entity });
 
     const replacement = {
       "@context": [
@@ -415,11 +439,11 @@ describe("replaceAttrs", () => {
     };
 
     try {
-      const response = await replaceAttrs(
-        entity.id!,
-        "temperature",
-        replacement,
-      );
+      const response = await replaceAttrs({
+        entityId: entity.id!,
+        attrId: "temperature",
+        attr: replacement,
+      });
       expect(response.status).toBe(204);
     } catch (err) {
       // https://github.com/ScorpioBroker/ScorpioBroker/issues/677

@@ -40,7 +40,7 @@ export function makeCSR() {
 describe("createCSR", () => {
   it("should create a CSR and return the location", async () => {
     const csr = makeCSR();
-    const { location } = await createCSR(csr);
+    const { location } = await createCSR({ csr });
 
     expect(typeof location).toBe("string");
     expect(location).toBeTruthy();
@@ -48,9 +48,9 @@ describe("createCSR", () => {
 
   it("should return 409 when creating a duplicate CSR", async () => {
     const csr = makeCSR();
-    await createCSR(csr);
+    await createCSR({ csr });
 
-    await expect(createCSR(csr)).rejects.toThrow(NgsiLdConflict);
+    await expect(createCSR({ csr })).rejects.toThrow(NgsiLdConflict);
   });
 });
 
@@ -61,7 +61,7 @@ describe("queryCSR", () => {
   it("should query CSRs", async () => {
     // Create a CSR first so there's something to query
     const csr = makeCSR();
-    await createCSR(csr);
+    await createCSR({ csr });
 
     // Scorpio requires at least one filter param (id, type, attrs, etc.)
     if (gateBroker("scorpio", "CSR query requires filter params like type")) {
@@ -87,9 +87,11 @@ describe("queryCSR", () => {
         },
       ],
     };
-    await createCSR(csr);
+    await createCSR({ csr });
 
-    const data = await queryCSR({ type: "ContextSourceRegistration" });
+    const data = await queryCSR({
+      params: { type: "ContextSourceRegistration" },
+    });
 
     expect(Array.isArray(data)).toBe(true);
   });
@@ -101,17 +103,17 @@ describe("queryCSR", () => {
 describe("retrieveCSR", () => {
   it("should retrieve a CSR by id", async () => {
     const csr = makeCSR();
-    await createCSR(csr);
+    await createCSR({ csr });
 
-    const data = await retrieveCSR(csr.id!);
+    const data = await retrieveCSR({ registrationId: csr.id! });
 
     expect(data).toBeDefined();
   });
 
   it("should return 404 for a non-existent CSR", async () => {
-    await expect(retrieveCSR("urn:ngsi-ld:CSR:nonexistent")).rejects.toThrow(
-      NgsiLdNotFound,
-    );
+    await expect(
+      retrieveCSR({ registrationId: "urn:ngsi-ld:CSR:nonexistent" }),
+    ).rejects.toThrow(NgsiLdNotFound);
   });
 });
 
@@ -121,7 +123,7 @@ describe("retrieveCSR", () => {
 describe("updateCSR", () => {
   it("should update (PATCH) a CSR", async () => {
     const csr = makeCSR();
-    await createCSR(csr);
+    await createCSR({ csr });
 
     const patch = {
       "@context": [
@@ -130,12 +132,15 @@ describe("updateCSR", () => {
       endpoint: "http://updated.example.com/ngsi-ld",
     };
 
-    const result = await updateCSR(csr.id!, patch);
+    const result = await updateCSR({
+      registrationId: csr.id!,
+      csrFragment: patch,
+    });
 
     expect(result).toBeUndefined();
 
     // Verify the update worked
-    const retrieved = await retrieveCSR(csr.id!);
+    const retrieved = await retrieveCSR({ registrationId: csr.id! });
     const data = retrieved as Record<string, unknown>;
     expect(data["endpoint"]).toBe("http://updated.example.com/ngsi-ld");
   });
@@ -149,7 +154,10 @@ describe("updateCSR", () => {
     };
 
     await expect(
-      updateCSR("urn:ngsi-ld:CSR:nonexistent", patch),
+      updateCSR({
+        registrationId: "urn:ngsi-ld:CSR:nonexistent",
+        csrFragment: patch,
+      }),
     ).rejects.toThrow(NgsiLdNotFound);
   });
 });
@@ -160,17 +168,17 @@ describe("updateCSR", () => {
 describe("deleteCSR", () => {
   it("should delete a CSR", async () => {
     const csr = makeCSR();
-    await createCSR(csr);
+    await createCSR({ csr });
 
-    const result = await deleteCSR(csr.id!);
+    const result = await deleteCSR({ registrationId: csr.id! });
 
     expect(result).toBeUndefined();
     // don't track — already deleted
   });
 
   it("should return 404 when deleting a non-existent CSR", async () => {
-    await expect(deleteCSR("urn:ngsi-ld:CSR:nonexistent")).rejects.toThrow(
-      NgsiLdNotFound,
-    );
+    await expect(
+      deleteCSR({ registrationId: "urn:ngsi-ld:CSR:nonexistent" }),
+    ).rejects.toThrow(NgsiLdNotFound);
   });
 });

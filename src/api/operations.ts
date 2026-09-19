@@ -127,764 +127,833 @@ import {
 
 import { fetcher, type NgsiLdRequestOpts } from "../fetcher";
 
-export const createEntity = <T extends Entity = Entity>(
-  entity: WithContext<NonReadonly<T>>,
-  params?: CreateEntityParams,
-  options?: NgsiLdRequestOpts,
-) => {
+export const createEntity = <T extends Entity = Entity>(opts: {
+  entity: WithContext<NonReadonly<T>>;
+  params?: CreateEntityParams;
+  options?: NgsiLdRequestOpts;
+}) => {
   return fetcher<CreateEntityResponse>({
-    ...options,
-    path: getCreateEntityUrl({ params }),
+    ...opts.options,
+    path: getCreateEntityUrl({ params: opts.params }),
     method: "POST",
-    body: JSON.stringify(entity),
+    body: JSON.stringify(opts.entity),
   });
 };
 
-export const queryEntity = <T extends Entity = Entity>(
-  params?: QueryEntityParams<T["type"] extends string ? T["type"] : string>,
-  options?: NgsiLdRequestOpts,
-) => {
+export const queryEntity = <T extends Entity = Entity>(opts?: {
+  params?: QueryEntityParams<T["type"] extends string ? T["type"] : string>;
+  options?: NgsiLdRequestOpts;
+}) => {
   return fetcher<WithContext<T>[]>({
-    ...options,
+    ...opts?.options,
     path: getQueryEntityUrl<T["type"] extends string ? T["type"] : string>({
-      params,
+      params: opts?.params,
     }),
     method: "GET",
     returnFormat: "body",
   });
 };
 
-export const queryGeoEntity = <T extends Entity = Entity>(
-  params?: QueryEntityParams<T["type"] extends string ? T["type"] : string>,
-  options?: NgsiLdRequestOpts,
-) => {
+export const queryGeoEntity = <T extends Entity = Entity>(opts?: {
+  params?: QueryEntityParams<T["type"] extends string ? T["type"] : string>;
+  options?: NgsiLdRequestOpts;
+}) => {
   return fetcher<FeatureCollection<T>>({
-    ...options,
+    ...opts?.options,
     path: getQueryEntityUrl<T["type"] extends string ? T["type"] : string>({
-      params,
+      params: opts?.params,
     }),
     method: "GET",
-    headers: { Accept: "application/geo+json", ...options?.headers },
+    headers: { Accept: "application/geo+json", ...opts?.options?.headers },
     returnFormat: "body",
   });
 };
 
-export const retrieveEntity = <T extends Entity = Entity>(
-  entityId: string,
-  params?: RetrieveEntityParams,
-  options?: NgsiLdRequestOpts,
-) => {
+export const retrieveEntity = <T extends Entity = Entity>(opts: {
+  entityId: string;
+  params?: RetrieveEntityParams;
+  options?: NgsiLdRequestOpts;
+}) => {
   return fetcher<WithContext<T>>({
-    ...options,
-    path: getRetrieveEntityUrl({ entityId, params }),
+    ...opts.options,
+    path: getRetrieveEntityUrl({
+      entityId: opts.entityId,
+      params: opts.params,
+    }),
     method: "GET",
     returnFormat: "body",
   });
 };
 
-export const retrieveGeoEntity = <T extends Entity = Entity>(
-  entityId: string,
-  params?: Omit<RetrieveEntityParams, "options">,
-  options?: NgsiLdRequestOpts,
-) => {
+export const retrieveGeoEntity = <T extends Entity = Entity>(opts: {
+  entityId: string;
+  params?: Omit<RetrieveEntityParams, "options">;
+  options?: NgsiLdRequestOpts;
+}) => {
   return fetcher<Feature<T>>({
-    ...options,
-    path: getRetrieveEntityUrl({ entityId, params }),
+    ...opts.options,
+    path: getRetrieveEntityUrl({
+      entityId: opts.entityId,
+      params: opts.params,
+    }),
     method: "GET",
-    headers: { Accept: "application/geo+json", ...options?.headers },
+    headers: { Accept: "application/geo+json", ...opts.options?.headers },
     returnFormat: "body",
   });
 };
 
-export const deleteEntity = (
-  entityId: string,
-  params?: DeleteEntityParams,
-  options?: NgsiLdRequestOpts,
-) => {
+export const deleteEntity = (opts: {
+  entityId: string;
+  params?: DeleteEntityParams;
+  options?: NgsiLdRequestOpts;
+}) => {
   return fetcher<DeleteEntityResponse>({
-    ...options,
-    path: getDeleteEntityUrl({ entityId, params }),
+    ...opts.options,
+    path: getDeleteEntityUrl({ entityId: opts.entityId, params: opts.params }),
     method: "DELETE",
   });
 };
 
-export const mergeEntity = <T extends Entity = Entity>(
-  entityId: string,
-  entityFragment: WithContext<NonReadonly<Partial<T>>>,
-  params?: MergeEntityParams,
-  options?: NgsiLdRequestOpts,
-) => {
+export const mergeEntity = <T extends Entity = Entity>(opts: {
+  entityId: string;
+  entityFragment: WithContext<NonReadonly<Partial<T>>>;
+  params?: MergeEntityParams;
+  options?: NgsiLdRequestOpts;
+}) => {
   return fetcher<MergeEntityResponse>({
-    ...options,
-    path: getMergeEntityUrl({ entityId, params }),
+    ...opts.options,
+    path: getMergeEntityUrl({ entityId: opts.entityId, params: opts.params }),
     method: "PATCH",
-    body: JSON.stringify(entityFragment),
+    body: JSON.stringify(opts.entityFragment),
   });
 };
 
-export const replaceEntity = <T extends Entity = Entity>(
-  entityId: string,
-  entityFragment: WithContext<NonReadonly<Partial<T>>>,
-  params?: ReplaceEntityParams,
-  options?: NgsiLdRequestOpts,
-) => {
+export const replaceEntity = <T extends Entity = Entity>(opts: {
+  entityId: string;
+  entityFragment: WithContext<NonReadonly<Partial<T>>>;
+  params?: ReplaceEntityParams;
+  options?: NgsiLdRequestOpts;
+}) => {
   return fetcher<ReplaceEntityResponse>({
-    ...options,
-    path: getReplaceEntityUrl({ entityId, params }),
+    ...opts.options,
+    path: getReplaceEntityUrl({ entityId: opts.entityId, params: opts.params }),
     method: "PUT",
-    body: JSON.stringify(entityFragment),
+    body: JSON.stringify(opts.entityFragment),
   });
 };
 
-export const appendAttrs = <T extends Entity = Entity>(
-  entityId: string,
-  entityFragment: WithContext<NonReadonly<Partial<T>>>,
-  params?: AppendAttrsParams,
-  options?: NgsiLdRequestOpts,
-) => {
+export const appendAttrs = <T extends Entity = Entity>(opts: {
+  entityId: string;
+  entityFragment: WithContext<NonReadonly<Partial<T>>>;
+  params?: AppendAttrsParams;
+  options?: NgsiLdRequestOpts;
+}) => {
   return fetcher<AppendAttrsResponse>({
-    ...options,
-    path: getAppendAttrsUrl({ entityId, params }),
+    ...opts.options,
+    path: getAppendAttrsUrl({ entityId: opts.entityId, params: opts.params }),
     method: "POST",
-    body: JSON.stringify(entityFragment),
+    body: JSON.stringify(opts.entityFragment),
   });
 };
 
-export const updateEntity = <T extends Entity = Entity>(
-  entityId: string,
-  entityFragment: WithContext<NonReadonly<Partial<T>>>,
-  params?: UpdateEntityParams,
-  options?: NgsiLdRequestOpts,
-) => {
+export const updateEntity = <T extends Entity = Entity>(opts: {
+  entityId: string;
+  entityFragment: WithContext<NonReadonly<Partial<T>>>;
+  params?: UpdateEntityParams;
+  options?: NgsiLdRequestOpts;
+}) => {
   return fetcher<UpdateEntityResponse>({
-    ...options,
-    path: getUpdateEntityUrl({ entityId, params }),
+    ...opts.options,
+    path: getUpdateEntityUrl({ entityId: opts.entityId, params: opts.params }),
     method: "PATCH",
-    body: JSON.stringify(entityFragment),
+    body: JSON.stringify(opts.entityFragment),
   });
 };
 
-export const updateAttrs = (
-  entityId: string,
-  attrId: string,
-  attr: WithContext<NgsildAttribute>,
-  params?: UpdateAttrsParams,
-  options?: NgsiLdRequestOpts,
-) => {
+export const updateAttrs = (opts: {
+  entityId: string;
+  attrId: string;
+  attr: WithContext<NgsildAttribute>;
+  params?: UpdateAttrsParams;
+  options?: NgsiLdRequestOpts;
+}) => {
   return fetcher<UpdateAttrsResponse>({
-    ...options,
-    path: getUpdateAttrsUrl({ entityId, attrId, params }),
+    ...opts.options,
+    path: getUpdateAttrsUrl({
+      entityId: opts.entityId,
+      attrId: opts.attrId,
+      params: opts.params,
+    }),
     method: "PATCH",
-    body: JSON.stringify(attr),
+    body: JSON.stringify(opts.attr),
   });
 };
 
-export const deleteAttrs = (
-  entityId: string,
-  attrId: string,
-  params?: DeleteAttrsParams,
-  options?: NgsiLdRequestOpts,
-) => {
+export const deleteAttrs = (opts: {
+  entityId: string;
+  attrId: string;
+  params?: DeleteAttrsParams;
+  options?: NgsiLdRequestOpts;
+}) => {
   return fetcher<DeleteAttrsResponse>({
-    ...options,
-    path: getDeleteAttrsUrl({ entityId, attrId, params }),
+    ...opts.options,
+    path: getDeleteAttrsUrl({
+      entityId: opts.entityId,
+      attrId: opts.attrId,
+      params: opts.params,
+    }),
     method: "DELETE",
   });
 };
 
-export const replaceAttrs = (
-  entityId: string,
-  attrId: string,
-  attr: WithContext<NgsildAttribute>,
-  params?: ReplaceAttrsParams,
-  options?: NgsiLdRequestOpts,
-) => {
+export const replaceAttrs = (opts: {
+  entityId: string;
+  attrId: string;
+  attr: WithContext<NgsildAttribute>;
+  params?: ReplaceAttrsParams;
+  options?: NgsiLdRequestOpts;
+}) => {
   return fetcher<ReplaceAttrsResponse>({
-    ...options,
-    path: getReplaceAttrsUrl({ entityId, attrId, params }),
+    ...opts.options,
+    path: getReplaceAttrsUrl({
+      entityId: opts.entityId,
+      attrId: opts.attrId,
+      params: opts.params,
+    }),
     method: "PUT",
-    body: JSON.stringify(attr),
+    body: JSON.stringify(opts.attr),
   });
 };
 
-export const createCSR = (
-  csr: WithContext<NonReadonly<CsourceRegistration>>,
-  options?: NgsiLdRequestOpts,
-) => {
+export const createCSR = (opts: {
+  csr: WithContext<NonReadonly<CsourceRegistration>>;
+  options?: NgsiLdRequestOpts;
+}) => {
   return fetcher<{ location: string }>({
-    ...options,
+    ...opts.options,
     path: getCreateCSRUrl(),
     method: "POST",
-    body: JSON.stringify(csr),
+    body: JSON.stringify(opts.csr),
     returnFormat: "body",
   });
 };
 
-export const queryCSR = (
-  params?: QueryCSRParams,
-  options?: NgsiLdRequestOpts,
-) => {
+export const queryCSR = (opts?: {
+  params?: QueryCSRParams;
+  options?: NgsiLdRequestOpts;
+}) => {
   return fetcher<WithContext<CsourceRegistration>[]>({
-    ...options,
-    path: getQueryCSRUrl({ params }),
+    ...opts?.options,
+    path: getQueryCSRUrl({ params: opts?.params }),
     method: "GET",
     returnFormat: "body",
   });
 };
 
-export const retrieveCSR = (
-  registrationId: string,
-  params?: RetrieveCSRParams,
-  options?: NgsiLdRequestOpts,
-) => {
+export const retrieveCSR = (opts: {
+  registrationId: string;
+  params?: RetrieveCSRParams;
+  options?: NgsiLdRequestOpts;
+}) => {
   return fetcher<WithContext<CsourceRegistration>>({
-    ...options,
-    path: getRetrieveCSRUrl({ registrationId, params }),
+    ...opts.options,
+    path: getRetrieveCSRUrl({
+      registrationId: opts.registrationId,
+      params: opts.params,
+    }),
     method: "GET",
     returnFormat: "body",
   });
 };
 
-export const updateCSR = (
-  registrationId: string,
-  csrFragment: WithContext<NonReadonly<Partial<CsourceRegistration>>>,
-  options?: NgsiLdRequestOpts,
-) => {
+export const updateCSR = (opts: {
+  registrationId: string;
+  csrFragment: WithContext<NonReadonly<Partial<CsourceRegistration>>>;
+  options?: NgsiLdRequestOpts;
+}) => {
   return fetcher<void>({
-    ...options,
-    path: getUpdateCSRUrl({ registrationId }),
+    ...opts.options,
+    path: getUpdateCSRUrl({ registrationId: opts.registrationId }),
     method: "PATCH",
-    body: JSON.stringify(csrFragment),
+    body: JSON.stringify(opts.csrFragment),
     returnFormat: "body",
   });
 };
 
-export const deleteCSR = (
-  registrationId: string,
-  options?: NgsiLdRequestOpts,
-) => {
+export const deleteCSR = (opts: {
+  registrationId: string;
+  options?: NgsiLdRequestOpts;
+}) => {
   return fetcher<void>({
-    ...options,
-    path: getDeleteCSRUrl({ registrationId }),
+    ...opts.options,
+    path: getDeleteCSRUrl({ registrationId: opts.registrationId }),
     method: "DELETE",
     returnFormat: "body",
   });
 };
 
-export const createSubscription = (
-  subscription: WithContext<Subscription>,
-  params?: CreateSubscriptionParams,
-  options?: NgsiLdRequestOpts,
-) => {
+export const createSubscription = (opts: {
+  subscription: WithContext<Subscription>;
+  params?: CreateSubscriptionParams;
+  options?: NgsiLdRequestOpts;
+}) => {
   return fetcher<{ location: string }>({
-    ...options,
-    path: getCreateSubscriptionUrl({ params }),
+    ...opts.options,
+    path: getCreateSubscriptionUrl({ params: opts.params }),
     method: "POST",
-    body: JSON.stringify(subscription),
+    body: JSON.stringify(opts.subscription),
     returnFormat: "body",
   });
 };
 
-export const querySubscription = (
-  params?: QuerySubscriptionParams,
-  options?: NgsiLdRequestOpts,
-) => {
+export const querySubscription = (opts?: {
+  params?: QuerySubscriptionParams;
+  options?: NgsiLdRequestOpts;
+}) => {
   return fetcher<WithContext<Subscription>[]>({
-    ...options,
-    path: getQuerySubscriptionUrl({ params }),
+    ...opts?.options,
+    path: getQuerySubscriptionUrl({ params: opts?.params }),
     method: "GET",
     returnFormat: "body",
   });
 };
 
-export const retrieveSubscription = (
-  subscriptionId: string,
-  params?: RetrieveSubscriptionParams,
-  options?: NgsiLdRequestOpts,
-) => {
+export const retrieveSubscription = (opts: {
+  subscriptionId: string;
+  params?: RetrieveSubscriptionParams;
+  options?: NgsiLdRequestOpts;
+}) => {
   return fetcher<WithContext<Subscription>>({
-    ...options,
-    path: getRetrieveSubscriptionUrl({ subscriptionId, params }),
+    ...opts.options,
+    path: getRetrieveSubscriptionUrl({
+      subscriptionId: opts.subscriptionId,
+      params: opts.params,
+    }),
     method: "GET",
     returnFormat: "body",
   });
 };
 
-export const updateSubscription = (
-  subscriptionId: string,
-  subscriptionFragment: WithContext<Partial<Subscription>>,
-  params?: UpdateSubscriptionParams,
-  options?: NgsiLdRequestOpts,
-) => {
+export const updateSubscription = (opts: {
+  subscriptionId: string;
+  subscriptionFragment: WithContext<Partial<Subscription>>;
+  params?: UpdateSubscriptionParams;
+  options?: NgsiLdRequestOpts;
+}) => {
   return fetcher<void>({
-    ...options,
-    path: getUpdateSubscriptionUrl({ subscriptionId, params }),
+    ...opts.options,
+    path: getUpdateSubscriptionUrl({
+      subscriptionId: opts.subscriptionId,
+      params: opts.params,
+    }),
     method: "PATCH",
-    body: JSON.stringify(subscriptionFragment),
+    body: JSON.stringify(opts.subscriptionFragment),
     returnFormat: "body",
   });
 };
 
-export const deleteSubscription = (
-  subscriptionId: string,
-  params?: DeleteSubscriptionParams,
-  options?: NgsiLdRequestOpts,
-) => {
+export const deleteSubscription = (opts: {
+  subscriptionId: string;
+  params?: DeleteSubscriptionParams;
+  options?: NgsiLdRequestOpts;
+}) => {
   return fetcher<void>({
-    ...options,
-    path: getDeleteSubscriptionUrl({ subscriptionId, params }),
+    ...opts.options,
+    path: getDeleteSubscriptionUrl({
+      subscriptionId: opts.subscriptionId,
+      params: opts.params,
+    }),
     method: "DELETE",
     returnFormat: "body",
   });
 };
 
-export const createCSRSubscription = (
-  csrSubscription: WithContext<Subscription>,
-  options?: NgsiLdRequestOpts,
-) => {
+export const createCSRSubscription = (opts: {
+  csrSubscription: WithContext<Subscription>;
+  options?: NgsiLdRequestOpts;
+}) => {
   return fetcher<{ location: string }>({
-    ...options,
+    ...opts.options,
     path: getCreateCSRSubscriptionUrl(),
     method: "POST",
-    body: JSON.stringify(csrSubscription),
+    body: JSON.stringify(opts.csrSubscription),
     returnFormat: "body",
   });
 };
 
-export const queryCSRSubscription = (
-  params?: QueryCSRSubscriptionParams,
-  options?: NgsiLdRequestOpts,
-) => {
+export const queryCSRSubscription = (opts?: {
+  params?: QueryCSRSubscriptionParams;
+  options?: NgsiLdRequestOpts;
+}) => {
   return fetcher<WithContext<Subscription>[]>({
-    ...options,
-    path: getQueryCSRSubscriptionUrl({ params }),
+    ...opts?.options,
+    path: getQueryCSRSubscriptionUrl({ params: opts?.params }),
     method: "GET",
     returnFormat: "body",
   });
 };
 
-export const retrieveCSRSubscription = (
-  subscriptionId: string,
-  params?: RetrieveCSRSubscriptionParams,
-  options?: NgsiLdRequestOpts,
-) => {
+export const retrieveCSRSubscription = (opts: {
+  subscriptionId: string;
+  params?: RetrieveCSRSubscriptionParams;
+  options?: NgsiLdRequestOpts;
+}) => {
   return fetcher<WithContext<Subscription>>({
-    ...options,
-    path: getRetrieveCSRSubscriptionUrl({ subscriptionId, params }),
+    ...opts.options,
+    path: getRetrieveCSRSubscriptionUrl({
+      subscriptionId: opts.subscriptionId,
+      params: opts.params,
+    }),
     method: "GET",
     returnFormat: "body",
   });
 };
 
-export const updateCSRSubscription = (
-  csrSubscriptionId: string,
-  csrSubscriptionFragment: WithContext<Partial<Subscription>>,
-  options?: NgsiLdRequestOpts,
-) => {
+export const updateCSRSubscription = (opts: {
+  csrSubscriptionId: string;
+  csrSubscriptionFragment: WithContext<Partial<Subscription>>;
+  options?: NgsiLdRequestOpts;
+}) => {
   return fetcher<void>({
-    ...options,
-    path: getUpdateCSRSubscriptionUrl({ subscriptionId: csrSubscriptionId }),
+    ...opts.options,
+    path: getUpdateCSRSubscriptionUrl({
+      subscriptionId: opts.csrSubscriptionId,
+    }),
     method: "PATCH",
-    body: JSON.stringify(csrSubscriptionFragment),
+    body: JSON.stringify(opts.csrSubscriptionFragment),
     returnFormat: "body",
   });
 };
 
-export const deleteCSRSubscription = (
-  csrSubscriptionId: string,
-  options?: NgsiLdRequestOpts,
-) => {
+export const deleteCSRSubscription = (opts: {
+  csrSubscriptionId: string;
+  options?: NgsiLdRequestOpts;
+}) => {
   return fetcher<void>({
-    ...options,
-    path: getDeleteCSRSubscriptionUrl({ subscriptionId: csrSubscriptionId }),
+    ...opts.options,
+    path: getDeleteCSRSubscriptionUrl({
+      subscriptionId: opts.csrSubscriptionId,
+    }),
     method: "DELETE",
     returnFormat: "body",
   });
 };
 
-export const createBatch = <T extends Entity = Entity>(
-  entities: NonReadonly<MaybeContext<T>>[],
-  params?: CreateBatchParams,
-  options?: NgsiLdRequestOpts,
-) => {
+export const createBatch = <T extends Entity = Entity>(opts: {
+  entities: NonReadonly<MaybeContext<T>>[];
+  params?: CreateBatchParams;
+  options?: NgsiLdRequestOpts;
+}) => {
   return fetcher<CreateBatchResponse>({
-    ...options,
-    path: getCreateBatchUrl({ params }),
+    ...opts.options,
+    path: getCreateBatchUrl({ params: opts.params }),
     method: "POST",
-    body: JSON.stringify(entities),
+    body: JSON.stringify(opts.entities),
   });
 };
 
-export const upsertBatch = <T extends Entity = Entity>(
-  entities: NonReadonly<MaybeContext<T>>[],
-  params?: UpsertBatchParams,
-  options?: NgsiLdRequestOpts,
-) => {
+export const upsertBatch = <T extends Entity = Entity>(opts: {
+  entities: NonReadonly<MaybeContext<T>>[];
+  params?: UpsertBatchParams;
+  options?: NgsiLdRequestOpts;
+}) => {
   return fetcher<UpsertBatchResponse>({
-    ...options,
-    path: getUpsertBatchUrl({ params }),
+    ...opts.options,
+    path: getUpsertBatchUrl({ params: opts.params }),
     method: "POST",
-    body: JSON.stringify(entities),
+    body: JSON.stringify(opts.entities),
   });
 };
 
-export const updateBatch = <T extends Entity = Entity>(
-  entities: NonReadonly<MaybeContext<T>>[],
-  params?: UpdateBatchParams,
-  options?: NgsiLdRequestOpts,
-) => {
+export const updateBatch = <T extends Entity = Entity>(opts: {
+  entities: NonReadonly<MaybeContext<T>>[];
+  params?: UpdateBatchParams;
+  options?: NgsiLdRequestOpts;
+}) => {
   return fetcher<UpdateBatchResponse>({
-    ...options,
-    path: getUpdateBatchUrl({ params }),
+    ...opts.options,
+    path: getUpdateBatchUrl({ params: opts.params }),
     method: "POST",
-    body: JSON.stringify(entities),
+    body: JSON.stringify(opts.entities),
   });
 };
 
-export const deleteBatch = (
-  entityIds: string[],
-  params?: DeleteBatchParams,
-  options?: NgsiLdRequestOpts,
-) => {
+export const deleteBatch = (opts: {
+  entityIds: string[];
+  params?: DeleteBatchParams;
+  options?: NgsiLdRequestOpts;
+}) => {
   return fetcher<DeleteBatchResponse>({
-    ...options,
-    path: getDeleteBatchUrl({ params }),
+    ...opts.options,
+    path: getDeleteBatchUrl({ params: opts.params }),
     method: "POST",
-    headers: { "Content-Type": "application/json", ...options?.headers },
-    body: JSON.stringify(entityIds),
+    headers: { "Content-Type": "application/json", ...opts.options?.headers },
+    body: JSON.stringify(opts.entityIds),
   });
 };
 
-export const queryBatch = <T extends Entity = Entity>(
-  query: Query,
-  params?: QueryBatchParams,
-  options?: NgsiLdRequestOpts,
-) => {
+export const queryBatch = <T extends Entity = Entity>(opts: {
+  query: Query;
+  params?: QueryBatchParams;
+  options?: NgsiLdRequestOpts;
+}) => {
   return fetcher<WithContext<T>[]>({
-    ...options,
-    path: getQueryBatchUrl({ params }),
+    ...opts.options,
+    path: getQueryBatchUrl({ params: opts.params }),
     method: "POST",
     // https://github.com/stellio-hub/stellio-context-broker/issues/1809
-    headers: { "Content-Type": "application/json", ...options?.headers },
-    body: JSON.stringify(query),
+    headers: { "Content-Type": "application/json", ...opts.options?.headers },
+    body: JSON.stringify(opts.query),
     returnFormat: "body",
   });
 };
 
-export const queryGeoBatch = <T extends Entity = Entity>(
-  query: Query,
-  params?: QueryBatchParams,
-  options?: NgsiLdRequestOpts,
-) => {
+export const queryGeoBatch = <T extends Entity = Entity>(opts: {
+  query: Query;
+  params?: QueryBatchParams;
+  options?: NgsiLdRequestOpts;
+}) => {
   return fetcher<FeatureCollection<T>>({
-    ...options,
-    path: getQueryBatchUrl({ params }),
+    ...opts.options,
+    path: getQueryBatchUrl({ params: opts.params }),
     method: "POST",
     headers: {
       // https://github.com/stellio-hub/stellio-context-broker/issues/1809
       "Content-Type": "application/json",
       Accept: "application/geo+json",
-      ...options?.headers,
+      ...opts.options?.headers,
     },
-    body: JSON.stringify(query),
+    body: JSON.stringify(opts.query),
     returnFormat: "body",
   });
 };
 
-export const mergeBatch = <T extends Entity = Entity>(
-  entities: NonReadonly<MaybeContext<T>>[],
-  params?: MergeBatchParams,
-  options?: NgsiLdRequestOpts,
-) => {
+export const mergeBatch = <T extends Entity = Entity>(opts: {
+  entities: NonReadonly<MaybeContext<T>>[];
+  params?: MergeBatchParams;
+  options?: NgsiLdRequestOpts;
+}) => {
   return fetcher<MergeBatchResponse>({
-    ...options,
-    path: getMergeBatchUrl({ params }),
+    ...opts.options,
+    path: getMergeBatchUrl({ params: opts.params }),
     method: "POST",
-    body: JSON.stringify(entities),
+    body: JSON.stringify(opts.entities),
   });
 };
 
-export const upsertTemporal = <T extends Entity = Entity>(
-  entityTemporal: WithContext<InferEntityTemporal<T>>,
-  params?: UpsertTemporalParams,
-  options?: NgsiLdRequestOpts,
-) => {
+export const upsertTemporal = <T extends Entity = Entity>(opts: {
+  entityTemporal: WithContext<InferEntityTemporal<T>>;
+  params?: UpsertTemporalParams;
+  options?: NgsiLdRequestOpts;
+}) => {
   return fetcher<UpsertTemporalResponse>({
-    ...options,
-    path: getUpsertTemporalUrl({ params }),
+    ...opts.options,
+    path: getUpsertTemporalUrl({ params: opts.params }),
     method: "POST",
-    body: JSON.stringify(entityTemporal),
+    body: JSON.stringify(opts.entityTemporal),
   });
 };
 
-export const queryTemporal = <T extends Entity = Entity>(
-  params?: QueryTemporalParams<T["type"] extends string ? T["type"] : string>,
-  options?: NgsiLdRequestOpts,
-) => {
+export const queryTemporal = <T extends Entity = Entity>(opts?: {
+  params?: QueryTemporalParams<T["type"] extends string ? T["type"] : string>;
+  options?: NgsiLdRequestOpts;
+}) => {
   return fetcher<WithContext<InferEntityTemporal<T>>[]>({
-    ...options,
+    ...opts?.options,
     path: getQueryTemporalUrl<T["type"] extends string ? T["type"] : string>({
-      params,
+      params: opts?.params,
     }),
     method: "GET",
     returnFormat: "body",
   });
 };
 
-export const retrieveTemporal = <T extends Entity = Entity>(
-  entityId: string,
-  params?: RetrieveTemporalParams,
-  options?: NgsiLdRequestOpts,
-) => {
+export const retrieveTemporal = <T extends Entity = Entity>(opts: {
+  entityId: string;
+  params?: RetrieveTemporalParams;
+  options?: NgsiLdRequestOpts;
+}) => {
   return fetcher<WithContext<InferEntityTemporal<T>>>({
-    ...options,
-    path: getRetrieveTemporalUrl({ entityId, params }),
+    ...opts.options,
+    path: getRetrieveTemporalUrl({
+      entityId: opts.entityId,
+      params: opts.params,
+    }),
     method: "GET",
     returnFormat: "body",
   });
 };
 
-export const deleteTemporal = (
-  entityId: string,
-  params?: DeleteTemporalParams,
-  options?: NgsiLdRequestOpts,
-) => {
+export const deleteTemporal = (opts: {
+  entityId: string;
+  params?: DeleteTemporalParams;
+  options?: NgsiLdRequestOpts;
+}) => {
   return fetcher<void>({
-    ...options,
-    path: getDeleteTemporalUrl({ entityId, params }),
+    ...opts.options,
+    path: getDeleteTemporalUrl({
+      entityId: opts.entityId,
+      params: opts.params,
+    }),
     method: "DELETE",
     returnFormat: "body",
   });
 };
 
-export const appendAttrsTemporal = <T extends Entity = Entity>(
-  entityId: string,
-  entityTemporalFragment: WithContext<Partial<InferEntityTemporal<T>>>,
-  params?: AppendAttrsTemporalParams,
-  options?: NgsiLdRequestOpts,
-) => {
+export const appendAttrsTemporal = <T extends Entity = Entity>(opts: {
+  entityId: string;
+  entityTemporalFragment: WithContext<Partial<InferEntityTemporal<T>>>;
+  params?: AppendAttrsTemporalParams;
+  options?: NgsiLdRequestOpts;
+}) => {
   return fetcher<void>({
-    ...options,
-    path: getAppendAttrsTemporalUrl({ entityId, params }),
+    ...opts.options,
+    path: getAppendAttrsTemporalUrl({
+      entityId: opts.entityId,
+      params: opts.params,
+    }),
     method: "POST",
-    body: JSON.stringify(entityTemporalFragment),
+    body: JSON.stringify(opts.entityTemporalFragment),
     returnFormat: "body",
   });
 };
 
-export const deleteAttrsTemporal = (
-  entityId: string,
-  attrId: string,
-  params?: DeleteAttrsTemporalParams,
-  options?: NgsiLdRequestOpts,
-) => {
+export const deleteAttrsTemporal = (opts: {
+  entityId: string;
+  attrId: string;
+  params?: DeleteAttrsTemporalParams;
+  options?: NgsiLdRequestOpts;
+}) => {
   return fetcher<void>({
-    ...options,
-    path: getDeleteAttrsTemporalUrl({ entityId, attrId, params }),
+    ...opts.options,
+    path: getDeleteAttrsTemporalUrl({
+      entityId: opts.entityId,
+      attrId: opts.attrId,
+      params: opts.params,
+    }),
     method: "DELETE",
     returnFormat: "body",
   });
 };
 
-export const updateAttrsTemporal = (
-  entityId: string,
-  attrId: string,
-  instanceId: string,
+export const updateAttrsTemporal = (opts: {
+  entityId: string;
+  attrId: string;
+  instanceId: string;
 
   // Bare attribute *instance* (Property/Relationship + observedAt), NOT an
   // entity-temporal fragment — despite the yaml spec ref to
   // EntityTemporalFragment for this operation.
-  attr: WithContext<RequiredObservedAt<NgsildAttribute>>,
-  params?: UpdateAttrsTemporalParams,
-  options?: NgsiLdRequestOpts,
-) => {
+  attr: WithContext<RequiredObservedAt<NgsildAttribute>>;
+  params?: UpdateAttrsTemporalParams;
+  options?: NgsiLdRequestOpts;
+}) => {
   return fetcher<void>({
-    ...options,
-    path: getUpdateAttrsTemporalUrl({ entityId, attrId, instanceId, params }),
+    ...opts.options,
+    path: getUpdateAttrsTemporalUrl({
+      entityId: opts.entityId,
+      attrId: opts.attrId,
+      instanceId: opts.instanceId,
+      params: opts.params,
+    }),
     method: "PATCH",
-    body: JSON.stringify(attr),
+    body: JSON.stringify(opts.attr),
     returnFormat: "body",
   });
 };
 
-export const deleteAttrInstanceTemporal = (
-  entityId: string,
-  attrId: string,
-  instanceId: string,
-  params?: DeleteAttrInstanceTemporalParams,
-  options?: NgsiLdRequestOpts,
-) => {
+export const deleteAttrInstanceTemporal = (opts: {
+  entityId: string;
+  attrId: string;
+  instanceId: string;
+  params?: DeleteAttrInstanceTemporalParams;
+  options?: NgsiLdRequestOpts;
+}) => {
   return fetcher<void>({
-    ...options,
+    ...opts.options,
     path: getDeleteAttrInstanceTemporalUrl({
-      entityId,
-      attrId,
-      instanceId,
-      params,
+      entityId: opts.entityId,
+      attrId: opts.attrId,
+      instanceId: opts.instanceId,
+      params: opts.params,
     }),
     method: "DELETE",
     returnFormat: "body",
   });
 };
 
-export const temporalQueryBatch = <T extends Entity = Entity>(
-  query: QueryTemporal,
-  params?: TemporalQueryBatchParams,
-  options?: NgsiLdRequestOpts,
-) => {
+export const temporalQueryBatch = <T extends Entity = Entity>(opts: {
+  query: QueryTemporal;
+  params?: TemporalQueryBatchParams;
+  options?: NgsiLdRequestOpts;
+}) => {
   return fetcher<WithContext<InferEntityTemporal<T>>[]>({
-    ...options,
-    path: getTemporalQueryBatchUrl({ params }),
+    ...opts.options,
+    path: getTemporalQueryBatchUrl({ params: opts.params }),
     method: "POST",
     // https://github.com/stellio-hub/stellio-context-broker/issues/1809
-    headers: { "Content-Type": "application/json", ...options?.headers },
-    body: JSON.stringify(query),
+    headers: { "Content-Type": "application/json", ...opts.options?.headers },
+    body: JSON.stringify(opts.query),
     returnFormat: "body",
   });
 };
 
-export const retrieveEntityTypes = (
-  params?: RetrieveEntityTypesParams,
-  options?: NgsiLdRequestOpts,
-) => {
+export const retrieveEntityTypes = (opts?: {
+  params?: RetrieveEntityTypesParams;
+  options?: NgsiLdRequestOpts;
+}) => {
   return fetcher<WithContext<EntityTypeList> | WithContext<EntityType>[]>({
-    ...options,
-    path: getRetrieveEntityTypesUrl({ params }),
+    ...opts?.options,
+    path: getRetrieveEntityTypesUrl({ params: opts?.params }),
     method: "GET",
     returnFormat: "body",
   });
 };
 
-export const retrieveEntityTypeInfo = (
-  type: string,
-  params?: RetrieveEntityTypeInfoParams,
-  options?: NgsiLdRequestOpts,
-) => {
+export const retrieveEntityTypeInfo = (opts: {
+  type: string;
+  params?: RetrieveEntityTypeInfoParams;
+  options?: NgsiLdRequestOpts;
+}) => {
   return fetcher<WithContext<EntityTypeInfo>>({
-    ...options,
-    path: getRetrieveEntityTypeInfoUrl({ type, params }),
+    ...opts.options,
+    path: getRetrieveEntityTypeInfoUrl({
+      type: opts.type,
+      params: opts.params,
+    }),
     method: "GET",
     returnFormat: "body",
   });
 };
 
-export const retrieveAttrTypes = (
-  params?: RetrieveAttrTypesParams,
-  options?: NgsiLdRequestOpts,
-) => {
+export const retrieveAttrTypes = (opts?: {
+  params?: RetrieveAttrTypesParams;
+  options?: NgsiLdRequestOpts;
+}) => {
   return fetcher<WithContext<AttributeList> | WithContext<Attribute>[]>({
-    ...options,
-    path: getRetrieveAttrTypesUrl({ params }),
+    ...opts?.options,
+    path: getRetrieveAttrTypesUrl({ params: opts?.params }),
     method: "GET",
     returnFormat: "body",
   });
 };
 
-export const retrieveAttrTypeInfo = (
-  attrId: string,
-  params?: RetrieveAttrTypeInfoParams,
-  options?: NgsiLdRequestOpts,
-) => {
+export const retrieveAttrTypeInfo = (opts: {
+  attrId: string;
+  params?: RetrieveAttrTypeInfoParams;
+  options?: NgsiLdRequestOpts;
+}) => {
   return fetcher<WithContext<Attribute>>({
-    ...options,
-    path: getRetrieveAttrTypeInfoUrl({ attrId, params }),
+    ...opts.options,
+    path: getRetrieveAttrTypeInfoUrl({
+      attrId: opts.attrId,
+      params: opts.params,
+    }),
     method: "GET",
     returnFormat: "body",
   });
 };
 
-export const createContext = (
-  context: { "@context": LdContext },
-  options?: NgsiLdRequestOpts,
-) => {
+export const createContext = (opts: {
+  context: { "@context": LdContext };
+  options?: NgsiLdRequestOpts;
+}) => {
   return fetcher<{ location: string }>({
-    ...options,
+    ...opts.options,
     path: getCreateContextUrl(),
     method: "POST",
-    body: JSON.stringify(context),
+    body: JSON.stringify(opts.context),
     returnFormat: "body",
   });
 };
 
-export const listContexts = (
-  params?: ListContextsParams,
-  options?: NgsiLdRequestOpts,
-) => {
+export const listContexts = (opts?: {
+  params?: ListContextsParams;
+  options?: NgsiLdRequestOpts;
+}) => {
   return fetcher<string[] | LdContextMetadata[]>({
-    ...options,
-    path: getListContextsUrl({ params }),
+    ...opts?.options,
+    path: getListContextsUrl({ params: opts?.params }),
     method: "GET",
     returnFormat: "body",
   });
 };
 
-export const retrieveContext = (
-  contextId: string,
-  params?: RetrieveContextParams,
-  options?: NgsiLdRequestOpts,
-) => {
+export const retrieveContext = (opts: {
+  contextId: string;
+  params?: RetrieveContextParams;
+  options?: NgsiLdRequestOpts;
+}) => {
   return fetcher<{ "@context"?: LdContext } | LdContextMetadata>({
-    ...options,
-    path: getRetrieveContextUrl({ contextId, params }),
+    ...opts.options,
+    path: getRetrieveContextUrl({
+      contextId: opts.contextId,
+      params: opts.params,
+    }),
     method: "GET",
     returnFormat: "body",
   });
 };
 
-export const deleteContext = (
-  contextId: string,
-  params?: DeleteContextParams,
-  options?: NgsiLdRequestOpts,
-) => {
+export const deleteContext = (opts: {
+  contextId: string;
+  params?: DeleteContextParams;
+  options?: NgsiLdRequestOpts;
+}) => {
   return fetcher<void>({
-    ...options,
-    path: getDeleteContextUrl({ contextId, params }),
+    ...opts.options,
+    path: getDeleteContextUrl({
+      contextId: opts.contextId,
+      params: opts.params,
+    }),
     method: "DELETE",
     returnFormat: "body",
   });
 };
 
-export const retrieveEntityMap = (
-  entityMapId: string,
-  options?: NgsiLdRequestOpts,
-) => {
+export const retrieveEntityMap = (opts: {
+  entityMapId: string;
+  options?: NgsiLdRequestOpts;
+}) => {
   return fetcher<WithContext<EntityMap>>({
-    ...options,
-    path: getRetrieveEntityMapUrl({ entityMapId }),
+    ...opts.options,
+    path: getRetrieveEntityMapUrl({ entityMapId: opts.entityMapId }),
     method: "GET",
     returnFormat: "body",
   });
 };
 
-export const updateEntityMap = (
-  entityMapId: string,
-  entityMap: WithContext<NonReadonly<EntityMap>>,
-  options?: NgsiLdRequestOpts,
-) => {
+export const updateEntityMap = (opts: {
+  entityMapId: string;
+  entityMap: WithContext<NonReadonly<EntityMap>>;
+  options?: NgsiLdRequestOpts;
+}) => {
   return fetcher<void>({
-    ...options,
-    path: getUpdateEntityMapUrl({ entityMapId }),
+    ...opts.options,
+    path: getUpdateEntityMapUrl({ entityMapId: opts.entityMapId }),
     method: "PATCH",
-    body: JSON.stringify(entityMap),
+    body: JSON.stringify(opts.entityMap),
     returnFormat: "body",
   });
 };
 
-export const deleteEntityMap = (
-  entityMapId: string,
-  options?: NgsiLdRequestOpts,
-) => {
+export const deleteEntityMap = (opts: {
+  entityMapId: string;
+  options?: NgsiLdRequestOpts;
+}) => {
   return fetcher<void>({
-    ...options,
-    path: getDeleteEntityMapUrl({ entityMapId }),
+    ...opts.options,
+    path: getDeleteEntityMapUrl({ entityMapId: opts.entityMapId }),
     method: "DELETE",
     returnFormat: "body",
   });
 };
 
-export const retrieveCSIdentityInfo = (options?: NgsiLdRequestOpts) => {
+export const retrieveCSIdentityInfo = (opts?: {
+  options?: NgsiLdRequestOpts;
+}) => {
   return fetcher<WithContext<ContextSourceIdentity>>({
-    ...options,
+    ...opts?.options,
     path: getRetrieveCSIdentityInfoUrl(),
     method: "GET",
     returnFormat: "body",
