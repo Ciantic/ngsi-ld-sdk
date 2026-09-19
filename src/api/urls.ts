@@ -63,7 +63,7 @@ type QueryTimepropertyParameter =
 
 type QueryTimerelParameter = "after" | "before" | "between";
 
-type QueryEntityParams<T extends string = string> = {
+export type QueryEntityParams<T extends string = string> = {
   id?: string[];
   type?: T | T[];
   idPattern?: string;
@@ -91,7 +91,7 @@ type QueryEntityParams<T extends string = string> = {
   local?: boolean;
 };
 
-type RetrieveEntityParams = {
+export type RetrieveEntityParams = {
   type?: string;
   attrs?: string[];
   pick?: string[];
@@ -108,12 +108,12 @@ type RetrieveEntityParams = {
   local?: boolean;
 };
 
-type DeleteEntityParams = {
+export type DeleteEntityParams = {
   type?: string;
   local?: boolean;
 };
 
-type MergeEntityParams = {
+export type MergeEntityParams = {
   options?: OptionsRepresentation[];
   format?: FormatRepresentation;
   type?: string;
@@ -122,40 +122,40 @@ type MergeEntityParams = {
   local?: boolean;
 };
 
-type ReplaceEntityParams = {
+export type ReplaceEntityParams = {
   type?: string;
   local?: boolean;
 };
 
-type AppendAttrsParams = {
+export type AppendAttrsParams = {
   type?: string;
   options?: OptionsNoOverwrite[];
   local?: boolean;
 };
 
-type UpdateEntityParams = {
+export type UpdateEntityParams = {
   local?: boolean;
   type?: string;
 };
 
-type UpdateAttrsParams = {
+export type UpdateAttrsParams = {
   local?: boolean;
   type?: string;
 };
 
-type DeleteAttrsParams = {
+export type DeleteAttrsParams = {
   deleteAll?: boolean;
   datasetId?: string | string[];
   type?: string;
   local?: boolean;
 };
 
-type ReplaceAttrsParams = {
+export type ReplaceAttrsParams = {
   local?: boolean;
   type?: string;
 };
 
-type QueryCSRParams = {
+export type QueryCSRParams = {
   id?: string[];
   type?: string;
   idPattern?: string;
@@ -178,78 +178,78 @@ type QueryCSRParams = {
   count?: boolean;
 };
 
-type RetrieveCSRParams = {
+export type RetrieveCSRParams = {
   options?: OptionsSysAttrs[];
 };
 
-type CreateSubscriptionParams = {
+export type CreateSubscriptionParams = {
   local?: boolean;
 };
 
-type QuerySubscriptionParams = {
-  options?: OptionsSysAttrs[];
-  limit?: number;
-  count?: boolean;
-  local?: boolean;
-};
-
-type RetrieveSubscriptionParams = {
-  options?: OptionsSysAttrs[];
-  local?: boolean;
-};
-
-type UpdateSubscriptionParams = {
-  local?: boolean;
-};
-
-type DeleteSubscriptionParams = {
-  local?: boolean;
-};
-
-type QueryCSRSubscriptionParams = {
+export type QuerySubscriptionParams = {
   options?: OptionsSysAttrs[];
   limit?: number;
   count?: boolean;
-};
-
-type RetrieveCSRSubscriptionParams = {
-  options?: OptionsSysAttrs[];
-};
-
-type CreateBatchParams = {
   local?: boolean;
 };
 
-type UpsertBatchParams = {
+export type RetrieveSubscriptionParams = {
+  options?: OptionsSysAttrs[];
+  local?: boolean;
+};
+
+export type UpdateSubscriptionParams = {
+  local?: boolean;
+};
+
+export type DeleteSubscriptionParams = {
+  local?: boolean;
+};
+
+export type QueryCSRSubscriptionParams = {
+  options?: OptionsSysAttrs[];
+  limit?: number;
+  count?: boolean;
+};
+
+export type RetrieveCSRSubscriptionParams = {
+  options?: OptionsSysAttrs[];
+};
+
+export type CreateBatchParams = {
+  local?: boolean;
+};
+
+export type UpsertBatchParams = {
   options?: OptionsUpsert[];
   local?: boolean;
 };
 
-type UpdateBatchParams = {
+export type UpdateBatchParams = {
   options?: OptionsNoOverwrite[];
   local?: boolean;
 };
 
-type DeleteBatchParams = {
+export type DeleteBatchParams = {
   local?: boolean;
 };
 
-type QueryBatchParams = {
+export type QueryBatchParams = {
   count?: boolean;
   limit?: number;
   local?: boolean;
   options?: (OptionsRepresentation | OptionsSysAttrs)[];
 };
 
-type MergeBatchParams = {
+export type MergeBatchParams = {
   local?: boolean;
 };
 
-type UpsertTemporalParams = {
+export type UpsertTemporalParams = {
   local?: boolean;
 };
 
-type QueryTemporalParams<T extends string = string> = {
+export type QueryTemporalParams<T extends string = string> = {
   id?: string[];
   type?: T | T[];
   idPattern?: string;
@@ -279,7 +279,7 @@ type QueryTemporalParams<T extends string = string> = {
   local?: boolean;
 };
 
-type RetrieveTemporalParams = {
+export type RetrieveTemporalParams = {
   attrs?: string[];
   pick?: string[];
   omit?: string[];
@@ -297,45 +297,73 @@ type RetrieveTemporalParams = {
   local?: boolean;
 };
 
-type DeleteTemporalParams = {
+export type DeleteTemporalParams = {
   local?: boolean;
 };
 
-type AppendAttrsTemporalParams = {
+export type AppendAttrsTemporalParams = {
   local?: boolean;
 };
 
-type DeleteAttrsTemporalParams = {
+export type DeleteAttrsTemporalParams = {
   deleteAll?: boolean;
   datasetId?: string | string[];
   local?: boolean;
 };
 
-type UpdateAttrsTemporalParams = {
+export type UpdateAttrsTemporalParams = {
   local?: boolean;
 };
 
-type DeleteAttrInstanceTemporalParams = {
+export type DeleteAttrInstanceTemporalParams = {
   local?: boolean;
 };
 
-type TemporalQueryBatchParams = {
+export type TemporalQueryBatchParams = {
   local?: boolean;
 };
 
-type RetrieveEntityTypesParams = {
+export type RetrieveEntityTypesParams = {
   details?: boolean;
   local?: boolean;
 };
 
-type DeleteContextParams = {
+export type DeleteContextParams = {
   reload?: boolean;
 };
 
-export const getCreateEntityUrl = (params?: { local?: boolean }) => {
+export type CreateEntityParams = {
+  local?: boolean;
+};
+
+export type RetrieveEntityTypeInfoParams = {
+  local?: boolean;
+};
+
+export type RetrieveAttrTypesParams = {
+  details?: boolean;
+  local?: boolean;
+};
+
+export type RetrieveAttrTypeInfoParams = {
+  local?: boolean;
+};
+
+export type ListContextsParams = {
+  details?: boolean;
+  kind?: QueryKindParameter;
+};
+
+export type RetrieveContextParams = {
+  details?: boolean;
+};
+
+export const getCreateEntityUrl = (opts: {
+  params?: CreateEntityParams | undefined;
+}) => {
   const normalizedParams = new URLSearchParams();
 
-  Object.entries(params || {}).forEach(([key, value]) => {
+  Object.entries(opts.params || {}).forEach(([key, value]) => {
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? "null" : String(value));
     }
@@ -348,12 +376,12 @@ export const getCreateEntityUrl = (params?: { local?: boolean }) => {
     : `/entities`;
 };
 
-export const getQueryEntityUrl = <T extends string = string>(
-  params?: QueryEntityParams<T>,
-) => {
+export const getQueryEntityUrl = <T extends string = string>(opts: {
+  params?: QueryEntityParams<T> | undefined;
+}) => {
   const normalizedParams = new URLSearchParams();
 
-  Object.entries(params || {}).forEach(([key, value]) => {
+  Object.entries(opts.params || {}).forEach(([key, value]) => {
     const explodeParameters = ["coordinates", "datasetId"];
 
     if (Array.isArray(value) && explodeParameters.includes(key)) {
@@ -375,13 +403,13 @@ export const getQueryEntityUrl = <T extends string = string>(
     : `/entities`;
 };
 
-export const getRetrieveEntityUrl = (
-  entityId: string,
-  params?: RetrieveEntityParams,
-) => {
+export const getRetrieveEntityUrl = (opts: {
+  entityId: string;
+  params?: RetrieveEntityParams | undefined;
+}) => {
   const normalizedParams = new URLSearchParams();
 
-  Object.entries(params || {}).forEach(([key, value]) => {
+  Object.entries(opts.params || {}).forEach(([key, value]) => {
     const explodeParameters = ["datasetId"];
 
     if (Array.isArray(value) && explodeParameters.includes(key)) {
@@ -399,17 +427,17 @@ export const getRetrieveEntityUrl = (
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `/entities/${entityId}?${stringifiedParams}`
-    : `/entities/${entityId}`;
+    ? `/entities/${opts.entityId}?${stringifiedParams}`
+    : `/entities/${opts.entityId}`;
 };
 
-export const getDeleteEntityUrl = (
-  entityId: string,
-  params?: DeleteEntityParams,
-) => {
+export const getDeleteEntityUrl = (opts: {
+  entityId: string;
+  params?: DeleteEntityParams | undefined;
+}) => {
   const normalizedParams = new URLSearchParams();
 
-  Object.entries(params || {}).forEach(([key, value]) => {
+  Object.entries(opts.params || {}).forEach(([key, value]) => {
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? "null" : String(value));
     }
@@ -418,17 +446,17 @@ export const getDeleteEntityUrl = (
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `/entities/${entityId}?${stringifiedParams}`
-    : `/entities/${entityId}`;
+    ? `/entities/${opts.entityId}?${stringifiedParams}`
+    : `/entities/${opts.entityId}`;
 };
 
-export const getMergeEntityUrl = (
-  entityId: string,
-  params?: MergeEntityParams,
-) => {
+export const getMergeEntityUrl = (opts: {
+  entityId: string;
+  params?: MergeEntityParams | undefined;
+}) => {
   const normalizedParams = new URLSearchParams();
 
-  Object.entries(params || {}).forEach(([key, value]) => {
+  Object.entries(opts.params || {}).forEach(([key, value]) => {
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? "null" : String(value));
     }
@@ -437,17 +465,17 @@ export const getMergeEntityUrl = (
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `/entities/${entityId}?${stringifiedParams}`
-    : `/entities/${entityId}`;
+    ? `/entities/${opts.entityId}?${stringifiedParams}`
+    : `/entities/${opts.entityId}`;
 };
 
-export const getReplaceEntityUrl = (
-  entityId: string,
-  params?: ReplaceEntityParams,
-) => {
+export const getReplaceEntityUrl = (opts: {
+  entityId: string;
+  params?: ReplaceEntityParams | undefined;
+}) => {
   const normalizedParams = new URLSearchParams();
 
-  Object.entries(params || {}).forEach(([key, value]) => {
+  Object.entries(opts.params || {}).forEach(([key, value]) => {
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? "null" : String(value));
     }
@@ -456,17 +484,17 @@ export const getReplaceEntityUrl = (
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `/entities/${entityId}?${stringifiedParams}`
-    : `/entities/${entityId}`;
+    ? `/entities/${opts.entityId}?${stringifiedParams}`
+    : `/entities/${opts.entityId}`;
 };
 
-export const getAppendAttrsUrl = (
-  entityId: string,
-  params?: AppendAttrsParams,
-) => {
+export const getAppendAttrsUrl = (opts: {
+  entityId: string;
+  params?: AppendAttrsParams | undefined;
+}) => {
   const normalizedParams = new URLSearchParams();
 
-  Object.entries(params || {}).forEach(([key, value]) => {
+  Object.entries(opts.params || {}).forEach(([key, value]) => {
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? "null" : String(value));
     }
@@ -475,17 +503,17 @@ export const getAppendAttrsUrl = (
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `/entities/${entityId}/attrs?${stringifiedParams}`
-    : `/entities/${entityId}/attrs`;
+    ? `/entities/${opts.entityId}/attrs?${stringifiedParams}`
+    : `/entities/${opts.entityId}/attrs`;
 };
 
-export const getUpdateEntityUrl = (
-  entityId: string,
-  params?: UpdateEntityParams,
-) => {
+export const getUpdateEntityUrl = (opts: {
+  entityId: string;
+  params?: UpdateEntityParams | undefined;
+}) => {
   const normalizedParams = new URLSearchParams();
 
-  Object.entries(params || {}).forEach(([key, value]) => {
+  Object.entries(opts.params || {}).forEach(([key, value]) => {
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? "null" : String(value));
     }
@@ -494,18 +522,18 @@ export const getUpdateEntityUrl = (
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `/entities/${entityId}/attrs?${stringifiedParams}`
-    : `/entities/${entityId}/attrs`;
+    ? `/entities/${opts.entityId}/attrs?${stringifiedParams}`
+    : `/entities/${opts.entityId}/attrs`;
 };
 
-export const getUpdateAttrsUrl = (
-  entityId: string,
-  attrId: string,
-  params?: UpdateAttrsParams,
-) => {
+export const getUpdateAttrsUrl = (opts: {
+  entityId: string;
+  attrId: string;
+  params?: UpdateAttrsParams | undefined;
+}) => {
   const normalizedParams = new URLSearchParams();
 
-  Object.entries(params || {}).forEach(([key, value]) => {
+  Object.entries(opts.params || {}).forEach(([key, value]) => {
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? "null" : String(value));
     }
@@ -514,18 +542,18 @@ export const getUpdateAttrsUrl = (
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `/entities/${entityId}/attrs/${attrId}?${stringifiedParams}`
-    : `/entities/${entityId}/attrs/${attrId}`;
+    ? `/entities/${opts.entityId}/attrs/${opts.attrId}?${stringifiedParams}`
+    : `/entities/${opts.entityId}/attrs/${opts.attrId}`;
 };
 
-export const getDeleteAttrsUrl = (
-  entityId: string,
-  attrId: string,
-  params?: DeleteAttrsParams,
-) => {
+export const getDeleteAttrsUrl = (opts: {
+  entityId: string;
+  attrId: string;
+  params?: DeleteAttrsParams | undefined;
+}) => {
   const normalizedParams = new URLSearchParams();
 
-  Object.entries(params || {}).forEach(([key, value]) => {
+  Object.entries(opts.params || {}).forEach(([key, value]) => {
     const explodeParameters = ["datasetId"];
 
     if (Array.isArray(value) && explodeParameters.includes(key)) {
@@ -543,18 +571,18 @@ export const getDeleteAttrsUrl = (
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `/entities/${entityId}/attrs/${attrId}?${stringifiedParams}`
-    : `/entities/${entityId}/attrs/${attrId}`;
+    ? `/entities/${opts.entityId}/attrs/${opts.attrId}?${stringifiedParams}`
+    : `/entities/${opts.entityId}/attrs/${opts.attrId}`;
 };
 
-export const getReplaceAttrsUrl = (
-  entityId: string,
-  attrId: string,
-  params?: ReplaceAttrsParams,
-) => {
+export const getReplaceAttrsUrl = (opts: {
+  entityId: string;
+  attrId: string;
+  params?: ReplaceAttrsParams | undefined;
+}) => {
   const normalizedParams = new URLSearchParams();
 
-  Object.entries(params || {}).forEach(([key, value]) => {
+  Object.entries(opts.params || {}).forEach(([key, value]) => {
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? "null" : String(value));
     }
@@ -563,18 +591,20 @@ export const getReplaceAttrsUrl = (
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `/entities/${entityId}/attrs/${attrId}?${stringifiedParams}`
-    : `/entities/${entityId}/attrs/${attrId}`;
+    ? `/entities/${opts.entityId}/attrs/${opts.attrId}?${stringifiedParams}`
+    : `/entities/${opts.entityId}/attrs/${opts.attrId}`;
 };
 
 export const getCreateCSRUrl = () => {
   return `/csourceRegistrations`;
 };
 
-export const getQueryCSRUrl = (params?: QueryCSRParams) => {
+export const getQueryCSRUrl = (opts: {
+  params?: QueryCSRParams | undefined;
+}) => {
   const normalizedParams = new URLSearchParams();
 
-  Object.entries(params || {}).forEach(([key, value]) => {
+  Object.entries(opts.params || {}).forEach(([key, value]) => {
     const explodeParameters = ["coordinates"];
 
     if (Array.isArray(value) && explodeParameters.includes(key)) {
@@ -596,13 +626,13 @@ export const getQueryCSRUrl = (params?: QueryCSRParams) => {
     : `/csourceRegistrations`;
 };
 
-export const getRetrieveCSRUrl = (
-  registrationId: string,
-  params?: RetrieveCSRParams,
-) => {
+export const getRetrieveCSRUrl = (opts: {
+  registrationId: string;
+  params?: RetrieveCSRParams | undefined;
+}) => {
   const normalizedParams = new URLSearchParams();
 
-  Object.entries(params || {}).forEach(([key, value]) => {
+  Object.entries(opts.params || {}).forEach(([key, value]) => {
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? "null" : String(value));
     }
@@ -611,38 +641,24 @@ export const getRetrieveCSRUrl = (
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `/csourceRegistrations/${registrationId}?${stringifiedParams}`
-    : `/csourceRegistrations/${registrationId}`;
+    ? `/csourceRegistrations/${opts.registrationId}?${stringifiedParams}`
+    : `/csourceRegistrations/${opts.registrationId}`;
 };
 
-export const getUpdateCSRUrl = (registrationId: string) => {
-  return `/csourceRegistrations/${registrationId}`;
+export const getUpdateCSRUrl = (opts: { registrationId: string }) => {
+  return `/csourceRegistrations/${opts.registrationId}`;
 };
 
-export const getDeleteCSRUrl = (registrationId: string) => {
-  return `/csourceRegistrations/${registrationId}`;
+export const getDeleteCSRUrl = (opts: { registrationId: string }) => {
+  return `/csourceRegistrations/${opts.registrationId}`;
 };
 
-export const getCreateSubscriptionUrl = (params?: CreateSubscriptionParams) => {
+export const getCreateSubscriptionUrl = (opts: {
+  params?: CreateSubscriptionParams | undefined;
+}) => {
   const normalizedParams = new URLSearchParams();
 
-  Object.entries(params || {}).forEach(([key, value]) => {
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? "null" : String(value));
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0
-    ? `/subscriptions?${stringifiedParams}`
-    : `/subscriptions`;
-};
-
-export const getQuerySubscriptionUrl = (params?: QuerySubscriptionParams) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
+  Object.entries(opts.params || {}).forEach(([key, value]) => {
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? "null" : String(value));
     }
@@ -655,13 +671,12 @@ export const getQuerySubscriptionUrl = (params?: QuerySubscriptionParams) => {
     : `/subscriptions`;
 };
 
-export const getRetrieveSubscriptionUrl = (
-  subscriptionId: string,
-  params?: RetrieveSubscriptionParams,
-) => {
+export const getQuerySubscriptionUrl = (opts: {
+  params?: QuerySubscriptionParams | undefined;
+}) => {
   const normalizedParams = new URLSearchParams();
 
-  Object.entries(params || {}).forEach(([key, value]) => {
+  Object.entries(opts.params || {}).forEach(([key, value]) => {
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? "null" : String(value));
     }
@@ -670,17 +685,17 @@ export const getRetrieveSubscriptionUrl = (
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `/subscriptions/${subscriptionId}?${stringifiedParams}`
-    : `/subscriptions/${subscriptionId}`;
+    ? `/subscriptions?${stringifiedParams}`
+    : `/subscriptions`;
 };
 
-export const getUpdateSubscriptionUrl = (
-  subscriptionId: string,
-  params?: UpdateSubscriptionParams,
-) => {
+export const getRetrieveSubscriptionUrl = (opts: {
+  subscriptionId: string;
+  params?: RetrieveSubscriptionParams | undefined;
+}) => {
   const normalizedParams = new URLSearchParams();
 
-  Object.entries(params || {}).forEach(([key, value]) => {
+  Object.entries(opts.params || {}).forEach(([key, value]) => {
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? "null" : String(value));
     }
@@ -689,17 +704,17 @@ export const getUpdateSubscriptionUrl = (
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `/subscriptions/${subscriptionId}?${stringifiedParams}`
-    : `/subscriptions/${subscriptionId}`;
+    ? `/subscriptions/${opts.subscriptionId}?${stringifiedParams}`
+    : `/subscriptions/${opts.subscriptionId}`;
 };
 
-export const getDeleteSubscriptionUrl = (
-  subscriptionId: string,
-  params?: DeleteSubscriptionParams,
-) => {
+export const getUpdateSubscriptionUrl = (opts: {
+  subscriptionId: string;
+  params?: UpdateSubscriptionParams | undefined;
+}) => {
   const normalizedParams = new URLSearchParams();
 
-  Object.entries(params || {}).forEach(([key, value]) => {
+  Object.entries(opts.params || {}).forEach(([key, value]) => {
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? "null" : String(value));
     }
@@ -708,20 +723,39 @@ export const getDeleteSubscriptionUrl = (
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `/subscriptions/${subscriptionId}?${stringifiedParams}`
-    : `/subscriptions/${subscriptionId}`;
+    ? `/subscriptions/${opts.subscriptionId}?${stringifiedParams}`
+    : `/subscriptions/${opts.subscriptionId}`;
+};
+
+export const getDeleteSubscriptionUrl = (opts: {
+  subscriptionId: string;
+  params?: DeleteSubscriptionParams | undefined;
+}) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(opts.params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : String(value));
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/subscriptions/${opts.subscriptionId}?${stringifiedParams}`
+    : `/subscriptions/${opts.subscriptionId}`;
 };
 
 export const getCreateCSRSubscriptionUrl = () => {
   return `/csourceSubscriptions`;
 };
 
-export const getQueryCSRSubscriptionUrl = (
-  params?: QueryCSRSubscriptionParams,
-) => {
+export const getQueryCSRSubscriptionUrl = (opts: {
+  params?: QueryCSRSubscriptionParams | undefined;
+}) => {
   const normalizedParams = new URLSearchParams();
 
-  Object.entries(params || {}).forEach(([key, value]) => {
+  Object.entries(opts.params || {}).forEach(([key, value]) => {
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? "null" : String(value));
     }
@@ -734,13 +768,13 @@ export const getQueryCSRSubscriptionUrl = (
     : `/csourceSubscriptions`;
 };
 
-export const getRetrieveCSRSubscriptionUrl = (
-  subscriptionId: string,
-  params?: RetrieveCSRSubscriptionParams,
-) => {
+export const getRetrieveCSRSubscriptionUrl = (opts: {
+  subscriptionId: string;
+  params?: RetrieveCSRSubscriptionParams | undefined;
+}) => {
   const normalizedParams = new URLSearchParams();
 
-  Object.entries(params || {}).forEach(([key, value]) => {
+  Object.entries(opts.params || {}).forEach(([key, value]) => {
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? "null" : String(value));
     }
@@ -749,22 +783,28 @@ export const getRetrieveCSRSubscriptionUrl = (
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `/csourceSubscriptions/${subscriptionId}?${stringifiedParams}`
-    : `/csourceSubscriptions/${subscriptionId}`;
+    ? `/csourceSubscriptions/${opts.subscriptionId}?${stringifiedParams}`
+    : `/csourceSubscriptions/${opts.subscriptionId}`;
 };
 
-export const getUpdateCSRSubscriptionUrl = (subscriptionId: string) => {
-  return `/csourceSubscriptions/${subscriptionId}`;
+export const getUpdateCSRSubscriptionUrl = (opts: {
+  subscriptionId: string;
+}) => {
+  return `/csourceSubscriptions/${opts.subscriptionId}`;
 };
 
-export const getDeleteCSRSubscriptionUrl = (subscriptionId: string) => {
-  return `/csourceSubscriptions/${subscriptionId}`;
+export const getDeleteCSRSubscriptionUrl = (opts: {
+  subscriptionId: string;
+}) => {
+  return `/csourceSubscriptions/${opts.subscriptionId}`;
 };
 
-export const getCreateBatchUrl = (params?: CreateBatchParams) => {
+export const getCreateBatchUrl = (opts: {
+  params?: CreateBatchParams | undefined;
+}) => {
   const normalizedParams = new URLSearchParams();
 
-  Object.entries(params || {}).forEach(([key, value]) => {
+  Object.entries(opts.params || {}).forEach(([key, value]) => {
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? "null" : String(value));
     }
@@ -777,10 +817,12 @@ export const getCreateBatchUrl = (params?: CreateBatchParams) => {
     : `/entityOperations/create`;
 };
 
-export const getUpsertBatchUrl = (params?: UpsertBatchParams) => {
+export const getUpsertBatchUrl = (opts: {
+  params?: UpsertBatchParams | undefined;
+}) => {
   const normalizedParams = new URLSearchParams();
 
-  Object.entries(params || {}).forEach(([key, value]) => {
+  Object.entries(opts.params || {}).forEach(([key, value]) => {
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? "null" : String(value));
     }
@@ -793,10 +835,12 @@ export const getUpsertBatchUrl = (params?: UpsertBatchParams) => {
     : `/entityOperations/upsert`;
 };
 
-export const getUpdateBatchUrl = (params?: UpdateBatchParams) => {
+export const getUpdateBatchUrl = (opts: {
+  params?: UpdateBatchParams | undefined;
+}) => {
   const normalizedParams = new URLSearchParams();
 
-  Object.entries(params || {}).forEach(([key, value]) => {
+  Object.entries(opts.params || {}).forEach(([key, value]) => {
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? "null" : String(value));
     }
@@ -809,10 +853,12 @@ export const getUpdateBatchUrl = (params?: UpdateBatchParams) => {
     : `/entityOperations/update`;
 };
 
-export const getDeleteBatchUrl = (params?: DeleteBatchParams) => {
+export const getDeleteBatchUrl = (opts: {
+  params?: DeleteBatchParams | undefined;
+}) => {
   const normalizedParams = new URLSearchParams();
 
-  Object.entries(params || {}).forEach(([key, value]) => {
+  Object.entries(opts.params || {}).forEach(([key, value]) => {
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? "null" : String(value));
     }
@@ -825,10 +871,12 @@ export const getDeleteBatchUrl = (params?: DeleteBatchParams) => {
     : `/entityOperations/delete`;
 };
 
-export const getQueryBatchUrl = (params?: QueryBatchParams) => {
+export const getQueryBatchUrl = (opts: {
+  params?: QueryBatchParams | undefined;
+}) => {
   const normalizedParams = new URLSearchParams();
 
-  Object.entries(params || {}).forEach(([key, value]) => {
+  Object.entries(opts.params || {}).forEach(([key, value]) => {
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? "null" : String(value));
     }
@@ -841,10 +889,12 @@ export const getQueryBatchUrl = (params?: QueryBatchParams) => {
     : `/entityOperations/query`;
 };
 
-export const getMergeBatchUrl = (params?: MergeBatchParams) => {
+export const getMergeBatchUrl = (opts: {
+  params?: MergeBatchParams | undefined;
+}) => {
   const normalizedParams = new URLSearchParams();
 
-  Object.entries(params || {}).forEach(([key, value]) => {
+  Object.entries(opts.params || {}).forEach(([key, value]) => {
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? "null" : String(value));
     }
@@ -857,10 +907,12 @@ export const getMergeBatchUrl = (params?: MergeBatchParams) => {
     : `/entityOperations/merge`;
 };
 
-export const getUpsertTemporalUrl = (params?: UpsertTemporalParams) => {
+export const getUpsertTemporalUrl = (opts: {
+  params?: UpsertTemporalParams | undefined;
+}) => {
   const normalizedParams = new URLSearchParams();
 
-  Object.entries(params || {}).forEach(([key, value]) => {
+  Object.entries(opts.params || {}).forEach(([key, value]) => {
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? "null" : String(value));
     }
@@ -873,12 +925,12 @@ export const getUpsertTemporalUrl = (params?: UpsertTemporalParams) => {
     : `/temporal/entities`;
 };
 
-export const getQueryTemporalUrl = <T extends string = string>(
-  params?: QueryTemporalParams<T>,
-) => {
+export const getQueryTemporalUrl = <T extends string = string>(opts: {
+  params?: QueryTemporalParams<T> | undefined;
+}) => {
   const normalizedParams = new URLSearchParams();
 
-  Object.entries(params || {}).forEach(([key, value]) => {
+  Object.entries(opts.params || {}).forEach(([key, value]) => {
     const explodeParameters = ["coordinates", "datasetId"];
 
     if (Array.isArray(value) && explodeParameters.includes(key)) {
@@ -900,13 +952,13 @@ export const getQueryTemporalUrl = <T extends string = string>(
     : `/temporal/entities`;
 };
 
-export const getRetrieveTemporalUrl = (
-  entityId: string,
-  params?: RetrieveTemporalParams,
-) => {
+export const getRetrieveTemporalUrl = (opts: {
+  entityId: string;
+  params?: RetrieveTemporalParams | undefined;
+}) => {
   const normalizedParams = new URLSearchParams();
 
-  Object.entries(params || {}).forEach(([key, value]) => {
+  Object.entries(opts.params || {}).forEach(([key, value]) => {
     const explodeParameters = ["datasetId"];
 
     if (Array.isArray(value) && explodeParameters.includes(key)) {
@@ -924,17 +976,17 @@ export const getRetrieveTemporalUrl = (
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `/temporal/entities/${entityId}?${stringifiedParams}`
-    : `/temporal/entities/${entityId}`;
+    ? `/temporal/entities/${opts.entityId}?${stringifiedParams}`
+    : `/temporal/entities/${opts.entityId}`;
 };
 
-export const getDeleteTemporalUrl = (
-  entityId: string,
-  params?: DeleteTemporalParams,
-) => {
+export const getDeleteTemporalUrl = (opts: {
+  entityId: string;
+  params?: DeleteTemporalParams | undefined;
+}) => {
   const normalizedParams = new URLSearchParams();
 
-  Object.entries(params || {}).forEach(([key, value]) => {
+  Object.entries(opts.params || {}).forEach(([key, value]) => {
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? "null" : String(value));
     }
@@ -943,17 +995,17 @@ export const getDeleteTemporalUrl = (
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `/temporal/entities/${entityId}?${stringifiedParams}`
-    : `/temporal/entities/${entityId}`;
+    ? `/temporal/entities/${opts.entityId}?${stringifiedParams}`
+    : `/temporal/entities/${opts.entityId}`;
 };
 
-export const getAppendAttrsTemporalUrl = (
-  entityId: string,
-  params?: AppendAttrsTemporalParams,
-) => {
+export const getAppendAttrsTemporalUrl = (opts: {
+  entityId: string;
+  params?: AppendAttrsTemporalParams | undefined;
+}) => {
   const normalizedParams = new URLSearchParams();
 
-  Object.entries(params || {}).forEach(([key, value]) => {
+  Object.entries(opts.params || {}).forEach(([key, value]) => {
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? "null" : String(value));
     }
@@ -962,18 +1014,18 @@ export const getAppendAttrsTemporalUrl = (
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `/temporal/entities/${entityId}/attrs?${stringifiedParams}`
-    : `/temporal/entities/${entityId}/attrs`;
+    ? `/temporal/entities/${opts.entityId}/attrs?${stringifiedParams}`
+    : `/temporal/entities/${opts.entityId}/attrs`;
 };
 
-export const getDeleteAttrsTemporalUrl = (
-  entityId: string,
-  attrId: string,
-  params?: DeleteAttrsTemporalParams,
-) => {
+export const getDeleteAttrsTemporalUrl = (opts: {
+  entityId: string;
+  attrId: string;
+  params?: DeleteAttrsTemporalParams | undefined;
+}) => {
   const normalizedParams = new URLSearchParams();
 
-  Object.entries(params || {}).forEach(([key, value]) => {
+  Object.entries(opts.params || {}).forEach(([key, value]) => {
     const explodeParameters = ["datasetId"];
 
     if (Array.isArray(value) && explodeParameters.includes(key)) {
@@ -991,19 +1043,19 @@ export const getDeleteAttrsTemporalUrl = (
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `/temporal/entities/${entityId}/attrs/${attrId}?${stringifiedParams}`
-    : `/temporal/entities/${entityId}/attrs/${attrId}`;
+    ? `/temporal/entities/${opts.entityId}/attrs/${opts.attrId}?${stringifiedParams}`
+    : `/temporal/entities/${opts.entityId}/attrs/${opts.attrId}`;
 };
 
-export const getUpdateAttrsTemporalUrl = (
-  entityId: string,
-  attrId: string,
-  instanceId: string,
-  params?: UpdateAttrsTemporalParams,
-) => {
+export const getUpdateAttrsTemporalUrl = (opts: {
+  entityId: string;
+  attrId: string;
+  instanceId: string;
+  params?: UpdateAttrsTemporalParams | undefined;
+}) => {
   const normalizedParams = new URLSearchParams();
 
-  Object.entries(params || {}).forEach(([key, value]) => {
+  Object.entries(opts.params || {}).forEach(([key, value]) => {
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? "null" : String(value));
     }
@@ -1012,19 +1064,19 @@ export const getUpdateAttrsTemporalUrl = (
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `/temporal/entities/${entityId}/attrs/${attrId}/${instanceId}?${stringifiedParams}`
-    : `/temporal/entities/${entityId}/attrs/${attrId}/${instanceId}`;
+    ? `/temporal/entities/${opts.entityId}/attrs/${opts.attrId}/${opts.instanceId}?${stringifiedParams}`
+    : `/temporal/entities/${opts.entityId}/attrs/${opts.attrId}/${opts.instanceId}`;
 };
 
-export const getDeleteAttrInstanceTemporalUrl = (
-  entityId: string,
-  attrId: string,
-  instanceId: string,
-  params?: DeleteAttrInstanceTemporalParams,
-) => {
+export const getDeleteAttrInstanceTemporalUrl = (opts: {
+  entityId: string;
+  attrId: string;
+  instanceId: string;
+  params?: DeleteAttrInstanceTemporalParams | undefined;
+}) => {
   const normalizedParams = new URLSearchParams();
 
-  Object.entries(params || {}).forEach(([key, value]) => {
+  Object.entries(opts.params || {}).forEach(([key, value]) => {
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? "null" : String(value));
     }
@@ -1033,14 +1085,16 @@ export const getDeleteAttrInstanceTemporalUrl = (
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `/temporal/entities/${entityId}/attrs/${attrId}/${instanceId}?${stringifiedParams}`
-    : `/temporal/entities/${entityId}/attrs/${attrId}/${instanceId}`;
+    ? `/temporal/entities/${opts.entityId}/attrs/${opts.attrId}/${opts.instanceId}?${stringifiedParams}`
+    : `/temporal/entities/${opts.entityId}/attrs/${opts.attrId}/${opts.instanceId}`;
 };
 
-export const getTemporalQueryBatchUrl = (params?: TemporalQueryBatchParams) => {
+export const getTemporalQueryBatchUrl = (opts: {
+  params?: TemporalQueryBatchParams | undefined;
+}) => {
   const normalizedParams = new URLSearchParams();
 
-  Object.entries(params || {}).forEach(([key, value]) => {
+  Object.entries(opts.params || {}).forEach(([key, value]) => {
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? "null" : String(value));
     }
@@ -1053,12 +1107,12 @@ export const getTemporalQueryBatchUrl = (params?: TemporalQueryBatchParams) => {
     : `/temporal/entityOperations/query`;
 };
 
-export const getRetrieveEntityTypesUrl = (
-  params?: RetrieveEntityTypesParams,
-) => {
+export const getRetrieveEntityTypesUrl = (opts: {
+  params?: RetrieveEntityTypesParams | undefined;
+}) => {
   const normalizedParams = new URLSearchParams();
 
-  Object.entries(params || {}).forEach(([key, value]) => {
+  Object.entries(opts.params || {}).forEach(([key, value]) => {
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? "null" : String(value));
     }
@@ -1071,13 +1125,13 @@ export const getRetrieveEntityTypesUrl = (
     : `/types`;
 };
 
-export const getRetrieveEntityTypeInfoUrl = (
-  type: string,
-  params?: { local?: boolean },
-) => {
+export const getRetrieveEntityTypeInfoUrl = (opts: {
+  type: string;
+  params?: RetrieveEntityTypeInfoParams | undefined;
+}) => {
   const normalizedParams = new URLSearchParams();
 
-  Object.entries(params || {}).forEach(([key, value]) => {
+  Object.entries(opts.params || {}).forEach(([key, value]) => {
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? "null" : String(value));
     }
@@ -1086,17 +1140,16 @@ export const getRetrieveEntityTypeInfoUrl = (
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `/types/${type}?${stringifiedParams}`
-    : `/types/${type}`;
+    ? `/types/${opts.type}?${stringifiedParams}`
+    : `/types/${opts.type}`;
 };
 
-export const getRetrieveAttrTypesUrl = (params?: {
-  details?: boolean;
-  local?: boolean;
+export const getRetrieveAttrTypesUrl = (opts: {
+  params?: RetrieveAttrTypesParams | undefined;
 }) => {
   const normalizedParams = new URLSearchParams();
 
-  Object.entries(params || {}).forEach(([key, value]) => {
+  Object.entries(opts.params || {}).forEach(([key, value]) => {
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? "null" : String(value));
     }
@@ -1109,13 +1162,13 @@ export const getRetrieveAttrTypesUrl = (params?: {
     : `/attributes`;
 };
 
-export const getRetrieveAttrTypeInfoUrl = (
-  attrId: string,
-  params?: { local?: boolean },
-) => {
+export const getRetrieveAttrTypeInfoUrl = (opts: {
+  attrId: string;
+  params?: RetrieveAttrTypeInfoParams | undefined;
+}) => {
   const normalizedParams = new URLSearchParams();
 
-  Object.entries(params || {}).forEach(([key, value]) => {
+  Object.entries(opts.params || {}).forEach(([key, value]) => {
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? "null" : String(value));
     }
@@ -1124,21 +1177,20 @@ export const getRetrieveAttrTypeInfoUrl = (
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `/attributes/${attrId}?${stringifiedParams}`
-    : `/attributes/${attrId}`;
+    ? `/attributes/${opts.attrId}?${stringifiedParams}`
+    : `/attributes/${opts.attrId}`;
 };
 
 export const getCreateContextUrl = () => {
   return `/jsonldContexts`;
 };
 
-export const getListContextsUrl = (params?: {
-  details?: boolean;
-  kind?: QueryKindParameter;
+export const getListContextsUrl = (opts: {
+  params?: ListContextsParams | undefined;
 }) => {
   const normalizedParams = new URLSearchParams();
 
-  Object.entries(params || {}).forEach(([key, value]) => {
+  Object.entries(opts.params || {}).forEach(([key, value]) => {
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? "null" : String(value));
     }
@@ -1151,13 +1203,13 @@ export const getListContextsUrl = (params?: {
     : `/jsonldContexts`;
 };
 
-export const getRetrieveContextUrl = (
-  contextId: string,
-  params?: { details?: boolean },
-) => {
+export const getRetrieveContextUrl = (opts: {
+  contextId: string;
+  params?: RetrieveContextParams | undefined;
+}) => {
   const normalizedParams = new URLSearchParams();
 
-  Object.entries(params || {}).forEach(([key, value]) => {
+  Object.entries(opts.params || {}).forEach(([key, value]) => {
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? "null" : String(value));
     }
@@ -1166,17 +1218,17 @@ export const getRetrieveContextUrl = (
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `/jsonldContexts/${contextId}?${stringifiedParams}`
-    : `/jsonldContexts/${contextId}`;
+    ? `/jsonldContexts/${opts.contextId}?${stringifiedParams}`
+    : `/jsonldContexts/${opts.contextId}`;
 };
 
-export const getDeleteContextUrl = (
-  contextId: string,
-  params?: DeleteContextParams,
-) => {
+export const getDeleteContextUrl = (opts: {
+  contextId: string;
+  params?: DeleteContextParams | undefined;
+}) => {
   const normalizedParams = new URLSearchParams();
 
-  Object.entries(params || {}).forEach(([key, value]) => {
+  Object.entries(opts.params || {}).forEach(([key, value]) => {
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? "null" : String(value));
     }
@@ -1185,20 +1237,20 @@ export const getDeleteContextUrl = (
   const stringifiedParams = normalizedParams.toString();
 
   return stringifiedParams.length > 0
-    ? `/jsonldContexts/${contextId}?${stringifiedParams}`
-    : `/jsonldContexts/${contextId}`;
+    ? `/jsonldContexts/${opts.contextId}?${stringifiedParams}`
+    : `/jsonldContexts/${opts.contextId}`;
 };
 
-export const getRetrieveEntityMapUrl = (entityMapId: string) => {
-  return `/entityMap/${entityMapId}`;
+export const getRetrieveEntityMapUrl = (opts: { entityMapId: string }) => {
+  return `/entityMap/${opts.entityMapId}`;
 };
 
-export const getUpdateEntityMapUrl = (entityMapId: string) => {
-  return `/entityMap/${entityMapId}`;
+export const getUpdateEntityMapUrl = (opts: { entityMapId: string }) => {
+  return `/entityMap/${opts.entityMapId}`;
 };
 
-export const getDeleteEntityMapUrl = (entityMapId: string) => {
-  return `/entityMap/${entityMapId}`;
+export const getDeleteEntityMapUrl = (opts: { entityMapId: string }) => {
+  return `/entityMap/${opts.entityMapId}`;
 };
 
 export const getRetrieveCSIdentityInfoUrl = () => {

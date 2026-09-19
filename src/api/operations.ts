@@ -24,6 +24,51 @@ import type {
   InferEntityTemporal,
 } from "./schemas";
 
+import type {
+  AppendAttrsParams,
+  AppendAttrsTemporalParams,
+  CreateBatchParams,
+  CreateEntityParams,
+  CreateSubscriptionParams,
+  DeleteAttrInstanceTemporalParams,
+  DeleteAttrsParams,
+  DeleteAttrsTemporalParams,
+  DeleteBatchParams,
+  DeleteContextParams,
+  DeleteEntityParams,
+  DeleteSubscriptionParams,
+  DeleteTemporalParams,
+  ListContextsParams,
+  MergeBatchParams,
+  MergeEntityParams,
+  QueryBatchParams,
+  QueryCSRParams,
+  QueryCSRSubscriptionParams,
+  QueryEntityParams,
+  QuerySubscriptionParams,
+  QueryTemporalParams,
+  ReplaceAttrsParams,
+  ReplaceEntityParams,
+  RetrieveAttrTypeInfoParams,
+  RetrieveAttrTypesParams,
+  RetrieveContextParams,
+  RetrieveCSRParams,
+  RetrieveCSRSubscriptionParams,
+  RetrieveEntityParams,
+  RetrieveEntityTypeInfoParams,
+  RetrieveEntityTypesParams,
+  RetrieveSubscriptionParams,
+  RetrieveTemporalParams,
+  TemporalQueryBatchParams,
+  UpdateAttrsParams,
+  UpdateAttrsTemporalParams,
+  UpdateBatchParams,
+  UpdateEntityParams,
+  UpdateSubscriptionParams,
+  UpsertBatchParams,
+  UpsertTemporalParams,
+} from "./urls";
+
 import {
   getAppendAttrsTemporalUrl,
   getAppendAttrsUrl,
@@ -84,10 +129,10 @@ import { fetcher } from "../fetcher";
 
 export const createEntity = <T extends Entity = Entity>(
   createEntityBody?: WithContext<NonReadonly<T>>,
-  params?: Parameters<typeof getCreateEntityUrl>[0],
+  params?: CreateEntityParams,
   options?: RequestInit,
 ) => {
-  return fetcher<CreateEntityResponse>(getCreateEntityUrl(params), {
+  return fetcher<CreateEntityResponse>(getCreateEntityUrl({ params }), {
     ...options,
     method: "POST",
     headers: { ...options?.headers },
@@ -96,13 +141,13 @@ export const createEntity = <T extends Entity = Entity>(
 };
 
 export const queryEntity = <T extends Entity = Entity>(
-  params?: Parameters<
-    typeof getQueryEntityUrl<T["type"] extends string ? T["type"] : string>
-  >[0],
+  params?: QueryEntityParams<T["type"] extends string ? T["type"] : string>,
   options?: RequestInit,
 ) => {
   return fetcher<WithContext<T>[]>(
-    getQueryEntityUrl<T["type"] extends string ? T["type"] : string>(params),
+    getQueryEntityUrl<T["type"] extends string ? T["type"] : string>({
+      params,
+    }),
     {
       ...options,
       method: "GET",
@@ -112,13 +157,13 @@ export const queryEntity = <T extends Entity = Entity>(
 };
 
 export const queryGeoEntity = <T extends Entity = Entity>(
-  params?: Parameters<
-    typeof getQueryEntityUrl<T["type"] extends string ? T["type"] : string>
-  >[0],
+  params?: QueryEntityParams<T["type"] extends string ? T["type"] : string>,
   options?: RequestInit,
 ) => {
   return fetcher<FeatureCollection<T>>(
-    getQueryEntityUrl<T["type"] extends string ? T["type"] : string>(params),
+    getQueryEntityUrl<T["type"] extends string ? T["type"] : string>({
+      params,
+    }),
     {
       ...options,
       method: "GET",
@@ -130,10 +175,10 @@ export const queryGeoEntity = <T extends Entity = Entity>(
 
 export const retrieveEntity = <T extends Entity = Entity>(
   entityId: string,
-  params?: Parameters<typeof getRetrieveEntityUrl>[1],
+  params?: RetrieveEntityParams,
   options?: RequestInit,
 ) => {
-  return fetcher<WithContext<T>>(getRetrieveEntityUrl(entityId, params), {
+  return fetcher<WithContext<T>>(getRetrieveEntityUrl({ entityId, params }), {
     ...options,
     method: "GET",
     returnFormat: "body",
@@ -142,10 +187,10 @@ export const retrieveEntity = <T extends Entity = Entity>(
 
 export const retrieveGeoEntity = <T extends Entity = Entity>(
   entityId: string,
-  params?: Omit<Parameters<typeof getRetrieveEntityUrl>[1], "options">,
+  params?: Omit<RetrieveEntityParams, "options">,
   options?: RequestInit,
 ) => {
-  return fetcher<Feature<T>>(getRetrieveEntityUrl(entityId, params), {
+  return fetcher<Feature<T>>(getRetrieveEntityUrl({ entityId, params }), {
     ...options,
     method: "GET",
     headers: { Accept: "application/geo+json", ...options?.headers },
@@ -155,13 +200,16 @@ export const retrieveGeoEntity = <T extends Entity = Entity>(
 
 export const deleteEntity = (
   entityId: string,
-  params?: Parameters<typeof getDeleteEntityUrl>[1],
+  params?: DeleteEntityParams,
   options?: RequestInit,
 ) => {
-  return fetcher<DeleteEntityResponse>(getDeleteEntityUrl(entityId, params), {
-    ...options,
-    method: "DELETE",
-  });
+  return fetcher<DeleteEntityResponse>(
+    getDeleteEntityUrl({ entityId, params }),
+    {
+      ...options,
+      method: "DELETE",
+    },
+  );
 };
 
 export const mergeEntity = <T extends Entity = Entity>(
@@ -169,10 +217,10 @@ export const mergeEntity = <T extends Entity = Entity>(
 
   // TODO: How to ensure there is no extra parameters in mergeEntityBody?
   mergeEntityBody?: WithContext<NonReadonly<Partial<T>>>,
-  params?: Parameters<typeof getMergeEntityUrl>[1],
+  params?: MergeEntityParams,
   options?: RequestInit,
 ) => {
-  return fetcher<MergeEntityResponse>(getMergeEntityUrl(entityId, params), {
+  return fetcher<MergeEntityResponse>(getMergeEntityUrl({ entityId, params }), {
     ...options,
     method: "PATCH",
     headers: { ...options?.headers },
@@ -183,24 +231,27 @@ export const mergeEntity = <T extends Entity = Entity>(
 export const replaceEntity = <T extends Entity = Entity>(
   entityId: string,
   replaceEntityBody?: WithContext<NonReadonly<Partial<T>>>,
-  params?: Parameters<typeof getReplaceEntityUrl>[1],
+  params?: ReplaceEntityParams,
   options?: RequestInit,
 ) => {
-  return fetcher<ReplaceEntityResponse>(getReplaceEntityUrl(entityId, params), {
-    ...options,
-    method: "PUT",
-    headers: { ...options?.headers },
-    body: JSON.stringify(replaceEntityBody),
-  });
+  return fetcher<ReplaceEntityResponse>(
+    getReplaceEntityUrl({ entityId, params }),
+    {
+      ...options,
+      method: "PUT",
+      headers: { ...options?.headers },
+      body: JSON.stringify(replaceEntityBody),
+    },
+  );
 };
 
 export const appendAttrs = <T extends Entity = Entity>(
   entityId: string,
   appendAttrsBody?: WithContext<NonReadonly<Partial<T>>>,
-  params?: Parameters<typeof getAppendAttrsUrl>[1],
+  params?: AppendAttrsParams,
   options?: RequestInit,
 ) => {
-  return fetcher<AppendAttrsResponse>(getAppendAttrsUrl(entityId, params), {
+  return fetcher<AppendAttrsResponse>(getAppendAttrsUrl({ entityId, params }), {
     ...options,
     method: "POST",
     headers: { ...options?.headers },
@@ -211,26 +262,29 @@ export const appendAttrs = <T extends Entity = Entity>(
 export const updateEntity = <T extends Entity = Entity>(
   entityId: string,
   updateEntityBody?: WithContext<NonReadonly<Partial<T>>>,
-  params?: Parameters<typeof getUpdateEntityUrl>[1],
+  params?: UpdateEntityParams,
   options?: RequestInit,
 ) => {
-  return fetcher<UpdateEntityResponse>(getUpdateEntityUrl(entityId, params), {
-    ...options,
-    method: "PATCH",
-    headers: { ...options?.headers },
-    body: JSON.stringify(updateEntityBody),
-  });
+  return fetcher<UpdateEntityResponse>(
+    getUpdateEntityUrl({ entityId, params }),
+    {
+      ...options,
+      method: "PATCH",
+      headers: { ...options?.headers },
+      body: JSON.stringify(updateEntityBody),
+    },
+  );
 };
 
 export const updateAttrs = (
   entityId: string,
   attrId: string,
   attributeFragmentBody?: WithContext<NgsildAttribute>,
-  params?: Parameters<typeof getUpdateAttrsUrl>[2],
+  params?: UpdateAttrsParams,
   options?: RequestInit,
 ) => {
   return fetcher<UpdateAttrsResponse>(
-    getUpdateAttrsUrl(entityId, attrId, params),
+    getUpdateAttrsUrl({ entityId, attrId, params }),
     {
       ...options,
       method: "PATCH",
@@ -243,11 +297,11 @@ export const updateAttrs = (
 export const deleteAttrs = (
   entityId: string,
   attrId: string,
-  params?: Parameters<typeof getDeleteAttrsUrl>[2],
+  params?: DeleteAttrsParams,
   options?: RequestInit,
 ) => {
   return fetcher<DeleteAttrsResponse>(
-    getDeleteAttrsUrl(entityId, attrId, params),
+    getDeleteAttrsUrl({ entityId, attrId, params }),
     {
       ...options,
       method: "DELETE",
@@ -259,11 +313,11 @@ export const replaceAttrs = (
   entityId: string,
   attrId: string,
   attributeFragmentBody?: WithContext<NgsildAttribute>,
-  params?: Parameters<typeof getReplaceAttrsUrl>[2],
+  params?: ReplaceAttrsParams,
   options?: RequestInit,
 ) => {
   return fetcher<ReplaceAttrsResponse>(
-    getReplaceAttrsUrl(entityId, attrId, params),
+    getReplaceAttrsUrl({ entityId, attrId, params }),
     {
       ...options,
       method: "PUT",
@@ -286,24 +340,24 @@ export const createCSR = (
   });
 };
 
-export const queryCSR = (
-  params?: Parameters<typeof getQueryCSRUrl>[0],
-  options?: RequestInit,
-) => {
-  return fetcher<WithContext<CsourceRegistration>[]>(getQueryCSRUrl(params), {
-    ...options,
-    method: "GET",
-    returnFormat: "body",
-  });
+export const queryCSR = (params?: QueryCSRParams, options?: RequestInit) => {
+  return fetcher<WithContext<CsourceRegistration>[]>(
+    getQueryCSRUrl({ params }),
+    {
+      ...options,
+      method: "GET",
+      returnFormat: "body",
+    },
+  );
 };
 
 export const retrieveCSR = (
   registrationId: string,
-  params?: Parameters<typeof getRetrieveCSRUrl>[1],
+  params?: RetrieveCSRParams,
   options?: RequestInit,
 ) => {
   return fetcher<WithContext<CsourceRegistration>>(
-    getRetrieveCSRUrl(registrationId, params),
+    getRetrieveCSRUrl({ registrationId, params }),
     {
       ...options,
       method: "GET",
@@ -317,7 +371,7 @@ export const updateCSR = (
   updateCSRBody?: WithContext<NonReadonly<Partial<CsourceRegistration>>>,
   options?: RequestInit,
 ) => {
-  return fetcher<void>(getUpdateCSRUrl(registrationId), {
+  return fetcher<void>(getUpdateCSRUrl({ registrationId }), {
     ...options,
     method: "PATCH",
     headers: { ...options?.headers },
@@ -327,7 +381,7 @@ export const updateCSR = (
 };
 
 export const deleteCSR = (registrationId: string, options?: RequestInit) => {
-  return fetcher<void>(getDeleteCSRUrl(registrationId), {
+  return fetcher<void>(getDeleteCSRUrl({ registrationId }), {
     ...options,
     method: "DELETE",
     returnFormat: "body",
@@ -336,10 +390,10 @@ export const deleteCSR = (registrationId: string, options?: RequestInit) => {
 
 export const createSubscription = (
   subscriptionBody?: WithContext<Subscription>,
-  params?: Parameters<typeof getCreateSubscriptionUrl>[0],
+  params?: CreateSubscriptionParams,
   options?: RequestInit,
 ) => {
-  return fetcher<{ location: string }>(getCreateSubscriptionUrl(params), {
+  return fetcher<{ location: string }>(getCreateSubscriptionUrl({ params }), {
     ...options,
     method: "POST",
     headers: { ...options?.headers },
@@ -349,23 +403,26 @@ export const createSubscription = (
 };
 
 export const querySubscription = (
-  params?: Parameters<typeof getQuerySubscriptionUrl>[0],
+  params?: QuerySubscriptionParams,
   options?: RequestInit,
 ) => {
-  return fetcher<WithContext<Subscription>[]>(getQuerySubscriptionUrl(params), {
-    ...options,
-    method: "GET",
-    returnFormat: "body",
-  });
+  return fetcher<WithContext<Subscription>[]>(
+    getQuerySubscriptionUrl({ params }),
+    {
+      ...options,
+      method: "GET",
+      returnFormat: "body",
+    },
+  );
 };
 
 export const retrieveSubscription = (
   subscriptionId: string,
-  params?: Parameters<typeof getRetrieveSubscriptionUrl>[1],
+  params?: RetrieveSubscriptionParams,
   options?: RequestInit,
 ) => {
   return fetcher<WithContext<Subscription>>(
-    getRetrieveSubscriptionUrl(subscriptionId, params),
+    getRetrieveSubscriptionUrl({ subscriptionId, params }),
     {
       ...options,
       method: "GET",
@@ -377,10 +434,10 @@ export const retrieveSubscription = (
 export const updateSubscription = (
   subscriptionId: string,
   subscriptionFragmentBody?: WithContext<Partial<Subscription>>,
-  params?: Parameters<typeof getUpdateSubscriptionUrl>[1],
+  params?: UpdateSubscriptionParams,
   options?: RequestInit,
 ) => {
-  return fetcher<void>(getUpdateSubscriptionUrl(subscriptionId, params), {
+  return fetcher<void>(getUpdateSubscriptionUrl({ subscriptionId, params }), {
     ...options,
     method: "PATCH",
     headers: { ...options?.headers },
@@ -391,10 +448,10 @@ export const updateSubscription = (
 
 export const deleteSubscription = (
   subscriptionId: string,
-  params?: Parameters<typeof getDeleteSubscriptionUrl>[1],
+  params?: DeleteSubscriptionParams,
   options?: RequestInit,
 ) => {
-  return fetcher<void>(getDeleteSubscriptionUrl(subscriptionId, params), {
+  return fetcher<void>(getDeleteSubscriptionUrl({ subscriptionId, params }), {
     ...options,
     method: "DELETE",
     returnFormat: "body",
@@ -415,11 +472,11 @@ export const createCSRSubscription = (
 };
 
 export const queryCSRSubscription = (
-  params?: Parameters<typeof getQueryCSRSubscriptionUrl>[0],
+  params?: QueryCSRSubscriptionParams,
   options?: RequestInit,
 ) => {
   return fetcher<WithContext<Subscription>[]>(
-    getQueryCSRSubscriptionUrl(params),
+    getQueryCSRSubscriptionUrl({ params }),
     {
       ...options,
       method: "GET",
@@ -430,11 +487,11 @@ export const queryCSRSubscription = (
 
 export const retrieveCSRSubscription = (
   subscriptionId: string,
-  params?: Parameters<typeof getRetrieveCSRSubscriptionUrl>[1],
+  params?: RetrieveCSRSubscriptionParams,
   options?: RequestInit,
 ) => {
   return fetcher<WithContext<Subscription>>(
-    getRetrieveCSRSubscriptionUrl(subscriptionId, params),
+    getRetrieveCSRSubscriptionUrl({ subscriptionId, params }),
     {
       ...options,
       method: "GET",
@@ -448,7 +505,7 @@ export const updateCSRSubscription = (
   subscriptionFragmentBody?: WithContext<Partial<Subscription>>,
   options?: RequestInit,
 ) => {
-  return fetcher<void>(getUpdateCSRSubscriptionUrl(subscriptionId), {
+  return fetcher<void>(getUpdateCSRSubscriptionUrl({ subscriptionId }), {
     ...options,
     method: "PATCH",
     headers: { ...options?.headers },
@@ -461,7 +518,7 @@ export const deleteCSRSubscription = (
   subscriptionId: string,
   options?: RequestInit,
 ) => {
-  return fetcher<void>(getDeleteCSRSubscriptionUrl(subscriptionId), {
+  return fetcher<void>(getDeleteCSRSubscriptionUrl({ subscriptionId }), {
     ...options,
     method: "DELETE",
     returnFormat: "body",
@@ -470,10 +527,10 @@ export const deleteCSRSubscription = (
 
 export const createBatch = <T extends Entity = Entity>(
   createBatchBodyItem?: NonReadonly<MaybeContext<T>>[],
-  params?: Parameters<typeof getCreateBatchUrl>[0],
+  params?: CreateBatchParams,
   options?: RequestInit,
 ) => {
-  return fetcher<CreateBatchResponse>(getCreateBatchUrl(params), {
+  return fetcher<CreateBatchResponse>(getCreateBatchUrl({ params }), {
     ...options,
     method: "POST",
     headers: { ...options?.headers },
@@ -483,10 +540,10 @@ export const createBatch = <T extends Entity = Entity>(
 
 export const upsertBatch = <T extends Entity = Entity>(
   upsertBatchBodyItem?: NonReadonly<MaybeContext<T>>[],
-  params?: Parameters<typeof getUpsertBatchUrl>[0],
+  params?: UpsertBatchParams,
   options?: RequestInit,
 ) => {
-  return fetcher<UpsertBatchResponse>(getUpsertBatchUrl(params), {
+  return fetcher<UpsertBatchResponse>(getUpsertBatchUrl({ params }), {
     ...options,
     method: "POST",
     headers: { ...options?.headers },
@@ -496,10 +553,10 @@ export const upsertBatch = <T extends Entity = Entity>(
 
 export const updateBatch = <T extends Entity = Entity>(
   updateBatchBodyItem?: NonReadonly<MaybeContext<T>>[],
-  params?: Parameters<typeof getUpdateBatchUrl>[0],
+  params?: UpdateBatchParams,
   options?: RequestInit,
 ) => {
-  return fetcher<UpdateBatchResponse>(getUpdateBatchUrl(params), {
+  return fetcher<UpdateBatchResponse>(getUpdateBatchUrl({ params }), {
     ...options,
     method: "POST",
     headers: { ...options?.headers },
@@ -509,10 +566,10 @@ export const updateBatch = <T extends Entity = Entity>(
 
 export const deleteBatch = (
   deleteBatchBody?: string[],
-  params?: Parameters<typeof getDeleteBatchUrl>[0],
+  params?: DeleteBatchParams,
   options?: RequestInit,
 ) => {
-  return fetcher<DeleteBatchResponse>(getDeleteBatchUrl(params), {
+  return fetcher<DeleteBatchResponse>(getDeleteBatchUrl({ params }), {
     ...options,
     method: "POST",
     headers: { "Content-Type": "application/json", ...options?.headers },
@@ -522,10 +579,10 @@ export const deleteBatch = (
 
 export const queryBatch = <T extends Entity = Entity>(
   query?: Query,
-  params?: Parameters<typeof getQueryBatchUrl>[0],
+  params?: QueryBatchParams,
   options?: RequestInit,
 ) => {
-  return fetcher<WithContext<T>[]>(getQueryBatchUrl(params), {
+  return fetcher<WithContext<T>[]>(getQueryBatchUrl({ params }), {
     ...options,
     method: "POST",
     // https://github.com/stellio-hub/stellio-context-broker/issues/1809
@@ -537,10 +594,10 @@ export const queryBatch = <T extends Entity = Entity>(
 
 export const queryGeoBatch = <T extends Entity = Entity>(
   query?: Query,
-  params?: Parameters<typeof getQueryBatchUrl>[0],
+  params?: QueryBatchParams,
   options?: RequestInit,
 ) => {
-  return fetcher<FeatureCollection<T>>(getQueryBatchUrl(params), {
+  return fetcher<FeatureCollection<T>>(getQueryBatchUrl({ params }), {
     ...options,
     method: "POST",
     headers: {
@@ -556,10 +613,10 @@ export const queryGeoBatch = <T extends Entity = Entity>(
 
 export const mergeBatch = <T extends Entity = Entity>(
   mergeBatchBodyItem?: NonReadonly<MaybeContext<T>>[],
-  params?: Parameters<typeof getMergeBatchUrl>[0],
+  params?: MergeBatchParams,
   options?: RequestInit,
 ) => {
-  return fetcher<MergeBatchResponse>(getMergeBatchUrl(params), {
+  return fetcher<MergeBatchResponse>(getMergeBatchUrl({ params }), {
     ...options,
     method: "POST",
     headers: { ...options?.headers },
@@ -569,10 +626,10 @@ export const mergeBatch = <T extends Entity = Entity>(
 
 export const upsertTemporal = <T extends Entity = Entity>(
   entityTemporalBody?: WithContext<InferEntityTemporal<T>>,
-  params?: Parameters<typeof getUpsertTemporalUrl>[0],
+  params?: UpsertTemporalParams,
   options?: RequestInit,
 ) => {
-  return fetcher<UpsertTemporalResponse>(getUpsertTemporalUrl(params), {
+  return fetcher<UpsertTemporalResponse>(getUpsertTemporalUrl({ params }), {
     ...options,
     method: "POST",
     headers: { ...options?.headers },
@@ -581,13 +638,13 @@ export const upsertTemporal = <T extends Entity = Entity>(
 };
 
 export const queryTemporal = <T extends Entity = Entity>(
-  params?: Parameters<
-    typeof getQueryTemporalUrl<T["type"] extends string ? T["type"] : string>
-  >[0],
+  params?: QueryTemporalParams<T["type"] extends string ? T["type"] : string>,
   options?: RequestInit,
 ) => {
   return fetcher<WithContext<InferEntityTemporal<T>>[]>(
-    getQueryTemporalUrl<T["type"] extends string ? T["type"] : string>(params),
+    getQueryTemporalUrl<T["type"] extends string ? T["type"] : string>({
+      params,
+    }),
     {
       ...options,
       method: "GET",
@@ -598,11 +655,11 @@ export const queryTemporal = <T extends Entity = Entity>(
 
 export const retrieveTemporal = <T extends Entity = Entity>(
   entityId: string,
-  params?: Parameters<typeof getRetrieveTemporalUrl>[1],
+  params?: RetrieveTemporalParams,
   options?: RequestInit,
 ) => {
   return fetcher<WithContext<InferEntityTemporal<T>>>(
-    getRetrieveTemporalUrl(entityId, params),
+    getRetrieveTemporalUrl({ entityId, params }),
     {
       ...options,
       method: "GET",
@@ -613,10 +670,10 @@ export const retrieveTemporal = <T extends Entity = Entity>(
 
 export const deleteTemporal = (
   entityId: string,
-  params?: Parameters<typeof getDeleteTemporalUrl>[1],
+  params?: DeleteTemporalParams,
   options?: RequestInit,
 ) => {
-  return fetcher<void>(getDeleteTemporalUrl(entityId, params), {
+  return fetcher<void>(getDeleteTemporalUrl({ entityId, params }), {
     ...options,
     method: "DELETE",
     returnFormat: "body",
@@ -626,10 +683,10 @@ export const deleteTemporal = (
 export const appendAttrsTemporal = <T extends Entity = Entity>(
   entityId: string,
   entityTemporalFragmentBody?: WithContext<Partial<InferEntityTemporal<T>>>,
-  params?: Parameters<typeof getAppendAttrsTemporalUrl>[1],
+  params?: AppendAttrsTemporalParams,
   options?: RequestInit,
 ) => {
-  return fetcher<void>(getAppendAttrsTemporalUrl(entityId, params), {
+  return fetcher<void>(getAppendAttrsTemporalUrl({ entityId, params }), {
     ...options,
     method: "POST",
     headers: { ...options?.headers },
@@ -641,14 +698,17 @@ export const appendAttrsTemporal = <T extends Entity = Entity>(
 export const deleteAttrsTemporal = (
   entityId: string,
   attrId: string,
-  params?: Parameters<typeof getDeleteAttrsTemporalUrl>[2],
+  params?: DeleteAttrsTemporalParams,
   options?: RequestInit,
 ) => {
-  return fetcher<void>(getDeleteAttrsTemporalUrl(entityId, attrId, params), {
-    ...options,
-    method: "DELETE",
-    returnFormat: "body",
-  });
+  return fetcher<void>(
+    getDeleteAttrsTemporalUrl({ entityId, attrId, params }),
+    {
+      ...options,
+      method: "DELETE",
+      returnFormat: "body",
+    },
+  );
 };
 
 export const updateAttrsTemporal = (
@@ -656,11 +716,11 @@ export const updateAttrsTemporal = (
   attrId: string,
   instanceId: string,
   temporalAttrFragmentBody?: WithContext<RequiredObservedAt<NgsildAttribute>>,
-  params?: Parameters<typeof getUpdateAttrsTemporalUrl>[3],
+  params?: UpdateAttrsTemporalParams,
   options?: RequestInit,
 ) => {
   return fetcher<void>(
-    getUpdateAttrsTemporalUrl(entityId, attrId, instanceId, params),
+    getUpdateAttrsTemporalUrl({ entityId, attrId, instanceId, params }),
     {
       ...options,
       method: "PATCH",
@@ -677,11 +737,11 @@ export const deleteAttrInstanceTemporal = (
   entityId: string,
   attrId: string,
   instanceId: string,
-  params?: Parameters<typeof getDeleteAttrInstanceTemporalUrl>[3],
+  params?: DeleteAttrInstanceTemporalParams,
   options?: RequestInit,
 ) => {
   return fetcher<void>(
-    getDeleteAttrInstanceTemporalUrl(entityId, attrId, instanceId, params),
+    getDeleteAttrInstanceTemporalUrl({ entityId, attrId, instanceId, params }),
     {
       ...options,
       method: "DELETE",
@@ -692,11 +752,11 @@ export const deleteAttrInstanceTemporal = (
 
 export const temporalQueryBatch = <T extends Entity = Entity>(
   queryTemporalBody: QueryTemporal,
-  params?: Parameters<typeof getTemporalQueryBatchUrl>[0],
+  params?: TemporalQueryBatchParams,
   options?: RequestInit,
 ) => {
   return fetcher<WithContext<InferEntityTemporal<T>>[]>(
-    getTemporalQueryBatchUrl(params),
+    getTemporalQueryBatchUrl({ params }),
     {
       ...options,
       method: "POST",
@@ -709,11 +769,11 @@ export const temporalQueryBatch = <T extends Entity = Entity>(
 };
 
 export const retrieveEntityTypes = (
-  params?: Parameters<typeof getRetrieveEntityTypesUrl>[0],
+  params?: RetrieveEntityTypesParams,
   options?: RequestInit,
 ) => {
   return fetcher<WithContext<EntityTypeList> | WithContext<EntityType>[]>(
-    getRetrieveEntityTypesUrl(params),
+    getRetrieveEntityTypesUrl({ params }),
     {
       ...options,
       method: "GET",
@@ -724,11 +784,11 @@ export const retrieveEntityTypes = (
 
 export const retrieveEntityTypeInfo = (
   type: string,
-  params?: Parameters<typeof getRetrieveEntityTypeInfoUrl>[1],
+  params?: RetrieveEntityTypeInfoParams,
   options?: RequestInit,
 ) => {
   return fetcher<WithContext<EntityTypeInfo>>(
-    getRetrieveEntityTypeInfoUrl(type, params),
+    getRetrieveEntityTypeInfoUrl({ type, params }),
     {
       ...options,
       method: "GET",
@@ -738,11 +798,11 @@ export const retrieveEntityTypeInfo = (
 };
 
 export const retrieveAttrTypes = (
-  params?: Parameters<typeof getRetrieveAttrTypesUrl>[0],
+  params?: RetrieveAttrTypesParams,
   options?: RequestInit,
 ) => {
   return fetcher<WithContext<AttributeList> | WithContext<Attribute>[]>(
-    getRetrieveAttrTypesUrl(params),
+    getRetrieveAttrTypesUrl({ params }),
     {
       ...options,
       method: "GET",
@@ -753,11 +813,11 @@ export const retrieveAttrTypes = (
 
 export const retrieveAttrTypeInfo = (
   attrId: string,
-  params?: Parameters<typeof getRetrieveAttrTypeInfoUrl>[1],
+  params?: RetrieveAttrTypeInfoParams,
   options?: RequestInit,
 ) => {
   return fetcher<WithContext<Attribute>>(
-    getRetrieveAttrTypeInfoUrl(attrId, params),
+    getRetrieveAttrTypeInfoUrl({ attrId, params }),
     {
       ...options,
       method: "GET",
@@ -780,23 +840,26 @@ export const createContext = (
 };
 
 export const listContexts = (
-  params?: Parameters<typeof getListContextsUrl>[0],
+  params?: ListContextsParams,
   options?: RequestInit,
 ) => {
-  return fetcher<string[] | LdContextMetadata[]>(getListContextsUrl(params), {
-    ...options,
-    method: "GET",
-    returnFormat: "body",
-  });
+  return fetcher<string[] | LdContextMetadata[]>(
+    getListContextsUrl({ params }),
+    {
+      ...options,
+      method: "GET",
+      returnFormat: "body",
+    },
+  );
 };
 
 export const retrieveContext = (
   contextId: string,
-  params?: Parameters<typeof getRetrieveContextUrl>[1],
+  params?: RetrieveContextParams,
   options?: RequestInit,
 ) => {
   return fetcher<{ "@context"?: LdContext } | LdContextMetadata>(
-    getRetrieveContextUrl(contextId, params),
+    getRetrieveContextUrl({ contextId, params }),
     {
       ...options,
       method: "GET",
@@ -807,10 +870,10 @@ export const retrieveContext = (
 
 export const deleteContext = (
   contextId: string,
-  params?: Parameters<typeof getDeleteContextUrl>[1],
+  params?: DeleteContextParams,
   options?: RequestInit,
 ) => {
-  return fetcher<void>(getDeleteContextUrl(contextId, params), {
+  return fetcher<void>(getDeleteContextUrl({ contextId, params }), {
     ...options,
     method: "DELETE",
     returnFormat: "body",
@@ -821,11 +884,14 @@ export const retrieveEntityMap = (
   entityMapId: string,
   options?: RequestInit,
 ) => {
-  return fetcher<WithContext<EntityMap>>(getRetrieveEntityMapUrl(entityMapId), {
-    ...options,
-    method: "GET",
-    returnFormat: "body",
-  });
+  return fetcher<WithContext<EntityMap>>(
+    getRetrieveEntityMapUrl({ entityMapId }),
+    {
+      ...options,
+      method: "GET",
+      returnFormat: "body",
+    },
+  );
 };
 
 export const updateEntityMap = (
@@ -833,7 +899,7 @@ export const updateEntityMap = (
   updateEntityMapBody?: WithContext<NonReadonly<EntityMap>>,
   options?: RequestInit,
 ) => {
-  return fetcher<void>(getUpdateEntityMapUrl(entityMapId), {
+  return fetcher<void>(getUpdateEntityMapUrl({ entityMapId }), {
     ...options,
     method: "PATCH",
     headers: { ...options?.headers },
@@ -843,7 +909,7 @@ export const updateEntityMap = (
 };
 
 export const deleteEntityMap = (entityMapId: string, options?: RequestInit) => {
-  return fetcher<void>(getDeleteEntityMapUrl(entityMapId), {
+  return fetcher<void>(getDeleteEntityMapUrl({ entityMapId }), {
     ...options,
     method: "DELETE",
     returnFormat: "body",
