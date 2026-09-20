@@ -23,25 +23,38 @@ function throwHttpError(response: Response, body: ProblemDetails): never {
 
 type NgsiLdRequest = {
   path: string;
-  method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
+  method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH" | string;
   params?: any;
   returnFormat?: "body" | "status-data";
 };
 
 export type NgsiLdRequestOpts = {
   baseUrl?: string;
+  fetch?: typeof fetch;
+  init?: () => Promise<RequestInit> | RequestInit;
 } & RequestInit;
 
-export const fetcher = async <T>({
-  path,
-  method,
-  params,
-  headers,
-  body,
-  returnFormat,
-  baseUrl,
-  ...requestInit
-}: NgsiLdRequestOpts & NgsiLdRequest): Promise<T> => {
+export const fetcher = async <T>(
+  o: NgsiLdRequestOpts & NgsiLdRequest,
+): Promise<T> => {
+  if (typeof o.init === "function") {
+    o = {
+      ...o,
+      ...(await o.init()),
+    };
+  }
+
+  let {
+    path,
+    method,
+    params,
+    returnFormat,
+    baseUrl,
+    headers,
+    body,
+    ...requestInit
+  } = o;
+
   let targetUrl = `${baseUrl ?? BASE_URL}${path}`;
   if (params) {
     targetUrl += "?" + new URLSearchParams(params);
@@ -60,7 +73,7 @@ export const fetcher = async <T>({
   });
   new Headers(headers).forEach((value, key) => mergedHeaders.set(key, value));
 
-  const response = await fetch(targetUrl, {
+  const response = await (o.fetch ?? fetch)(targetUrl, {
     ...requestInit,
     method,
     ...(typeof wireBody !== "undefined" ? { body: wireBody } : {}),
